@@ -1,36 +1,27 @@
-<footer class="footer sm:footer-horizontal bg-base-200 text-base-content p-10">
-  <nav>
-    <h6 class="footer-title">Services</h6>
-    <a class="link link-hover">Branding</a>
-    <a class="link link-hover">Design</a>
-    <a class="link link-hover">Marketing</a>
-    <a class="link link-hover">Advertisement</a>
-  </nav>
-  <nav>
-    <h6 class="footer-title">Company</h6>
-    <a class="link link-hover">About us</a>
-    <a class="link link-hover">Contact</a>
-    <a class="link link-hover">Jobs</a>
-    <a class="link link-hover">Press kit</a>
-  </nav>
-  <nav>
-    <h6 class="footer-title">Legal</h6>
-    <a class="link link-hover">Terms of use</a>
-    <a class="link link-hover">Privacy policy</a>
-    <a class="link link-hover">Cookie policy</a>
-  </nav>
-  <form>
-    <h6 class="footer-title">Newsletter</h6>
-    <fieldset class="w-80">
-      <label>Enter your email address</label>
-      <div class="join">
-        <input
-          type="text"
-          placeholder="username@site.com"
-          class="input input-bordered join-item"
-        />
-        <button class="btn btn-primary join-item">Subscribe</button>
-      </div>
-    </fieldset>
-  </form>
+---
+import Logo from "../assets/astro.svg";
+---
+<section id="footer" class=" bg-base-100 text-base-content p-5 ">
+<footer >
+    <div class="footer sm:footer-horizontal px-10 mt-5">
+        <aside>
+            <div class="flex items-center space-x-4">
+              <img src={Logo.src} alt="Logo" class="h-10 md:h-8 lg:h-10 xl:h-15" />
+        
+              <p class="text-md sm:text-md md:text-xl font-bold lg:text-3xl">NoFaltes App</p>
+            </div>
+            <p class="text-sm lg:text-lg sm:px-10 md:px-10 lg:px-15">
+              Asistencia digital, rápida y sin complicaciones
+            </p>
+          </aside>
+          <nav>
+            <h6 class="footer-title">Legal</h6>
+            <a href="/Terminos_de_uso" class="link link-hover">Términos de uso</a>
+            <a href="/Politica_de_privacidad" class="link link-hover">Política de privacidad</a>
+          </nav>
+    </div>
+  <div class="text-center mt-10 text-sm text-gray-500 ">
+    <p>&copy; 2025 NoFaltes App. Todos los derechos reservados.</p>
+  </div>
 </footer>
+</section>
