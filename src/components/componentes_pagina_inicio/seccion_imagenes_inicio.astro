@@ -1,30 +1,50 @@
+<section id="seccionImagenesInicio" >
+  <div class="relative w-full overflow-hidden">
+    <!-- Texto fijo -->
+    <div
+      class="absolute bottom-4 left-4 md:bottom-10 md:left-10 z-20 text-white max-w-xs md:max-w-xl"
+    >
+      <h1 class="text-xl sm:text-xl md:text-4xl font-bold">
+        Centro de Investigación Multidisciplinario FMOcc UES
+      </h1>
+    </div>
 
-<div class="relative w-full h-screen overflow-hidden">
-  <!-- Texto fijo -->
-  <div class="absolute bottom-15 left-10 z-20 text-white max-w-xl">
-    <h1 class="text-4xl font-bold">Centro de Investigación Multidisciplinario FMOcc UES</h1>
+    <!-- Carrusel con imagen duplicada al final -->
+    <div
+      id="carousel"
+      class="flex transition-transform duration-1000 ease-in-out h-[40vh] sm:h-[50vh] lg:h-screen"
+    >
+      <div class="w-full flex-shrink-0">
+        <img
+          src="/src/assets/imagen_inicio_1.png"
+          class="w-full h-full object-cover"
+        />
+      </div>
+      <div class="w-full flex-shrink-0">
+        <img
+          src="/src/assets/imagen_inicio_1.png"
+          class="w-full h-full object-cover"
+        />
+      </div>
+      <div class="w-full flex-shrink-0">
+        <img
+          src="/src/assets/imagen_inicio_1.png"
+          class="w-full h-full object-cover"
+        />
+      </div>
+      <!-- duplicado de la primera -->
+      <div class="w-full flex-shrink-0">
+        <img
+          src="/src/assets/imagen_inicio_1.png"
+          class="w-full h-full object-cover"
+        />
+      </div>
+    </div>
   </div>
-
-  <!-- Carrusel con imagen duplicada al final -->
-  <div id="carousel" class="flex h-screen transition-transform duration-1000 ease-in-out">
-    <div class="w-full h-screen flex-shrink-0">
-      <img src="/src/assets/imagen_inicio_1.png" class="w-full h-full object-cover" />
-    </div>
-    <div class="w-full h-screen flex-shrink-0">
-      <img src="/src/assets/imagen_inicio_1.png" class="w-full h-full object-cover" />
-    </div>
-    <div class="w-full h-screen flex-shrink-0">
-      <img src="/src/assets/imagen_inicio_1.png" class="w-full h-full object-cover" />
-    </div>
-    <!-- duplicado de la primera -->
-    <div class="w-full h-screen flex-shrink-0">
-      <img src="/src/assets/imagen_inicio_1.png" class="w-full h-full object-cover" />
-    </div>
-  </div>
-</div>
+</section>
 
 <script>
-  const track = document.getElementById('carousel');
+  const track = document.getElementById("carousel");
   const totalSlides = 3; // reales
   let index = 0;
 
