@@ -2,7 +2,7 @@
   <div class="relative w-full overflow-hidden">
     <!-- Texto fijo -->
     <div
-      class="absolute bottom-4 left-4 md:bottom-10 md:left-10 z-20 text-white max-w-xs md:max-w-xl"
+      class="absolute bottom-4 left-4 md:bottom-20 md:left-10 z-20 text-white max-w-xs md:max-w-xl"
     >
       <h1 class="text-xl sm:text-xl md:text-4xl font-bold">
         Centro de Investigación Multidisciplinario FMOcc UES
@@ -44,7 +44,7 @@
 </section>
 
 <script>
-  const track = document.getElementById("carousel");
+  const track = document.getElementById("carousel") as HTMLElement;
   const totalSlides = 3; // reales
   let index = 0;
 
