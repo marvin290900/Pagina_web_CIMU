@@ -73,36 +73,40 @@
       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-5 px-4 transition-all duration-1000 opacity-0 translate-y-8"
     >
       <div class="flex flex-col h-full w-full max-w-md mx-auto">
-        <div
-          class="card bg-transparent border-2 border-black rounded-2xl text-black h-full flex flex-col"
-        >
-          <div class="card-body flex-grow">
-            <h2 class="card-title">Misión</h2>
-            <p>
-              “Somos un centro de investigación científico de carácter
-              universitario, que realiza investigaciones considerando los
-              problemas más relevantes de la realidad regional, nacional e
-              internacional. Para lo cual, se dirige hacia la construcción de
-              conocimientos que puedan ser insertados al entorno social,
-              económico, productivo, cultural y ambiental”
-            </p>
+        <div class="borde-giratorio">
+          <div 
+            class="contenido card bg-transparent text-black h-full flex flex-col rounded-2xl min-h-[220px]"
+          >
+            <div class="card-body flex-grow p-4">
+              <h2 class="card-title">Misión</h2>
+              <p>
+                “Somos un centro de investigación científico de carácter
+                universitario, que realiza investigaciones considerando los
+                problemas más relevantes de la realidad regional, nacional e
+                internacional. Para lo cual, se dirige hacia la construcción de
+                conocimientos que puedan ser insertados al entorno social,
+                económico, productivo, cultural y ambiental”
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
       <div class="flex flex-col h-full w-full max-w-md mx-auto">
-        <div
-          class="card bg-transparent border-2 border-black rounded-2xl text-black h-full flex flex-col"
-        >
-          <div class="card-body flex-grow">
-            <h2 class="card-title">Visión</h2>
-            <p>
-              “Ser un referente académico sobre los temas de interés
-              relacionados a la problemática regional, nacional e internacional;
-              con el aporte de conocimiento científico que pueda ser insertado a
-              la propuesta de soluciones y contribuir así al desarrollo social y
-              el bienestar colectivo.”
-            </p>
+        <div class="borde-giratorio">
+          <div
+            class="contenido card bg-transparent rounded-2xl text-black h-full flex flex-col min-h-[220px]"
+          >
+            <div class="card-body flex-grow p-4">
+              <h2 class="card-title">Visión</h2>
+              <p class="mt-2">
+                “Ser un referente académico sobre los temas de interés
+                relacionados a la problemática regional, nacional e
+                internacional; con el aporte de conocimiento científico que
+                pueda ser insertado a la propuesta de soluciones y contribuir
+                así al desarrollo social y el bienestar colectivo.”
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -110,19 +114,21 @@
       <div
         class="flex flex-col h-full w-full max-w-md sm:col-span-2 lg:col-span-1 mx-auto"
       >
-        <div
-          class="card bg-transparent border-2 border-black rounded-2xl text-black h-full flex flex-col"
-        >
-          <div class="card-body flex-grow">
-            <h2 class="card-title mb-5">Valores</h2>
-            <ul
-              class="grid grid-cols-2 gap-x-4 gap-y-8 list-disc list-inside text-left"
-            >
-              <li>Ética</li>
-              <li>Compromiso social</li>
-              <li>Pertinencia</li>
-              <li>Sinergia</li>
-            </ul>
+        <div class="borde-giratorio">
+          <div
+            class="contenido card bg-transparent rounded-2xl text-black h-full flex flex-col min-h-[220px]"
+          >
+            <div class="card-body flex-grow p-4">
+              <h2 class="card-title mb-5">Valores</h2>
+              <ul
+                class="grid grid-cols-2 gap-x-4 gap-y-8 list-disc list-inside text-left"
+              >
+                <li>Ética</li>
+                <li>Compromiso social</li>
+                <li>Pertinencia</li>
+                <li>Sinergia</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -255,18 +261,17 @@
   </div>
 </section>
 
-
 <script>
   const targets = document.querySelectorAll(
-    '#titulo_centro_investigacion, #texto_centro_investigacion, #segundo_texto_centro_investigacion, #tercer_texto_centro_investigacion, #cuarto_texto_centro_investigacion, #quinto_texto_centro_investigacion'
+    "#titulo_centro_investigacion, #texto_centro_investigacion, #segundo_texto_centro_investigacion, #tercer_texto_centro_investigacion, #cuarto_texto_centro_investigacion, #quinto_texto_centro_investigacion"
   );
 
   const observer = new IntersectionObserver(
-    entries => {
-      entries.forEach(entry => {
+    (entries) => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          entry.target.classList.remove('opacity-0', 'translate-y-8');
-          entry.target.classList.add('opacity-100', 'translate-y-0');
+          entry.target.classList.remove("opacity-0", "translate-y-8");
+          entry.target.classList.add("opacity-100", "translate-y-0");
         }
       });
     },
@@ -275,5 +280,32 @@
     }
   );
 
-  targets.forEach(target => observer.observe(target));
+  targets.forEach((target) => observer.observe(target));
 </script>
+
+<style>
+  @keyframes girarBorde {
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 360% 50%;
+    }
+  }
+
+  .borde-giratorio {
+    position: relative;
+    border-radius: 1rem; /* mismo que rounded-2xl */
+    padding: 2px; /* espacio para el borde animado */
+    background: linear-gradient(270deg, #FFFFFF, #283886, #FFFFFF, #283886);
+    background-size: 400% 400%;
+    animation: girarBorde 8s linear infinite;
+  }
+
+  .borde-giratorio > .contenido {
+    background: white; /* o transparente si quieres */
+    border-radius: 1rem;
+    height: 100%;
+    width: 100%;
+  }
+</style>
