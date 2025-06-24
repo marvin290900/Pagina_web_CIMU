@@ -1,0 +1,94 @@
+---
+import plumaEditorial from "../../assets/pluma-editorial.png";
+import remi from "../../assets/remi.png";
+---
+
+<section id="seccionEditorial" class="py-8 bg-white text-center">
+  <div class="container mx-auto">
+    <div
+      id="titulo"
+      class="font-bold text-[#283886] bg-[#F5F5F5] m-auto p-2 rounded-2xl w-48 transition-all duration-1000 opacity-0 translate-y-8"
+    >
+      <h4 class="font-light">Puplicaciones</h4>
+      <h4 class="font-extrabold">CIMU</h4>
+    </div>
+    <div
+      id="titulo_editorial"
+      class="w-full flex justify-center items-center pb-8 transition-all duration-1000 opacity-0 translate-y-8"
+    >
+      <h2
+        class="text-2xl sm:text-xl md:text-2xl lg:text-4xl font-bold text-gray-800 mt-10"
+      >
+        Multidisciplinaria Editorial
+      </h2>
+      <img src={plumaEditorial.src} alt="Logo editorial" />
+    </div>
+    <div
+      id="parrafo_editorial"
+      class="px-6 flex flex-col justify-center items-center text-center rounded-lg shadow-none transition-all duration-1000 opacity-0 translate-y-8"
+    >
+      <p class="text-sm md:text-lg lg:text-2xl text-gray-800 pb-10">
+        <span class="text-[#283886] font-bold">REMI</span> es una revista de Acceso
+        Abierto, semestral, gratuita, revisada por pares evaluadores, que acepta
+        de forma continua manuscritos de carácter multidisciplinario, sin costo de
+        publicación para los autores.
+      </p>
+    </div>
+    <div
+      id="editorial_imagen"
+      class="w-full shadow-none transition-all duration-1000 opacity-0 translate-y-8"
+    >
+      <img src={remi.src} alt="Portada revista remi" class="mx-auto" />
+    </div>
+  </div>
+</section>
+
+<script>
+  const targets = document.querySelectorAll(
+    "#titulo_editorial, #titulo, #parrafo_editorial, #editorial_imagen"
+  );
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.remove("opacity-0", "translate-y-8");
+          entry.target.classList.add("opacity-100", "translate-y-0");
+        }
+      });
+    },
+    {
+      threshold: 0.1,
+    }
+  );
+
+  targets.forEach((target) => observer.observe(target));
+
+  const track = document.getElementById("carousel-track");
+  const items = [...track.children];
+  const totalItems = items.length;
+
+  // Duplica los items
+  for (let i = 0; i < totalItems; i++) {
+    const clone = items[i].cloneNode(true);
+    track.appendChild(clone);
+  }
+
+  let scrollX = 0;
+  const speed = 0.5; // velocidad del desplazamiento
+
+  function animate() {
+    scrollX += speed;
+    track.style.transform = `translateX(-${scrollX}px)`;
+
+    // Reinicia cuando haya recorrido el largo de los originales
+    const maxScroll = track.scrollWidth / 2;
+    if (scrollX >= maxScroll) {
+      scrollX = 0;
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+</script>
