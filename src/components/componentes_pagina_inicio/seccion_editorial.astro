@@ -20,7 +20,7 @@ import plumaEditorial from "../../assets/pluma-editorial.png";
       >
         Multidisciplinaria Editorial
       </h2>
-      <img src={plumaEditorial.src} alt="Logo editorial" />
+      <img src={plumaEditorial.src} alt="Logo editorial" class="w-18 sm:w-18 md:w-18 lg:w-24 h-auto"/>
     </div>
     <div
       id="parrafo_editorial"
@@ -64,31 +64,4 @@ import plumaEditorial from "../../assets/pluma-editorial.png";
 
   targets.forEach((target) => observer.observe(target));
 
-  const track = document.getElementById("carousel-track");
-  const items = [...track.children];
-  const totalItems = items.length;
-
-  // Duplica los items
-  for (let i = 0; i < totalItems; i++) {
-    const clone = items[i].cloneNode(true);
-    track.appendChild(clone);
-  }
-
-  let scrollX = 0;
-  const speed = 0.5; // velocidad del desplazamiento
-
-  function animate() {
-    scrollX += speed;
-    track.style.transform = `translateX(-${scrollX}px)`;
-
-    // Reinicia cuando haya recorrido el largo de los originales
-    const maxScroll = track.scrollWidth / 2;
-    if (scrollX >= maxScroll) {
-      scrollX = 0;
-    }
-
-    requestAnimationFrame(animate);
-  }
-
-  animate();
 </script>

@@ -268,7 +268,7 @@
 
   targets.forEach((target) => observer.observe(target));
 
-  const track = document.getElementById("carousel-track");
+  const track = document.getElementById("carousel-track") as HTMLElement;
   const items = [...track.children];
   const totalItems = items.length;
 

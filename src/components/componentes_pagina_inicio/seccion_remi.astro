@@ -6,22 +6,15 @@ import remi from "../../assets/remi.png";
 <section id="seccionEditorial" class="py-8 bg-white text-center">
   <div class="container mx-auto">
     <div
-      id="titulo"
-      class="font-bold text-[#283886] bg-[#F5F5F5] m-auto p-2 rounded-2xl w-48 transition-all duration-1000 opacity-0 translate-y-8"
-    >
-      <h4 class="font-light">Puplicaciones</h4>
-      <h4 class="font-extrabold">CIMU</h4>
-    </div>
-    <div
       id="titulo_editorial"
-      class="w-full flex justify-center items-center pb-8 transition-all duration-1000 opacity-0 translate-y-8"
+      class="w-full flex justify-center items-center pb-8 mt-8 transition-all duration-1000 opacity-0 translate-y-8"
     >
       <h2
         class="text-2xl sm:text-xl md:text-2xl lg:text-4xl font-bold text-gray-800 mt-10"
       >
-        Multidisciplinaria Editorial
+        REMI
       </h2>
-      <img src={plumaEditorial.src} alt="Logo editorial" />
+      <img src={plumaEditorial.src} alt="Logo remi" class="w-18 sm:w-18 md:w-18 lg:w-24 h-auto" />
     </div>
     <div
       id="parrafo_editorial"
@@ -64,31 +57,4 @@ import remi from "../../assets/remi.png";
 
   targets.forEach((target) => observer.observe(target));
 
-  const track = document.getElementById("carousel-track");
-  const items = [...track.children];
-  const totalItems = items.length;
-
-  // Duplica los items
-  for (let i = 0; i < totalItems; i++) {
-    const clone = items[i].cloneNode(true);
-    track.appendChild(clone);
-  }
-
-  let scrollX = 0;
-  const speed = 0.5; // velocidad del desplazamiento
-
-  function animate() {
-    scrollX += speed;
-    track.style.transform = `translateX(-${scrollX}px)`;
-
-    // Reinicia cuando haya recorrido el largo de los originales
-    const maxScroll = track.scrollWidth / 2;
-    if (scrollX >= maxScroll) {
-      scrollX = 0;
-    }
-
-    requestAnimationFrame(animate);
-  }
-
-  animate();
 </script>
