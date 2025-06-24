@@ -1,27 +1,81 @@
 ---
-import Logo from "../assets/astro.svg";
+import plumaEditorial from "../../assets/pluma-editorial.png";
+import cimuLogo from "../assets/cimu.png";
+import plumaLogo from "../assets/logo_pluma_multi.png";
+import uesLogoBlanco from "../assets/uesLogoBlanco.svg";
 ---
-<section id="footer" class=" bg-base-100 text-base-content p-5 ">
-<footer >
-    <div class="footer sm:footer-horizontal px-10 mt-5">
-        <aside>
-            <div class="flex items-center space-x-4">
-              <img src={Logo.src} alt="Logo" class="h-10 md:h-8 lg:h-10 xl:h-15" />
-        
-              <p class="text-md sm:text-md md:text-xl font-bold lg:text-3xl">NoFaltes App</p>
-            </div>
-            <p class="text-sm lg:text-lg sm:px-10 md:px-10 lg:px-15">
-              Asistencia digital, rápida y sin complicaciones
-            </p>
-          </aside>
-          <nav>
-            <h6 class="footer-title">Legal</h6>
-            <a href="/Terminos_de_uso" class="link link-hover">Términos de uso</a>
-            <a href="/Politica_de_privacidad" class="link link-hover">Política de privacidad</a>
-          </nav>
+
+<footer id="footer" class="bg-base-100 text-base-content p-5">
+  <div class="footer sm:footer-horizontal px-10 mt-5">
+    <aside>
+      <div class="flex items-center space-x-4 gap-8">
+        <img
+          src={cimuLogo.src}
+          alt="Logo Cimu"
+          class="h-10 md:h-8 lg:h-10 xl:h-15"
+        />
+
+        <img
+          src={plumaLogo.src}
+          alt="Logo Pluma"
+          class="h-10 md:h-8 lg:h-10 xl:h-15"
+        />
+
+        <img
+          src={uesLogoBlanco.src}
+          alt="Logo Ues"
+          class="h-10 md:h-8 lg:h-10 xl:h-15"
+        />
+      </div>
+    </aside>
+    <nav>
+      <h6 class="footer-title">Contacto</h6>
+      <div class="flex items-center gap-2 my-1">
+        <span class="mdi mdi-map-marker text-gray-600"></span>
+        <span>123 Calle Principal, Ciudad</span>
+      </div>
+      <div class="flex items-center gap-2 my-1">
+        <span class="mdi mdi-phone text-gray-600"></span>
+        <span>+503 1234 5678</span>
+      </div>
+      <div class="flex items-center gap-2 my-1">
+        <span class="mdi mdi-email text-gray-600"></span>
+        <span>contacto@ejemplo.com</span>
+      </div>
+    </nav>
+    <div class="avatar-group -space-x-6 flex">
+      <div
+        class="avatar rounded-full bg-blue-600 w-12 h-12 flex items-center justify-center text-white text-xl"
+      >
+        <span class="mdi mdi-facebook"></span>
+      </div>
+      <div
+        class="avatar rounded-full bg-sky-400 w-12 h-12 flex items-center justify-center text-white text-xl"
+      >
+        <span class="mdi mdi-twitter"></span>
+      </div>
+      <div
+        class="avatar rounded-full bg-pink-600 w-12 h-12 flex items-center justify-center text-white text-xl"
+      >
+        <span class="mdi mdi-instagram"></span>
+      </div>
+      <div
+        class="avatar rounded-full bg-blue-700 w-12 h-12 flex items-center justify-center text-white text-xl"
+      >
+        <span class="mdi mdi-linkedin"></span>
+      </div>
     </div>
-  <div class="text-center mt-10 text-sm text-gray-500 ">
-    <p>&copy; 2025 NoFaltes App. Todos los derechos reservados.</p>
+  </div>
+  <div class="text-center mt-10 text-sm text-gray-500">
+    <p>
+  &copy; {new Date().getFullYear()} Universidad de El Salvador | Todos los derechos reservados
+</p>
   </div>
 </footer>
-</section>
+
+<style>
+  .avatar:hover {
+  filter: brightness(110%);
+  cursor: pointer;
+}
+</style>
