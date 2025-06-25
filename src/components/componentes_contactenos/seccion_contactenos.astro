@@ -1,0 +1,249 @@
+<section id="seccion_contactenos" class="py-12 bg-white text-center ">
+  <!-- Título -->
+  <div id="titulo_contactenos" class="px-6 mb-10 transition-all duration-1000 opacity-0 translate-y-8">
+    <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
+      ¡Contáctenos!
+    </h2>
+    <p class="text-gray-700 max-w-2xl mx-auto">
+      ¿Tienes dudas, sugerencias o deseas colaborar con nosotros? Puedes
+      escribirnos a través del siguiente formulario o mediante nuestros canales
+      de contacto.
+    </p>
+  </div>
+
+  <!-- Formulario + Mapa -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-10 px-6 max-w-6xl mx-auto">
+    <!-- Formulario -->
+    <form
+      id="contactForm"
+      action="https://formsubmit.co/cuellarmarvin14@gmail.com"
+      method="POST"
+      class="bg-gray-50 shadow-md rounded-xl p-6 text-left space-y-4 transition-all duration-1000 opacity-0 translate-y-8"
+    >
+      <div>
+        <label class="block text-gray-800 font-semibold mb-1"
+          >Nombre completo</label
+        >
+        <input
+          name="nombre"
+          type="text"
+          required
+          class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring focus:border-blue-400 text-black"
+        />
+      </div>
+      <div>
+        <label class="block text-gray-800 font-semibold mb-1"
+          >Correo electrónico</label
+        >
+        <input
+          name="correo"
+          type="email"
+          required
+          class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring focus:border-blue-400 text-black"
+        />
+      </div>
+      <div>
+        <label class="block text-gray-800 font-semibold mb-1">Asunto</label>
+        <input
+          name="asunto"
+          type="text"
+          required
+          class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring focus:border-blue-400 text-black"
+        />
+      </div>
+      <div>
+        <label class="block text-gray-800 font-semibold mb-1">Mensaje</label>
+        <textarea
+          name="mensaje"
+          rows="5"
+          required
+          class="w-full border border-gray-300 rounded-md px-4 py-2 resize-none focus:outline-none focus:ring focus:border-blue-400 text-black"
+        ></textarea>
+      </div>
+      <button
+        type="submit"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md"
+      >
+        Enviar mensaje
+      </button>
+      <input type="hidden" name="_captcha" value="false" />
+      <p id="formMessage" class="text-sm mt-2 text-green-600 hidden">
+        ✅ Mensaje enviado correctamente.
+      </p>
+    </form>
+
+    <!-- Mapa-->
+    <div id="mapa" class="rounded-xl overflow-hidden shadow-md h-96 transition-all duration-1000 opacity-0 translate-y-8">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3871.804133540645!2d-89.5756796259317!3d13.970261192200217!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f62e8f193eda62f%3A0xd40e3f2801fddb61!2sFacultad%20Multidisciplinaria%20de%20Occidente%20UES!5e0!3m2!1ses-419!2ssv!4v1750880829353!5m2!1ses-419!2ssv"
+        width="600"
+        height="450"
+        style="border:0;"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+  </div>
+
+  <!-- Info de contacto -->
+  <div id="info_contact" class="mt-16 px-6 max-w-4xl mx-auto text-left space-y-3 text-gray-800 transition-all duration-1000 opacity-0 translate-y-8">
+    <h3 class="text-2xl font-bold text-center mb-4">
+      Información de contacto
+    </h3>
+    <p>
+      <strong>📍 Dirección:</strong> Facultad Multidisciplinaria de Occidente, Universidad
+      de El Salvador, Santa Ana, El Salvador.
+    </p>
+    <p>
+      <strong>📧 Correo electrónico:</strong>
+      <a
+        href="mailto:centroinvestigacion@ues.edu.sv"
+        class="text-blue-600 hover:underline">centroinvestigacion@ues.edu.sv</a
+      >
+    </p>
+    <p><strong>📞 Teléfono:</strong> +503 2445-xxxx</p>
+    <p>
+      <strong>🕒 Horario de atención:</strong> Lunes a viernes, de 8:00 a.m. a 4:00
+      p.m.
+    </p>
+  </div>
+
+  <!-- Redes sociales -->
+  <div id="redes_sociales" class="mt-10 flex justify-center space-x-6 transition-all duration-1000 opacity-0 translate-y-8">
+    <a
+      href="https://www.facebook.com/tu-centro"
+      target="_blank"
+      aria-label="Facebook"
+      class="text-blue-700 text-3xl hover:scale-110 transition"
+    >
+      <i class="mdi mdi-facebook"></i>
+    </a>
+    <a
+      href="https://www.instagram.com/tu-centro"
+      target="_blank"
+      aria-label="Instagram"
+      class="text-pink-500 text-3xl hover:scale-110 transition"
+    >
+      <i class="mdi mdi-twitter"></i>
+    </a>
+    <a
+      href="https://www.linkedin.com/in/tu-centro"
+      target="_blank"
+      aria-label="LinkedIn"
+      class="text-blue-600 text-3xl hover:scale-110 transition"
+    >
+      <i class="mdi mdi-instagram"></i>
+    </a>
+  </div>
+</section>
+
+<script>
+    const targets = document.querySelectorAll(
+    "#titulo_contactenos, #contactForm, #mapa, #info_contact, #redes_sociales"
+  );
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.remove("opacity-0", "translate-y-8");
+          entry.target.classList.add("opacity-100", "translate-y-0");
+        }
+      });
+    },
+    {
+      threshold: 0.1,
+    }
+  );
+
+  targets.forEach((target) => observer.observe(target));
+
+
+
+
+
+
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("contactForm") as HTMLFormElement;
+    if (!form) return;
+
+    // Crear mensaje flotante
+    const floatingMessage = document.createElement("div");
+    Object.assign(floatingMessage.style, {
+      position: "fixed",
+      top: "20px",
+      left: "50%",
+      transform: "translateX(-50%)",
+      padding: "12px 24px",
+      borderRadius: "8px",
+      boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+      fontWeight: "600",
+      fontSize: "16px",
+      zIndex: "1000",
+      display: "none",
+      color: "white",
+    });
+    document.body.appendChild(floatingMessage);
+
+    function showMessage(text, isError = false) {
+      floatingMessage.textContent = (isError ? "❌ " : "✅ ") + text;
+      floatingMessage.style.backgroundColor = isError ? "#dc2626" : "#22c55e";
+      floatingMessage.style.display = "block";
+      setTimeout(() => (floatingMessage.style.display = "none"), 3000);
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      // Validaciones
+      const nombre = form.nombre.value.trim();
+      const correo = form.correo.value.trim();
+      const asunto = form.asunto.value.trim();
+      const mensaje = form.mensaje.value.trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (nombre.length < 3) {
+        showMessage("Por favor, ingresa un nombre válido de al menos 3 caracteres.", true);
+        form.nombre.focus();
+        return;
+      }
+      if (!emailRegex.test(correo)) {
+        showMessage("Por favor, ingresa un correo electrónico válido.", true);
+        form.correo.focus();
+        return;
+      }
+      if (asunto.length < 4) {
+        showMessage("Por favor, ingresa un asunto válido de al menos 4 caracteres.", true);
+        form.asunto.focus();
+        return;
+      }
+      if (mensaje.length < 10) {
+        showMessage("Por favor, ingresa un mensaje válido de al menos 10 caracteres.", true);
+        form.mensaje.focus();
+        return;
+      }
+
+      // Preparar datos para enviar
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch(form.action, {
+          method: "POST",
+          body: formData,
+          // ¡OJO! NO agregar headers personalizados como Accept aquí
+        });
+
+        if (response.ok) {
+          showMessage("Mensaje enviado correctamente.");
+          form.reset();
+        } else {
+          showMessage("Hubo un error al enviar el mensaje.", true);
+        }
+      } catch (error) {
+        showMessage("Error en la conexión. Inténtalo más tarde.", true);
+        console.error(error);
+      }
+    });
+  });
+</script>
