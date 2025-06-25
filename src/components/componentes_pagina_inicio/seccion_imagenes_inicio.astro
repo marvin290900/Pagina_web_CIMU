@@ -1,3 +1,7 @@
+---
+const { titulo } = Astro.props;
+---
+
 <section id="seccionImagenesInicio">
   <div class="relative w-full overflow-hidden">
     <!-- Texto fijo -->
@@ -5,7 +9,7 @@
       class="absolute bottom-4 left-4 md:bottom-20 md:left-10 z-20 text-white max-w-xs md:max-w-xl"
     >
       <h1 class="text-xl sm:text-xl md:text-4xl font-bold">
-        Centro de Investigación Multidisciplinario FMOcc UES
+        {titulo}
       </h1>
     </div>
 
@@ -44,25 +48,26 @@
 </section>
 
 <script>
-  const track = document.getElementById("carousel") as HTMLElement;
-  const totalSlides = 3; // reales
-  let index = 0;
+   document.addEventListener("DOMContentLoaded", () => {
+    const track = document.getElementById("carousel");
+    const totalSlides = 3;
+    let index = 0;
 
-  function goToSlide(i, animate = true) {
-    track.style.transitionDuration = animate ? "1000ms" : "0ms";
-    track.style.transform = `translateX(-${i * 100}%)`;
-  }
-
-  setInterval(() => {
-    index++;
-    goToSlide(index);
-
-    if (index === totalSlides) {
-      // esperar a que termine la animación antes de reiniciar al slide 0
-      setTimeout(() => {
-        goToSlide(0, false); // sin animación
-        index = 0;
-      }, 1000); // igual a duración de transición
+    function goToSlide(i, animate = true) {
+      track.style.transitionDuration = animate ? "1000ms" : "0ms";
+      track.style.transform = `translateX(-${i * 100}%)`;
     }
-  }, 5000);
+
+    setInterval(() => {
+      index++;
+      goToSlide(index);
+
+      if (index === totalSlides) {
+        setTimeout(() => {
+          goToSlide(0, false);
+          index = 0;
+        }, 1000);
+      }
+    }, 5000);
+  });
 </script>
