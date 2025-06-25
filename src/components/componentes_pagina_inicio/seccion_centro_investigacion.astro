@@ -27,7 +27,7 @@
           <img
             src="/src/assets/imagen_inicio_1.png"
             alt="Imagen del CIMU"
-            class="w-full h-auto rounded-lg shadow-md"
+            class="w-full h-auto rounded-lg shadow-md transform transition-transform duration-300 hover:scale-105"
           />
         </div>
 
@@ -72,13 +72,13 @@
       id="tercer_texto_centro_investigacion"
       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-5 px-4 transition-all duration-1000 opacity-0 translate-y-8"
     >
-      <div class="flex flex-col h-full w-full max-w-md mx-auto">
+      <div class="flex flex-col h-full w-full max-w-md mx-auto transform transition-transform duration-300 hover:scale-105">
         <div class="borde-giratorio">
-          <div 
-            class="contenido card bg-transparent text-black h-full flex flex-col rounded-2xl min-h-[220px]"
+          <div
+            class="contenido card bg-transparent text-black h-full flex flex-col rounded-2xl min-h-[220px] "
           >
             <div class="card-body flex-grow p-4">
-              <h2 class="card-title">Misión</h2>
+              <h2 class="card-title ">Misión</h2>
               <p>
                 “Somos un centro de investigación científico de carácter
                 universitario, que realiza investigaciones considerando los
@@ -92,7 +92,7 @@
         </div>
       </div>
 
-      <div class="flex flex-col h-full w-full max-w-md mx-auto">
+      <div class="flex flex-col h-full w-full max-w-md mx-auto transform transition-transform duration-300 hover:scale-105">
         <div class="borde-giratorio">
           <div
             class="contenido card bg-transparent rounded-2xl text-black h-full flex flex-col min-h-[220px]"
@@ -112,7 +112,7 @@
       </div>
 
       <div
-        class="flex flex-col h-full w-full max-w-md sm:col-span-2 lg:col-span-1 mx-auto"
+        class="flex flex-col h-full w-full max-w-md sm:col-span-2 lg:col-span-1 mx-auto transform transition-transform duration-300 hover:scale-105"
       >
         <div class="borde-giratorio">
           <div
@@ -154,11 +154,16 @@
     </div>
     <div
       id="quinto_texto_centro_investigacion"
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 place-items-center px-4 py-8 transition-all duration-1000 opacity-0 translate-y-8"
-    >
+      class="flex flex-wrap justify-center gap-8 px-4 py-8 transition-all duration-1000 opacity-0 translate-y-8">
       <div class="flex flex-col items-center w-full max-w-xs">
-        <div class="avatar">
-          <div class="w-24 h-24 rounded-full overflow-hidden">
+        <div class="relative w-28 h-28 flex items-center justify-center mb-2">
+          <!-- Borde giratorio -->
+          <div
+            class="absolute inset-0 rounded-full border-4 animate-spin-gradient"
+          >
+          </div>
+
+          <div class="w-24 h-24 rounded-full overflow-hidden bg-white z-10">
             <img
               src="https://img.daisyui.com/images/profile/demo/distracted1@192.webp"
               class="w-full h-full object-cover"
@@ -166,7 +171,7 @@
             />
           </div>
         </div>
-        <div class="text-center mt-4 text-gray-800">
+        <div class="text-center text-gray-800">
           <p class="text-lg font-semibold">Nombre del Usuario</p>
           <p class="text-sm">Cargo</p>
           <p class="text-sm italic">correo@ejemplo.com</p>
@@ -174,8 +179,14 @@
       </div>
 
       <div class="flex flex-col items-center w-full max-w-xs">
-        <div class="avatar">
-          <div class="w-24 h-24 rounded-full overflow-hidden">
+        <div class="relative w-28 h-28 flex items-center justify-center mb-2">
+          <!-- Borde giratorio -->
+          <div
+            class="absolute inset-0 rounded-full border-4 animate-spin-gradient"
+          >
+          </div>
+
+          <div class="w-24 h-24 rounded-full overflow-hidden bg-white z-10">
             <img
               src="https://img.daisyui.com/images/profile/demo/distracted1@192.webp"
               class="w-full h-full object-cover"
@@ -183,7 +194,7 @@
             />
           </div>
         </div>
-        <div class="text-center mt-4 text-gray-800">
+        <div class="text-center text-gray-800">
           <p class="text-lg font-semibold">Nombre del Usuario</p>
           <p class="text-sm">Cargo</p>
           <p class="text-sm italic">correo@ejemplo.com</p>
@@ -191,8 +202,14 @@
       </div>
 
       <div class="flex flex-col items-center w-full max-w-xs">
-        <div class="avatar">
-          <div class="w-24 h-24 rounded-full overflow-hidden">
+        <div class="relative w-28 h-28 flex items-center justify-center mb-2">
+          <!-- Borde giratorio -->
+          <div
+            class="absolute inset-0 rounded-full border-4 animate-spin-gradient"
+          >
+          </div>
+
+          <div class="w-24 h-24 rounded-full overflow-hidden bg-white z-10">
             <img
               src="https://img.daisyui.com/images/profile/demo/distracted1@192.webp"
               class="w-full h-full object-cover"
@@ -200,63 +217,13 @@
             />
           </div>
         </div>
-        <div class="text-center mt-4 text-gray-800">
+        <div class="text-center text-gray-800">
           <p class="text-lg font-semibold">Nombre del Usuario</p>
           <p class="text-sm">Cargo</p>
           <p class="text-sm italic">correo@ejemplo.com</p>
         </div>
       </div>
 
-      <div class="flex flex-col items-center w-full max-w-xs">
-        <div class="avatar">
-          <div class="w-24 h-24 rounded-full overflow-hidden">
-            <img
-              src="https://img.daisyui.com/images/profile/demo/distracted1@192.webp"
-              class="w-full h-full object-cover"
-              alt="Avatar"
-            />
-          </div>
-        </div>
-        <div class="text-center mt-4 text-gray-800">
-          <p class="text-lg font-semibold">Nombre del Usuario</p>
-          <p class="text-sm">Cargo</p>
-          <p class="text-sm italic">correo@ejemplo.com</p>
-        </div>
-      </div>
-
-      <div class="flex flex-col items-center w-full max-w-xs">
-        <div class="avatar">
-          <div class="w-24 h-24 rounded-full overflow-hidden">
-            <img
-              src="https://img.daisyui.com/images/profile/demo/distracted1@192.webp"
-              class="w-full h-full object-cover"
-              alt="Avatar"
-            />
-          </div>
-        </div>
-        <div class="text-center mt-4 text-gray-800">
-          <p class="text-lg font-semibold">Nombre del Usuario</p>
-          <p class="text-sm">Cargo</p>
-          <p class="text-sm italic">correo@ejemplo.com</p>
-        </div>
-      </div>
-
-      <div class="flex flex-col items-center w-full max-w-xs">
-        <div class="avatar">
-          <div class="w-24 h-24 rounded-full overflow-hidden">
-            <img
-              src="https://img.daisyui.com/images/profile/demo/distracted1@192.webp"
-              class="w-full h-full object-cover"
-              alt="Avatar"
-            />
-          </div>
-        </div>
-        <div class="text-center mt-4 text-gray-800">
-          <p class="text-lg font-semibold">Nombre del Usuario</p>
-          <p class="text-sm">Cargo</p>
-          <p class="text-sm italic">correo@ejemplo.com</p>
-        </div>
-      </div>
     </div>
   </div>
 </section>
@@ -297,7 +264,7 @@
     position: relative;
     border-radius: 1rem; /* mismo que rounded-2xl */
     padding: 2px; /* espacio para el borde animado */
-    background: linear-gradient(270deg, #FFFFFF, #283886, #FFFFFF, #283886);
+    background: linear-gradient(270deg, #ffffff, #283886, #ffffff, #283886);
     background-size: 400% 400%;
     animation: girarBorde 8s linear infinite;
   }
@@ -307,5 +274,26 @@
     border-radius: 1rem;
     height: 100%;
     width: 100%;
+  }
+
+  @keyframes spin-gradient {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-spin-gradient {
+    background: conic-gradient(
+      from 0deg,
+      #283886,
+      #ffffff,
+      #283886,
+      #ffffff,
+      #283886
+    );
+    animation: spin-gradient 5s linear infinite;
   }
 </style>

@@ -1,5 +1,5 @@
 ---
-const { titulo } = Astro.props;
+const { titulo, imagen1, imagen2, imagen3 } = Astro.props;
 ---
 
 <section id="seccionImagenesInicio">
@@ -20,19 +20,19 @@ const { titulo } = Astro.props;
     >
       <div class="w-full flex-shrink-0">
         <img
-          src="/src/assets/imagen_inicio_1.png"
+          src={imagen1}
           class="w-full h-full object-cover"
         />
       </div>
       <div class="w-full flex-shrink-0">
         <img
-          src="/src/assets/imagen_inicio_1.png"
+          src={imagen2}
           class="w-full h-full object-cover"
         />
       </div>
       <div class="w-full flex-shrink-0">
         <img
-          src="/src/assets/imagen_inicio_1.png"
+          src={imagen3}
           class="w-full h-full object-cover"
         />
       </div>
@@ -53,7 +53,7 @@ const { titulo } = Astro.props;
     const totalSlides = 3;
     let index = 0;
 
-    function goToSlide(i, animate = true) {
+    function goToSlide(i:number, animate = true) {
       track.style.transitionDuration = animate ? "1000ms" : "0ms";
       track.style.transform = `translateX(-${i * 100}%)`;
     }

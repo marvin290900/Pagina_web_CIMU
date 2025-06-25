@@ -1,11 +1,12 @@
 ---
+
 import "../styles/global.css";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -19,7 +20,7 @@ import Header from "../components/Header.astro";
   </head>
   <body>
     <Header />
-    <main>
+    <main class="zoom-fade-in-up">
       <slot />
     </main>
     <Footer /> 
@@ -33,4 +34,19 @@ import Header from "../components/Header.astro";
     width: 100%;
     height: 100%;
   }
+
+ @keyframes zoomFadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.zoom-fade-in-up {
+  animation: zoomFadeInUp 0.7s ease-out;
+}
 </style>
