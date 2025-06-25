@@ -49,7 +49,7 @@ const { titulo } = Astro.props;
 
 <script>
    document.addEventListener("DOMContentLoaded", () => {
-    const track = document.getElementById("carousel");
+    const track = document.getElementById("carousel") as HTMLElement;
     const totalSlides = 3;
     let index = 0;
 

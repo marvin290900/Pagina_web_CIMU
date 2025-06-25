@@ -1,0 +1,23 @@
+---
+const { titulo, imagen } = Astro.props;
+---
+
+<section id="seccionImageneGeneral">
+  <div class="relative w-full h-[40vh] sm:h-[50vh] lg:h-screen overflow-hidden">
+    <!-- Texto fijo sobre la imagen -->
+    <div class="absolute bottom-4 left-4 md:bottom-20 md:left-10 z-20 text-white max-w-xs md:max-w-xl">
+      <h1 class="text-xl sm:text-xl md:text-4xl font-bold">
+        {titulo}
+      </h1>
+    </div>
+
+    <!-- Imagen única fija -->
+    <img
+      src={imagen}
+      alt="Imagen de inicio"
+      class="w-full h-full object-cover"
+    />
+  </div>
+</section>
+
+
