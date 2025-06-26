@@ -1,6 +1,9 @@
-<section id="seccion_contactenos" class="py-12 bg-white text-center ">
+<section id="seccion_contactenos" class="py-12 bg-white text-center">
   <!-- Título -->
-  <div id="titulo_contactenos" class="px-6 mb-10 transition-all duration-1000 opacity-0 translate-y-8">
+  <div
+    id="titulo_contactenos"
+    class="px-6 mb-10 transition-all duration-1000 opacity-0 translate-y-8"
+  >
     <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
       ¡Contáctenos!
     </h2>
@@ -60,12 +63,18 @@
           class="w-full border border-gray-300 rounded-md px-4 py-2 resize-none focus:outline-none focus:ring focus:border-blue-400 text-black"
         ></textarea>
       </div>
+
       <button
         type="submit"
-        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md"
+        id="submitButton"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md flex items-center justify-center gap-2"
       >
-        Enviar mensaje
+        <span id="submitText">Enviar mensaje</span>
+        <span
+          id="spinner"
+          class="loading loading-spinner loading-md text-white hidden"></span>
       </button>
+
       <input type="hidden" name="_captcha" value="false" />
       <p id="formMessage" class="text-sm mt-2 text-green-600 hidden">
         ✅ Mensaje enviado correctamente.
@@ -73,7 +82,10 @@
     </form>
 
     <!-- Mapa-->
-    <div id="mapa" class="rounded-xl overflow-hidden shadow-md h-96 transition-all duration-1000 opacity-0 translate-y-8">
+    <div
+      id="mapa"
+      class="rounded-xl overflow-hidden shadow-md h-96 transition-all duration-1000 opacity-0 translate-y-8"
+    >
       <iframe
         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3871.804133540645!2d-89.5756796259317!3d13.970261192200217!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f62e8f193eda62f%3A0xd40e3f2801fddb61!2sFacultad%20Multidisciplinaria%20de%20Occidente%20UES!5e0!3m2!1ses-419!2ssv!4v1750880829353!5m2!1ses-419!2ssv"
         width="600"
@@ -86,12 +98,14 @@
   </div>
 
   <!-- Info de contacto -->
-  <div id="info_contact" class="mt-16 px-6 max-w-4xl mx-auto text-left space-y-3 text-gray-800 transition-all duration-1000 opacity-0 translate-y-8">
-    <h3 class="text-2xl font-bold text-center mb-4">
-      Información de contacto
-    </h3>
+  <div
+    id="info_contact"
+    class="mt-16 px-6 max-w-4xl mx-auto text-left space-y-3 text-gray-800 transition-all duration-1000 opacity-0 translate-y-8"
+  >
+    <h3 class="text-2xl font-bold text-center mb-4">Información de contacto</h3>
     <p>
-      <strong>📍 Dirección:</strong> Avenida Fray Felipe de Jesús Moraga Sur, Santa Ana., Santa Ana, El Salvador 
+      <strong>📍 Dirección:</strong> Avenida Fray Felipe de Jesús Moraga Sur, Santa
+      Ana
     </p>
     <p>
       <strong>📧 Correo electrónico:</strong>
@@ -108,7 +122,10 @@
   </div>
 
   <!-- Redes sociales -->
-  <div id="redes_sociales" class="mt-10 flex justify-center space-x-6 transition-all duration-1000 opacity-0 translate-y-8">
+  <div
+    id="redes_sociales"
+    class="mt-10 flex justify-center space-x-6 transition-all duration-1000 opacity-0 translate-y-8"
+  >
     <a
       href="https://www.facebook.com/tu-centro"
       target="_blank"
@@ -137,7 +154,7 @@
 </section>
 
 <script>
-    const targets = document.querySelectorAll(
+  const targets = document.querySelectorAll(
     "#titulo_contactenos, #contactForm, #mapa, #info_contact, #redes_sociales"
   );
 
@@ -156,12 +173,6 @@
   );
 
   targets.forEach((target) => observer.observe(target));
-
-
-
-
-
-
 
   document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("contactForm") as HTMLFormElement;
@@ -203,7 +214,10 @@
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
       if (nombre.length < 3) {
-        showMessage("Por favor, ingresa un nombre válido de al menos 3 caracteres.", true);
+        showMessage(
+          "Por favor, ingresa un nombre válido de al menos 3 caracteres.",
+          true
+        );
         form.nombre.focus();
         return;
       }
@@ -213,16 +227,29 @@
         return;
       }
       if (asunto.length < 4) {
-        showMessage("Por favor, ingresa un asunto válido de al menos 4 caracteres.", true);
+        showMessage(
+          "Por favor, ingresa un asunto válido de al menos 4 caracteres.",
+          true
+        );
         form.asunto.focus();
         return;
       }
       if (mensaje.length < 10) {
-        showMessage("Por favor, ingresa un mensaje válido de al menos 10 caracteres.", true);
+        showMessage(
+          "Por favor, ingresa un mensaje válido de al menos 10 caracteres.",
+          true
+        );
         form.mensaje.focus();
         return;
       }
 
+      const spinner = document.getElementById("spinner") as HTMLSpanElement;
+      const submitText = document.getElementById("submitText") as HTMLSpanElement;
+      const submitButton = document.getElementById("submitButton") as HTMLButtonElement;
+
+      spinner.classList.remove("hidden");
+      submitText.classList.add("hidden");
+      submitButton.disabled = true;
       // Preparar datos para enviar
       const formData = new FormData(form);
 
@@ -242,6 +269,10 @@
       } catch (error) {
         showMessage("Error en la conexión. Inténtalo más tarde.", true);
         console.error(error);
+      } finally {
+        spinner.classList.add("hidden");
+        submitText.classList.remove("hidden");
+        submitButton.disabled = false;
       }
     });
   });
