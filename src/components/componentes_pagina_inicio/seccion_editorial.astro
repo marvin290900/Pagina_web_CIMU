@@ -1,5 +1,6 @@
 ---
 import plumaEditorial from "../../assets/pluma-editorial.png";
+import Carrusel3D from "./Carrusel3d.vue";
 ---
 
 <section id="seccionEditorial" class="py-8 bg-white text-center">
@@ -20,7 +21,11 @@ import plumaEditorial from "../../assets/pluma-editorial.png";
       >
         Multidisciplinaria Editorial
       </h2>
-      <img src={plumaEditorial.src} alt="Logo editorial" class="w-18 sm:w-18 md:w-18 lg:w-24 h-auto"/>
+      <img
+        src={plumaEditorial.src}
+        alt="Logo editorial"
+        class="w-18 sm:w-18 md:w-18 lg:w-24 h-auto"
+      />
     </div>
     <div
       id="parrafo_editorial"
@@ -40,6 +45,7 @@ import plumaEditorial from "../../assets/pluma-editorial.png";
     id="libros"
     class="relative bg-gradient-to-b from-[#283886] h-[500px] overflow-hidden transition-all duration-1000 opacity-0 translate-y-8"
   >
+    <Carrusel3D client:load />
   </div>
 </section>
 
@@ -63,5 +69,4 @@ import plumaEditorial from "../../assets/pluma-editorial.png";
   );
 
   targets.forEach((target) => observer.observe(target));
-
 </script>
