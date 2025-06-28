@@ -23,12 +23,26 @@ import remi from "../assets/remi.png";
 
 <Layout>
   <main>
-    <SeccionImagenesInicio titulo="Centro de Investigación Multidisciplinario FMOcc UES"  imagen1={imagen1} imagen2={imagen2} imagen3={imagen3}/>
-    <SeccionCentroInvestigacion centroInvestigacion = {centroInvestigacion} investigador1 = {investigador1}/>
-    <SeccionProgramasInvestigacion programaSociologicos = {programaSociologicos} laboratorioPublica = {laboratorioPublica} programaJuridicos = {programaJuridicos} programaMedioAmbiente = {programaMedioAmbiente} programaInclusion = {programaInclusion}/>
-   <SeccionInvestigacionesDestacadas /> 
+    <SeccionImagenesInicio
+      titulo="Centro de Investigación"
+      subtitulo="Multidisciplinario FMOcc UES"
+      imagen1={imagen1}
+      imagen2={imagen2}
+      imagen3={imagen3}
+    />
+    <SeccionCentroInvestigacion
+      centroInvestigacion={centroInvestigacion}
+      investigador1={investigador1}
+    />
+    <SeccionProgramasInvestigacion
+      programaSociologicos={programaSociologicos}
+      laboratorioPublica={laboratorioPublica}
+      programaJuridicos={programaJuridicos}
+      programaMedioAmbiente={programaMedioAmbiente}
+      programaInclusion={programaInclusion}
+    />
+    <SeccionInvestigacionesDestacadas />
     <SeccionEditorial />
-    <SeccionRemi plumaEditorial = {plumaEditorial} remi = {remi}/>
+    <SeccionRemi plumaEditorial={plumaEditorial} remi={remi} />
   </main>
 </Layout>
- 
