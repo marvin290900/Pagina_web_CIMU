@@ -2,6 +2,11 @@
 import "../styles/global.css";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
+
+import cimuLogo from "../assets/cimu.png";
+import uesLogoBlanco from "../assets/uesLogoBlanco.svg";
+import uesLogoRojo from "../assets/uesLogoRojo.svg";
+import plumaLogo from "../assets/logo_pluma_multi.png";
 ---
 
 <!doctype html>
@@ -18,11 +23,11 @@ import Header from "../components/Header.astro";
     />
   </head>
   <body>
-    <Header />
+    <Header cimuLogo={cimuLogo} uesLogoBlanco={uesLogoBlanco} uesLogoRojo={uesLogoRojo}/>
     <main class="zoom-fade-in-up">
       <slot />
     </main>
-    <Footer />
+    <Footer cimuLogo={cimuLogo} uesLogoBlanco={uesLogoBlanco} plumaLogo={plumaLogo}/>
   </body>
 </html>
 

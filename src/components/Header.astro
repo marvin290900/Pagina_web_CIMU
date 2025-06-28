@@ -1,6 +1,5 @@
 ---
-import cimuLogo from "../assets/cimu.png";
-import uesLogoBlanco from "../assets/uesLogoBlanco.svg";
+const { cimuLogo, uesLogoBlanco, uesLogoRojo } = Astro.props;
 ---
 
 <!-- Se muestra cuando esta en laptop y tablet -->
@@ -14,6 +13,8 @@ import uesLogoBlanco from "../assets/uesLogoBlanco.svg";
         id="uesLogo"
         src={uesLogoBlanco.src}
         alt="uesLogo"
+        data-logo-blanco={uesLogoBlanco.src}
+        data-logo-rojo={uesLogoRojo.src}
         class="h-8 sm:h-8 md:h-10 lg:h-12 transition-all duration-300"
       /></a
     >
@@ -40,13 +41,15 @@ import uesLogoBlanco from "../assets/uesLogoBlanco.svg";
             <a
               href="/centro_de_investigacion"
               class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
-              >Centro de Investigación</a>
+              >Centro de Investigación</a
+            >
           </li>
           <li>
             <a
               href="/programa_de_investigaciones"
               class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
-              >Programas de Investigación</a>
+              >Programas de Investigación</a
+            >
           </li>
         </ul>
       </li>
@@ -60,13 +63,15 @@ import uesLogoBlanco from "../assets/uesLogoBlanco.svg";
             <a
               href="/multidisciplinaria_editorial"
               class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
-              >Multidisciplinaria Editorial</a>
+              >Multidisciplinaria Editorial</a
+            >
           </li>
           <li>
             <a
               href="/remi"
               class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
-              >REMI</a>
+              >REMI</a
+            >
           </li>
         </ul>
       </li>
@@ -99,13 +104,15 @@ import uesLogoBlanco from "../assets/uesLogoBlanco.svg";
           <a
             href="/centro_de_investigacion"
             class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
-            >Centro de Investigación</a>
+            >Centro de Investigación</a
+          >
         </li>
         <li>
           <a
             href="/programa_de_investigaciones"
             class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
-            >Programas de Investigación</a>
+            >Programas de Investigación</a
+          >
         </li>
       </ul>
     </details>
@@ -119,24 +126,29 @@ import uesLogoBlanco from "../assets/uesLogoBlanco.svg";
           <a
             href="/multidisciplinaria_editorial"
             class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
-            >Multidisciplinaria Editorial</a>
+            >Multidisciplinaria Editorial</a
+          >
         </li>
         <li>
           <a
             href="/remi"
             class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
-            >REMI</a>
+            >REMI</a
+          >
         </li>
       </ul>
     </details>
 
-    <a href="/contactenos" class="block py-2 px-3 rounded-md hover:bg-gray-100">Contáctenos</a>
+    <a href="/contactenos" class="block py-2 px-3 rounded-md hover:bg-gray-100"
+      >Contáctenos</a
+    >
   </div>
 </header>
 
 <script is:inline>
-  const uesLogoNegro = "/src/assets/uesLogoRojo.svg";
-  const uesLogoBlanco = "/src/assets/uesLogoBlanco.svg";
+  const logo = document.getElementById("uesLogo");
+  const uesLogoBlanco = logo.dataset.logoBlanco;
+  const uesLogoRojo = logo.dataset.logoRojo;
 
   // Cambiar color y logo al hacer scroll
   window.addEventListener("scroll", () => {
@@ -147,7 +159,7 @@ import uesLogoBlanco from "../assets/uesLogoBlanco.svg";
     if (window.scrollY > 50) {
       header.classList.add("bg-white", "text-black", "shadow-md");
       header.classList.remove("bg-transparent", "text-white");
-      logo.src = uesLogoNegro;
+      logo.src = uesLogoRojo;
     } else {
       header.classList.add("bg-transparent", "text-white");
       header.classList.remove("bg-white", "text-black", "shadow-md");
