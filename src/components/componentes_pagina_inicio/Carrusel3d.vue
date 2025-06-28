@@ -77,9 +77,7 @@ const swiperOptions = {
   width: 100%;
   
 }
-</style>
 
-<style>
 /* Estilos globales para los controles de Swiper */
 .swiper-button-next,
 .swiper-button-prev {
