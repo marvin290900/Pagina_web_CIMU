@@ -1,3 +1,7 @@
+---
+const { centroInvestigacion,investigador1 }  = Astro.props;
+---
+
 <section id="seccionCentroInvestigacion" class="py-8 bg-white text-center">
   <div class="container mx-auto">
     <div
@@ -25,7 +29,7 @@
       <div class="flex flex-col lg:flex-row items-center gap-8 mt-10">
         <div id="imagen_detalle" class="w-full lg:w-1/2">
           <img
-            src="/src/assets/imagen_inicio_1.png"
+            src={centroInvestigacion.src}
             alt="Imagen del CIMU"
             class="w-full h-auto rounded-lg shadow-md transform transition-transform duration-300 hover:scale-105"
           />
@@ -165,7 +169,7 @@
 
           <div class="w-24 h-24 rounded-full overflow-hidden bg-white z-10">
             <img
-              src="https://img.daisyui.com/images/profile/demo/distracted1@192.webp"
+              src={investigador1.src}
               class="w-full h-full object-cover"
               alt="Avatar"
             />
@@ -188,7 +192,7 @@
 
           <div class="w-24 h-24 rounded-full overflow-hidden bg-white z-10">
             <img
-              src="https://img.daisyui.com/images/profile/demo/distracted1@192.webp"
+              src={investigador1.src}
               class="w-full h-full object-cover"
               alt="Avatar"
             />
@@ -211,7 +215,7 @@
 
           <div class="w-24 h-24 rounded-full overflow-hidden bg-white z-10">
             <img
-              src="https://img.daisyui.com/images/profile/demo/distracted1@192.webp"
+              src={investigador1.src}
               class="w-full h-full object-cover"
               alt="Avatar"
             />

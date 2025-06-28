@@ -1,6 +1,5 @@
 ---
-import plumaEditorial from "../../assets/pluma-editorial.png";
-import remi from "../../assets/remi.png";
+const { plumaEditorial,remi }  = Astro.props;
 ---
 
 <section id="seccionEditorial" class="py-8 bg-white text-center">
@@ -31,7 +30,9 @@ import remi from "../../assets/remi.png";
       id="editorial_imagen"
       class="w-full shadow-none transition-all duration-1000 opacity-0 translate-y-8 "
     >
+    <a href="/remi">
       <img src={remi.src} alt="Portada revista remi" class="mx-auto" />
+      </a>
     </div>
   </div>
 </section>

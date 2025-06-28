@@ -3,17 +3,32 @@ import Layout from "../layouts/Layout.astro";
 import SeccionImagenesInicio from "../components/componentes_pagina_inicio/seccion_imagenes_inicio.astro";
 import SeccionCentroInvestigacion from "../components/componentes_pagina_inicio/seccion_centro_investigacion.astro";
 import SeccionProgramasInvestigacion from "../components/componentes_pagina_inicio/seccion_programas_investigacion.astro";
+import SeccionInvestigacionesDestacadas from "../components/componentes_pagina_inicio/seccion_investigaciones_destacadas.astro";
 import SeccionEditorial from "../components/componentes_pagina_inicio/seccion_editorial.astro";
 import SeccionRemi from "../components/componentes_pagina_inicio/seccion_remi.astro";
+
+import imagen1 from "../assets/imagen_inicio_1.jpg";
+import imagen2 from "../assets/imagen_inicio_2.jpg";
+import imagen3 from "../assets/imagen_inicio_3.jpg";
+import centroInvestigacion from "../assets/imagen_inicio_1.jpg";
+import investigador1 from "../assets/imagen_inicio_1.jpg";
+import programaSociologicos from "../assets/imagen_inicio_1.jpg";
+import laboratorioPublica from "../assets/imagen_inicio_1.jpg";
+import programaJuridicos from "../assets/imagen_inicio_1.jpg";
+import programaMedioAmbiente from "../assets/imagen_inicio_1.jpg";
+import programaInclusion from "../assets/imagen_inicio_1.jpg";
+import plumaEditorial from "../assets/pluma-editorial.png";
+import remi from "../assets/remi.png";
 ---
 
 <Layout>
   <main>
-    <SeccionImagenesInicio titulo="Centro de Investigación Multidisciplinario FMOcc UES"  imagen1="/src/assets/imagen_inicio_1.png" imagen2="/src/assets/imagen_inicio_1.png" imagen3="/src/assets/imagen_inicio_1.png"/>
-    <SeccionCentroInvestigacion />
-    <SeccionProgramasInvestigacion />
+    <SeccionImagenesInicio titulo="Centro de Investigación Multidisciplinario FMOcc UES"  imagen1={imagen1} imagen2={imagen2} imagen3={imagen3}/>
+    <SeccionCentroInvestigacion centroInvestigacion = {centroInvestigacion} investigador1 = {investigador1}/>
+    <SeccionProgramasInvestigacion programaSociologicos = {programaSociologicos} laboratorioPublica = {laboratorioPublica} programaJuridicos = {programaJuridicos} programaMedioAmbiente = {programaMedioAmbiente} programaInclusion = {programaInclusion}/>
+    <SeccionInvestigacionesDestacadas />
     <SeccionEditorial />
-    <SeccionRemi />
+    <SeccionRemi plumaEditorial = {plumaEditorial} remi = {remi}/>
   </main>
 </Layout>
  

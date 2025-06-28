@@ -2,11 +2,13 @@
 import Layout from "../layouts/Layout.astro";
 import SeccionImagenGeneral from "../components/seccion_imagen_general.astro"
 import SeccionContactenos from "../components/componentes_contactenos/seccion_contactenos.astro";
+
+import logoContactenosPagina from "/src/assets/logo_contactenos_pagina.png"
 ---
 
 <Layout>
   <main>
-    <SeccionImagenGeneral titulo="" imagen="/src/assets/logo_contactenos_pagina.png" />
+    <SeccionImagenGeneral titulo="¡Contáctenos!" imagen={logoContactenosPagina} />
     <SeccionContactenos />
   </main>
 </Layout> 
