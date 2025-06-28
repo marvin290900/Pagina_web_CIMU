@@ -5,12 +5,12 @@
     class="px-6 mb-10 transition-all duration-1000 opacity-0 translate-y-8"
   >
     <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
-      ¡Contácta con nosotros!
+      ¡Ponte en contacto con nosotros!
     </h2>
     <p class="text-gray-700 max-w-2xl mx-auto">
-      ¿Tienes dudas, sugerencias o deseas colaborar con nosotros? Puedes
-      escribirnos a través del siguiente formulario o mediante nuestros canales
-      de contacto.
+      Estamos a tu disposición para cualquier consulta, sugerencia o
+      colaboración. Puedes escribirnos mediante el formulario o a través de
+      nuestros medios de contacto.
     </p>
   </div>
 
@@ -86,6 +86,9 @@
       id="mapa"
       class="rounded-xl overflow-hidden shadow-md h-96 transition-all duration-1000 opacity-0 translate-y-8"
     >
+      <h3 class="text-xl font-semibold mb-2 text-left px-4 text-black">
+        Mapa de Ubicación:
+      </h3>
       <iframe
         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3871.804133540645!2d-89.5756796259317!3d13.970261192200217!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f62e8f193eda62f%3A0xd40e3f2801fddb61!2sFacultad%20Multidisciplinaria%20de%20Occidente%20UES!5e0!3m2!1ses-419!2ssv!4v1750880829353!5m2!1ses-419!2ssv"
         width="600"
@@ -244,8 +247,12 @@
       }
 
       const spinner = document.getElementById("spinner") as HTMLSpanElement;
-      const submitText = document.getElementById("submitText") as HTMLSpanElement;
-      const submitButton = document.getElementById("submitButton") as HTMLButtonElement;
+      const submitText = document.getElementById(
+        "submitText"
+      ) as HTMLSpanElement;
+      const submitButton = document.getElementById(
+        "submitButton"
+      ) as HTMLButtonElement;
 
       spinner.classList.remove("hidden");
       submitText.classList.add("hidden");
