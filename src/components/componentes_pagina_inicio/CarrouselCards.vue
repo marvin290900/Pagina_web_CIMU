@@ -68,7 +68,7 @@ const tarjetas = [
       <swiper-slide
         v-for="(card, index) in tarjetas"
         :key="index"
-        class="w-full max-w-md px-4 flex justify-center items-center"
+        class="w-full max-w-md flex justify-center items-center rounded-xl overflow-hidden"
       >
         <div class="w-full h-[248px] rounded-lg overflow-hidden bg-white shadow-lg flex">
           <div class="w-1/2 bg-[#CCCCCC] flex items-center justify-center">
