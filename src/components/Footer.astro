@@ -1,5 +1,5 @@
 ---
-const { cimuLogo, uesLogoBlanco, plumaLogo } = Astro.props;
+const { cimuLogo, uesLogoBlanco, plumaLogo, submarcaCIMU } = Astro.props;
 ---
 
 <footer id="footer" class="bg-base-100 text-base-content p-5">
@@ -28,6 +28,13 @@ const { cimuLogo, uesLogoBlanco, plumaLogo } = Astro.props;
           class="h-10 md:h-8 lg:h-10 xl:h-15"
         />
         </a>
+        <a href="/">
+        <img
+          src={submarcaCIMU.src}
+          alt="Logo Ues"
+          class="h-10 md:h-8 lg:h-10 xl:h-15"
+        />
+        </a>
         
       </div>
     </aside>
@@ -35,15 +42,15 @@ const { cimuLogo, uesLogoBlanco, plumaLogo } = Astro.props;
       <h6 class="footer-title">Contacto</h6>
       <div class="flex items-center gap-2 my-1">
         <span class="mdi mdi-map-marker text-gray-600"></span>
-        <span>123 Calle Principal, Ciudad</span>
+        <span>Santa Ana, El Salvador</span>
       </div>
       <div class="flex items-center gap-2 my-1">
         <span class="mdi mdi-phone text-gray-600"></span>
-        <span>+503 1234 5678</span>
+        <span>+503 1234-5678</span>
       </div>
       <div class="flex items-center gap-2 my-1">
         <span class="mdi mdi-email text-gray-600"></span>
-        <span>contacto@ejemplo.com</span>
+        <span>editorial.occidente@ues.edu.sv</span>
       </div>
     </a>
     <a href="/contactenos" class="avatar-group -space-x-6 flex">
