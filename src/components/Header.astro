@@ -28,9 +28,11 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo } = Astro.props;
   </div>
 
   <!-- Menú para pantallas grandes -->
-  <div class="flex-none hidden sm:block mr-10">
+  <div class="flex-none hidden sm:block mr-10 md:mr-5">
     <ul class="menu menu-horizontal px-1" id="menuPrincipal">
       <li><a href="/">Inicio</a></li>
+      <li><a href="/sobre_nosotros">Sobre Nosotros</a></li>
+      <li> <a href="/gaceta_multidisciplinaria" class="block max-w-[90px] truncate lg:max-w-none lg:whitespace-normal lg:overflow-visible lg:text-ellipsis-none">Gaceta Multidisciplinaria</a></li>
 
       <li class="group relative">
         <a class="">Investigaciones </a>
@@ -88,6 +90,8 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo } = Astro.props;
     class="fixed left-0 right-0 top-16 bg-white text-black rounded-md shadow-lg p-4 z-50 hidden animate-fade-in w-full max-w-md mx-auto"
   >
     <a href="/" class="block py-2 px-3 rounded-md hover:bg-gray-100">Inicio</a>
+    <a href="/sobre_nosotros" class="block py-2 px-3 rounded-md hover:bg-gray-100">Sobre Nosotros</a>
+    <a href="/gaceta_multidisciplinaria" class="block py-2 px-3 rounded-md hover:bg-gray-100">Gaceta Multidisciplinaria</a>
 
     <details>
       <summary class="cursor-pointer py-2 px-3 hover:bg-gray-100 rounded-md"
