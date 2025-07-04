@@ -1,0 +1,48 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SeccionImagenGeneral from "../../components/seccion_imagen_general.astro"
+import logoRemiPagina from "../../assets/logo_remi_pagina.png";
+
+import { getInvestigadorPorId } from "../../lib/investigadores.js";
+const { id } = Astro.params;
+const investigador = await getInvestigadorPorId(id);
+---
+
+<Layout>
+  <main>
+    <SeccionImagenGeneral titulo="" imagen={logoRemiPagina} />
+    <section id="investigador_seleccionado" class="py-8 bg-white text-center">
+      <div class="container mx-auto">
+        <div class="text-black">
+          {
+            investigador ? (
+              <section class="p-8 max-w-3xl mx-auto">
+                <h1 class="text-3xl font-bold mb-4">{investigador.nombre}</h1>
+                <img
+                  src={investigador.foto || "/default-avatar.png"}
+                  alt={`Foto de ${investigador.nombre}`}
+                  class="rounded-lg mb-4 w-48 h-48 object-cover"
+                />
+                <p>
+                  <strong>Cargo:</strong> {investigador.cargo}
+                </p>
+                <p>
+                  <strong>Correo:</strong> {investigador.correo}
+                </p>
+                <p>
+                  <strong>Biografía:</strong>{" "}
+                  {investigador.bio || "No disponible"}
+                </p>
+                {/* otros datos que tengas */}
+              </section>
+            ) : (
+              <p class="text-center text-red-600 mt-20">
+                Investigador no encontrado.
+              </p>
+            )
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>

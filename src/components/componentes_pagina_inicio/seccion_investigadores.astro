@@ -26,7 +26,8 @@ const { investigadores, imagenDefault } = Astro.props;
     >
       {
   investigadores.map((inv) => (
-    <div class="flex flex-col items-center w-full max-w-xs border-2 border-transparent rounded-lg transition-transform duration-300 hover:scale-105 hover:border-[#28388659] cursor-pointer">
+    
+    <a href={`/investigadores/${encodeURIComponent(inv._id)}`} class="flex flex-col items-center w-full max-w-xs border-2 border-transparent rounded-lg transition-transform duration-300 hover:scale-105 hover:border-[#28388659] cursor-pointer">
       <div class="relative w-28 h-28 flex items-center justify-center mb-2 ">
         <div class="absolute inset-0 rounded-full border-4 animate-spin-gradient "></div>
         <div class="w-24 h-24 rounded-full overflow-hidden bg-white z-10">
@@ -42,7 +43,7 @@ const { investigadores, imagenDefault } = Astro.props;
         <p class="text-sm">{inv.cargo}</p>
         <p class="text-sm ">{inv.correo}</p>
       </div>
-    </div>
+    </a>
   ))
 }
 
