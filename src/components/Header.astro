@@ -11,18 +11,20 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo } = Astro.props;
     <a href="/"
       ><img
         id="uesLogo"
+        title="Universidad de El Salvador"
         src={uesLogoBlanco.src}
         alt="uesLogo"
         data-logo-blanco={uesLogoBlanco.src}
         data-logo-rojo={uesLogoRojo.src}
-        class="h-8 sm:h-8 md:h-10 lg:h-12 transition-all duration-300"
+        class="h-8 sm:h-8 md:h-10 lg:h-12 transition-all duration-300 hover:scale-105 hover:brightness-110"
       /></a
     >
     <a href="/"
       ><img
         src={cimuLogo.src}
         alt="cimuLogo"
-        class="h-8 sm:h-8 md:h-10 lg:h-12 transition-all duration-300"
+        title="Centro de Investigación Multidisciplinario FMOcc UES"
+        class="h-8 sm:h-8 md:h-10 lg:h-12 transition-all duration-300 hover:scale-105 hover:brightness-110"
       /></a
     >
   </div>
