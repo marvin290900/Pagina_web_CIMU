@@ -54,7 +54,7 @@ const tarjetas = [
 </script>
 
 <template>
-  <div class="max-w-8xl mx-auto py-10">
+  <div class="max-w-7xl mx-auto py-10">
     <swiper
       :modules="modules"
       :effect="swiperOptions.effect"
