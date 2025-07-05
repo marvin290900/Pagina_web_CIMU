@@ -1,59 +1,71 @@
 ---
-const { titulo, imagen1, imagen2, imagen3 } = Astro.props;
+const { titulo, subtitulo, imagen1, imagen2, imagen3 } = Astro.props;
 ---
 
 <section id="seccionImagenesInicio">
   <div class="relative w-full overflow-hidden">
-    <!-- Texto fijo -->
+    <!-- Texto en dos líneas -->
     <div
-      class="absolute bottom-4 left-4 md:bottom-20 md:left-10 z-20 text-white max-w-xs md:max-w-xl"
+      class="absolute bottom-10 left-5 md:bottom-20 md:left-10 lg:bottom-20 lg:left-10 z-20 text-white max-w-xs md:max-w-xl"
     >
-      <h1 id="tituloAnimado" class="text-xl sm:text-xl md:text-4xl font-bold animar-zoom-in">
-        {titulo}
-      </h1>
+      <h1
+        id="linea1"
+        class="text-xl sm:text-xl md:text-4xl font-bold whitespace-pre"
+        data-texto={titulo}
+      ></h1>
+      <h1
+        id="linea2"
+        class="text-sm sm:text-sm md:text-2xl lg:text-2xl  font-semibold mt-1 whitespace-pre"
+        data-texto={subtitulo}
+      ></h1>
     </div>
 
-    <!-- Carrusel con imagen duplicada al final -->
+    <!-- Carrusel -->
     <div
       id="carousel"
       class="flex transition-transform duration-1000 ease-in-out h-[40vh] sm:h-[50vh] lg:h-screen"
     >
       <div class="w-full flex-shrink-0">
-        <img
-          src={imagen1.src}
-          class="w-full h-full object-cover"
-        />
+        <img src={imagen1.src} class="w-full h-full object-cover" />
       </div>
       <div class="w-full flex-shrink-0">
-        <img
-          src={imagen2.src}
-          class="w-full h-full object-cover"
-        />
+        <img src={imagen2.src} class="w-full h-full object-cover" />
       </div>
       <div class="w-full flex-shrink-0">
-        <img
-          src={imagen3.src}
-          class="w-full h-full object-cover"
-        />
+        <img src={imagen3.src} class="w-full h-full object-cover" />
       </div>
-      <!-- duplicado de la primera -->
       <div class="w-full flex-shrink-0">
-        <img
-          src={imagen1.src}
-          class="w-full h-full object-cover"
-        />
+        <img src={imagen1.src} class="w-full h-full object-cover" />
       </div>
     </div>
   </div>
 </section>
 
-<script>
-   document.addEventListener("DOMContentLoaded", () => {
-    const track = document.getElementById("carousel") as HTMLElement;
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", () => {
+    function animarTexto(id) {
+      const el = document.getElementById(id);
+      const texto = el.dataset.texto;
+      let i = 0;
+      const escribir = () => {
+        if (i < texto.length) {
+          el.textContent += texto.charAt(i);
+          i++;
+          setTimeout(escribir, 50);
+        }
+      };
+      escribir();
+    }
+
+    animarTexto("linea1");
+    setTimeout(() => animarTexto("linea2"), 600); // retraso entre líneas
+
+    // Carrusel
+    const track = document.getElementById("carousel");
     const totalSlides = 3;
     let index = 0;
 
-    function goToSlide(i:number, animate = true) {
+    function goToSlide(i, animate = true) {
       track.style.transitionDuration = animate ? "1000ms" : "0ms";
       track.style.transform = `translateX(-${i * 100}%)`;
     }
@@ -70,24 +82,4 @@ const { titulo, imagen1, imagen2, imagen3 } = Astro.props;
       }
     }, 5000);
   });
-
-  document.addEventListener("DOMContentLoaded", () => {
-    const titulo = document.getElementById("tituloAnimado") as HTMLElement;
-    setTimeout(() => {
-      titulo.classList.add("animado");
-    }, 300); 
-  });
 </script>
-
-<style>
-  .animar-zoom-in {
-    opacity: 0;
-    transform: scale(0.5);
-    transition: transform 0.6s ease-out, opacity 0.6s ease-out;
-  }
-
-  .animado {
-    opacity: 1;
-    transform: scale(1);
-  }
-</style>

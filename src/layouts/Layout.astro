@@ -7,6 +7,7 @@ import cimuLogo from "../assets/cimu.png";
 import uesLogoBlanco from "../assets/uesLogoBlanco.svg";
 import uesLogoRojo from "../assets/uesLogoRojo.svg";
 import plumaLogo from "../assets/logo_pluma_multi.png";
+import submarcaCIMU from "../assets/logo_submarca.png";
 ---
 
 <!doctype html>
@@ -16,18 +17,20 @@ import plumaLogo from "../assets/logo_pluma_multi.png";
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <title>CIMU</title>
+    <title>Centro de Investigación - CIMU</title>
     <link
       href="https://cdn.materialdesignicons.com/7.2.96/css/materialdesignicons.min.css"
       rel="stylesheet"
     />
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+
   </head>
   <body>
     <Header cimuLogo={cimuLogo} uesLogoBlanco={uesLogoBlanco} uesLogoRojo={uesLogoRojo}/>
     <main class="zoom-fade-in-up">
       <slot />
     </main>
-    <Footer cimuLogo={cimuLogo} uesLogoBlanco={uesLogoBlanco} plumaLogo={plumaLogo}/>
+    <Footer cimuLogo={cimuLogo} uesLogoBlanco={uesLogoBlanco} plumaLogo={plumaLogo} submarcaCIMU={submarcaCIMU} />
   </body>
 </html>
 
@@ -37,6 +40,7 @@ import plumaLogo from "../assets/logo_pluma_multi.png";
     margin: 0;
     width: 100%;
     height: 100%;
+    font-family: 'Spectral', serif;
   }
 
   @keyframes zoomFadeInUp {

@@ -1,13 +1,16 @@
 ---
 const { titulo, imagen } = Astro.props;
 ---
-
 <section id="seccionImageneGeneral">
   <div class="relative w-full h-[40vh] sm:h-[50vh] lg:h-screen overflow-hidden">
-    <div class="absolute bottom-4 left-4 md:bottom-20 md:left-10 z-20 text-white max-w-xs md:max-w-xl">
-      <h1 id="tituloAnimado" class="text-xl sm:text-xl md:text-4xl font-bold animar-zoom-in">
-        {titulo}
-      </h1>
+    <div 
+      class="absolute bottom-10 left-5 md:bottom-20 md:left-10 lg:bottom-20 lg:left-10 z-20 text-white max-w-xs md:max-w-xl"
+    >
+      <h1 
+        id="tituloAnimado" 
+        class="text-xl sm:text-xl md:text-4xl font-bold whitespace-pre"
+        data-titulo={titulo}
+      ></h1>
     </div>
     <img
       src={imagen.src}
@@ -17,24 +20,23 @@ const { titulo, imagen } = Astro.props;
   </div>
 </section>
 
-<script>
+<!-- Script para animar letra por letra -->
+<script is:inline>
   document.addEventListener("DOMContentLoaded", () => {
-    const titulo = document.getElementById("tituloAnimado") as HTMLElement;
-    setTimeout(() => {
-      titulo.classList.add("animado");
-    }, 300); 
+    const tituloElemento = document.getElementById("tituloAnimado");
+    const texto = tituloElemento.dataset.titulo;
+    let i = 0;
+
+    const escribir = () => {
+      if (i < texto.length) {
+        tituloElemento.textContent += texto.charAt(i);
+        i++;
+        setTimeout(escribir, 60);
+      }
+    };
+
+    escribir();
   });
 </script>
 
-<style>
-  .animar-zoom-in {
-    opacity: 0;
-    transform: scale(0.5);
-    transition: transform 0.6s ease-out, opacity 0.6s ease-out;
-  }
 
-  .animado {
-    opacity: 1;
-    transform: scale(1);
-  }
-</style>
