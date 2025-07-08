@@ -1,10 +1,13 @@
 import axios from 'axios';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export const couch = axios.create({
-  baseURL: 'http://localhost:5984', // Cambia si usas otro host o puerto
+  baseURL: process.env.COUCHDB_URL, 
   auth: {
-    username: 'admin', // tu usuario de CouchDB
-    password: 'admin', // tu contraseña
+    username: process.env.COUCHDB_USER,
+    password: process.env.COUCHDB_PASSWORD,
   },
   headers: {
     'Content-Type': 'application/json',

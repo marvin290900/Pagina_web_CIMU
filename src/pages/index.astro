@@ -22,9 +22,9 @@ import programaInclusion from "../assets/imagen_inicio_1.jpg";
 import plumaEditorial from "../assets/pluma-editorial.png";
 import remi from "../assets/remi.png";
 //importo las funciones de las bases de datos
-import { getInvestigadores } from "../lib/investigadores.js"
+import { getInvestigadoresDirectivos } from "../lib/investigadores.js"
 
-const investigadores = await getInvestigadores(); //obtengo todos los investigadores
+const InvestigadoresDirectivos = await getInvestigadoresDirectivos(); //obtengo todos los investigadores
 ---
 
 <Layout>
@@ -37,7 +37,7 @@ const investigadores = await getInvestigadores(); //obtengo todos los investigad
       imagen3={imagen3}
     />
     <SeccionCentroInvestigacion centroInvestigacion={centroInvestigacion} />
-    <SeccionInvestigadores investigadores={investigadores} imagenDefault={imagenDefault}/>
+    <SeccionInvestigadores InvestigadoresDirectivos={InvestigadoresDirectivos} imagenDefault={imagenDefault}/>
     <SeccionProgramasInvestigacion
       programaSociologicos={programaSociologicos}
       laboratorioPublica={laboratorioPublica}
