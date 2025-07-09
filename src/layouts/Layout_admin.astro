@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import NavbarAdmin from "../components/componentes_admin/navbar_admin.astro" 
 ---
 
 <!doctype html>
@@ -9,9 +10,16 @@ import "../styles/global.css";
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <title>Centro de Investigación - CIMU</title>
+    <title>Panel Administrativo - CIMU</title>
+    <link
+      href="https://cdn.materialdesignicons.com/7.2.96/css/materialdesignicons.min.css"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+
   </head>
   <body>
+    <NavbarAdmin />
     <main>
       <slot />
     </main>

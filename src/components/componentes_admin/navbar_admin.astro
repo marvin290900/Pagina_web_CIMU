@@ -1,0 +1,120 @@
+---
+
+---
+
+<!-- Se muestra cuando esta en laptop y tablet -->
+<header
+  id="mainHeader"
+  class="navbar fixed top-0 left-0 w-full z-50 transition-colors duration-300 bg-gray-900 text-white shadow-none"
+>
+  <div class="w-full flex items-center justify-between px-4 md:px-6">
+    <!-- Título o marca -->
+    <div class="text-lg font-bold uppercase">Panel de Administración</div>
+
+    <!-- Menú centrado (oculto en móvil) -->
+    <nav class="hidden sm:flex flex-1 justify-center">
+      <ul class="menu menu-horizontal px-1" id="menuPrincipal">
+        <li><a href="/admin/investigadores">Investigadores/as</a></li>
+        <li><a href="/">Blog</a></li>
+        <li><a href="/">Multidisciplinaria</a></li>
+        <li><a href="/">REMI</a></li>
+        <li><a href="/">Investigaciones</a></li>
+      </ul>
+    </nav>
+
+    <!-- Avatar del usuario (derecha) -->
+    <div class="flex items-center">
+      <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white">
+        <img
+          src="https://i.pravatar.cc/150?img=3"
+          alt="Usuario logueado"
+          class="w-full h-full object-cover"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- Menú para móvil -->
+  <div class="flex-none sm:hidden relative">
+    <!-- Botón hamburguesa -->
+    <button id="toggleMenu" class="btn btn-square btn-ghost">
+      <span class="mdi mdi-menu text-2xl"></span>
+    </button>
+  </div>
+
+  <!-- Menú desplegable pegado a la izquierda -->
+  <div
+    id="mobileMenu"
+    class="fixed left-0 right-0 top-16 bg-gray-900 text-white rounded-md shadow-lg p-4 z-50 hidden animate-fade-in w-full max-w-md mx-auto"
+  >
+    <a
+      href="/"
+      class="block py-2 px-3 rounded-md hover:bg-gray-500 hover:text-white"
+      >Investigadores/as</a
+    >
+    <a
+      href="/"
+      class="block py-2 px-3 rounded-md hover:bg-gray-500 hover:text-white"
+      >Blog</a
+    >
+    <a
+      href="/"
+      class="block py-2 px-3 rounded-md hover:bg-gray-500 hover:text-white"
+      >Multidisciplinaria</a
+    >
+    <a
+      href="/"
+      class="block py-2 px-3 rounded-md hover:bg-gray-500 hover:text-white"
+      >REMI</a
+    >
+    <a
+      href="/"
+      class="block py-2 px-3 rounded-md hover:bg-gray-500 hover:text-white"
+      >Investigaciones</a
+    >
+  </div>
+</header>
+
+<script is:inline>
+  // Cierra todos los submenús cuando se hace clic en un enlace
+  document.querySelectorAll("#menuPrincipal a").forEach((link) => {
+    link.addEventListener("click", () => {
+      document.querySelectorAll("#menuPrincipal li ul").forEach((submenu) => {
+        submenu.classList.remove("opacity-100", "pointer-events-auto");
+        submenu.classList.add("opacity-0", "pointer-events-none");
+      });
+    });
+  });
+
+  // Cierra submenús al cambiar de página
+  window.addEventListener("beforeunload", () => {
+    document.querySelectorAll("#menuPrincipal li ul").forEach((submenu) => {
+      submenu.classList.remove("opacity-100", "pointer-events-auto");
+      submenu.classList.add("opacity-0", "pointer-events-none");
+    });
+  });
+
+  const toggleBtn = document.getElementById("toggleMenu");
+  const mobileMenu = document.getElementById("mobileMenu");
+
+  toggleBtn.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+  });
+
+  // Cerrar al hacer clic fuera del menú
+  document.addEventListener("click", (event) => {
+    const isClickInsideMenu = mobileMenu.contains(event.target);
+    const isClickOnButton = toggleBtn.contains(event.target);
+
+    if (!isClickInsideMenu && !isClickOnButton) {
+      mobileMenu.classList.add("hidden");
+    }
+  });
+
+  // Cierra al hacer clic en cualquier enlace del menú móvil
+  mobileMenu.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      mobileMenu.classList.add("hidden");
+    });
+  });
+</script>
