@@ -10,14 +10,16 @@ const { cimuLogo, uesLogoBlanco, plumaLogo, submarcaCIMU } = Astro.props;
         <img
           src={cimuLogo.src}
           alt="Logo Cimu"
-          class="h-10 md:h-8 lg:h-10 xl:h-15"
+          title="Centro de Investigación Multidisciplinario FMOcc UES"
+          class="h-10 md:h-8 lg:h-10 xl:h-15 hover:scale-105 hover:brightness-110 transition-all duration-300"
         />
         </a> 
         <a href="/">
         <img
           src={plumaLogo.src}
           alt="Logo Pluma"
-          class="h-10 md:h-8 lg:h-10 xl:h-15"
+          title="Multidisciplinaria Editorial"
+          class="h-10 md:h-8 lg:h-10 xl:h-15 hover:scale-105 hover:brightness-110 transition-all duration-300"
         />
         </a>
 
@@ -25,20 +27,22 @@ const { cimuLogo, uesLogoBlanco, plumaLogo, submarcaCIMU } = Astro.props;
         <img
           src={uesLogoBlanco.src}
           alt="Logo Ues"
-          class="h-10 md:h-8 lg:h-10 xl:h-15"
+          title="Universidad de El Salvador"
+          class="h-10 md:h-8 lg:h-10 xl:h-15 hover:scale-105 hover:brightness-110 transition-all duration-300"
         />
         </a>
         <a href="/">
         <img
           src={submarcaCIMU.src}
-          alt="Logo Ues"
-          class="h-10 md:h-8 lg:h-10 xl:h-15"
+          alt="sub marca CIMU"
+          title="Sub marca CIMU"
+          class="h-10 md:h-8 lg:h-10 xl:h-15 hover:scale-105 hover:brightness-110 transition-all duration-300"
         />
         </a>
         
       </div>
     </aside>
-    <a href="/contactenos">
+    <a href="/contactenos" title="Ponte en contacto con nostros" class="hover:scale-105 hover:brightness-110 transition-all duration-300">
       <h6 class="footer-title">Contacto</h6>
       <div class="flex items-center gap-2 my-1">
         <span class="mdi mdi-map-marker text-gray-600"></span>
@@ -53,7 +57,7 @@ const { cimuLogo, uesLogoBlanco, plumaLogo, submarcaCIMU } = Astro.props;
         <span>editorial.occidente@ues.edu.sv</span>
       </div>
     </a>
-    <a href="/contactenos" class="avatar-group -space-x-6 flex">
+    <a href="/contactenos" class="avatar-group -space-x-6 flex hover:scale-105 hover:brightness-110 transition-all duration-300" title="Ponte en contacto con nostros">
       <div
         class="avatar rounded-full bg-blue-600 w-12 h-12 flex items-center justify-center text-white text-xl"
       >

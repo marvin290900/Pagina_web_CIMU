@@ -16,6 +16,7 @@
     "axios": "^1.10.0",
     "daisyui": "^5.0.43",
     "dotenv": "^17.1.0",
+    "formidable": "^3.5.4",
     "swiper": "^11.2.8",
     "tailwindcss": "^4.1.10"
   }
