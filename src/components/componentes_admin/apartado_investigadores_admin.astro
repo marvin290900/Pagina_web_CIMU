@@ -69,4 +69,42 @@
     </form>
   </div>
 
-  
+  <script>
+  const form = document.getElementById('formAgregarInvestigador');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const nombre = form.nombre.value;
+    const email = form.email.value;
+    const departamento = form.departamento.value;
+    const descripcion = form.descripcion.value;
+
+    const data = {
+      nombre,
+      email,
+      departamento,
+      descripcion,
+      creado_en: new Date().toISOString()
+    };
+
+    try {
+      const res = await fetch('/api/investigadores/agregar', { // <-- ¡ruta correcta!
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      const result = await res.json();
+      if (result.ok) {
+        alert('Investigador agregado exitosamente ✅');
+        form.reset();
+      } else {
+        alert('Error al agregar: ' + result.error);
+      }
+    } catch (err) {
+      console.error('Error al enviar:', err);
+      alert('Hubo un error al enviar los datos.');
+    }
+  });
+</script>
