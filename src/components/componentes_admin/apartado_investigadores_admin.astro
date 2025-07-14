@@ -1,0 +1,242 @@
+<section id="apartadoInvestigadoresAdmin" class="py-8 bg-white text-black">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-semibold">Investigadores Registrados</h2>
+      <button
+        id="btnMostrarFormulario"
+        class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+      >
+        + Agregar Investigador
+      </button>
+    </div>
+
+    <!-- Formulario oculto por defecto -->
+    <div id="formularioInvestigador" class="mb-8 hidden">
+      <form id="formAgregarInvestigador" class="space-y-5 bg-gray-100 p-6 rounded shadow">
+        <div>
+          <label for="nombre" class="block font-medium">Nombre completo</label>
+          <input id="nombre" name="nombre" type="text" required class="input" />
+        </div>
+
+        <div>
+          <label for="email" class="block font-medium">Correo electrónico</label>
+          <input id="email" name="email" type="email" required class="input" />
+        </div>
+
+        <div>
+          <label for="departamento" class="block font-medium">Departamento</label>
+          <input id="departamento" name="departamento" type="text" class="input" />
+        </div>
+
+        <div>
+          <label for="descripcion" class="block font-medium">Descripción</label>
+          <textarea id="descripcion" name="descripcion" rows="3" class="input"></textarea>
+        </div>
+
+        <button
+          type="submit"
+          class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
+        >
+          Guardar Investigador
+        </button>
+      </form>
+    </div>
+
+<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+  <div class="flex gap-2">
+    <select id="filtroCategoria" class="border border-gray-300 rounded px-2 py-1">
+      <option value="">Todos</option>
+      <option value="directivo">Directivos</option>
+      <option value="pasantes">Pasantes</option>
+    </select>
+    <input
+      id="filtroNombre"
+      type="text"
+      placeholder="Buscar por nombre"
+      class="border border-gray-300 rounded px-3 py-1"
+    />
+  </div>
+</div>
+
+    <!-- Lista de investigadores -->
+    <div id="listaInvestigadores" class="space-y-4">
+      <!-- JS insertará aquí las tarjetas -->
+       <div class="border border-gray-300 p-4 rounded-lg shadow-sm bg-white flex justify-between items-center">
+  <!-- Izquierda: avatar + info -->
+  <div class="flex items-center gap-4">
+    <!-- Avatar -->
+    <img
+      src="https://i.pravatar.cc/80?img=4"
+      alt="Avatar del investigador"
+      class="w-16 h-16 rounded-full object-cover border border-gray-400"
+    />
+
+    <!-- Info -->
+    <div>
+      <h3 class="text-lg font-semibold">Dr. Juan López</h3>
+      <p class="text-sm text-gray-700">juan.lopez@universidad.edu</p>
+      <p class="text-sm text-gray-600">Departamento: Ciencias Sociales</p>
+    </div>
+  </div>
+
+  <!-- Derecha: botones -->
+  <div class="flex gap-3">
+    <button class="px-4 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">
+      Editar
+    </button>
+    <button class="px-4 py-1 bg-red-600 text-white rounded hover:bg-red-700">
+      Eliminar
+    </button>
+  </div>
+</div>
+
+
+    </div>
+  </div>
+</section>
+
+
+
+<script>
+  const form = document.getElementById('formAgregarInvestigador') as HTMLFormElement;
+  const formulario = document.getElementById('formularioInvestigador') as HTMLDivElement;
+  const btnMostrar = document.getElementById('btnMostrarFormulario') as HTMLButtonElement;
+  const listaInvestigadores = document.getElementById('listaInvestigadores') as HTMLDivElement;
+
+  const filtroCategoria = document.getElementById('filtroCategoria');
+const filtroNombre = document.getElementById('filtroNombre');
+
+// Escuchar cambios en filtros
+filtroCategoria.addEventListener('change', renderInvestigadores);
+filtroNombre.addEventListener('input', renderInvestigadores);
+
+  let investigadores = [];
+
+  // Mostrar u ocultar formulario
+  btnMostrar.addEventListener('click', () => {
+    formulario.classList.toggle('hidden');
+    btnMostrar.textContent = formulario.classList.contains('hidden')
+      ? '+ Agregar Investigador'
+      : 'Ocultar Formulario';
+  });
+
+  // Cargar investigadores
+  async function cargarInvestigadores() {
+    try {
+      const res = await fetch('/api/investigadores/obtener');
+      const data = await res.json();
+      investigadores = data.docs || [];
+      renderInvestigadores();
+    } catch (err) {
+      console.error('Error cargando investigadores:', err);
+    }
+  }
+
+  // Renderizar investigadores
+ function renderInvestigadores() {
+  const categoriaSeleccionada = filtroCategoria.value.toLowerCase();
+  const textoBusqueda = filtroNombre.value.toLowerCase();
+
+  const filtrados = investigadores.filter((inv) => {
+    const coincideCategoria = !categoriaSeleccionada || inv.categoria?.toLowerCase() === categoriaSeleccionada;
+    const coincideNombre = inv.nombre?.toLowerCase().includes(textoBusqueda);
+    return coincideCategoria && coincideNombre;
+  });
+
+  listaInvestigadores.innerHTML = '';
+
+  filtrados.forEach((inv) => {
+    const card = document.createElement('div');
+    card.className = 'border border-gray-300 p-4 rounded-lg shadow-sm bg-white flex justify-between items-center';
+
+    card.innerHTML = `
+      <div class="flex items-center gap-4">
+        <img
+          src="https://i.pravatar.cc/80?u=${inv._id}" 
+          alt="Avatar del investigador"
+          class="w-16 h-16 rounded-full object-cover border border-gray-400"
+        />
+        <div>
+          <h3 class="text-lg font-semibold">${inv.nombre}</h3>
+          <p class="text-sm text-gray-700">${inv.email}</p>
+          <p class="text-sm text-gray-600">${inv.departamento || ''}</p>
+          <p class="text-sm text-gray-500">${inv.descripcion || ''}</p>
+        </div>
+      </div>
+
+      <div class="flex gap-2">
+        <button onclick="editarInvestigador('${inv._id}')" class="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">
+          Editar
+        </button>
+        <button onclick="eliminarInvestigador('${inv._id}')" class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">
+          Eliminar
+        </button>
+      </div>
+    `;
+
+    listaInvestigadores.appendChild(card);
+  });
+}
+
+
+
+  // Agregar investigador
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const nuevo = {
+      nombre: form.nombre.value,
+      email: form.email.value,
+      departamento: form.departamento.value,
+      descripcion: form.descripcion.value,
+      creado_en: new Date().toISOString()
+    };
+
+    try {
+      const res = await fetch('/api/investigadores/agregar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(nuevo)
+      });
+      const result = await res.json();
+      if (result.ok) {
+        alert('✅ Investigador agregado');
+        form.reset();
+        formulario.classList.add('hidden');
+        await cargarInvestigadores();
+      } else {
+        alert('❌ Error: ' + result.error);
+      }
+    } catch (err) {
+      console.error('Error al enviar:', err);
+      alert('❌ Hubo un error');
+    }
+  });
+
+  // Eliminar investigador
+  async function eliminarInvestigador(id) {
+    if (!confirm('¿Estás seguro de eliminar este investigador?')) return;
+    try {
+      const res = await fetch(`/api/investigadores/${id}`, {
+        method: 'DELETE'
+      });
+      const result = await res.json();
+      if (result.ok) {
+        alert('🗑️ Investigador eliminado');
+        await cargarInvestigadores();
+      } else {
+        alert('Error al eliminar');
+      }
+    } catch (err) {
+      console.error('Error al eliminar:', err);
+    }
+  }
+
+  // Placeholder para editar
+  function editarInvestigador(id) {
+    alert('🛠️ Función de edición aún no implementada');
+    // Puedes usar los datos de investigadores.find(i => i._id === id) y llenar el formulario
+  }
+
+  // Cargar al inicio
+  cargarInvestigadores();
+</script>

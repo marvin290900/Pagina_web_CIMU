@@ -12,19 +12,19 @@ import SeccionRemi from "../components/componentes_pagina_inicio/seccion_remi.as
 import imagen1 from "../assets/imagen_inicio_1.jpg";
 import imagen2 from "../assets/imagen_inicio_2.jpg";
 import imagen3 from "../assets/imagen_inicio_3.jpg";
-import centroInvestigacion from "../assets/imagen_inicio_1.jpg";
+import centroInvestigacion from "../assets/imagen_centro_investigacion.jpg";
 import imagenDefault from "../assets/imagen_default_2.png"
-import programaSociologicos from "../assets/imagen_inicio_1.jpg";
+import programaSociologicos from "../assets/programa_sociologicos.jpg";
 import laboratorioPublica from "../assets/logo_opinion_publica.png";
-import programaJuridicos from "../assets/imagen_inicio_1.jpg";
-import programaMedioAmbiente from "../assets/imagen_inicio_1.jpg";
-import programaInclusion from "../assets/imagen_inicio_1.jpg";
+import programaJuridicos from "../assets/programa_juridico.jpg";
+import programaMedioAmbiente from "../assets/programa_medioAmbiente.jpg";
+import programaInclusion from "../assets/programa_inclusion.jpg";
 import plumaEditorial from "../assets/pluma-editorial.png";
 import remi from "../assets/remi.png";
 //importo las funciones de las bases de datos
-import { getInvestigadores } from "../lib/investigadores.js"
+import { getInvestigadoresDirectivos } from "../lib/investigadores.js"
 
-const investigadores = await getInvestigadores(); //obtengo todos los investigadores
+const InvestigadoresDirectivos = await getInvestigadoresDirectivos(); //obtengo todos los investigadores
 ---
 
 <Layout>
@@ -37,7 +37,7 @@ const investigadores = await getInvestigadores(); //obtengo todos los investigad
       imagen3={imagen3}
     />
     <SeccionCentroInvestigacion centroInvestigacion={centroInvestigacion} />
-    <SeccionInvestigadores investigadores={investigadores} imagenDefault={imagenDefault}/>
+    <SeccionInvestigadores InvestigadoresDirectivos={InvestigadoresDirectivos} imagenDefault={imagenDefault}/>
     <SeccionProgramasInvestigacion
       programaSociologicos={programaSociologicos}
       laboratorioPublica={laboratorioPublica}

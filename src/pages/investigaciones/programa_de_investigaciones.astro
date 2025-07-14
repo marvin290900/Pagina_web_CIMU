@@ -1,14 +1,14 @@
   ---
-  import Layout from "../layouts/Layout.astro";
-  import SeccionImagenGeneral from "../components/seccion_imagen_general.astro";
+  import Layout from "../../layouts/Layout.astro";
+  import SeccionImagenGeneral from "../../components/seccion_imagen_general.astro";
   import imagen1 from "../assets/imagen_inicio_1.jpg";
-  import SeccionProgramasInvestigacion from "../components/componentes_pagina_inicio/seccion_programas_investigacion.astro";
+  import SeccionProgramasInvestigacion from "../../components/componentes_pagina_inicio/seccion_programas_investigacion.astro";
   import programaSociologicos from "../assets/imagen_inicio_1.jpg";
   import laboratorioPublica from "../assets/logo_opinion_publica.png";
   import programaJuridicos from "../assets/imagen_inicio_1.jpg";
   import programaMedioAmbiente from "../assets/imagen_inicio_1.jpg";
   import programaInclusion from "../assets/imagen_inicio_1.jpg";
-  import InvestigacionesComponent from "../components/componentes_programa_investigacion/InvestigacionesComponent.vue";
+  import InvestigacionesComponent from "../../components/componentes_programa_investigacion/InvestigacionesComponent.vue";
 
   const filtro = Astro.url.searchParams.get('programa') ?? '';
   const modo = Astro.url.searchParams.get('modo') ?? 'todo';

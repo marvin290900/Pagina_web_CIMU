@@ -1,12 +1,23 @@
-import { couch } from '../lib/couchDB.js';
+import { couch } from './couchDB.js';
 
-const DB_NAME = 'cimu';
+const DB_NAME = 'cimu';   
 
-// Obtener todos los documentos que sean investigadores usando _find y selector
-export async function getInvestigadores() {
+export async function getInvestigadoresDirectivos() {
   try {
     const response = await couch.post(`/${DB_NAME}/_find`, {
-      selector: { type: 'investigador' }
+      selector: { type: 'investigador', categoria: 'directivo' }
+    });
+    return response.data.docs;
+  } catch (error) {
+    console.error('Error al obtener investigadores:', error);
+    return [];
+  }
+}
+
+export async function getInvestigadoresPasantes() {
+  try {
+    const response = await couch.post(`/${DB_NAME}/_find`, {
+      selector: { type: 'investigador', categoria: 'pasantes' }
     });
     return response.data.docs;
   } catch (error) {
@@ -23,5 +34,17 @@ export async function getInvestigadorPorId(id) {
   } catch (error) {
     console.error('Error al obtener investigador:', error);
     return null;
+  }
+}
+
+export async function getTodosLosInvestigadores() {
+  try {
+    const response = await couch.post(`/${DB_NAME}/_find`, {
+      selector: { type: 'investigador' },
+    });
+    return response.data.docs;
+  } catch (error) {
+    console.error('Error al obtener todos los investigadores:', error);
+    return [];
   }
 }

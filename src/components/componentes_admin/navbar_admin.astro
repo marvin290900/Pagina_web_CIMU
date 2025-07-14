@@ -1,0 +1,107 @@
+<!-- Overlay oscuro -->
+<div
+  id="sidebarOverlay"
+  class="fixed inset-0 bg-[#6B72804D] z-40 hidden transition-opacity duration-300"
+></div>
+
+<!-- Sidebar (oculto por defecto) -->
+<aside
+  id="sidebar"
+  class="fixed top-0 left-0 w-64 h-full bg-gray-800 text-white transform -translate-x-full transition-transform duration-300 z-50"
+>
+  <!-- Título + botón cerrar -->
+  <div class="flex items-center justify-between p-4 border-b border-gray-700">
+    <span class="font-bold text-lg">Navegación</span>
+    <button id="closeSidebar" class="text-white text-xl hover:text-red-400">
+      <span class="mdi mdi-close"></span>
+    </button>
+  </div>
+
+  <!-- Menú de navegación -->
+  <nav class="flex flex-col p-4 space-y-2 flex-1">
+    <a href="/admin/investigadores" class="hover:bg-gray-700 rounded px-3 py-2 flex items-center gap-2">
+      <span class="mdi mdi-account-group-outline"></span> Investigadores/as
+    </a>
+    <a href="/" class="hover:bg-gray-700 rounded px-3 py-2 flex items-center gap-2">
+      <span class="mdi mdi-post-outline"></span> Blog
+    </a>
+    <a href="/" class="hover:bg-gray-700 rounded px-3 py-2 flex items-center gap-2">
+      <span class="mdi mdi-school-outline"></span> Multidisciplinaria
+    </a>
+    <a href="/" class="hover:bg-gray-700 rounded px-3 py-2 flex items-center gap-2">
+      <span class="mdi mdi-lan"></span> REMI
+    </a>
+    <a href="/" class="hover:bg-gray-700 rounded px-3 py-2 flex items-center gap-2">
+      <span class="mdi mdi-file-document-multiple-outline"></span> Investigaciones
+    </a>
+  </nav>
+
+  <!-- Cerrar sesión -->
+  <div class="p-4 border-t border-gray-700">
+    <a href="/logout" class="hover:bg-red-600 hover:text-white rounded px-3 py-2 flex items-center gap-2 text-red-400">
+      <span class="mdi mdi-logout"></span> Cerrar sesión
+    </a>
+  </div>
+</aside>
+
+
+<!-- Encabezado principal -->
+<header
+  id="mainHeader"
+  class="navbar fixed top-0 left-0 w-full z-40 bg-gray-900 text-white shadow"
+>
+  <div class="w-full flex items-center justify-between px-4 md:px-6 h-10">
+    <div class="flex items-center gap-3">
+      <!-- Botón para mostrar el sidebar -->
+      <button id="toggleSidebar" class="btn btn-sm btn-ghost text-white focus:outline-none mdi mdi-menu text-2xl hover:bg-blue-950"/>
+        
+      <!-- Título -->
+      <a href="/admin/informacion" class="text-xs sm:text-xs md:text-lg lg:text-lg font-bold uppercase">Panel de Administración</a>
+    </div>
+
+
+    <!-- Avatar usuario -->
+    <div class="flex items-center">
+      <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white">
+        <img
+          src="https://i.pravatar.cc/150?img=3"
+          alt="Usuario logueado"
+          class="w-full h-full object-cover"
+        />
+      </div>
+    </div>
+  </div>
+</header>
+
+
+<!-- Scripts -->
+<script is:inline>
+  const sidebar = document.getElementById("sidebar");
+  const toggleSidebar = document.getElementById("toggleSidebar");
+  const closeSidebar = document.getElementById("closeSidebar");
+  const overlay = document.getElementById("sidebarOverlay");
+
+  function openSidebar() {
+    sidebar.classList.remove("-translate-x-full");
+    sidebar.classList.add("translate-x-0");
+    overlay.classList.remove("hidden");
+  }
+
+  function hideSidebar() {
+    sidebar.classList.add("-translate-x-full");
+    sidebar.classList.remove("translate-x-0");
+    overlay.classList.add("hidden");
+  }
+
+  toggleSidebar.addEventListener("click", openSidebar);
+  closeSidebar.addEventListener("click", hideSidebar);
+  overlay.addEventListener("click", hideSidebar);
+
+  // Cierra al hacer clic en cualquier enlace del sidebar
+  document.querySelectorAll(".sidebar-link").forEach((link) => {
+    link.addEventListener("click", () => {
+      hideSidebar();
+    });
+  });
+
+</script>
