@@ -42,6 +42,22 @@
       </form>
     </div>
 
+<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+  <div class="flex gap-2">
+    <select id="filtroCategoria" class="border border-gray-300 rounded px-2 py-1">
+      <option value="">Todos</option>
+      <option value="directivo">Directivos</option>
+      <option value="pasantes">Pasantes</option>
+    </select>
+    <input
+      id="filtroNombre"
+      type="text"
+      placeholder="Buscar por nombre"
+      class="border border-gray-300 rounded px-3 py-1"
+    />
+  </div>
+</div>
+
     <!-- Lista de investigadores -->
     <div id="listaInvestigadores" class="space-y-4">
       <!-- JS insertará aquí las tarjetas -->
@@ -87,6 +103,13 @@
   const btnMostrar = document.getElementById('btnMostrarFormulario') as HTMLButtonElement;
   const listaInvestigadores = document.getElementById('listaInvestigadores') as HTMLDivElement;
 
+  const filtroCategoria = document.getElementById('filtroCategoria');
+const filtroNombre = document.getElementById('filtroNombre');
+
+// Escuchar cambios en filtros
+filtroCategoria.addEventListener('change', renderInvestigadores);
+filtroNombre.addEventListener('input', renderInvestigadores);
+
   let investigadores = [];
 
   // Mostrar u ocultar formulario
@@ -111,13 +134,22 @@
 
   // Renderizar investigadores
  function renderInvestigadores() {
+  const categoriaSeleccionada = filtroCategoria.value.toLowerCase();
+  const textoBusqueda = filtroNombre.value.toLowerCase();
+
+  const filtrados = investigadores.filter((inv) => {
+    const coincideCategoria = !categoriaSeleccionada || inv.categoria?.toLowerCase() === categoriaSeleccionada;
+    const coincideNombre = inv.nombre?.toLowerCase().includes(textoBusqueda);
+    return coincideCategoria && coincideNombre;
+  });
+
   listaInvestigadores.innerHTML = '';
-  investigadores.forEach((inv) => {
+
+  filtrados.forEach((inv) => {
     const card = document.createElement('div');
     card.className = 'border border-gray-300 p-4 rounded-lg shadow-sm bg-white flex justify-between items-center';
 
     card.innerHTML = `
-      <!-- Izquierda: avatar + info -->
       <div class="flex items-center gap-4">
         <img
           src="https://i.pravatar.cc/80?u=${inv._id}" 
@@ -132,7 +164,6 @@
         </div>
       </div>
 
-      <!-- Derecha: botones -->
       <div class="flex gap-2">
         <button onclick="editarInvestigador('${inv._id}')" class="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">
           Editar
@@ -146,6 +177,7 @@
     listaInvestigadores.appendChild(card);
   });
 }
+
 
 
   // Agregar investigador
