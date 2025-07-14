@@ -4,34 +4,38 @@ const { InvestigadoresDirectivos, imagenDefault } = Astro.props;
 
 <section id="seccionInvestigadores" class="bg-white text-center">
   <div class="container mx-auto">
-    
     <div
       id="quinto_texto_centro_investigacion"
       class="flex flex-wrap justify-center gap-8 px-4 py-5 transition-all duration-1000 opacity-0 translate-y-8"
     >
       {
-  InvestigadoresDirectivos.map((inv) => (
-    
-    <a href={`/investigadores/${encodeURIComponent(inv._id)}`} class="flex flex-col items-center w-full max-w-xs border-2 border-transparent rounded-lg transition-transform duration-300 hover:scale-105 hover:border-[#28388659] cursor-pointer">
-      <div class="relative w-28 h-28 flex items-center justify-center mb-2 ">
-        <div class="absolute inset-0 rounded-full border-4 animate-spin-gradient "></div>
-        <div class="w-24 h-24 rounded-full overflow-hidden bg-white z-10">
-          <img
-            src={inv.foto && inv.foto.trim() !== '' ? inv.foto : imagenDefault.src}
-            class="w-full h-full object-cover"
-            alt={`Foto de ${inv.nombre}`}
-          />
-        </div>
-      </div>
-      <div class="text-center text-gray-800">
-        <p class="text-lg font-semibold">{inv.nombre}</p>
-        <p class="text-sm">{inv.cargo}</p>
-        <p class="text-sm ">{inv.correo}</p>
-      </div>
-    </a>
-  ))
-}
-
+        InvestigadoresDirectivos.map((inv) => (
+          <a
+            href={`/investigadores/${encodeURIComponent(inv._id)}`}
+            class="flex flex-col items-center w-full max-w-xs border-2 border-transparent rounded-lg transition-transform duration-300 hover:scale-105 hover:border-[#28388659] cursor-pointer"
+          >
+            <div class="relative w-28 h-28 flex items-center justify-center mb-2 ">
+              <div class="absolute inset-0 rounded-full border-4 animate-spin-gradient " />
+              <div class="w-24 h-24 rounded-full overflow-hidden bg-white z-10">
+                <img
+                  src={
+                    inv.foto && inv.foto.trim() !== ""
+                      ? inv.foto
+                      : imagenDefault.src
+                  }
+                  class="w-full h-full object-cover"
+                  alt={`Foto de ${inv.nombre}`}
+                />
+              </div>
+            </div>
+            <div class="text-center text-gray-800">
+              <p class="text-lg font-semibold">{inv.nombre}</p>
+              <p class="text-sm">{inv.cargo}</p>
+              <p class="text-sm ">{inv.correo}</p>
+            </div>
+          </a>
+        ))
+      }
     </div>
   </div>
 </section>
@@ -85,27 +89,24 @@ const { InvestigadoresDirectivos, imagenDefault } = Astro.props;
   }
 
   @keyframes spin-gradient {
-  0% {
-    transform: rotate(0deg);
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
-  100% {
-    transform: rotate(360deg);
+
+  .animate-spin-gradient {
+    background: conic-gradient(
+      from 0deg,
+      #283886,
+      #ffffff,
+      #283886,
+      #ffffff,
+      #283886
+    );
+    animation: spin-gradient 5s linear infinite;
+    transition: all 0.3s ease-in-out;
   }
-}
-
-
-.animate-spin-gradient {
-  background: conic-gradient(
-    from 0deg,
-    #283886,
-    #ffffff,
-    #283886,
-    #ffffff,
-    #283886
-  );
-  animation: spin-gradient 5s linear infinite;
-  transition: all 0.3s ease-in-out;
-}
-
-
 </style>
