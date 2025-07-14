@@ -1,74 +1,36 @@
----
-import Layout from "../layouts/Layout.astro";
-import SeccionImagenGeneral from "../components/seccion_imagen_general.astro";
-import imagen1 from "../assets/imagen_inicio_1.jpg";
----
+  ---
+  import Layout from "../layouts/Layout.astro";
+  import SeccionImagenGeneral from "../components/seccion_imagen_general.astro";
+  import imagen1 from "../assets/imagen_inicio_1.jpg";
+  import SeccionProgramasInvestigacion from "../components/componentes_pagina_inicio/seccion_programas_investigacion.astro";
+  import programaSociologicos from "../assets/imagen_inicio_1.jpg";
+  import laboratorioPublica from "../assets/logo_opinion_publica.png";
+  import programaJuridicos from "../assets/imagen_inicio_1.jpg";
+  import programaMedioAmbiente from "../assets/imagen_inicio_1.jpg";
+  import programaInclusion from "../assets/imagen_inicio_1.jpg";
+  import InvestigacionesComponent from "../components/componentes_programa_investigacion/InvestigacionesComponent.vue";
 
-<Layout>
-  <main>
-    <SeccionImagenGeneral
-      titulo="Programa de Investigaciones"
-      imagen={imagen1}
-    />
-    <section id="seccion_investigacion" class="pl-15 bg-white">
-      <div class="py-8 text-2xl text-gray-600 mt-4">
-        <div class="mb-4">
-          <span class="mdi mdi-filter"></span>Filtrar
-        </div>
+  const filtro = Astro.url.searchParams.get('programa') ?? '';
+  const modo = Astro.url.searchParams.get('modo') ?? 'todo';
+  ---
 
-        <!-- inline-flex con alineación al final para que los wrappers altos "bajen" -->
-        <div class="inline-flex items-end">
-          <button
-            id="btnReciente"
-            class="btn btn-xl px-10 py-3 text-lg rounded-l focus:z-10"
-            style="background-color: var(--color-primary); color: white;"
-            onclick="activarBoton('btnReciente','btnTodas')"
-          >
-            Recientes
-          </button>
+  <Layout>
+    <main>
+      <SeccionImagenGeneral
+        titulo="Programa de Investigaciones"
+        imagen={imagen1}
+        class = "w-screen"
+      />
+      <SeccionProgramasInvestigacion
+        programaSociologicos={programaSociologicos}
+        laboratorioPublica={laboratorioPublica}
+        programaJuridicos={programaJuridicos}
+        programaMedioAmbiente={programaMedioAmbiente}
+        programaInclusion={programaInclusion}
+      />
+      
+      <InvestigacionesComponent client:load/>>
+    </main>
 
-          <button
-            id="btnTodas"
-            class="btn btn-xl px-10 py-3 text-lg bg-gray-200 text-gray-700 rounded-r hover:bg-gray-300 focus:z-10"
-            onclick="activarBoton('btnTodas','btnReciente')"
-          >
-            Todas
-          </button>
-
-          <!-- Wrapper del label + select -->
-          <div class="flex flex-col ml-4">
-            <label for="filtroProgramas" class="text-base text-gray-700 mb-1">
-              Por programas
-            </label>
-            <select
-              id="filtroProgramas"
-              class="p-2 border rounded"
-            >
-              <option value="todos">Todos</option>
-              <option value="sociologicos">Sociológicos</option>
-              <option value="juridicos">Jurídicos</option>
-              <option value="medio_ambiente">Medio Ambiente</option>
-              <option value="inclusion">Inclusión</option>
-              <option value="laboratorio_publica">Laboratorio Pública</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <script is:inline>
-    function activarBoton(idActivo, idInactivo) {
-      const btnA = document.getElementById(idActivo);
-      const btnI = document.getElementById(idInactivo);
-      if (!btnA || !btnI) return;
-      btnA.disabled = true;
-      btnI.disabled = false;
-      btnA.style.backgroundColor = "var(--color-primary)";
-      btnA.style.color = "white";
-      btnI.style.backgroundColor = "";
-      btnI.style.color = "";
-    }
-  </script>
-</Layout>
+  </Layout>
 
