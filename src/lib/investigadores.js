@@ -36,3 +36,15 @@ export async function getInvestigadorPorId(id) {
     return null;
   }
 }
+
+export async function getTodosLosInvestigadores() {
+  try {
+    const response = await couch.post(`/${DB_NAME}/_find`, {
+      selector: { type: 'investigador' },
+    });
+    return response.data.docs;
+  } catch (error) {
+    console.error('Error al obtener todos los investigadores:', error);
+    return [];
+  }
+}

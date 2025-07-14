@@ -1,110 +1,210 @@
-<section id="apartadoInvestigadoresAdmin" class="py-8 bg-white text-center text-black">
-  <div class="container mx-auto">
-    <h2 class="text-2xl font-semibold mb-6 text-center">Agregar Investigador</h2>
-
-    <form id="formAgregarInvestigador" class="space-y-5">
-      <div>
-        <label for="nombre" class="block mb-1 font-medium text-gray-700">Nombre completo</label>
-        <input
-          type="text"
-          id="nombre"
-          name="nombre"
-          placeholder="Ej: María Pérez"
-          required
-          class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-
-      <div>
-        <label for="email" class="block mb-1 font-medium text-gray-700">Correo electrónico</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          placeholder="ejemplo@correo.com"
-          required
-          class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-
-      <div>
-        <label for="departamento" class="block mb-1 font-medium text-gray-700">Departamento</label>
-        <input
-          type="text"
-          id="departamento"
-          name="departamento"
-          placeholder="Ej: Ciencias Sociales"
-          class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-
-      <div>
-        <label for="descripcion" class="block mb-1 font-medium text-gray-700">Descripción / Perfil</label>
-        <textarea
-          id="descripcion"
-          name="descripcion"
-          rows="3"
-          placeholder="Breve descripción del investigador"
-          class="w-full border border-gray-300 rounded-md px-3 py-2 resize-y focus:outline-none focus:ring-2 focus:ring-blue-500"
-        ></textarea>
-      </div>
-
-      <!-- <div>
-        <label for="foto" class="block mb-1 font-medium text-gray-700">Foto</label>
-        <input
-          type="file"
-          id="foto"
-          name="foto"
-          accept="image/*"
-          class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div> -->
-
+<section id="apartadoInvestigadoresAdmin" class="py-8 bg-white text-black">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-semibold">Investigadores Registrados</h2>
       <button
-        type="submit"
-        class="w-full bg-blue-600 text-white py-2 rounded-md font-semibold hover:bg-blue-700 transition"
+        id="btnMostrarFormulario"
+        class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
       >
-        Agregar Investigador
+        + Agregar Investigador
       </button>
-    </form>
+    </div>
+
+    <!-- Formulario oculto por defecto -->
+    <div id="formularioInvestigador" class="mb-8 hidden">
+      <form id="formAgregarInvestigador" class="space-y-5 bg-gray-100 p-6 rounded shadow">
+        <div>
+          <label for="nombre" class="block font-medium">Nombre completo</label>
+          <input id="nombre" name="nombre" type="text" required class="input" />
+        </div>
+
+        <div>
+          <label for="email" class="block font-medium">Correo electrónico</label>
+          <input id="email" name="email" type="email" required class="input" />
+        </div>
+
+        <div>
+          <label for="departamento" class="block font-medium">Departamento</label>
+          <input id="departamento" name="departamento" type="text" class="input" />
+        </div>
+
+        <div>
+          <label for="descripcion" class="block font-medium">Descripción</label>
+          <textarea id="descripcion" name="descripcion" rows="3" class="input"></textarea>
+        </div>
+
+        <button
+          type="submit"
+          class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
+        >
+          Guardar Investigador
+        </button>
+      </form>
+    </div>
+
+    <!-- Lista de investigadores -->
+    <div id="listaInvestigadores" class="space-y-4">
+      <!-- JS insertará aquí las tarjetas -->
+       <div class="border border-gray-300 p-4 rounded-lg shadow-sm bg-white flex justify-between items-center">
+  <!-- Izquierda: avatar + info -->
+  <div class="flex items-center gap-4">
+    <!-- Avatar -->
+    <img
+      src="https://i.pravatar.cc/80?img=4"
+      alt="Avatar del investigador"
+      class="w-16 h-16 rounded-full object-cover border border-gray-400"
+    />
+
+    <!-- Info -->
+    <div>
+      <h3 class="text-lg font-semibold">Dr. Juan López</h3>
+      <p class="text-sm text-gray-700">juan.lopez@universidad.edu</p>
+      <p class="text-sm text-gray-600">Departamento: Ciencias Sociales</p>
+    </div>
   </div>
 
-  <script>
-  const form = document.getElementById('formAgregarInvestigador');
+  <!-- Derecha: botones -->
+  <div class="flex gap-3">
+    <button class="px-4 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">
+      Editar
+    </button>
+    <button class="px-4 py-1 bg-red-600 text-white rounded hover:bg-red-700">
+      Eliminar
+    </button>
+  </div>
+</div>
 
+
+    </div>
+  </div>
+</section>
+
+
+
+<script>
+  const form = document.getElementById('formAgregarInvestigador') as HTMLFormElement;
+  const formulario = document.getElementById('formularioInvestigador') as HTMLDivElement;
+  const btnMostrar = document.getElementById('btnMostrarFormulario') as HTMLButtonElement;
+  const listaInvestigadores = document.getElementById('listaInvestigadores') as HTMLDivElement;
+
+  let investigadores = [];
+
+  // Mostrar u ocultar formulario
+  btnMostrar.addEventListener('click', () => {
+    formulario.classList.toggle('hidden');
+    btnMostrar.textContent = formulario.classList.contains('hidden')
+      ? '+ Agregar Investigador'
+      : 'Ocultar Formulario';
+  });
+
+  // Cargar investigadores
+  async function cargarInvestigadores() {
+    try {
+      const res = await fetch('/api/investigadores/obtener');
+      const data = await res.json();
+      investigadores = data.docs || [];
+      renderInvestigadores();
+    } catch (err) {
+      console.error('Error cargando investigadores:', err);
+    }
+  }
+
+  // Renderizar investigadores
+ function renderInvestigadores() {
+  listaInvestigadores.innerHTML = '';
+  investigadores.forEach((inv) => {
+    const card = document.createElement('div');
+    card.className = 'border border-gray-300 p-4 rounded-lg shadow-sm bg-white flex justify-between items-center';
+
+    card.innerHTML = `
+      <!-- Izquierda: avatar + info -->
+      <div class="flex items-center gap-4">
+        <img
+          src="https://i.pravatar.cc/80?u=${inv._id}" 
+          alt="Avatar del investigador"
+          class="w-16 h-16 rounded-full object-cover border border-gray-400"
+        />
+        <div>
+          <h3 class="text-lg font-semibold">${inv.nombre}</h3>
+          <p class="text-sm text-gray-700">${inv.email}</p>
+          <p class="text-sm text-gray-600">${inv.departamento || ''}</p>
+          <p class="text-sm text-gray-500">${inv.descripcion || ''}</p>
+        </div>
+      </div>
+
+      <!-- Derecha: botones -->
+      <div class="flex gap-2">
+        <button onclick="editarInvestigador('${inv._id}')" class="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">
+          Editar
+        </button>
+        <button onclick="eliminarInvestigador('${inv._id}')" class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">
+          Eliminar
+        </button>
+      </div>
+    `;
+
+    listaInvestigadores.appendChild(card);
+  });
+}
+
+
+  // Agregar investigador
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-
-    const nombre = form.nombre.value;
-    const email = form.email.value;
-    const departamento = form.departamento.value;
-    const descripcion = form.descripcion.value;
-
-    const data = {
-      nombre,
-      email,
-      departamento,
-      descripcion,
+    const nuevo = {
+      nombre: form.nombre.value,
+      email: form.email.value,
+      departamento: form.departamento.value,
+      descripcion: form.descripcion.value,
       creado_en: new Date().toISOString()
     };
 
     try {
-      const res = await fetch('/api/investigadores/agregar', { // <-- ¡ruta correcta!
+      const res = await fetch('/api/investigadores/agregar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify(nuevo)
       });
-
       const result = await res.json();
       if (result.ok) {
-        alert('Investigador agregado exitosamente ✅');
+        alert('✅ Investigador agregado');
         form.reset();
+        formulario.classList.add('hidden');
+        await cargarInvestigadores();
       } else {
-        alert('Error al agregar: ' + result.error);
+        alert('❌ Error: ' + result.error);
       }
     } catch (err) {
       console.error('Error al enviar:', err);
-      alert('Hubo un error al enviar los datos.');
+      alert('❌ Hubo un error');
     }
   });
+
+  // Eliminar investigador
+  async function eliminarInvestigador(id) {
+    if (!confirm('¿Estás seguro de eliminar este investigador?')) return;
+    try {
+      const res = await fetch(`/api/investigadores/${id}`, {
+        method: 'DELETE'
+      });
+      const result = await res.json();
+      if (result.ok) {
+        alert('🗑️ Investigador eliminado');
+        await cargarInvestigadores();
+      } else {
+        alert('Error al eliminar');
+      }
+    } catch (err) {
+      console.error('Error al eliminar:', err);
+    }
+  }
+
+  // Placeholder para editar
+  function editarInvestigador(id) {
+    alert('🛠️ Función de edición aún no implementada');
+    // Puedes usar los datos de investigadores.find(i => i._id === id) y llenar el formulario
+  }
+
+  // Cargar al inicio
+  cargarInvestigadores();
 </script>
