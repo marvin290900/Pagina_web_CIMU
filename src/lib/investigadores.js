@@ -48,3 +48,37 @@ export async function getTodosLosInvestigadores() {
     return [];
   }
 }
+
+export async function actualizarInvestigador(id, datosActualizados) {
+  try {
+    // Primero obtenemos el documento completo para obtener _rev
+    const docActual = await couch.get(`/${DB_NAME}/${id}`);
+    const doc = docActual.data;
+
+    // Actualizamos los campos con los datos que vienen en datosActualizados
+    const docActualizado = {
+      ...doc,
+      ...datosActualizados,
+    };
+
+    // Guardamos el documento actualizado (PUT)
+    const response = await couch.put(`/${DB_NAME}/${id}`, docActualizado);
+    return { ok: true, data: response.data };
+  } catch (error) {
+    console.error('Error al actualizar investigador:', error);
+    return { ok: false, error };
+  }
+}
+
+
+export async function eliminarInvestigador(id, rev) {
+  try {
+    const response = await couch.delete(`/${DB_NAME}/${id}`, {
+      params: { rev }
+    });
+    return { ok: true, data: response.data };
+  } catch (error) {
+    console.error('Error al eliminar el investigador:', error);
+    return { ok: false, error };
+  }
+}
