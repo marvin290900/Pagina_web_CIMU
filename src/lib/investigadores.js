@@ -17,7 +17,7 @@ export async function getInvestigadoresDirectivos() {
 export async function getInvestigadoresPasantes() {
   try {
     const response = await couch.post(`/${DB_NAME}/_find`, {
-      selector: { type: 'investigador', categoria: 'pasantes' }
+      selector: { type: 'investigador', categoria: 'pasante' }
     });
     return response.data.docs;
   } catch (error) {

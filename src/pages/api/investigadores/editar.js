@@ -1,10 +1,12 @@
 import { actualizarInvestigador } from '../../../lib/investigadores.js';
 
-export async function PUT({ params, request }) {
-  const id = params.id;
-  const datos = await request.json();
+export async function PUT({ request }) {
+  const body = await request.json();
+  const id = body.id;
+  const datos = { ...body };
+  delete datos.id; // eliminamos id del objeto a actualizar
 
-  if (!id || !datos) {
+  if (!id || Object.keys(datos).length === 0) {
     return new Response(JSON.stringify({ ok: false, error: 'Faltan datos' }), {
       status: 400,
       headers: { 'Content-Type': 'application/json' }
