@@ -1,7 +1,5 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import SeccionImagenGeneral from "../../components/seccion_imagen_general.astro"
-import fondoInvestigador from "../../assets/fondo_investigador.png";
+import Layout from "../../layouts/Layout_investigaciones.astro";
 import imagenDefault from "../../assets/imagen_default_1.png"
 
 import { getInvestigadorPorId } from "../../lib/investigadores.js";
@@ -10,21 +8,35 @@ const investigador = await getInvestigadorPorId(id);
 ---
 
 <Layout>
-  <main class="relative">
-    <!-- Imagen de fondo con texto animado (sin overlay personalizado aún) -->
-    <SeccionImagenGeneral titulo="" imagen={fondoInvestigador} />
+  <main class="mt-20">
 
     {
       investigador && (
-        <!-- Contenedor sobrepuesto encima de la imagen -->
-        <div class="absolute top-15 md:top-20 lg:top-20 left-1/2 transform -translate-x-1/2 z-30 flex flex-col items-center text-white">
-          <img
-            src={investigador.foto || imagenDefault.src}
-            alt={`Foto de ${investigador.nombre}`}
-            class="rounded-full w-40 h-40 md:w-90 md:h-90 lg:w-100 lg:h-100 object-cover border-4 border-white shadow-lg mb-2 md:mb-5 lg:mb-8"
-          />
-          <h1 class="text-xl md:text-3xl lg:text-4xl font-bold drop-shadow whitespace-nowrap">{investigador.nombre}</h1>
-        </div>
+        <div class="container grid grid-cols-2 lg:grid-cols-2 gap-8 px-6 sm:px-6 md:px-12 lg:px-20">
+    
+    <div class="mt-8 p-6 text-center rounded-lg shadow-none bg-white flex items-center justify-center">
+      <div>
+        <p class="text-center text-lg sm:text-xl md:text-2xl lg:text-5xl font-bold text-gray-900">
+          <span class="text-xs md:text-[24px] lg:text-lg xl:text-6xl font-bold bg-clip-text text-transparent" style="background-image: linear-gradient(to right, #16182D, #474E93);">
+            {investigador.nombre}
+          </span>
+        </p>
+        <p class="mt-4 text-center text-xs sm:text-[12px] md:text-lg lg:text-2xl text-gray-700">
+          {investigador.cargo}
+        </p>
+      </div>
+    </div>
+
+    
+    <div class="flex justify-center items-center relative bg-white py-10 sm:py-30 md:py-8 lg:py-5">
+      
+       <div class="mt-1 sm:mt-2 h-35 w-35 sm:h-20 sm:w-20 md:h-50 md:w-50 lg:w-105 lg:h-105 border-none bg-[#474f9309] shadow-lg rounded-full  absolute animate-bounce"></div>
+      
+      <div class="mt-1 sm:mt-2 h-32 w-32 sm:h-15 sm:w-15 md:h-48 md:w-48 lg:w-100 lg:h-100 border-4 border-dashed border-[#474E93] rounded-full relative animate-bounce-spin"></div>
+        <img src={investigador.foto || imagenDefault.src} alt="Imagen animada" class="rounded-full w-30 h-30 md:w-46 md:h-46 lg:w-96 lg:h-96 object-cover border-4 border-white shadow-lg -mb-0.5  md:mb-6 lg:mb-10 animate-bounce absolute sm:translate-y-4 md:translate-y-4 lg:translate-y-6" />
+    </div>
+
+  </div>
       )
     }
 
@@ -56,4 +68,61 @@ const investigador = await getInvestigadorPorId(id);
     </section>
   </main>
 </Layout>
+
+
+<style>
+  @keyframes zoom {
+    from {
+      transform: scale(1.1);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  .animate-zoom {
+    animation: zoom 3s ease-in-out forwards;
+  }
+
+  @keyframes bounce {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  .animate-bounce {
+    animation: bounce 5s infinite ease-in-out;
+  }
+
+  @keyframes spin-slow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 50s linear infinite;
+  }
+
+  
+  @keyframes bounceAndSpin {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(20deg); 
+  }
+}
+
+.animate-bounce-spin {
+  animation: bounceAndSpin 5s infinite ease-in-out;
+}
+</style>
 
