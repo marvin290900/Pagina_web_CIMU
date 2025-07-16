@@ -166,11 +166,11 @@ const { centroInvestigacion,investigador1 }  = Astro.props;
 <style>
   @keyframes girarBorde {
     0% {
-      background-position: 0% 50%;
-    }
-    100% {
-      background-position: 360% 50%;
-    }
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
   }
 
   .borde-giratorio {
@@ -179,7 +179,7 @@ const { centroInvestigacion,investigador1 }  = Astro.props;
     padding: 3px; /* espacio para el borde animado */
     background: linear-gradient(270deg, #ffffff, #283886, #ffffff, #283886);
     background-size: 400% 400%;
-    animation: girarBorde 8s linear infinite;
+    animation: girarBorde 10s linear infinite;
   }
 
   .borde-giratorio > .contenido {
