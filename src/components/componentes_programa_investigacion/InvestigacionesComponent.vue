@@ -100,7 +100,7 @@ async function cargar() {
 // Manejar click en tarjeta
 function handleClick(investigacion) {
   // Ejemplo: navegar a detalle de investigación
-  window.location.href = `/investigacion/${investigacion._id}`
+  window.location.href = `/investigaciones/${investigacion._id}`
 }
 
 // Recarga cuando cambian filtros

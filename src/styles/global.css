@@ -4,6 +4,8 @@
 @import 'swiper/css/effect-coverflow';
 @import 'swiper/css/navigation';
 @import 'swiper/css/pagination';
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
 @plugin "daisyui" {
   themes: light --default;
   
