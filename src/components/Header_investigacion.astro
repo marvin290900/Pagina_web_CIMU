@@ -12,9 +12,9 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo } = Astro.props;
       ><img
         id="uesLogo"
         title="Universidad de El Salvador"
-        src={uesLogoBlanco.src}
+        src={uesLogoRojo.src}
         alt="uesLogo"
-        data-logo-blanco={uesLogoBlanco.src}
+        data-logo-blanco={uesLogoRojo.src}
         data-logo-rojo={uesLogoRojo.src}
         class="h-8 sm:h-8 md:h-10 lg:h-12 transition-all duration-300 hover:scale-105 hover:brightness-110"
       /></a
@@ -201,7 +201,7 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo } = Astro.props;
     } else {
       header.classList.add("bg-transparent");
       header.classList.remove("bg-white", "text-black", "shadow-md");
-      logo.src = uesLogoBlanco;
+      logo.src = uesLogoRojo;
     }
   });
 

@@ -2,10 +2,17 @@
 import Layout from "../../layouts/Layout.astro";
 import SeccionImagenGeneral from "../../components/seccion_imagen_general.astro"
 import logoMultiPagina from "../../assets/logo_multi_pagina.png";
+import SeccionTodosInvestigadores from "../../components/componentes_nosotros/seccion_todos_investigadores.astro";
+import { getInvestigadoresDirectivos } from "../../lib/investigadores.js"
+import { getInvestigadoresPasantes } from "../../lib/investigadores.js"
+import imagenDefault from "../../assets/imagen_default_2.png"
+const InvestigadoresDirectivos = await getInvestigadoresDirectivos(); 
+const InvestigadoresPasantes = await getInvestigadoresPasantes();
 ---
 
 <Layout>
   <main>
     <SeccionImagenGeneral titulo="" imagen={logoMultiPagina} />
+    <SeccionTodosInvestigadores InvestigadoresDirectivos={InvestigadoresDirectivos} InvestigadoresPasantes={InvestigadoresPasantes} imagenDefault={imagenDefault}/>
   </main>
 </Layout> 

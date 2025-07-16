@@ -1,0 +1,177 @@
+---
+const { InvestigadoresDirectivos, InvestigadoresPasantes, imagenDefault } =
+  Astro.props;
+---
+
+<section id="seccionInvestigadores" class="bg-white text-center">
+  <div class="container mx-auto">
+    <div
+      id="cuarto_texto_centro_investigacion"
+      class="p-6 flex flex-col justify-center items-center text-center rounded-lg shadow-none transition-all duration-1000 opacity-0 translate-y-8"
+    >
+      <p
+        class="text-2xl sm:text-xl md:text-2xl lg:text-4xl font-bold text-gray-800 mt-10"
+      >
+        Conoce a nuestro equipo de Investigación del CIMU - FMOcc - UES
+      </p>
+    </div>
+
+    <div id="titulo_directivos" class="w-full text-center mt-10 transition-all duration-1000 opacity-0 translate-y-8">
+      <p
+        class="text-lg sm:text-lg md:text-xl lg:text-xl font-light text-gray-700"
+      >
+        Equipo Directivo del Centro de Investigación
+      </p>
+    </div>
+
+    <div
+      id="quinto_texto_centro_investigacion"
+      class="flex flex-wrap justify-center gap-8 px-4 py-5 transition-all duration-1000 opacity-0 translate-y-8"
+    >
+      {
+        InvestigadoresDirectivos.map((inv) => (
+          <div class="borde-giratorio-azul">
+            <a
+              href={`/investigadores/${encodeURIComponent(inv._id)}`}
+              class="flex flex-row items-center w-full max-w-sm border-2 border-transparent rounded-2xl shadow-lg transition-transform duration-300 hover:scale-105 cursor-pointer bg-white p-4 gap-4"
+            >
+              <div class="relative w-28 h-28 flex items-center justify-center">
+                <div class="w-18 h-18 rounded-full overflow-hidden bg-white z-10">
+                  <img
+                    src={
+                      inv.foto && inv.foto.trim() !== ""
+                        ? inv.foto
+                        : imagenDefault.src
+                    }
+                    class="w-full h-full object-cover"
+                    alt={`Foto de ${inv.nombre}`}
+                  />
+                </div>
+              </div>
+
+              <div class="text-left text-gray-800 flex-1">
+                <p class="text-md font-semibold">{inv.nombre}</p>
+                <p class="text-sm">{inv.cargo}</p>
+                <p class="text-sm text-gray-400">{inv.correo}</p>
+              </div>
+            </a>
+          </div>
+        ))
+      }
+    </div>
+
+    <div id="titulo_pasantes" class="w-full text-center mt-10 transition-all duration-1000 opacity-0 translate-y-8">
+      <p
+        class="text-lg sm:text-lg md:text-xl lg:text-xl font-light text-gray-700"
+      >
+        Equipo Investigador y de Apoyo del CIMU
+      </p>
+    </div>
+
+    <div
+      id="sexto_texto_centro_investigacion"
+      class="flex flex-wrap justify-center gap-8 px-4 py-5 transition-all duration-1000 opacity-0 translate-y-8"
+    >
+      {
+        InvestigadoresPasantes.map((inv) => (
+          <div class="borde-giratorio-verde">
+            <a
+              href={`/investigadores/${encodeURIComponent(inv._id)}`}
+              class="flex flex-row items-center w-full max-w-sm border-2 border-transparent rounded-2xl shadow-lg transition-transform duration-300 hover:scale-105 cursor-pointer bg-white p-4 gap-4"
+            >
+              <div class="relative w-28 h-28 flex items-center justify-center">
+                <div class="w-18 h-18 rounded-full overflow-hidden bg-white z-10">
+                  <img
+                    src={
+                      inv.foto && inv.foto.trim() !== ""
+                        ? inv.foto
+                        : imagenDefault.src
+                    }
+                    class="w-full h-full object-cover"
+                    alt={`Foto de ${inv.nombre}`}
+                  />
+                </div>
+              </div>
+
+              <div class="text-left text-gray-800 flex-1">
+                <p class="text-md font-semibold">{inv.nombre}</p>
+                <p class="text-sm">{inv.cargo}</p>
+                <p class="text-sm text-gray-400">{inv.correo}</p>
+              </div>
+            </a>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  const targets = document.querySelectorAll(
+    " #cuarto_texto_centro_investigacion, #quinto_texto_centro_investigacion, #sexto_texto_centro_investigacion,#titulo_directivos, #titulo_pasantes"
+  );
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.remove("opacity-0", "translate-y-8");
+          entry.target.classList.add("opacity-100", "translate-y-0");
+        }
+      });
+    },
+    {
+      threshold: 0.1,
+    }
+  );
+
+  targets.forEach((target) => observer.observe(target));
+</script>
+
+<style>
+  @keyframes girarBorde {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .borde-giratorio {
+    position: relative;
+    border-radius: 1rem; /* mismo que rounded-2xl */
+    padding: 2px; /* espacio para el borde animado */
+    background: linear-gradient(270deg, #ffffff, #283886, #ffffff, #283886);
+    background-size: 400% 400%;
+    animation: girarBorde 8s linear infinite;
+  }
+
+  .borde-giratorio > .contenido {
+    background: white; /* o transparente si quieres */
+    border-radius: 1rem;
+    height: 100%;
+    width: 100%;
+  }
+
+  .borde-giratorio-azul {
+    position: relative;
+    border-radius: 1rem;
+    padding: 2px;
+    background: linear-gradient(270deg, #ffffff, #283886, #ffffff, #283886);
+    background-size: 400% 400%;
+    animation: girarBorde 8s linear infinite;
+  }
+
+  .borde-giratorio-verde {
+    position: relative;
+    border-radius: 1rem;
+    padding: 2px;
+    background: linear-gradient(270deg, #ffffff, #28a745, #ffffff, #28a745);
+    background-size: 400% 400%;
+    animation: girarBorde 8s linear infinite;
+  }
+</style>
