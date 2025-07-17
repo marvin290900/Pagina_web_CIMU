@@ -809,7 +809,7 @@
     document.getElementById("modalDescripcion")!.textContent =
       inv.descripcion || "";
     document.getElementById("modalImagen")!.src =
-      `https://i.pravatar.cc/80?u=${inv._id}`;
+      `${inv.foto}`;
 
     const contenedorRedes = document.getElementById("modalRedes")!;
     contenedorRedes.innerHTML = ""; // limpiar
@@ -875,7 +875,7 @@
       const infoDiv = document.createElement("div");
       infoDiv.className = "flex items-center gap-4 cursor-pointer";
       infoDiv.innerHTML = `
-      <img src="https://i.pravatar.cc/80?u=${inv._id}" class="w-16 h-16 rounded-full object-cover border" />
+      <img src="${inv.foto}" class="w-16 h-16 rounded-full object-cover border" />
       <div>
         <h3 class="text-lg font-semibold">${inv.nombre}</h3>
         <p class="text-sm text-gray-700">${inv.email}</p>
