@@ -1,7 +1,7 @@
 <section id="apartadoInvestigadoresAdmin" class="py-8 bg-white text-black">
   <div class="container mx-auto px-4">
     <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-semibold">Investigadores Registrados</h2>
+      <h2 class="text-sm sm:text-lg md:text-lg lg:text-2xl font-semibold">Investigadores Registrados</h2>
       <button
         id="btnMostrarModalAgregar"
         class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
@@ -877,7 +877,7 @@
       infoDiv.innerHTML = `
       <img src="${inv.foto}" class="w-16 h-16 rounded-full object-cover border" />
       <div>
-        <h3 class="text-lg font-semibold">${inv.nombre}</h3>
+        <h3 class="text-sm sm:text-sm md:text-lg lg:text-lg font-semibold">${inv.nombre}</h3>
         <p class="text-sm text-gray-700">${inv.email}</p>
         <p class="text-sm text-gray-600">${inv.departamento || ""}</p>
         <p class="text-sm text-gray-500">${inv.descripcion || ""}</p>
@@ -886,7 +886,7 @@
       infoDiv.addEventListener("click", () => mostrarModalInvestigador(inv));
 
       const botones = document.createElement("div");
-      botones.className = "flex gap-2";
+      botones.className = "flex flex-col sm:flex-row gap-2 ";
 
       const btnEditar = document.createElement("button");
       btnEditar.textContent = "Editar";
