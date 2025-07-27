@@ -1,14 +1,14 @@
   ---
   import Layout from "../../layouts/Layout.astro";
   import SeccionImagenGeneral from "../../components/seccion_imagen_general.astro";
-  import imagen1 from "../../assets/logo_programa_investigaciones.png";
+  import imagen1 from "../../assets/investigaciones/logo_programa_investigaciones.png";
   import SeccionProgramasInvestigacion from "../../components/componentes_pagina_inicio/seccion_programas_investigacion.astro";
- import programaSociologicos from "../../assets/imagen_inicio_1.jpg";
-  import laboratorioPublica from "../../assets/logo_opinion_publica.png";
-  import programaJuridicos from "../../assets/imagen_inicio_1.jpg";
-  import programaMedioAmbiente from "../../assets/imagen_inicio_1.jpg";
-  import programaInclusion from "../../assets/imagen_inicio_1.jpg";
-  import InvestigacionesComponent from "../../components/componentes_programa_investigacion/InvestigacionesComponent.vue";
+  import programaSociologicos from "../../assets/programas/programa_sociologicos.jpg";
+import laboratorioPublica from "../../assets/programas/logo_opinion_publica.png";
+import programaJuridicos from "../../assets/programas/programa_juridico.jpg";
+import programaMedioAmbiente from "../../assets/programas/programa_medioAmbiente.jpg";
+import programaInclusion from "../../assets/programas/programa_inclusion.jpg";
+import InvestigacionesComponent from "../../components/componentes_programa_investigacion/InvestigacionesComponent.vue";
   
   const filtro = Astro.url.searchParams.get('programa') ?? '';
   const modo = Astro.url.searchParams.get('modo') ?? 'todo';
@@ -21,13 +21,13 @@
         imagen={imagen1}
         class = "w-screen"
       />
-      <SeccionProgramasInvestigacion
+      <!-- <SeccionProgramasInvestigacion
         programaSociologicos={programaSociologicos}
         laboratorioPublica={laboratorioPublica}
         programaJuridicos={programaJuridicos}
         programaMedioAmbiente={programaMedioAmbiente}
         programaInclusion={programaInclusion}
-      />
+      /> -->
       
       <InvestigacionesComponent client:load/>>
     </main>
