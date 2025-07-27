@@ -4,14 +4,14 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import { EffectCoverflow, Navigation, Pagination } from 'swiper/modules';
 
 // Importa tus imágenes
-import img1 from '../../assets/temp/1.jpg';
-import img2 from '../../assets/temp/2.jpg';
-import img3 from '../../assets/temp/3.jpg';
+import img1 from '../../assets/temp/1.png';
+import img2 from '../../assets/temp/2.png';
+import img3 from '../../assets/temp/3.png';
 import img4 from '../../assets/temp/4.jpg';
-import img5 from '../../assets/temp/5.jpg';
+import img5 from '../../assets/temp/5.png';
 import img6 from '../../assets/temp/6.jpg';
-import img7 from '../../assets/temp/7.jpg';
-import img8 from '../../assets/temp/8.jpg';
+import img7 from '../../assets/temp/7.png';
+import img8 from '../../assets/temp/8.png';
 
 // ... importa todas las imágenes necesarias
 
