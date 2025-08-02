@@ -1,4 +1,31 @@
 import { getInvestigadorPorId, eliminarInvestigador } from '../../../lib/investigadores.js';
+import fs from 'fs/promises';
+import path from 'path';
+
+async function eliminarArchivoImagen(fotoUrl) {
+  try {
+    if (!fotoUrl) {
+      console.log('No hay foto para eliminar');
+      return;
+    }
+
+    const urlSinQuery = fotoUrl.split('?')[0];
+    const imagePath = path.join(process.cwd(), 'public', urlSinQuery);
+    console.log('Intentando eliminar imagen en:', imagePath);
+
+    try {
+      await fs.access(imagePath);
+    } catch {
+      console.log('Archivo no existe, no se elimina');
+      return;
+    }
+
+    await fs.unlink(imagePath);
+    console.log('Imagen eliminada:', imagePath);
+  } catch (error) {
+    console.error('Error al eliminar imagen:', error);
+  }
+}
 
 export async function DELETE({ request }) {
   try {
@@ -21,6 +48,9 @@ export async function DELETE({ request }) {
       });
     }
 
+    // Eliminar la imagen antes de eliminar el documento
+    await eliminarArchivoImagen(investigador.foto);
+
     const resultado = await eliminarInvestigador(id, investigador._rev);
 
     if (resultado.ok) {
@@ -42,4 +72,3 @@ export async function DELETE({ request }) {
     });
   }
 }
-

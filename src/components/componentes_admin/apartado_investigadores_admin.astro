@@ -187,6 +187,7 @@
               accept="image/*"
               class="file-input file-input-bordered w-full"
             />
+            <img id="previewFoto" class="mt-4 w-32 h-32 object-cover rounded border hidden" />
           </div>
 
           <!-- Currículum en PDF -->
@@ -490,6 +491,9 @@
     "btnLimpiarFiltroNombre"
   ) as HTMLButtonElement;
 
+  const inputFoto = document.getElementById("foto") as HTMLInputElement;
+const previewFoto = document.getElementById("previewFoto") as HTMLImageElement;
+
   let investigadores = [];
   let idAEliminar = null;
 
@@ -504,6 +508,7 @@
 
   btnCancelarAgregar.addEventListener("click", () => {
     modalAgregar.close();
+    limpiarFormularioAgregar();
   });
 
   btnCancelarConfirmarAgregar.addEventListener("click", () => {
@@ -512,6 +517,7 @@
 
   btnCerrarModalAgregar.addEventListener("click", () => {
     modalAgregar.close();
+    limpiarFormularioAgregar();
   });
 
   btnCerrarModalEditar.addEventListener("click", () => {
@@ -533,6 +539,21 @@
   btnCancelarEliminar.addEventListener("click", () => {
     modalConfirmarEliminar.close();
   });
+
+  inputFoto.addEventListener("change", () => {
+  const file = inputFoto.files?.[0];
+  if (file && file.type.startsWith("image/")) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      previewFoto.src = e.target?.result as string;
+      previewFoto.classList.remove("hidden");
+    };
+    reader.readAsDataURL(file);
+  } else {
+    previewFoto.src = "";
+    previewFoto.classList.add("hidden");
+  }
+});
 
   //FUncion para mostrar mesanje personalizado
    function showMessage(mensaje, tipo = "info") {
@@ -630,12 +651,40 @@
     }
   }
 
+  // Boton para guardar investigador
   btnConfirmarAgregar.addEventListener("click", async () => {
-    const boton = btnConfirmarAgregar;
+  const boton = btnConfirmarAgregar;
+  mostrarSpinnerEnBoton(boton);
+
+  try {
+    // 1. Subir imagen primero
+    const inputFoto = document.getElementById("foto") as HTMLInputElement;
+    const file = inputFoto.files?.[0];
+
+    let fotoUrl = null;
+    
+    if (file) {
+      const formDataImagen = new FormData();
+      formDataImagen.append("foto", file);
+
+      const resImagen = await fetch("/api/investigadores/subir_imagen", {
+        method: "POST",
+        body: formDataImagen,
+      });
+
+      if (!resImagen.ok) throw new Error("Error al subir la imagen");
+
+      const dataImagen = await resImagen.json();
+      if (!dataImagen.ok) throw new Error(dataImagen.error || "Error en subida");
+
+      fotoUrl = dataImagen.url; // link de la imagen subida
+    }
+
+    
+    // 2. Armar objeto con datos y link de foto
     const formData = new FormData(form);
     const email = formData.get("email").toString().toLowerCase().trim();
     const idTransformado = `${email.replace(/@/g, "_")}`;
-    mostrarSpinnerEnBoton(boton);
 
     const nuevo = {
       _id: idTransformado,
@@ -647,44 +696,46 @@
       type: "investigador",
       telefonos: formData.get("telefonos"),
       creado_en: new Date().toISOString(),
+      foto: fotoUrl,
       redes: {
         facebook: formData.get("facebook"),
         twitter: formData.get("twitter"),
         linkedin: formData.get("linkedin"),
       },
+      
     };
 
+    // 3. Guardar investigador en CouchDB
+    const res = await fetch("/api/investigadores/agregar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(nuevo),
+    });
 
-    try {
-      const res = await fetch("/api/investigadores/agregar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(nuevo),
-      });
-
-      if (!res.ok) {
-        const error = await res.text();
-        throw new Error(`Error HTTP: ${res.status} - ${error}`);
-      }
-
-      const result = await res.json();
-
-      if (result.ok) {
-        showMessage("Investigador agregado correctamente", "success");
-        form.reset();
-        modalAgregar.close();
-        modalConfirmarAgregar.close();
-        await cargarInvestigadores();
-      } else {
-        showMessage("Error al agregar: " + result.error, "error");
-      }
-    } catch (err) {
-      console.error("Error al enviar:", err);
-      showMessage("Error al agregar", "error");
-    } finally {
-      ocultarSpinnerEnBoton(boton);
+    if (!res.ok) {
+      const error = await res.text();
+      throw new Error(`Error HTTP: ${res.status} - ${error}`);
     }
-  });
+
+    const result = await res.json();
+
+    if (result.ok) {
+      showMessage("Investigador agregado correctamente", "success");
+      form.reset();
+      modalAgregar.close();
+      modalConfirmarAgregar.close();
+      await cargarInvestigadores();
+    } else {
+      showMessage("Error al agregar: " + result.error, "error");
+    }
+  } catch (err) {
+    console.error("Error al enviar:", err);
+    showMessage("Error al agregar", "error");
+  } finally {
+    ocultarSpinnerEnBoton(boton);
+  }
+});
+
 
 //Boton para confirmar guardar cambio a la hora de editar investigador
   btnConfirmarGuardar.addEventListener("click", async () => {
@@ -912,4 +963,23 @@
   }
 
   cargarInvestigadores();
+
+  function limpiarFormularioAgregar() {
+  const form = document.getElementById("formAgregarInvestigador") as HTMLFormElement;
+  form.reset(); // Limpia los campos automáticamente
+
+  // Ocultar la imagen de previsualización
+  const previewFoto = document.getElementById("previewFoto") as HTMLImageElement;
+  previewFoto.src = "";
+  previewFoto.classList.add("hidden");
+
+  // Opcional: limpiar campos manuales si es necesario (como select con valores por defecto, etc.)
+  const camposTexto = form.querySelectorAll("input, textarea, select");
+  camposTexto.forEach((campo) => {
+    if (campo instanceof HTMLInputElement && campo.type === "file") {
+      campo.value = ""; // reset archivo
+    }
+  });
+}
+
 </script>
