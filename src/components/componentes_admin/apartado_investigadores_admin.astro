@@ -1,7 +1,9 @@
-<section id="apartadoInvestigadoresAdmin" class="py-8 bg-white text-black">
+<section id="apartadoInvestigadoresAdmin" class="py-1 bg-white text-black">
   <div class="container mx-auto px-4">
     <div class="flex justify-between items-center mb-6">
-      <h2 class="text-sm sm:text-lg md:text-lg lg:text-2xl font-semibold">Investigadores Registrados</h2>
+      <h2 class="text-sm sm:text-lg md:text-lg lg:text-2xl font-semibold">
+        Investigadores Registrados
+      </h2>
       <button
         id="btnMostrarModalAgregar"
         class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
@@ -51,6 +53,22 @@
               type="email"
               required
               class="input w-full"
+            />
+          </div>
+
+          <!-- Foto -->
+          <div>
+            <label for="foto" class="block font-medium">Foto</label>
+            <input
+              id="foto"
+              name="foto"
+              type="file"
+              accept="image/*"
+              class="file-input file-input-bordered w-full"
+            />
+            <img
+              id="previewFoto"
+              class="mt-4 w-32 h-32 object-cover rounded border hidden"
             />
           </div>
 
@@ -177,19 +195,6 @@
             />
           </div>
 
-          <!-- Foto -->
-          <div>
-            <label for="foto" class="block font-medium">Foto</label>
-            <input
-              id="foto"
-              name="foto"
-              type="file"
-              accept="image/*"
-              class="file-input file-input-bordered w-full"
-            />
-            <img id="previewFoto" class="mt-4 w-32 h-32 object-cover rounded border hidden" />
-          </div>
-
           <!-- Currículum en PDF -->
           <div>
             <label for="cv" class="block font-medium">Currículum (PDF)</label>
@@ -200,6 +205,8 @@
               accept="application/pdf"
               class="file-input file-input-bordered w-full"
             />
+            <iframe id="previewCV" class="mt-4 w-full h-64 border hidden"
+            ></iframe>
           </div>
 
           <!-- Botones -->
@@ -351,7 +358,16 @@
         <p id="modalCorreo" class="text-sm text-gray-700 mb-1"></p>
         <p id="modalDepartamento" class="text-sm text-gray-600 mb-1"></p>
         <p id="modalDescripcion" class="text-sm text-gray-500"></p>
+        <!-- Sección para mostrar CV -->
+      <div class="mt-4">
+        <label class="block font-medium">Currículum Vitae (PDF)</label>
+        <iframe
+          id="modalCV"
+          class="w-full h-64 border"
+          style="border-radius: 0.5rem"></iframe>
       </div>
+      </div>
+      
     </dialog>
 
     <!-- Modal para confirmar agregar investigador -->
@@ -492,11 +508,15 @@
   ) as HTMLButtonElement;
 
   const inputFoto = document.getElementById("foto") as HTMLInputElement;
-const previewFoto = document.getElementById("previewFoto") as HTMLImageElement;
+  const previewFoto = document.getElementById(
+    "previewFoto"
+  ) as HTMLImageElement;
+
+  const inputCV = document.getElementById("cv") as HTMLInputElement;
+  const previewCV = document.getElementById("previewCV") as HTMLIFrameElement;
 
   let investigadores = [];
   let idAEliminar = null;
-
 
   btnMostrarModalAgregar.addEventListener("click", () => {
     modalAgregar.showModal();
@@ -541,22 +561,35 @@ const previewFoto = document.getElementById("previewFoto") as HTMLImageElement;
   });
 
   inputFoto.addEventListener("change", () => {
-  const file = inputFoto.files?.[0];
-  if (file && file.type.startsWith("image/")) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      previewFoto.src = e.target?.result as string;
-      previewFoto.classList.remove("hidden");
-    };
-    reader.readAsDataURL(file);
-  } else {
-    previewFoto.src = "";
-    previewFoto.classList.add("hidden");
-  }
-});
+    const file = inputFoto.files?.[0];
+    if (file && file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previewFoto.src = e.target?.result as string;
+        previewFoto.classList.remove("hidden");
+      };
+      reader.readAsDataURL(file);
+    } else {
+      previewFoto.src = "";
+      previewFoto.classList.add("hidden");
+    }
+  });
+
+  inputCV.addEventListener("change", () => {
+    const file = inputCV.files?.[0];
+
+    if (file && file.type === "application/pdf") {
+      const url = URL.createObjectURL(file);
+      previewCV.src = url;
+      previewCV.classList.remove("hidden");
+    } else {
+      previewCV.src = "";
+      previewCV.classList.add("hidden");
+    }
+  });
 
   //FUncion para mostrar mesanje personalizado
-   function showMessage(mensaje, tipo = "info") {
+  function showMessage(mensaje, tipo = "info") {
     // Crear contenedor si no existe
     let contenedor = document.getElementById("message-container");
     if (!contenedor) {
@@ -610,7 +643,6 @@ const previewFoto = document.getElementById("previewFoto") as HTMLImageElement;
     }, 3000);
   }
 
-
   // Funcion para filtrar por categoria
   filtroCategoria.addEventListener("change", renderInvestigadores);
   filtroNombre.addEventListener("input", () => {
@@ -631,7 +663,7 @@ const previewFoto = document.getElementById("previewFoto") as HTMLImageElement;
   });
 
   //datalles par evitar que se envien muchas peticiones al servidor
-    function mostrarSpinnerEnBoton(boton) {
+  function mostrarSpinnerEnBoton(boton) {
     const texto = boton.querySelector(".btn-text");
     const spinner = boton.querySelector(".btn-spinner");
     if (texto && spinner) {
@@ -653,92 +685,115 @@ const previewFoto = document.getElementById("previewFoto") as HTMLImageElement;
 
   // Boton para guardar investigador
   btnConfirmarAgregar.addEventListener("click", async () => {
-  const boton = btnConfirmarAgregar;
-  mostrarSpinnerEnBoton(boton);
+    const boton = btnConfirmarAgregar;
+    mostrarSpinnerEnBoton(boton);
 
-  try {
-    // 1. Subir imagen primero
-    const inputFoto = document.getElementById("foto") as HTMLInputElement;
-    const file = inputFoto.files?.[0];
+    try {
+      // 1. Subir imagen primero
+      const inputFoto = document.getElementById("foto") as HTMLInputElement;
+      const file = inputFoto.files?.[0];
 
-    let fotoUrl = null;
-    
-    if (file) {
-      const formDataImagen = new FormData();
-      formDataImagen.append("foto", file);
-      formDataImagen.append('carpeta', 'investigadores'); //carpeta donde se guardará la imagen
-      
-      const resImagen = await fetch("/api/subir_imagen", {
+      let fotoUrl = null;
+
+      if (file) {
+        const formDataImagen = new FormData();
+        formDataImagen.append("foto", file);
+        formDataImagen.append("carpeta", "investigadores"); //carpeta donde se guardará la imagen
+
+        const resImagen = await fetch("/api/subir_imagen", {
+          method: "POST",
+          body: formDataImagen,
+        });
+
+        if (!resImagen.ok) throw new Error("Error al subir la imagen");
+
+        const dataImagen = await resImagen.json();
+        if (!dataImagen.ok)
+          throw new Error(dataImagen.error || "Error en subida");
+
+        fotoUrl = dataImagen.url; // link de la imagen subida
+      }
+
+      const inputCV = document.getElementById("cv") as HTMLInputElement;
+      const cvFile = inputCV.files?.[0];
+
+      let cvUrl = null;
+
+      if (cvFile) {
+        const formDataCV = new FormData();
+        formDataCV.append("cv", cvFile);
+        formDataCV.append("carpeta", "cv");
+
+        const resCV = await fetch("/api/investigadores/subir_cv", {
+          method: "POST",
+          body: formDataCV,
+        });
+
+        if (!resCV.ok) throw new Error("Error al subir el CV");
+
+        const dataCV = await resCV.json();
+        if (!dataCV.ok)
+          throw new Error(dataCV.error || "Error en subida de CV");
+
+        cvUrl = dataCV.url; // link del CV
+      }
+
+      // 2. Armar objeto con datos y link de foto
+      const formData = new FormData(form);
+      const email = formData.get("email").toString().toLowerCase().trim();
+      const idTransformado = `${email.replace(/@/g, "_")}`;
+
+      const nuevo = {
+        _id: idTransformado,
+        nombre: formData.get("nombre"),
+        email: formData.get("email"),
+        departamento: formData.get("departamento"),
+        descripcion: formData.get("descripcion"),
+        categoria: formData.get("rol"),
+        type: "investigador",
+        telefonos: formData.get("telefonos"),
+        creado_en: new Date().toISOString(),
+        foto: fotoUrl,
+        cv: cvUrl,
+        redes: {
+          facebook: formData.get("facebook"),
+          twitter: formData.get("twitter"),
+          linkedin: formData.get("linkedin"),
+        },
+      };
+
+      // 3. Guardar investigador en CouchDB
+      const res = await fetch("/api/investigadores/agregar", {
         method: "POST",
-        body: formDataImagen,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(nuevo),
       });
 
-      if (!resImagen.ok) throw new Error("Error al subir la imagen");
+      if (!res.ok) {
+        const error = await res.text();
+        throw new Error(`Error HTTP: ${res.status} - ${error}`);
+      }
 
-      const dataImagen = await resImagen.json();
-      if (!dataImagen.ok) throw new Error(dataImagen.error || "Error en subida");
+      const result = await res.json();
 
-      fotoUrl = dataImagen.url; // link de la imagen subida
+      if (result.ok) {
+        showMessage("Investigador agregado correctamente", "success");
+        form.reset();
+        modalAgregar.close();
+        modalConfirmarAgregar.close();
+        await cargarInvestigadores();
+      } else {
+        showMessage("Error al agregar: " + result.error, "error");
+      }
+    } catch (err) {
+      console.error("Error al enviar:", err);
+      showMessage("Error al agregar", "error");
+    } finally {
+      ocultarSpinnerEnBoton(boton);
     }
+  });
 
-    
-    // 2. Armar objeto con datos y link de foto
-    const formData = new FormData(form);
-    const email = formData.get("email").toString().toLowerCase().trim();
-    const idTransformado = `${email.replace(/@/g, "_")}`;
-
-    const nuevo = {
-      _id: idTransformado,
-      nombre: formData.get("nombre"),
-      email: formData.get("email"),
-      departamento: formData.get("departamento"),
-      descripcion: formData.get("descripcion"),
-      categoria: formData.get("rol"),
-      type: "investigador",
-      telefonos: formData.get("telefonos"),
-      creado_en: new Date().toISOString(),
-      foto: fotoUrl,
-      redes: {
-        facebook: formData.get("facebook"),
-        twitter: formData.get("twitter"),
-        linkedin: formData.get("linkedin"),
-      },
-      
-    };
-
-    // 3. Guardar investigador en CouchDB
-    const res = await fetch("/api/investigadores/agregar", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(nuevo),
-    });
-
-    if (!res.ok) {
-      const error = await res.text();
-      throw new Error(`Error HTTP: ${res.status} - ${error}`);
-    }
-
-    const result = await res.json();
-
-    if (result.ok) {
-      showMessage("Investigador agregado correctamente", "success");
-      form.reset();
-      modalAgregar.close();
-      modalConfirmarAgregar.close();
-      await cargarInvestigadores();
-    } else {
-      showMessage("Error al agregar: " + result.error, "error");
-    }
-  } catch (err) {
-    console.error("Error al enviar:", err);
-    showMessage("Error al agregar", "error");
-  } finally {
-    ocultarSpinnerEnBoton(boton);
-  }
-});
-
-
-//Boton para confirmar guardar cambio a la hora de editar investigador
+  //Boton para confirmar guardar cambio a la hora de editar investigador
   btnConfirmarGuardar.addEventListener("click", async () => {
     const boton = btnConfirmarGuardar;
     mostrarSpinnerEnBoton(boton);
@@ -816,8 +871,6 @@ const previewFoto = document.getElementById("previewFoto") as HTMLImageElement;
     }
   }
 
-  
-
   function editarInvestigador(id) {
     const inv = investigadores.find((i) => i._id === id);
     if (!inv) return alert("Investigador no encontrado");
@@ -850,7 +903,7 @@ const previewFoto = document.getElementById("previewFoto") as HTMLImageElement;
     }
   }
 
-   function mostrarModalInvestigador(inv) {
+  function mostrarModalInvestigador(inv) {
     const modal = document.getElementById(
       "modalInvestigador"
     ) as HTMLDialogElement;
@@ -860,8 +913,7 @@ const previewFoto = document.getElementById("previewFoto") as HTMLImageElement;
       "Departamento: " + (inv.departamento || "");
     document.getElementById("modalDescripcion")!.textContent =
       inv.descripcion || "";
-    document.getElementById("modalImagen")!.src =
-      `${inv.foto}`;
+    document.getElementById("modalImagen")!.src = `${inv.foto}`;
 
     const contenedorRedes = document.getElementById("modalRedes")!;
     contenedorRedes.innerHTML = ""; // limpiar
@@ -874,13 +926,14 @@ const previewFoto = document.getElementById("previewFoto") as HTMLImageElement;
     if (redes.linkedin)
       contenedorRedes.innerHTML += `<a href="${redes.linkedin}" target="_blank"><i class="mdi mdi-linkedin text-blue-700 text-xl"></i></a>`;
 
+    document.getElementById("modalCV")!.setAttribute("src", inv.cv || "");
+
     modal.showModal();
   }
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
   });
-
 
   function renderInvestigadores() {
     const categoriaSeleccionada = filtroCategoria.value.toLowerCase();
@@ -966,21 +1019,26 @@ const previewFoto = document.getElementById("previewFoto") as HTMLImageElement;
   cargarInvestigadores();
 
   function limpiarFormularioAgregar() {
-  const form = document.getElementById("formAgregarInvestigador") as HTMLFormElement;
-  form.reset(); // Limpia los campos automáticamente
+    const form = document.getElementById(
+      "formAgregarInvestigador"
+    ) as HTMLFormElement;
+    form.reset(); // Limpia los campos automáticamente
 
-  // Ocultar la imagen de previsualización
-  const previewFoto = document.getElementById("previewFoto") as HTMLImageElement;
-  previewFoto.src = "";
-  previewFoto.classList.add("hidden");
+    // Ocultar la imagen de previsualización
+    const previewFoto = document.getElementById(
+      "previewFoto"
+    ) as HTMLImageElement;
+    previewFoto.src = "";
+    previewFoto.classList.add("hidden");
 
-  // Opcional: limpiar campos manuales si es necesario (como select con valores por defecto, etc.)
-  const camposTexto = form.querySelectorAll("input, textarea, select");
-  camposTexto.forEach((campo) => {
-    if (campo instanceof HTMLInputElement && campo.type === "file") {
-      campo.value = ""; // reset archivo
-    }
-  });
-}
-
+    // Opcional: limpiar campos manuales si es necesario (como select con valores por defecto, etc.)
+    const camposTexto = form.querySelectorAll("input, textarea, select");
+    camposTexto.forEach((campo) => {
+      if (campo instanceof HTMLInputElement && campo.type === "file") {
+        campo.value = ""; // reset archivo
+      }
+    });
+    previewCV.src = "";
+    previewCV.classList.add("hidden");
+  }
 </script>

@@ -27,6 +27,31 @@ async function eliminarArchivoImagen(fotoUrl) {
   }
 }
 
+async function eliminarArchivoCV(cvUrl) {
+  try {
+    if (!cvUrl) {
+      console.log('No hay CV para eliminar');
+      return;
+    }
+
+    const urlSinQuery = cvUrl.split('?')[0];
+    const cvPath = path.join(process.cwd(), 'public', urlSinQuery);
+    console.log('Intentando eliminar CV en:', cvPath);
+
+    try {
+      await fs.access(cvPath);
+    } catch {
+      console.log('Archivo CV no existe, no se elimina');
+      return;
+    }
+
+    await fs.unlink(cvPath);
+    console.log('CV eliminado:', cvPath);
+  } catch (error) {
+    console.error('Error al eliminar CV:', error);
+  }
+}
+
 export async function DELETE({ request }) {
   try {
     const body = await request.json();
@@ -48,8 +73,9 @@ export async function DELETE({ request }) {
       });
     }
 
-    // Eliminar la imagen antes de eliminar el documento
+    // Eliminar la imagen y el CV antes de eliminar el documento
     await eliminarArchivoImagen(investigador.foto);
+    await eliminarArchivoCV(investigador.cv);
 
     const resultado = await eliminarInvestigador(id, investigador._rev);
 
