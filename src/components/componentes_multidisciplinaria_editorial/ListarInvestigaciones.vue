@@ -154,7 +154,7 @@
           class="flex flex-col gap-3 pb-3 group"
         >
           <div class="w-full aspect-[3/4] rounded-lg overflow-hidden relative">
-            <a href="/nosotros/investigadores">
+            <a :href="`/publicaciones/multidisciplinaria/${investigacion._id}`">
               <img
                 :src="investigacion.portada_libro"
                 alt=""
@@ -234,7 +234,7 @@ const cambiarPagina = (pagina) => {
 };
 
 onMounted(() => {
-  fetch("/api/getInvestigacionesAll")
+  fetch("/api/publicaciones/obtener")
     .then((res) => res.json())
     .then((json) => {
       data.value = json.rows.map((i) => i.doc);

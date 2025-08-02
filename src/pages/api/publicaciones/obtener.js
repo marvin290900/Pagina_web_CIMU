@@ -1,4 +1,4 @@
-import { couch } from "../../lib/couchDB";
+import { couch } from "../../../lib/couchDB";
 export async function GET() {
   try {
     const res = await couch.get('cimu-investigaciones/_all_docs?include_docs=true');

@@ -1,0 +1,15 @@
+---
+import Layout from "../../../layouts/Layout_investigaciones.astro";
+import MostrarDetallesInvestigacion from "../../../components/componentes_multidisciplinaria_editorial/DetallesInvestigacion.vue";
+const { id } = Astro.params;
+
+if (!id) {
+  return Astro.redirect("/404");
+}
+---
+
+<Layout>
+  <main class="my-40">
+    <MostrarDetallesInvestigacion id={id} client:load />
+  </main>
+</Layout>
