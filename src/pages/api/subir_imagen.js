@@ -16,12 +16,16 @@ export async function POST({ request }) {
       });
     }
 
+    // Obtener el nombre de la carpeta (por ejemplo: 'investigadores', 'libros', etc.)
+    // Si no viene, usar 'uploads' por defecto
+    const carpeta = formData.get('carpeta')?.toString().trim() || 'uploads';
+
     // Convertimos la imagen a un buffer para guardarla
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
     // Ruta donde guardaremos las imágenes (carpeta public/uploads)
-    const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+    const uploadsDir = path.join(process.cwd(), 'public', carpeta);
 
     // Crear la carpeta si no existe
     if (!fs.existsSync(uploadsDir)) {
@@ -41,7 +45,7 @@ export async function POST({ request }) {
     await fs.promises.writeFile(filePath, buffer);
 
     // URL pública para acceder desde el frontend
-    const publicUrl = `/uploads/${fileName}`;
+    const publicUrl = `/${carpeta}/${fileName}`;
 
     // Devolvemos el resultado con el link
     return new Response(JSON.stringify({ ok: true, url: publicUrl }), {

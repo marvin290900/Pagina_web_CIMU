@@ -666,8 +666,9 @@ const previewFoto = document.getElementById("previewFoto") as HTMLImageElement;
     if (file) {
       const formDataImagen = new FormData();
       formDataImagen.append("foto", file);
-
-      const resImagen = await fetch("/api/investigadores/subir_imagen", {
+      formDataImagen.append('carpeta', 'investigadores'); //carpeta donde se guardará la imagen
+      
+      const resImagen = await fetch("/api/subir_imagen", {
         method: "POST",
         body: formDataImagen,
       });
