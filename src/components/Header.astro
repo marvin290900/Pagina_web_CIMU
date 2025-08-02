@@ -38,14 +38,14 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo } = Astro.props;
         <ul
           class="absolute left-0 top-full bg-white text-black rounded-md opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition duration-300 p-2 shadow-md z-50"
         >
-        <li>
+          <li>
             <a
               href="/nosotros/acerca_de_cimu"
               class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
               >Acerca de CIMU</a
             >
           </li>
-          
+
           <li>
             <a
               href="/nosotros/investigadores"
@@ -56,14 +56,18 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo } = Astro.props;
         </ul>
       </li>
 
-      <li> <a href="/gaceta_multidisciplinaria" class="block max-w-[90px] truncate lg:max-w-none lg:whitespace-normal lg:overflow-visible lg:text-ellipsis-none">Gaceta Multidisciplinaria</a></li>
+      <li>
+        <a
+          href="/gaceta_multidisciplinaria"
+          class="block max-w-[90px] truncate lg:max-w-none lg:whitespace-normal lg:overflow-visible lg:text-ellipsis-none"
+          >Gaceta Multidisciplinaria</a>
+      </li>
 
       <li class="group relative">
         <a class="">Investigaciones </a>
         <ul
           class="absolute left-0 top-full bg-white text-black rounded-md opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition duration-300 p-2 shadow-md z-50"
         >
-          
           <li>
             <a
               href="/investigaciones/programa_de_investigaciones"
@@ -81,7 +85,7 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo } = Astro.props;
         >
           <li>
             <a
-              href="/publicaciones/multidisciplinaria_editorial"
+              href="/publicaciones/multidisciplinaria/multidisciplinaria_editorial"
               class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
               >Multidisciplinaria Editorial</a
             >
@@ -136,15 +140,17 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo } = Astro.props;
       </ul>
     </details>
 
-
-    <a href="/gaceta_multidisciplinaria" class="block py-2 px-3 rounded-md hover:bg-gray-100">Gaceta Multidisciplinaria</a>
+    <a
+      href="/gaceta_multidisciplinaria"
+      class="block py-2 px-3 rounded-md hover:bg-gray-100"
+      >Gaceta Multidisciplinaria</a
+    >
 
     <details>
       <summary class="cursor-pointer py-2 px-3 hover:bg-gray-100 rounded-md"
         >Investigaciones</summary
       >
       <ul class="pl-4 mt-2">
-        
         <li>
           <a
             href="/investigaciones/programa_de_investigaciones"
