@@ -75,12 +75,6 @@ import { ref, watch, onMounted } from 'vue'
 const modo = ref('todo')
 const programa = ref('')
 const investigaciones = ref([ 
-  // Datos de ejemplo, reemplazar con datos reales
-  { _id: '1', titulo: 'Investigación A', programa: 'Sociológicos', fecha: '2023-10-01', imagen: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPHvG2-NVd8j7oQbPH3eHEAGvbn9-apLCM7A&s', description: 'Descripción de la investigación A' },
-  { _id: '2', titulo: 'Investigación B', programa: 'Jurídicos', fecha: '2023-09-15', imagen: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9KGeu4iNFo2O-3nRh1XRlbPIRdohKkfT91Q&s',  description: 'Descripción de la investigación B' },
-  { _id: '3', titulo: 'Investigación C', programa: 'Medio Ambiente', fecha: '2023-08-20', imagen: 'https://tesisdoctoralesonline.com/wp-content/uploads/2021/12/Tipos-de-metodologias-de-investigacion-como-identificarlas-1.jpg', description: 'Descripción de la investigación C' },
-  { _id: '4', titulo: 'Investigación D', programa: 'Inclusión', fecha: '2023-07-10', imagen: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1b2k5j6Z7J8a5gXy1Y2c9f3s4x8z6k5m7wA&s', description: 'Descripción de la investigación D' },
-  { _id: '5', titulo: 'Investigación E', programa: 'Laboratorio Pública', fecha: '2023-06-05', imagen: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9KGeu4iNFo2O-3nRh1XRlbPIRdohKkfT91Q&s', description: 'Descripción de la investigación E' }
 ]);
 
 // Formateo de fecha
@@ -110,7 +104,12 @@ async function cargar() {
 
     // Filtro por recientes (ordenar por fecha)
     if (modo.value === 'recientes') {
-      docs = docs.sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
+      const haceUnAnio = new Date()
+      haceUnAnio.setFullYear(haceUnAnio.getFullYear() - 1)
+
+      docs = docs
+        .filter(doc => new Date(doc.fecha) >= haceUnAnio)
+        .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
     }
 
     investigaciones.value = docs
