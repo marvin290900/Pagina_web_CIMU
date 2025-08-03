@@ -69,7 +69,7 @@
 </template>
 
 <script setup>
-import { ref, watchEffect } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 
 // Estados reactivos
 const modo = ref('todo')
@@ -89,13 +89,36 @@ function formatDate(dateStr) {
   return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })
 }
 
-// Carga de datos
 async function cargar() {
-  // let url = `/api/investigaciones?modo=${modo.value}`
-  // if (programa.value) url += `&programa=${programa.value}`
-  // const res = await fetch(url)
-  // investigaciones.value = await res.json()
+  try {
+    const res = await fetch('https://couchdb.am19139.me/investigaciones/_all_docs?include_docs=true', {
+      headers: {
+        Authorization: 'Basic ' + btoa('admin:am191392120')
+      }
+    })
+
+    const data = await res.json()
+
+    let docs = data.rows
+      .map(row => row.doc)
+      .filter(doc => doc && doc.titulo) // Asegura que tenga contenido válido
+
+    // Filtro por programa
+    if (programa.value) {
+      docs = docs.filter(doc => doc.programa === programa.value)
+    }
+
+    // Filtro por recientes (ordenar por fecha)
+    if (modo.value === 'recientes') {
+      docs = docs.sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
+    }
+
+    investigaciones.value = docs
+  } catch (err) {
+    console.error('Error cargando investigaciones:', err)
+  }
 }
+
 
 // Manejar click en tarjeta
 function handleClick(investigacion) {
@@ -104,7 +127,9 @@ function handleClick(investigacion) {
 }
 
 // Recarga cuando cambian filtros
-watchEffect(cargar)
+// Ejecutar al montar y luego al cambiar modo o programa
+onMounted(cargar)
+watch([modo, programa], cargar);
 </script>
 
 <style scoped>
