@@ -17,7 +17,7 @@
       <div class="modal-box max-w-3xl">
         <form
           id="formAgregarInvestigador"
-          class="space-y-5 bg-gray-100 p-6 rounded shadow"
+          class="space-y-5 bg-white p-6 rounded"
           method="dialog"
           enctype="multipart/form-data"
         >
@@ -27,7 +27,9 @@
             id="btnCerrarModalAgregar">✕</button
           >
 
-          <h2 class="text-xl font-semibold mb-4">Agregar Investigador</h2>
+          <h2 class="text-xl font-semibold mb-4 text-center">
+            Agregar Investigador
+          </h2>
 
           <!-- Nombre completo -->
           <div>
@@ -54,6 +56,12 @@
               required
               class="input w-full"
             />
+            <small
+              id="mensajeCorreoExistente"
+              class="text-red-500 text-sm hidden"
+            >
+              Ya existe un investigador con este correo.
+            </small>
           </div>
 
           <!-- Foto -->
@@ -64,11 +72,12 @@
               name="foto"
               type="file"
               accept="image/*"
+              required
               class="file-input file-input-bordered w-full"
             />
             <img
               id="previewFoto"
-              class="mt-4 w-32 h-32 object-cover rounded border hidden"
+              class="mt-4 w-32 h-32 object-cover rounded-full border hidden"
             />
           </div>
 
@@ -85,31 +94,6 @@
               <option value="directivo">Directivo</option>
               <option value="pasante">Pasante</option>
             </select>
-          </div>
-
-          <!-- Departamento -->
-          <div>
-            <label for="departamento" class="block font-medium"
-              >Departamento</label
-            >
-            <input
-              id="departamento"
-              name="departamento"
-              type="text"
-              class="input w-full"
-            />
-          </div>
-
-          <!-- Teléfonos -->
-          <div>
-            <label for="telefonos" class="block font-medium">Teléfono(s)</label>
-            <input
-              id="telefonos"
-              name="telefonos"
-              type="text"
-              placeholder="Ej: 7111-2222, 7888-9999"
-              class="input w-full"
-            />
           </div>
 
           <!-- Redes Sociales -->
@@ -143,31 +127,6 @@
             </div>
           </div>
 
-          <!-- Descripción -->
-          <div>
-            <label for="descripcion" class="block font-medium"
-              >Descripción</label
-            >
-            <textarea
-              id="descripcion"
-              name="descripcion"
-              rows="3"
-              class="textarea w-full"></textarea>
-          </div>
-
-          <!-- Campo de investigación -->
-          <div>
-            <label for="campoInvestigacion" class="block font-medium"
-              >Campo de investigación</label
-            >
-            <input
-              id="campoInvestigacion"
-              name="campoInvestigacion"
-              type="text"
-              class="input w-full"
-            />
-          </div>
-
           <!-- Publicaciones relevantes -->
           <div>
             <label for="publicaciones" class="block font-medium"
@@ -181,20 +140,6 @@
               class="textarea w-full"></textarea>
           </div>
 
-          <!-- Años de experiencia -->
-          <div>
-            <label for="experiencia" class="block font-medium"
-              >Años de experiencia</label
-            >
-            <input
-              id="experiencia"
-              name="experiencia"
-              type="number"
-              min="0"
-              class="input w-full"
-            />
-          </div>
-
           <!-- Currículum en PDF -->
           <div>
             <label for="cv" class="block font-medium">Currículum (PDF)</label>
@@ -203,6 +148,7 @@
               name="cv"
               type="file"
               accept="application/pdf"
+              required
               class="file-input file-input-bordered w-full"
             />
             <iframe id="previewCV" class="mt-4 w-full h-64 border hidden"
@@ -240,6 +186,7 @@
 
           <input type="hidden" id="edit_id" />
 
+          <!-- Editar Nombre Completo -->
           <div>
             <label for="edit_nombre" class="block font-medium"
               >Nombre completo</label
@@ -252,6 +199,8 @@
               class="input"
             />
           </div>
+
+          <!-- Editar Correo Electrónico -->
           <div>
             <label for="edit_email" class="block font-medium"
               >Correo electrónico</label
@@ -264,27 +213,40 @@
               class="input"
             />
           </div>
+
+          <!-- Editar Foto -->
           <div>
-            <label for="edit_departamento" class="block font-medium"
-              >Departamento</label
-            >
+            <label for="edit_foto" class="block font-medium">Foto</label>
             <input
-              id="edit_departamento"
-              name="edit_departamento"
-              type="text"
-              class="input"
+              id="edit_foto"
+              name="edit_foto"
+              type="file"
+              accept="image/*"
+              class="file-input file-input-bordered w-full"
+            />
+            <img
+              id="previewFotoEdit"
+              class="mt-4 w-32 h-32 object-cover rounded border hidden"
             />
           </div>
+
+          <!-- Editar CV -->
           <div>
-            <label for="edit_descripcion" class="block font-medium"
-              >Descripción</label
+            <label for="edit_cv" class="block font-medium"
+              >Currículum (PDF)</label
             >
-            <textarea
-              id="edit_descripcion"
-              name="edit_descripcion"
-              rows="3"
-              class="input"></textarea>
+            <input
+              id="edit_cv"
+              name="edit_cv"
+              type="file"
+              accept="application/pdf"
+              class="file-input file-input-bordered w-full"
+            />
+            <iframe id="previewCVEedit" class="mt-4 w-full h-64 border hidden"
+            ></iframe>
           </div>
+
+          <!-- Botones -->
           <div class="flex justify-end gap-2">
             <button type="button" class="btn" id="btnCancelarEdicion"
               >Cancelar</button
@@ -359,15 +321,14 @@
         <p id="modalDepartamento" class="text-sm text-gray-600 mb-1"></p>
         <p id="modalDescripcion" class="text-sm text-gray-500"></p>
         <!-- Sección para mostrar CV -->
-      <div class="mt-4">
-        <label class="block font-medium">Currículum Vitae (PDF)</label>
-        <iframe
-          id="modalCV"
-          class="w-full h-64 border"
-          style="border-radius: 0.5rem"></iframe>
+        <div class="mt-4">
+          <label class="block font-medium">Currículum Vitae (PDF)</label>
+          <iframe
+            id="modalCV"
+            class="w-full h-64 border"
+            style="border-radius: 0.5rem"></iframe>
+        </div>
       </div>
-      </div>
-      
     </dialog>
 
     <!-- Modal para confirmar agregar investigador -->
@@ -518,11 +479,32 @@
   let investigadores = [];
   let idAEliminar = null;
 
+  async function cargarInvestigadores() {
+    try {
+      const res = await fetch("/api/investigadores/obtener");
+      const data = await res.json();
+      investigadores = data.docs || [];
+      await renderInvestigadores();
+    } catch (err) {
+      console.error("Error cargando investigadores:", err);
+    }
+  }
+
+  //######################################################################################
+  //CODIGOS PARA AGREGAR INVESTIGADORES NUEVOS
+
   btnMostrarModalAgregar.addEventListener("click", () => {
     modalAgregar.showModal();
   });
 
   btnAbrirConfirmarGuardarAgregar.addEventListener("click", () => {
+    const form = document.getElementById("formAgregarInvestigador") as HTMLFormElement;
+  if (!form.checkValidity()) {
+    form.reportValidity(); // muestra mensajes nativos de error
+    return; // no abre el modal de confirmación
+  }
+
+  // Si pasó la validación, abre el modal de confirmación
     modalConfirmarAgregar.showModal();
   });
 
@@ -538,26 +520,6 @@
   btnCerrarModalAgregar.addEventListener("click", () => {
     modalAgregar.close();
     limpiarFormularioAgregar();
-  });
-
-  btnCerrarModalEditar.addEventListener("click", () => {
-    modalEditar.close();
-  });
-
-  btnCancelarEdicion.addEventListener("click", () => {
-    modalEditar.close();
-  });
-
-  btnAbrirConfirmarGuardar.addEventListener("click", () => {
-    modalConfirmarGuardar.showModal();
-  });
-
-  btnCancelarGuardar.addEventListener("click", () => {
-    modalConfirmarGuardar.close();
-  });
-
-  btnCancelarEliminar.addEventListener("click", () => {
-    modalConfirmarEliminar.close();
   });
 
   inputFoto.addEventListener("change", () => {
@@ -587,101 +549,6 @@
       previewCV.classList.add("hidden");
     }
   });
-
-  //FUncion para mostrar mesanje personalizado
-  function showMessage(mensaje, tipo = "info") {
-    // Crear contenedor si no existe
-    let contenedor = document.getElementById("message-container");
-    if (!contenedor) {
-      contenedor = document.createElement("div");
-      contenedor.id = "message-container";
-      contenedor.style.position = "fixed";
-      contenedor.style.top = "80px";
-      contenedor.style.left = "50%";
-      contenedor.style.transform = "translateX(-50%)";
-      contenedor.style.zIndex = "9999";
-      document.body.appendChild(contenedor);
-    }
-
-    // Crear el mensaje
-    const mensajeElem = document.createElement("div");
-    mensajeElem.textContent = mensaje;
-    mensajeElem.style.marginBottom = "10px";
-    mensajeElem.style.padding = "12px 20px";
-    mensajeElem.style.borderRadius = "5px";
-    mensajeElem.style.color = "white";
-    mensajeElem.style.minWidth = "200px";
-    mensajeElem.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
-    mensajeElem.style.fontWeight = "600";
-    mensajeElem.style.fontFamily = "sans-serif";
-    mensajeElem.style.cursor = "default";
-    mensajeElem.style.opacity = "1";
-    mensajeElem.style.transition = "opacity 0.5s ease";
-
-    // Colores según tipo
-    switch (tipo) {
-      case "success":
-        mensajeElem.style.backgroundColor = "#28a745";
-        break;
-      case "error":
-        mensajeElem.style.backgroundColor = "#dc3545";
-        break;
-      case "info":
-      default:
-        mensajeElem.style.backgroundColor = "#007bff";
-        break;
-    }
-
-    contenedor.appendChild(mensajeElem);
-
-    // Desaparece después de 3 segundos
-    setTimeout(() => {
-      mensajeElem.style.opacity = "0";
-      setTimeout(() => {
-        mensajeElem.remove();
-      }, 500);
-    }, 3000);
-  }
-
-  // Funcion para filtrar por categoria
-  filtroCategoria.addEventListener("change", renderInvestigadores);
-  filtroNombre.addEventListener("input", () => {
-    if (filtroNombre.value.length > 0) {
-      btnLimpiarFiltroNombre.style.display = "block";
-    } else {
-      btnLimpiarFiltroNombre.style.display = "none";
-    }
-    renderInvestigadores();
-  });
-
-  // Boton para limpiar filtro de nombre
-  btnLimpiarFiltroNombre.addEventListener("click", () => {
-    filtroNombre.value = "";
-    btnLimpiarFiltroNombre.style.display = "none";
-    filtroNombre.focus();
-    renderInvestigadores();
-  });
-
-  //datalles par evitar que se envien muchas peticiones al servidor
-  function mostrarSpinnerEnBoton(boton) {
-    const texto = boton.querySelector(".btn-text");
-    const spinner = boton.querySelector(".btn-spinner");
-    if (texto && spinner) {
-      texto.classList.add("hidden");
-      spinner.classList.remove("hidden");
-      boton.disabled = true;
-    }
-  }
-
-  function ocultarSpinnerEnBoton(boton) {
-    const texto = boton.querySelector(".btn-text");
-    const spinner = boton.querySelector(".btn-spinner");
-    if (texto && spinner) {
-      texto.classList.remove("hidden");
-      spinner.classList.add("hidden");
-      boton.disabled = false;
-    }
-  }
 
   // Boton para guardar investigador
   btnConfirmarAgregar.addEventListener("click", async () => {
@@ -743,6 +610,47 @@
       const email = formData.get("email").toString().toLowerCase().trim();
       const idTransformado = `${email.replace(/@/g, "_")}`;
 
+      // Validar si ya existe un investigador con ese ID
+      const inputEmail = document.getElementById("email") as HTMLInputElement;
+      const mensajeCorreo = document.getElementById("mensajeCorreoExistente");
+
+      const existe = investigadores.some((inv) => inv._id === idTransformado);
+
+      if (existe) {
+        // Mostrar mensaje y marcar el input
+        inputEmail.classList.add(
+          "border",
+          "border-red-500",
+          "focus:border-red-500"
+        );
+        mensajeCorreo.classList.remove("hidden");
+
+        // Cerrar el modal de confirmación, mantener abierto el de agregar
+        modalConfirmarAgregar.close();
+        ocultarSpinnerEnBoton(boton);
+
+        // Enfocar el input
+        inputEmail.focus();
+        return;
+      } else {
+        // Limpiar errores si todo bien
+        inputEmail.classList.remove(
+          "border",
+          "border-red-500",
+          "focus:border-red-500"
+        );
+        mensajeCorreo.classList.add("hidden");
+      }
+
+      inputEmail.addEventListener("input", () => {
+        inputEmail.classList.remove(
+          "border",
+          "border-red-500",
+          "focus:border-red-500"
+        );
+        mensajeCorreo.classList.add("hidden");
+      });
+
       const nuevo = {
         _id: idTransformado,
         nombre: formData.get("nombre"),
@@ -779,6 +687,7 @@
       if (result.ok) {
         showMessage("Investigador agregado correctamente", "success");
         form.reset();
+        limpiarFormularioAgregar();
         modalAgregar.close();
         modalConfirmarAgregar.close();
         await cargarInvestigadores();
@@ -793,6 +702,80 @@
     }
   });
 
+  function limpiarFormularioAgregar() {
+    const form = document.getElementById(
+      "formAgregarInvestigador"
+    ) as HTMLFormElement;
+    form.reset(); // Limpia los campos automáticamente
+
+    // Ocultar la imagen de previsualización
+    const previewFoto = document.getElementById(
+      "previewFoto"
+    ) as HTMLImageElement;
+    previewFoto.src = "";
+    previewFoto.classList.add("hidden");
+
+    // Opcional: limpiar campos manuales si es necesario (como select con valores por defecto, etc.)
+    const camposTexto = form.querySelectorAll("input, textarea, select");
+    camposTexto.forEach((campo) => {
+      if (campo instanceof HTMLInputElement && campo.type === "file") {
+        campo.value = ""; // reset archivo
+      }
+    });
+    previewCV.src = "";
+    previewCV.classList.add("hidden");
+  }
+  //####################################################################################
+
+  //###################################################################################################
+  //CODIGOS PARA EDITAR INVESTIGADOR
+
+  btnCerrarModalEditar.addEventListener("click", () => {
+    modalEditar.close();
+  });
+
+  btnCancelarEdicion.addEventListener("click", () => {
+    modalEditar.close();
+  });
+
+  btnAbrirConfirmarGuardar.addEventListener("click", () => {
+    modalConfirmarGuardar.showModal();
+  });
+
+  btnCancelarGuardar.addEventListener("click", () => {
+    modalConfirmarGuardar.close();
+  });
+
+  function editarInvestigador(id) {
+    const inv = investigadores.find((i) => i._id === id);
+    if (!inv) return alert("Investigador no encontrado");
+
+    document.getElementById("edit_id").value = inv._id;
+    document.getElementById("edit_nombre").value = inv.nombre || "";
+    document.getElementById("edit_email").value = inv.email || "";
+
+    // Previsualizar imagen
+    const previewFoto = document.getElementById("previewFotoEdit");
+    if (inv.foto) {
+      previewFoto.src = inv.foto;
+      previewFoto.classList.remove("hidden");
+    } else {
+      previewFoto.src = "";
+      previewFoto.classList.add("hidden");
+    }
+
+    // Previsualizar PDF (CV)
+    const previewCV = document.getElementById("previewCVEedit");
+    if (inv.cv) {
+      previewCV.src = inv.cv;
+      previewCV.classList.remove("hidden");
+    } else {
+      previewCV.src = "";
+      previewCV.classList.add("hidden");
+    }
+    modalEditar.showModal();
+  }
+
   //Boton para confirmar guardar cambio a la hora de editar investigador
   btnConfirmarGuardar.addEventListener("click", async () => {
     const boton = btnConfirmarGuardar;
@@ -802,8 +785,6 @@
     const actualizado = {
       nombre: document.getElementById("edit_nombre").value,
       email: document.getElementById("edit_email").value,
-      departamento: document.getElementById("edit_departamento").value,
-      descripcion: document.getElementById("edit_descripcion").value,
     };
 
     try {
@@ -828,6 +809,20 @@
       ocultarSpinnerEnBoton(boton);
     }
   });
+
+  //###################################################################################################
+
+  //###############################################################################################
+  //CODIGOS PARA ELIMINAR INVESTIGADOR
+
+  btnCancelarEliminar.addEventListener("click", () => {
+    modalConfirmarEliminar.close();
+  });
+
+  function prepararEliminarInvestigador(id) {
+    idAEliminar = id;
+    modalConfirmarEliminar.showModal();
+  }
 
   //Boton para confirmar eliminar investigador
   btnConfirmarEliminar.addEventListener("click", async () => {
@@ -855,35 +850,6 @@
     await cargarInvestigadores();
   });
 
-  function prepararEliminarInvestigador(id) {
-    idAEliminar = id;
-    modalConfirmarEliminar.showModal();
-  }
-
-  async function cargarInvestigadores() {
-    try {
-      const res = await fetch("/api/investigadores/obtener");
-      const data = await res.json();
-      investigadores = data.docs || [];
-      await renderInvestigadores();
-    } catch (err) {
-      console.error("Error cargando investigadores:", err);
-    }
-  }
-
-  function editarInvestigador(id) {
-    const inv = investigadores.find((i) => i._id === id);
-    if (!inv) return alert("Investigador no encontrado");
-
-    document.getElementById("edit_id").value = inv._id;
-    document.getElementById("edit_nombre").value = inv.nombre || "";
-    document.getElementById("edit_email").value = inv.email || "";
-    document.getElementById("edit_departamento").value = inv.departamento || "";
-    document.getElementById("edit_descripcion").value = inv.descripcion || "";
-
-    modalEditar.showModal();
-  }
-
   async function eliminarInvestigador(id) {
     const respuesta = await fetch("/api/investigadores/eliminar", {
       method: "DELETE",
@@ -902,7 +868,10 @@
       showMessage("Error al eliminar: " + resultado.error, "error");
     }
   }
+  //###################################################################################################
 
+  //###############################################################################################
+  //MOSTRAR INVESTIGADORES Y RENDERIZARLOS
   function mostrarModalInvestigador(inv) {
     const modal = document.getElementById(
       "modalInvestigador"
@@ -1018,27 +987,102 @@
 
   cargarInvestigadores();
 
-  function limpiarFormularioAgregar() {
-    const form = document.getElementById(
-      "formAgregarInvestigador"
-    ) as HTMLFormElement;
-    form.reset(); // Limpia los campos automáticamente
+  //###############################################################################################
 
-    // Ocultar la imagen de previsualización
-    const previewFoto = document.getElementById(
-      "previewFoto"
-    ) as HTMLImageElement;
-    previewFoto.src = "";
-    previewFoto.classList.add("hidden");
+  //FUncion para mostrar mesanje personalizado
+  function showMessage(mensaje, tipo = "info") {
+    // Crear contenedor si no existe
+    let contenedor = document.getElementById("message-container");
+    if (!contenedor) {
+      contenedor = document.createElement("div");
+      contenedor.id = "message-container";
+      contenedor.style.position = "fixed";
+      contenedor.style.top = "80px";
+      contenedor.style.left = "50%";
+      contenedor.style.transform = "translateX(-50%)";
+      contenedor.style.zIndex = "999999999";
+      document.body.appendChild(contenedor);
+    }
 
-    // Opcional: limpiar campos manuales si es necesario (como select con valores por defecto, etc.)
-    const camposTexto = form.querySelectorAll("input, textarea, select");
-    camposTexto.forEach((campo) => {
-      if (campo instanceof HTMLInputElement && campo.type === "file") {
-        campo.value = ""; // reset archivo
-      }
-    });
-    previewCV.src = "";
-    previewCV.classList.add("hidden");
+    // Crear el mensaje
+    const mensajeElem = document.createElement("div");
+    mensajeElem.textContent = mensaje;
+    mensajeElem.style.marginBottom = "10px";
+    mensajeElem.style.padding = "12px 20px";
+    mensajeElem.style.borderRadius = "5px";
+    mensajeElem.style.color = "white";
+    mensajeElem.style.minWidth = "200px";
+    mensajeElem.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
+    mensajeElem.style.fontWeight = "600";
+    mensajeElem.style.fontFamily = "sans-serif";
+    mensajeElem.style.cursor = "default";
+    mensajeElem.style.opacity = "1";
+    mensajeElem.style.transition = "opacity 0.5s ease";
+    mensajeElem.style.position = "relative";
+    mensajeElem.style.zIndex = "999999999";
+
+    // Colores según tipo
+    switch (tipo) {
+      case "success":
+        mensajeElem.style.backgroundColor = "#28a745";
+        break;
+      case "error":
+        mensajeElem.style.backgroundColor = "#dc3545";
+        break;
+      case "info":
+      default:
+        mensajeElem.style.backgroundColor = "#007bff";
+        break;
+    }
+
+    contenedor.appendChild(mensajeElem);
+
+    // Desaparece después de 3 segundos
+    setTimeout(() => {
+      mensajeElem.style.opacity = "0";
+      setTimeout(() => {
+        mensajeElem.remove();
+      }, 500);
+    }, 3000);
+  }
+
+  // Funcion para filtrar por categoria
+  filtroCategoria.addEventListener("change", renderInvestigadores);
+  filtroNombre.addEventListener("input", () => {
+    if (filtroNombre.value.length > 0) {
+      btnLimpiarFiltroNombre.style.display = "block";
+    } else {
+      btnLimpiarFiltroNombre.style.display = "none";
+    }
+    renderInvestigadores();
+  });
+
+  // Boton para limpiar filtro de nombre
+  btnLimpiarFiltroNombre.addEventListener("click", () => {
+    filtroNombre.value = "";
+    btnLimpiarFiltroNombre.style.display = "none";
+    filtroNombre.focus();
+    renderInvestigadores();
+  });
+
+  //datalles par evitar que se envien muchas peticiones al servidor
+  function mostrarSpinnerEnBoton(boton) {
+    const texto = boton.querySelector(".btn-text");
+    const spinner = boton.querySelector(".btn-spinner");
+    if (texto && spinner) {
+      texto.classList.add("hidden");
+      spinner.classList.remove("hidden");
+      boton.disabled = true;
+    }
+  }
+
+  function ocultarSpinnerEnBoton(boton) {
+    const texto = boton.querySelector(".btn-text");
+    const spinner = boton.querySelector(".btn-spinner");
+    if (texto && spinner) {
+      texto.classList.remove("hidden");
+      spinner.classList.add("hidden");
+      boton.disabled = false;
+    }
   }
 </script>

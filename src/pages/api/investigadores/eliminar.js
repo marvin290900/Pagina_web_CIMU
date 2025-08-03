@@ -11,7 +11,7 @@ async function eliminarArchivoImagen(fotoUrl) {
 
     const urlSinQuery = fotoUrl.split('?')[0];
     const imagePath = path.join(process.cwd(), 'public', urlSinQuery);
-    console.log('Intentando eliminar imagen en:', imagePath);
+    //console.log('Intentando eliminar imagen en:', imagePath);
 
     try {
       await fs.access(imagePath);
@@ -21,7 +21,7 @@ async function eliminarArchivoImagen(fotoUrl) {
     }
 
     await fs.unlink(imagePath);
-    console.log('Imagen eliminada:', imagePath);
+    //console.log('Imagen eliminada:', imagePath);
   } catch (error) {
     console.error('Error al eliminar imagen:', error);
   }
@@ -36,7 +36,7 @@ async function eliminarArchivoCV(cvUrl) {
 
     const urlSinQuery = cvUrl.split('?')[0];
     const cvPath = path.join(process.cwd(), 'public', urlSinQuery);
-    console.log('Intentando eliminar CV en:', cvPath);
+    //console.log('Intentando eliminar CV en:', cvPath);
 
     try {
       await fs.access(cvPath);
@@ -46,7 +46,7 @@ async function eliminarArchivoCV(cvUrl) {
     }
 
     await fs.unlink(cvPath);
-    console.log('CV eliminado:', cvPath);
+    //console.log('CV eliminado:', cvPath);
   } catch (error) {
     console.error('Error al eliminar CV:', error);
   }
