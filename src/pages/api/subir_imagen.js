@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
+const BASE_URL = 'http://68.183.19.227';
 const BASE_PATH = '/var/www/cimu';
 
 export async function POST({ request }) {
