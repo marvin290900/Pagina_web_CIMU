@@ -1,6 +1,8 @@
 import fs from 'fs/promises';
 import path from 'path';
 
+const BASE_PATH = '/var/www/cimu';
+
 export async function POST({ request }) {
   try {
     const { path: url } = await request.json();
@@ -15,7 +17,7 @@ export async function POST({ request }) {
     const urlSinQuery = url.split('?')[0];
 
     // Ruta absoluta dentro de /public
-    const fullPath = path.join(process.cwd(), 'public', urlSinQuery);
+    const fullPath = path.join(BASE_PATH, urlSinQuery);
 
     try {
       await fs.access(fullPath);
