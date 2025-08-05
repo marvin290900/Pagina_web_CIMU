@@ -33,7 +33,7 @@ export async function POST({ request }) {
 
     await fs.promises.writeFile(filePath, buffer);
 
-    const publicUrl = `/${uploadsDir}/${fileName}`;
+    const publicUrl = `public/${carpeta}/${fileName}`;
 
     return new Response(JSON.stringify({ ok: true, url: publicUrl }), {
       status: 200,
