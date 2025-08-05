@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-const BASE_PATH = '/var/www/cimu/public';
+const BASE_PATH = '/var/www/cimu/public/uploads';
 
 export async function POST({ request }) {
   try {

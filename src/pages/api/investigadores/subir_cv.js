@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const BASE_PATH = '/var/www/cimu/public';
+const BASE_PATH = '/var/www/cimu/public/uploads';
 
 export async function POST({ request }) {
   try {
@@ -34,7 +34,7 @@ export async function POST({ request }) {
 
     await fs.promises.writeFile(filePath, buffer);
 
-    const publicUrl = `/${carpeta}/${fileName}`;
+    const publicUrl = `/uploads/${carpeta}/${fileName}`;
 
     return new Response(JSON.stringify({ ok: true, url: publicUrl }), {
       status: 200,
