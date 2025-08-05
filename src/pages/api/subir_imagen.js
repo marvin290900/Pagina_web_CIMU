@@ -1,8 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 
-const BASE_PATH = '/var/www/cimu'; // Cambia esto a la ruta absoluta de tu carpeta public
-
 export async function POST({ request }) {
   try {
     // Obtenemos los datos del formulario (la imagen)
@@ -28,7 +26,7 @@ export async function POST({ request }) {
     const buffer = Buffer.from(arrayBuffer);
 
     // Ruta donde guardaremos las imágenes (carpeta public/uploads)
-    const uploadsDir = path.join(BASE_PATH, carpeta);
+    const uploadsDir = path.join('/var/www/cimu/', carpeta);
 
     // Crear la carpeta si no existe
     if (!fs.existsSync(uploadsDir)) {
