@@ -503,7 +503,7 @@
 
   async function cargarInvestigadores() {
     try {
-      const res = await fetch("/api/inv/obtener");
+      const res = await fetch("/api/investigadores/obtener");
       const data = await res.json();
       investigadores = data.docs || [];
       await renderInvestigadores();
@@ -653,7 +653,7 @@
         formDataCV.append("cv", cvFile);
         formDataCV.append("carpeta", "cv");
 
-        const resCV = await fetch("/api/inv/subir_cv", {
+        const resCV = await fetch("/api/investigadores/subir_cv", {
           method: "POST",
           body: formDataCV,
         });
@@ -686,7 +686,7 @@
         },
       };
 
-      const res = await fetch("/api/inv/agregar", {
+      const res = await fetch("/api/investigadores/agregar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(nuevo),
@@ -897,7 +897,7 @@
           const fd = new FormData();
           fd.append("cv", nuevoCV);
           fd.append("carpeta", "cv");
-          const res = await fetch("/api/inv/subir_cv", {
+          const res = await fetch("/api/investigadores/subir_cv", {
             method: "POST",
             body: fd,
           });
@@ -910,7 +910,7 @@
       }
 
       // Enviar datos actualizados
-      const res = await fetch(`/api/inv/editar`, {
+      const res = await fetch(`/api/investigadores/editar`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -929,7 +929,7 @@
           investigador.foto &&
           investigador.foto !== nuevaFotoUrl
         ) {
-          await fetch("/api/inv/eliminar_archivo", {
+          await fetch("/api/investigadores/eliminar_archivo", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ path: investigador.foto }),
@@ -942,7 +942,7 @@
           investigador.cv &&
           investigador.cv !== nuevoCVUrl
         ) {
-          await fetch("/api/inv/eliminar_archivo", {
+          await fetch("/api/investigadores/eliminar_archivo", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ path: investigador.cv }),
@@ -1005,7 +1005,7 @@
   });
 
   async function eliminarInvestigador(id) {
-    const respuesta = await fetch("/api/inv/eliminar", {
+    const respuesta = await fetch("/api/investigadores/eliminar", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
