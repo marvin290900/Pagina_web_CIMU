@@ -629,7 +629,7 @@
       if (file) {
         const formDataImagen = new FormData();
         formDataImagen.append("foto", file);
-        formDataImagen.append("carpeta", "investigadores");
+        formDataImagen.append("carpeta", "investigadores_fotos");
 
         const resImagen = await fetch("/api/subir_imagen", {
           method: "POST",
@@ -651,7 +651,7 @@
       if (cvFile) {
         const formDataCV = new FormData();
         formDataCV.append("cv", cvFile);
-        formDataCV.append("carpeta", "cv");
+        formDataCV.append("carpeta", "cv_pdfs");
 
         const resCV = await fetch("/api/investigadores/subir_cv", {
           method: "POST",
