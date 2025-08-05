@@ -47,7 +47,7 @@ export async function POST({ request }) {
     await fs.promises.writeFile(filePath, buffer);
 
     // URL pública para acceder desde el frontend
-    const publicUrl = `/${carpeta}/${fileName}`;
+    const publicUrl = `/${uploadsDir}/${fileName}`;
 
     // Devolvemos el resultado con el link
     return new Response(JSON.stringify({ ok: true, url: publicUrl }), {
