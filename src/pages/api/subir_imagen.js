@@ -21,6 +21,7 @@ export async function POST({ request }) {
     // Obtener el nombre de la carpeta (por ejemplo: 'investigadores', 'libros', etc.)
     // Si no viene, usar 'uploads' por defecto
     const carpeta = formData.get('carpeta')?.toString().trim() || 'uploads';
+    console.log('Carpeta recibida:', carpeta);
 
     // Convertimos la imagen a un buffer para guardarla
     const arrayBuffer = await file.arrayBuffer();
