@@ -2,6 +2,7 @@ import axios from 'axios';
 import dotenv from 'dotenv';
 
 dotenv.config();
+console.log(process.env.COUCHDB_URL)
 
 export const couch = axios.create({
   baseURL: process.env.COUCHDB_URL, 
