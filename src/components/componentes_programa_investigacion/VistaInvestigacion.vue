@@ -120,7 +120,7 @@ const formatDate = (fecha) => {
 // Función para obtener la investigación desde el backend
 const obtenerInvestigacion = async () => {
   try {
-    const res = await fetch(`https://couchdb.am19139.me/investigaciones/${props.id}`, {
+    const res = await fetch(`http://68.183.19.227:5984/investigaciones/${props.id}`, {
       headers: {
         "Authorization": "Basic " + btoa("admin:am191392120")
       }

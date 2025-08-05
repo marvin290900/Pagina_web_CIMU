@@ -85,7 +85,7 @@ function formatDate(dateStr) {
 
 async function cargar() {
   try {
-    const res = await fetch('https://couchdb.am19139.me/investigaciones/_all_docs?include_docs=true', {
+    const res = await fetch('http://68.183.19.227:5984/investigaciones/_all_docs?include_docs=true', {
       headers: {
         Authorization: 'Basic ' + btoa('admin:am191392120')
       }
