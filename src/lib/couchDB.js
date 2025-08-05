@@ -4,10 +4,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const couch = axios.create({
-  baseURL: 'http://68.183.19.227:5984',
+  baseURL: process.env.COUCHDB_URL, 
   auth: {
-    username: 'admin',
-    password: 'paginawebcimu',
+    username: process.env.COUCHDB_USER,
+    password: process.env.COUCHDB_PASSWORD,
   },
   headers: {
     'Content-Type': 'application/json',
