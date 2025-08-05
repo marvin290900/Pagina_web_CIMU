@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
+const BASE_PATH = '/var/www/cimu/public';
 
 export async function POST({ request }) {
   try {
@@ -20,7 +21,7 @@ export async function POST({ request }) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    const uploadsDir = path.join('/var/www/cimu/', carpeta);
+    const uploadsDir = path.join(BASE_PATH, carpeta);
 
     if (!fs.existsSync(uploadsDir)) {
       fs.mkdirSync(uploadsDir, { recursive: true });
