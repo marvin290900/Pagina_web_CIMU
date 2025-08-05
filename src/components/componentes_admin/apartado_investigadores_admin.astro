@@ -875,7 +875,7 @@
         if (nuevaFoto) {
           const fd = new FormData();
           fd.append("foto", nuevaFoto);
-          fd.append("carpeta", "investigadores");
+          fd.append("carpeta", "investigadores_fotos");
           const res = await fetch("/api/subir_imagen", {
             method: "POST",
             body: fd,
