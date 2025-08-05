@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 
-const BASE_URL = 'http://68.183.19.227';
 const BASE_PATH = '/var/www/cimu';
 
 export async function POST({ request }) {
@@ -48,7 +47,7 @@ export async function POST({ request }) {
     await fs.promises.writeFile(filePath, buffer);
 
     // URL pública para acceder desde el frontend
-    const publicUrl = `${BASE_URL}/${carpeta}/${fileName}`;
+    const publicUrl = `/${carpeta}/${fileName}`;
 
     // Devolvemos el resultado con el link
     return new Response(JSON.stringify({ ok: true, url: publicUrl }), {
