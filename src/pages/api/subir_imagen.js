@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const BASE_PATH = '/var/www/cimu/public';
+const BASE_PATH = '/var/www/cimu/public'; // Cambia esto a la ruta absoluta de tu carpeta public
 
 export async function POST({ request }) {
   try {
