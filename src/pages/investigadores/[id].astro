@@ -4,6 +4,7 @@ import imagenDefault from "../../assets/default_investigador/imagen_default_1.pn
 
 import { getInvestigadorPorId } from "../../lib/investigadores.js";
 const { id } = Astro.params;
+console.log('ID recibido en la ruta:', id);
 const investigador = await getInvestigadorPorId(id);
 console.log('Investigador obtenido:', investigador);
 ---
