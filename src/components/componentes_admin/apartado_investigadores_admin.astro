@@ -896,7 +896,7 @@
         if (nuevoCV) {
           const fd = new FormData();
           fd.append("cv", nuevoCV);
-          fd.append("carpeta", "cv");
+          fd.append("carpeta", "cv-pdfs");
           const res = await fetch("/api/investigadores/subir_cv", {
             method: "POST",
             body: fd,
