@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const BASE_PATH = '/var/www/cimu/public'; // Cambia esto a la ruta absoluta de tu carpeta public
+const BASE_PATH = '/var/www/cimu'; // Cambia esto a la ruta absoluta de tu carpeta public
 
 export async function POST({ request }) {
   try {
@@ -47,7 +47,7 @@ export async function POST({ request }) {
     await fs.promises.writeFile(filePath, buffer);
 
     // URL pública para acceder desde el frontend
-    const publicUrl = `public/${carpeta}/${fileName}`;
+    const publicUrl = `/${carpeta}/${fileName}`;
 
     // Devolvemos el resultado con el link
     return new Response(JSON.stringify({ ok: true, url: publicUrl }), {
