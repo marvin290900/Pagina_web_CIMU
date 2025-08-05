@@ -629,7 +629,7 @@
       if (file) {
         const formDataImagen = new FormData();
         formDataImagen.append("foto", file);
-        formDataImagen.append("carpeta", "investigadores_fotos");
+        formDataImagen.append("carpeta", "invFotos");
 
         const resImagen = await fetch("/api/subir_imagen", {
           method: "POST",
@@ -651,7 +651,7 @@
       if (cvFile) {
         const formDataCV = new FormData();
         formDataCV.append("cv", cvFile);
-        formDataCV.append("carpeta", "cv_pdfs");
+        formDataCV.append("carpeta", "cvPdfs");
 
         const resCV = await fetch("/api/investigadores/subir_cv", {
           method: "POST",
@@ -875,7 +875,7 @@
         if (nuevaFoto) {
           const fd = new FormData();
           fd.append("foto", nuevaFoto);
-          fd.append("carpeta", "investigadores_fotos");
+          fd.append("carpeta", "invFotos");
           const res = await fetch("/api/subir_imagen", {
             method: "POST",
             body: fd,
@@ -896,7 +896,7 @@
         if (nuevoCV) {
           const fd = new FormData();
           fd.append("cv", nuevoCV);
-          fd.append("carpeta", "cv_pdfs");
+          fd.append("carpeta", "cvPdfs");
           const res = await fetch("/api/investigadores/subir_cv", {
             method: "POST",
             body: fd,
