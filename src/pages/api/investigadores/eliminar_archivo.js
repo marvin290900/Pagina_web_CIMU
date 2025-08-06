@@ -14,7 +14,7 @@ export async function POST({ request }) {
     }
 
     // Limpiar posibles parámetros query como ?v=123
-    const urlSinQuery = url.split('?')[0];
+    const urlSinQuery = url.split('?')[0].replace(/^\/+/, '');
 
     // Ruta absoluta dentro de /public
     const fullPath = path.join(BASE_PATH, urlSinQuery);
