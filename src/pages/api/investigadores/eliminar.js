@@ -11,7 +11,7 @@ async function eliminarArchivoImagen(fotoUrl) {
       return;
     }
 
-    const urlSinQuery = fotoUrl.split('?')[0];
+    const urlSinQuery = fotoUrl.split('?')[0].replace(/^\/+/, '');
     const imagePath = path.join(BASE_PATH, urlSinQuery);
     //console.log('Intentando eliminar imagen en:', imagePath);
 
@@ -36,7 +36,7 @@ async function eliminarArchivoCV(cvUrl) {
       return;
     }
 
-    const urlSinQuery = cvUrl.split('?')[0];
+    const urlSinQuery = cvUrl.split('?')[0].replace(/^\/+/, '');
     const cvPath = path.join(BASE_PATH, urlSinQuery);
     //console.log('Intentando eliminar CV en:', cvPath);
 
