@@ -2,7 +2,7 @@ import { getInvestigadorPorId, eliminarInvestigador } from '../../../lib/investi
 import fs from 'fs/promises';
 import path from 'path';
 
-const BASE_PATH = '/var/www/cimu/public/uploads';
+const BASE_PATH = '/var/www/cimu/public';
 
 async function eliminarArchivoImagen(fotoUrl) {
   try {
