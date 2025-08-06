@@ -18,6 +18,7 @@ export async function POST({ request }) {
 
     // Ruta absoluta dentro de /public
     const fullPath = path.join(BASE_PATH, urlSinQuery);
+    console.log('Intentando eliminar archivo en:', fullPath);
 
     try {
       await fs.access(fullPath);

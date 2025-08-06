@@ -38,7 +38,7 @@ async function eliminarArchivoCV(cvUrl) {
 
     const urlSinQuery = cvUrl.split('?')[0].replace(/^\/+/, '');
     const cvPath = path.join(BASE_PATH, urlSinQuery);
-    //console.log('Intentando eliminar CV en:', cvPath);
+    console.log('Intentando eliminar CV en:', cvPath);
 
     try {
       await fs.access(cvPath);
