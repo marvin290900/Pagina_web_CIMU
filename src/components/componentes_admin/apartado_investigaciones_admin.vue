@@ -93,7 +93,7 @@ const modal = ref(null)
 let imagenSeleccionada = null
 
 async function cargarInvestigaciones() {
-  const res = await fetch('https://couchdb.am19139.me/investigaciones/_all_docs?include_docs=true', {
+  const res = await fetch('http://68.183.19.227:5984/investigaciones/_all_docs?include_docs=true', {
     headers: {
       Authorization: 'Basic ' + btoa('admin:am191392120')
     }
@@ -147,7 +147,7 @@ async function guardarInvestigacion() {
     data.imagen = imageUrl
   }
 
-  const res = await fetch(`https://couchdb.am19139.me/investigaciones/${id}`, {
+  const res = await fetch(`http://68.183.19.227:5984/investigaciones/${id}`, {
     method: 'PUT',
     headers: {
       Authorization: 'Basic ' + btoa('admin:am191392120'),
@@ -161,7 +161,7 @@ async function guardarInvestigacion() {
 }
 
 async function eliminarInvestigacion(id, rev) {
-  await fetch(`https://couchdb.am19139.me/investigaciones/${id}?rev=${rev}`, {
+  await fetch(`http://68.183.19.227:5984/investigaciones/${id}?rev=${rev}`, {
     method: 'DELETE',
     headers: {
       Authorization: 'Basic ' + btoa('admin:am191392120')

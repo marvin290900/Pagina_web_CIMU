@@ -2,6 +2,8 @@ import { getInvestigadorPorId, eliminarInvestigador } from '../../../lib/investi
 import fs from 'fs/promises';
 import path from 'path';
 
+const BASE_PATH = '/var/www/cimu/public';
+
 async function eliminarArchivoImagen(fotoUrl) {
   try {
     if (!fotoUrl) {
@@ -9,8 +11,8 @@ async function eliminarArchivoImagen(fotoUrl) {
       return;
     }
 
-    const urlSinQuery = fotoUrl.split('?')[0];
-    const imagePath = path.join(process.cwd(), 'public', urlSinQuery);
+    const urlSinQuery = fotoUrl.split('?')[0].replace(/^\/+/, '');
+    const imagePath = path.join(BASE_PATH, urlSinQuery);
     //console.log('Intentando eliminar imagen en:', imagePath);
 
     try {
@@ -34,9 +36,9 @@ async function eliminarArchivoCV(cvUrl) {
       return;
     }
 
-    const urlSinQuery = cvUrl.split('?')[0];
-    const cvPath = path.join(process.cwd(), 'public', urlSinQuery);
-    //console.log('Intentando eliminar CV en:', cvPath);
+    const urlSinQuery = cvUrl.split('?')[0].replace(/^\/+/, '');
+    const cvPath = path.join(BASE_PATH, urlSinQuery);
+    console.log('Intentando eliminar CV en:', cvPath);
 
     try {
       await fs.access(cvPath);

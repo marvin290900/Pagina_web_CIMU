@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 
+const BASE_PATH = '/var/www/cimu/public/uploads';
+
 export async function POST({ request }) {
   try {
     const formData = await request.formData();
@@ -13,12 +15,13 @@ export async function POST({ request }) {
       });
     }
 
-    const carpeta = formData.get('carpeta')?.toString().trim() || 'cv';
+    const carpeta = formData.get('carpeta')?.toString().trim() || 'uploads';
+    console.log('Carpeta recibida:', carpeta);
 
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    const uploadsDir = path.join(process.cwd(), 'public', carpeta);
+    const uploadsDir = path.join(BASE_PATH, carpeta);
 
     if (!fs.existsSync(uploadsDir)) {
       fs.mkdirSync(uploadsDir, { recursive: true });
@@ -31,7 +34,7 @@ export async function POST({ request }) {
 
     await fs.promises.writeFile(filePath, buffer);
 
-    const publicUrl = `/${carpeta}/${fileName}`;
+    const publicUrl = `/uploads/${carpeta}/${fileName}`;
 
     return new Response(JSON.stringify({ ok: true, url: publicUrl }), {
       status: 200,
