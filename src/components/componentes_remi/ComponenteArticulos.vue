@@ -97,6 +97,13 @@ onMounted(async () => {
         </div>
       </div>
     </div>
+
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <p>REMI es una revista de Acceso Abierto, semestral, gratuita, revisada por pares evaluadores, que acepta de forma continua manuscritos de carácter multidisciplinario sin costo de publicación para los autores.</p>
+        <img src="/remi/creativecommon.png" alt="Descripción de la imagen" class="my-4"/>
+        <p>Revista Multidisciplinaria de Investigación por Facultad Multidisciplinaria de Occidente, Universidad de El Salvador se distribuye bajo una Licencia Creative Commons Atribución-NoComercial 4.0 Internacional.</p>
+    </div>
+
   </div>
 </template>
 
