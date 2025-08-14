@@ -1,0 +1,87 @@
+---
+import portada from "../../assets/remi/remi.png";
+import latinrevLogo from "../../assets/remi/latinrev.jpg"; // logo LatinREV
+import openAccessLogo from "../../assets/remi/open-access.jpg"; // logo Open Access
+import ComponenteArticulos from "./ComponenteArticulos.vue"
+
+
+const numero = {
+  titulo: "Vol. 3 Núm. 2 (2024): REMI vol.3 número 2 julio-diciembre",
+  descripcion: `REMI es una revista de Acceso Abierto, semestral, gratuita, revisada por pares evaluadores, 
+  que acepta de forma continua manuscritos de carácter multidisciplinario, 
+  sin costo de publicación para los autores.`,
+  publicado: "2025-06-02",
+  enlacePdf: "/pdfs/remi-numero-completo.pdf"
+};
+
+const editorial = {
+  titulo: "APUNTES SOBRE LA REDACCIÓN DE TEXTOS CIENTÍFICOS",
+  autor: "Obed Mejía",
+  paginas: "12-16",
+  enlace: "/pdfs/editorial.pdf"
+};
+---
+
+<div >
+    <div class="max-w-4xl mx-auto p-4">
+  <!-- Título -->
+  <h1 class="text-lg font-bold">{numero.titulo}</h1>
+
+  <!-- Portada y descripción -->
+  <div class="flex flex-col sm:flex-row gap-6 mt-4">
+    <!-- Imagen y botón -->
+    <div class="flex flex-col items-center sm:items-start">
+      <img 
+        src={portada.src} 
+        alt="Portada REMI"
+        class="w-64 rounded-lg shadow-lg"
+      />
+      <a 
+        href={numero.enlacePdf} 
+        class="btn btn-primary mt-4"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        📄 Número Completo
+      </a>
+    </div>
+
+    <!-- Descripción + indexaciones -->
+    <div class="flex-1">
+      <p class="mb-4">{numero.descripcion}</p>
+      <p class="font-semibold mb-4">
+        Publicado: <span class="font-normal">{numero.publicado}</span>
+      </p>
+
+      <!-- Logos -->
+      <div class="flex items-center gap-4">
+        <img src={latinrevLogo.src} alt="Indexado en LatínREV" class="h-10" />
+        <img src={openAccessLogo.src} alt="Open Access" class="h-10" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Editorial -->
+  <div class="card bg-base-100 shadow-md mt-8">
+    <div class="card-body">
+      <h2 class="card-title">Editorial</h2>
+      <p class="font-semibold">{editorial.titulo}</p>
+      <p class="text-sm text-gray-500">
+        {editorial.autor} — {editorial.paginas}
+      </p>
+      <div class="card-actions mt-2">
+        <a 
+          href={editorial.enlace} 
+          class="btn btn-outline btn-sm"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          📄 Ver PDF
+        </a>
+      </div>
+    </div>
+  </div>
+  </div>
+  <ComponenteArticulos client:load></ComponenteArticulos>
+
+</div>
