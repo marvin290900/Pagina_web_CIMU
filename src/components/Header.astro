@@ -1,11 +1,11 @@
 ---
-const { cimuLogo, uesLogoBlanco, uesLogoRojo } = Astro.props;
+const { cimuLogo, uesLogoBlanco, uesLogoRojo,decanato } = Astro.props;
 ---
 
 <!-- Se muestra cuando esta en laptop y tablet -->
 <header
   id="mainHeader"
-  class="navbar fixed top-0 left-0 w-full z-50 transition-colors duration-300 bg-transparent text-white shadow-none"
+  class="navbar fixed top-0 left-0 w-full z-50 transition-colors duration-300 bg-black text-white shadow-none"
 >
   <div class="flex items-center gap-10 flex-1 ml-4 md:ml-5">
     <a href="/"
@@ -22,6 +22,14 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo } = Astro.props;
     <a href="/"
       ><img
         src={cimuLogo.src}
+        alt="cimuLogo"
+        title="Centro de Investigación Multidisciplinario FMOcc UES"
+        class="h-8 sm:h-8 md:h-10 lg:h-12 transition-all duration-300 hover:scale-105 hover:brightness-110"
+      /></a
+    >
+    <a href="/"
+      ><img
+        src={decanato.src}
         alt="cimuLogo"
         title="Centro de Investigación Multidisciplinario FMOcc UES"
         class="h-8 sm:h-8 md:h-10 lg:h-12 transition-all duration-300 hover:scale-105 hover:brightness-110"
