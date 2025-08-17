@@ -3,10 +3,10 @@ import { couch } from './couchDB.js';
 const DB_NAME = 'cimu';   
 
 
-export async function getTodosLasImagenes() {
+export async function getTodasLasImagenes() {
   try {
     const response = await couch.post(`/${DB_NAME}/_find`, {
-      selector: { type: 'Carrousel' },
+      selector: { type: 'carrousel' },
     });
     return response.data.docs;
   } catch (error) {

@@ -1,14 +1,13 @@
 ---
-const { imagen1, imagen2, imagen3 } = Astro.props;
-const imagenes = [imagen1.src, imagen2.src, imagen3.src];
+const { TodasLasImagenes } = Astro.props;
 ---
 
 <section id="seccionImagenesInicio" class="relative w-full overflow-hidden h-[50vh] sm:h-[50vh] md:h-[40vh] lg:h-[70vh]">
   <div class="relative w-full h-full">
     <div id="carousel" class="flex h-full transition-transform duration-1000 ease-in-out">
-      {imagenes.concat(imagenes).map((img) => (
+      {TodasLasImagenes.concat(TodasLasImagenes).map((img) => (
         <div class="w-full flex-shrink-0 h-full">
-          <img src={img} class="w-full h-full object-cover rounded-lg" />
+          <img src={img.foto} class="w-full h-full object-cover rounded-lg" />
         </div>
       ))}
     </div>
