@@ -1,123 +1,155 @@
 ---
-const { cimuLogo, uesLogoBlanco, uesLogoRojo,decanato } = Astro.props;
+const { cimuLogo, uesLogoBlanco, uesLogoRojo, decanato, plumaLogo,remiLogo } =
+  Astro.props;
 ---
 
 <!-- Se muestra cuando esta en laptop y tablet -->
 <header
   id="mainHeader"
-  class="navbar fixed top-0 left-0 w-full z-50 transition-colors duration-300 bg-black text-white shadow-none"
+  class="w-full z-50 transition-colors duration-300 text-white shadow-none"
 >
-  <div class="flex items-center gap-10 flex-1 ml-4 md:ml-5">
-    <a href="/"
-      ><img
-        id="uesLogo"
-        title="Universidad de El Salvador"
-        src={uesLogoBlanco.src}
-        alt="uesLogo"
-        data-logo-blanco={uesLogoBlanco.src}
-        data-logo-rojo={uesLogoRojo.src}
-        class="h-8 sm:h-8 md:h-10 lg:h-12 transition-all duration-300 hover:scale-105 hover:brightness-110"
-      /></a
-    >
-    <a href="/"
-      ><img
-        src={cimuLogo.src}
-        alt="cimuLogo"
-        title="Centro de Investigación Multidisciplinario FMOcc UES"
-        class="h-8 sm:h-8 md:h-10 lg:h-12 transition-all duration-300 hover:scale-105 hover:brightness-110"
-      /></a
-    >
-    <a href="/"
-      ><img
-        src={decanato.src}
-        alt="cimuLogo"
-        title="Centro de Investigación Multidisciplinario FMOcc UES"
-        class="h-8 sm:h-8 md:h-10 lg:h-12 transition-all duration-300 hover:scale-105 hover:brightness-110"
-      /></a
-    >
+  <!-- FILA 1 - LOGOS -->
+  <div class="flex flex-col sm:flex-row items-center py-3 justify-center bg-[#283886]">
+    <!-- Logo + Texto -->
+    <div class="flex items-center">
+      <a href="/">
+        <img
+          src={cimuLogo.src}
+          alt="cimuLogo"
+          title="Centro de Investigación Multidisciplinario FMOcc UES"
+          class="h-18 sm:h-18 md:h-18 lg:h-24 transition-all duration-300 hover:scale-105 hover:brightness-110"
+        />
+      </a> 
+    </div>
+
+    <!-- Logos con divisor -->
+    <div class="ml-1 sm:ml-1 md:ml-18 lg:ml-50 flex items-center gap-6">
+      <a href="/" class="flex flex-row sm:flex-row items-center h-20">
+        <img
+          id="plumaLogo"
+          title="Editorial de la FMocc - UES"
+          src={plumaLogo.src}
+          alt="plumaLogo"
+          class="h-10 sm:h-10 md:h-10 lg:h-15 transition-all duration-300 hover:scale-105 hover:brightness-110"
+        />
+      </a>
+
+      <a href="/" class="flex items-center h-20">
+        <img
+          id="remiLogo"
+          title="Revista Multidisciplinaria de Investigación"
+          src={remiLogo.src}
+          alt="remiLogo"
+          class="h-8 sm:h-8 md:h-8 lg:h-12 transition-all duration-300 hover:scale-105 hover:brightness-110"
+        />
+      </a>
+      
+      <a href="/" class="flex items-center h-20">
+        <img
+          id="decanatoLogo"
+          title="Decanato FMOcc - UES"
+          src={decanato.src}
+          alt="decanatoLogo"
+          class="h-10 sm:h-10 md:h-10 lg:h-15 transition-all duration-300 hover:scale-105 hover:brightness-110"
+        />
+      </a>
+
+      <a href="/" class="flex items-center h-20">
+        <img
+          src={uesLogoBlanco.src}
+          alt="uesLogo"
+          title="Universidad de El Salvador"
+          class="h-10 sm:h-10 md:h-10 lg:h-15 transition-all duration-300 hover:scale-105 hover:brightness-110"
+        />
+      </a>
+    </div>
   </div>
 
+  <!-- FILA 2 - MENU -->
   <!-- Menú para pantallas grandes -->
-  <div class="flex-none hidden sm:block mr-10 md:mr-5">
-    <ul class="menu menu-horizontal px-1" id="menuPrincipal">
-      <li><a href="/">Inicio</a></li>
-      <li class="group relative">
-        <a class="">Nosotros </a>
-        <ul
-          class="absolute left-0 top-full bg-white text-black rounded-md opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition duration-300 p-2 shadow-md z-50"
-        >
-          <li>
-            <a
-              href="/nosotros/acerca_de_cimu"
-              class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
-              >Acerca de CIMU</a
-            >
-          </li>
+  <div class="flex items-center justify-center py-1 bg-[#1D2D50]">
+    <!-- Menu para pantallas grandes -->
+    <div class="hidden sm:block mr-10 md:mr-5">
+      <ul class="menu menu-horizontal px-1" id="menuPrincipal">
+        <li><a href="/">Inicio</a></li>
+        <li class="group relative">
+          <a class="">Nosotros </a>
+          <ul
+            class="absolute left-0 top-full bg-white text-black rounded-md opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition duration-300 p-2 shadow-md z-50"
+          >
+            <li>
+              <a
+                href="/nosotros/acerca_de_cimu"
+                class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
+                >Acerca de CIMU</a
+              >
+            </li>
 
-          <li>
-            <a
-              href="/nosotros/investigadores"
-              class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
-              >Investigadores/as</a
-            >
-          </li>
-        </ul>
-      </li>
+            <li>
+              <a
+                href="/nosotros/investigadores"
+                class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
+                >Investigadores/as</a
+              >
+            </li>
+          </ul>
+        </li>
 
-      <li>
-        <a
-          href="/gaceta_multidisciplinaria"
-          class="block max-w-[90px] truncate lg:max-w-none lg:whitespace-normal lg:overflow-visible lg:text-ellipsis-none"
-          >Gaceta Multidisciplinaria</a>
-      </li>
+        <li>
+          <a
+            href="/gaceta_multidisciplinaria"
+            >Gaceta Multidisciplinaria</a
+          >
+        </li>
 
-      <li class="group relative">
-        <a class="">Investigaciones </a>
-        <ul
-          class="absolute left-0 top-full bg-white text-black rounded-md opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition duration-300 p-2 shadow-md z-50"
-        >
-          <li>
-            <a
-              href="/investigaciones/programa_de_investigaciones"
-              class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
-              >Programas de Investigación</a
-            >
-          </li>
-        </ul>
-      </li>
+        <li class="group relative">
+          <a class="">Investigaciones </a>
+          <ul
+            class="absolute left-0 top-full bg-white text-black rounded-md opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition duration-300 p-2 shadow-md z-50"
+          >
+            <li>
+              <a
+                href="/investigaciones/programa_de_investigaciones"
+                class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
+                >Programas de Investigación</a
+              >
+            </li>
+          </ul>
+        </li>
 
-      <li class="group relative">
-        <a class="">Publicaciones</a>
-        <ul
-          class="absolute left-0 top-full bg-white text-black rounded-md opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition duration-300 p-2 shadow-md z-50"
-        >
-          <li>
-            <a
-              href="/publicaciones/multidisciplinaria/multidisciplinaria_editorial"
-              class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
-              >Multidisciplinaria Editorial</a
-            >
-          </li>
-          <li>
-            <a
-              href="/publicaciones/remi"
-              class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
-              >REMI</a
-            >
-          </li>
-        </ul>
-      </li>
+        <li class="group relative">
+          <a class="">Publicaciones</a>
+          <ul
+            class="absolute left-0 top-full bg-white text-black rounded-md opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition duration-300 p-2 shadow-md z-50"
+          >
+            <li>
+              <a
+                href="/publicaciones/multidisciplinaria/multidisciplinaria_editorial"
+                class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
+                >Multidisciplinaria Editorial</a
+              >
+            </li>
+            <li>
+              <a
+                href="/publicaciones/remi"
+                class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
+                >REMI</a
+              >
+            </li>
+          </ul>
+        </li>
 
-      <li><a href="/contactenos">Contáctenos</a></li>
-    </ul>
-  </div>
+        <li><a href="/contactenos">Contáctenos</a></li>
+      </ul>
+    </div>
 
-  <!-- Menú para móvil -->
-  <div class="flex-none sm:hidden relative">
-    <!-- Botón hamburguesa -->
-    <button id="toggleMenu" class="btn btn-square btn-ghost">
-      <span class="mdi mdi-menu text-2xl"></span>
-    </button>
+    <!-- Menú para móvil -->
+    <div class="flex-none sm:hidden relative">
+      <!-- Botón hamburguesa -->
+      <button id="toggleMenu" class="btn btn-square btn-ghost">
+        <span class="mdi mdi-menu text-2xl"></span>
+      </button>
+    </div>
   </div>
 
   <!-- Menú desplegable pegado a la izquierda -->
@@ -198,27 +230,6 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo,decanato } = Astro.props;
 </header>
 
 <script is:inline>
-  const logo = document.getElementById("uesLogo");
-  const uesLogoBlanco = logo.dataset.logoBlanco;
-  const uesLogoRojo = logo.dataset.logoRojo;
-
-  // Cambiar color y logo al hacer scroll
-  window.addEventListener("scroll", () => {
-    const header = document.getElementById("mainHeader");
-    const logo = document.getElementById("uesLogo");
-    if (!header || !logo) return;
-
-    if (window.scrollY > 50) {
-      header.classList.add("bg-white", "text-black", "shadow-md");
-      header.classList.remove("bg-transparent", "text-white");
-      logo.src = uesLogoRojo;
-    } else {
-      header.classList.add("bg-transparent", "text-white");
-      header.classList.remove("bg-white", "text-black", "shadow-md");
-      logo.src = uesLogoBlanco;
-    }
-  });
-
   // Cierra todos los submenús cuando se hace clic en un enlace
   document.querySelectorAll("#menuPrincipal a").forEach((link) => {
     link.addEventListener("click", () => {

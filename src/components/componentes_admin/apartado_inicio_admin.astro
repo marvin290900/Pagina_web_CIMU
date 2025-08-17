@@ -1,0 +1,321 @@
+---
+---
+
+<section id="apartadoCarrouselAdmin" class="py-1 bg-white text-black">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-sm sm:text-lg md:text-lg lg:text-2xl font-semibold">
+        Imágenes del Carrusel
+      </h2>
+      <button
+        id="btnMostrarModalAgregar"
+        class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+      >
+        + Agregar Imagen
+      </button>
+    </div>
+
+    <!-- Modal para agregar imagen -->
+    <dialog id="modalAgregarImagen" class="modal">
+      <div class="modal-box max-w-lg">
+        <form
+          id="formAgregarImagen"
+          class="space-y-5 bg-white p-6 rounded"
+          method="dialog"
+          enctype="multipart/form-data"
+        >
+          <button
+            class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+            type="button"
+            id="btnCerrarModalAgregar"
+          >✕</button>
+
+          <h2 class="text-xl font-semibold mb-4 text-center">
+            Agregar Imagen al Carrusel
+          </h2>
+
+          <!-- Subir Imagen -->
+          <div>
+            <label for="imagen" class="block font-medium">Seleccionar Imagen</label>
+            <input
+              id="imagen"
+              name="imagen"
+              type="file"
+              required
+              accept="image/*"
+              class="file-input file-input-bordered w-full"
+            />
+            <img
+              id="previewImagen"
+              class="mt-4 w-64 h-40 object-cover rounded border hidden"
+            />
+          </div>
+
+          <!-- Botones -->
+          <div class="flex justify-end gap-2">
+            <button type="button" class="btn" id="btnCancelarAgregar">Cancelar</button>
+            <button
+              type="button"
+              class="btn btn-success"
+              id="btnAbrirConfirmarGuardar"
+            >
+              Guardar
+            </button>
+          </div>
+        </form>
+      </div>
+    </dialog>
+
+    <!-- Modal para confirmar agregar imagen -->
+    <dialog id="modalConfirmarAgregar" class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg mb-4">¿Guardar nueva imagen?</h3>
+        <p class="text-sm text-gray-600 mb-4">
+          ¿Estás seguro de que deseas agregar esta imagen al carrusel?
+        </p>
+        <div class="flex justify-end gap-2">
+          <button id="btnCancelarConfirmarAgregar" class="btn">Cancelar</button>
+          <button id="btnConfirmarAgregar" class="btn btn-success">
+            <span class="btn-text">Guardar</span>
+            <span
+              class="btn-spinner hidden loading loading-spinner loading-sm"
+            ></span>
+          </button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Modal para confirmar eliminar imagen -->
+    <dialog id="modalConfirmarEliminar" class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg mb-4">¿Eliminar imagen?</h3>
+        <p class="text-sm text-gray-600 mb-4">
+          ¿Estás seguro de que deseas eliminar esta imagen del carrusel?
+        </p>
+        <div class="flex justify-end gap-2">
+          <button id="btnCancelarConfirmarEliminar" class="btn">Cancelar</button>
+          <button id="btnConfirmarEliminar" class="btn btn-success">
+            <span class="btn-text">Eliminar</span>
+            <span
+              class="btn-spinner hidden loading loading-spinner loading-sm"
+            ></span>
+          </button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Lista de imágenes -->
+    <div id="listaImagenes" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+      <!-- JS insertará aquí las tarjetas de imágenes -->
+    </div>
+
+    <!-- Mensaje cuando no hay imágenes -->
+    <p id="mensajeVacio" class="text-center text-gray-500 text-lg mt-6 hidden">
+      No hay imágenes en el carrusel.
+    </p>
+  </div>
+</section>
+
+<script>
+  const btnMostrarModal = document.getElementById("btnMostrarModalAgregar");
+  const modalAgregar = document.getElementById("modalAgregarImagen");
+  const modalConfirmarAgregar = document.getElementById("modalConfirmarAgregar");
+  const btnCerrarModal = document.getElementById("btnCerrarModalAgregar");
+  const btnCancelarAgregar = document.getElementById("btnCancelarAgregar");
+  const btnAbrirConfirmarGuardar = document.getElementById("btnAbrirConfirmarGuardar");
+  const btnCancelarConfirmarAgregar = document.getElementById("btnCancelarConfirmarAgregar");
+  const btnConfirmarAgregar = document.getElementById("btnConfirmarAgregar");
+
+  const inputImagen = document.getElementById("imagen");
+  const previewImagen = document.getElementById("previewImagen");
+
+  // Abrir modal de agregar
+  btnMostrarModal.addEventListener("click", () => modalAgregar.showModal());
+
+  // Cerrar modal de agregar
+  btnCerrarModal.addEventListener("click", () => modalAgregar.close());
+  btnCancelarAgregar.addEventListener("click", () => modalAgregar.close());
+
+  // Validación antes de mostrar modal de confirmación
+  btnAbrirConfirmarGuardar.addEventListener("click", () => {
+    const form = document.getElementById(
+      "formAgregarImagen"
+    ) as HTMLFormElement;
+    if (!form.checkValidity()) {
+      form.reportValidity(); // muestra mensajes nativos de error
+      return; // no abre el modal de confirmación
+    }
+
+    // Si pasó la validación, abre el modal de confirmación
+    modalConfirmarAgregar.showModal();
+  });
+
+  // Botón cancelar en modal de confirmación
+  btnCancelarConfirmarAgregar.addEventListener("click", () => modalConfirmarAgregar.close());
+
+// Boton para guardar imagen
+  btnConfirmarAgregar.addEventListener("click", async () => {
+    const boton = btnConfirmarAgregar;
+    mostrarSpinnerEnBoton(boton);
+
+    try {
+
+      // --- Aquí ya es seguro subir archivos ---
+      const inputImagen = document.getElementById("imagen") as HTMLInputElement;
+      const file = inputImagen.files?.[0];
+      let fotoUrl = null;
+
+      if (file) {
+        const formDataImagen = new FormData();
+        formDataImagen.append("imagen", file);
+        formDataImagen.append("carpeta", "carrousel");
+        //console.log('Carpeta en formData:', formDataImagen.get("carpeta"));
+
+        const resImagen = await fetch("/api/subir_imagen", {
+          method: "POST",
+          body: formDataImagen,
+        });
+
+        if (!resImagen.ok) throw new Error("Error al subir la imagen");
+        const dataImagen = await resImagen.json();
+        if (!dataImagen.ok)
+          throw new Error(dataImagen.error || "Error en subida");
+
+        fotoUrl = dataImagen.url;
+      } 
+
+      const id = Date.now() + "-" + Math.floor(Math.random() * 10000);
+      const nuevo = {
+        _id: id,
+        type: "carrousel",
+        creado_en: new Date().toISOString(),
+        foto: fotoUrl,
+      };
+
+      const res = await fetch("/api/inicio/agregar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(nuevo),
+      });
+
+      if (!res.ok) {
+        const error = await res.text();
+        throw new Error(`Error HTTP: ${res.status} - ${error}`);
+      }
+
+      const result = await res.json();
+
+      if (result.ok) {
+        showMessage("Imagen agregada correctamente", "success");
+        form.reset();
+        limpiarFormularioAgregar();
+        modalAgregar.close();
+        modalConfirmarAgregar.close();
+        previewImagen.classList.add("hidden");
+      } else {
+        showMessage("Error al agregar: " + result.error, "error");
+      }
+    } catch (err) {
+      console.error("Error al enviar:", err);
+      showMessage("Error al agregar", "error");
+    } finally {
+      ocultarSpinnerEnBoton(boton);
+    }
+  });
+
+ //datalles par evitar que se envien muchas peticiones al servidor
+  function mostrarSpinnerEnBoton(boton) {
+    const texto = boton.querySelector(".btn-text");
+    const spinner = boton.querySelector(".btn-spinner");
+    if (texto && spinner) {
+      texto.classList.add("hidden");
+      spinner.classList.remove("hidden");
+      boton.disabled = true;
+    }
+  }
+
+  function ocultarSpinnerEnBoton(boton) {
+    const texto = boton.querySelector(".btn-text");
+    const spinner = boton.querySelector(".btn-spinner");
+    if (texto && spinner) {
+      texto.classList.remove("hidden");
+      spinner.classList.add("hidden");
+      boton.disabled = false;
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // Previsualización de la imagen
+  inputImagen.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      previewImagen.src = URL.createObjectURL(file);
+      previewImagen.classList.remove("hidden");
+    } else {
+      previewImagen.classList.add("hidden");
+    }
+  });
+
+  // Función para mostrar mensajes flotantes
+  function showMessage(mensaje, tipo = "info") {
+    let contenedor = document.getElementById("message-container");
+    if (!contenedor) {
+      contenedor = document.createElement("div");
+      contenedor.id = "message-container";
+      contenedor.style.position = "fixed";
+      contenedor.style.top = "80px";
+      contenedor.style.left = "50%";
+      contenedor.style.transform = "translateX(-50%)";
+      contenedor.style.zIndex = "999999999";
+      document.body.appendChild(contenedor);
+    }
+
+    const mensajeElem = document.createElement("div");
+    mensajeElem.textContent = mensaje;
+    mensajeElem.style.marginBottom = "10px";
+    mensajeElem.style.padding = "12px 20px";
+    mensajeElem.style.borderRadius = "5px";
+    mensajeElem.style.color = "white";
+    mensajeElem.style.minWidth = "200px";
+    mensajeElem.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
+    mensajeElem.style.fontWeight = "600";
+    mensajeElem.style.fontFamily = "sans-serif";
+    mensajeElem.style.opacity = "1";
+    mensajeElem.style.transition = "opacity 0.5s ease";
+
+    switch (tipo) {
+      case "success":
+        mensajeElem.style.backgroundColor = "#28a745";
+        break;
+      case "error":
+        mensajeElem.style.backgroundColor = "#dc3545";
+        break;
+      default:
+        mensajeElem.style.backgroundColor = "#007bff";
+    }
+
+    contenedor.appendChild(mensajeElem);
+
+    setTimeout(() => {
+      mensajeElem.style.opacity = "0";
+      setTimeout(() => mensajeElem.remove(), 500);
+    }, 3000);
+  }
+</script>

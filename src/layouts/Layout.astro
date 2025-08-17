@@ -3,12 +3,13 @@ import "../styles/global.css";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 
-import cimuLogo from "../assets/logos/cimu.png";
+import cimuLogo from "../assets/logos/LogoConTextoCIMU.svg";
 import uesLogoBlanco from "../assets/logos/uesLogoBlanco.svg";
 import uesLogoRojo from "../assets/logos/uesLogoRojo.svg";
 import plumaLogo from "../assets/logos/logo_pluma_multi.png";
 import submarcaCIMU from "../assets/logos/logo_submarca.png";
 import decanato from "../assets/logos/decanato.svg";
+import remiLogo from "../assets/logos/remiLogo.svg";
 ---
 
 <!doctype html>
@@ -23,11 +24,11 @@ import decanato from "../assets/logos/decanato.svg";
       href="https://cdn.materialdesignicons.com/7.2.96/css/materialdesignicons.min.css"
       rel="stylesheet"
     />
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
   </head>
   <body>
-    <Header cimuLogo={cimuLogo} uesLogoBlanco={uesLogoBlanco} uesLogoRojo={uesLogoRojo} decanato={decanato} />
+    <Header cimuLogo={cimuLogo} uesLogoBlanco={uesLogoBlanco} uesLogoRojo={uesLogoRojo} decanato={decanato} plumaLogo={plumaLogo} remiLogo={remiLogo} />
     <main class="zoom-fade-in-up">
       <slot />
     </main>
@@ -41,7 +42,7 @@ import decanato from "../assets/logos/decanato.svg";
     margin: 0;
     width: 100%;
     height: 100%;
-    font-family: 'Spectral', serif;
+    font-family: 'Nunito', sans-serif;
   }
 
   @keyframes zoomFadeInUp {
