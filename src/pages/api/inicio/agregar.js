@@ -9,7 +9,7 @@ export async function POST({ request }) {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error('Error al agregar investigador:', error.message);
+    console.error('Error al agregar imagen:', error.message);
     return new Response(JSON.stringify({ ok: false, error: error.message }), {
       status: 500,
     });
