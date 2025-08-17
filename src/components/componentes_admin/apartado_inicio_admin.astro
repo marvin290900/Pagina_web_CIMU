@@ -1,4 +1,5 @@
 ---
+
 ---
 
 <section id="apartadoCarrouselAdmin" class="py-1 bg-white text-black">
@@ -27,8 +28,8 @@
           <button
             class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
             type="button"
-            id="btnCerrarModalAgregar"
-          >✕</button>
+            id="btnCerrarModalAgregar">✕</button
+          >
 
           <h2 class="text-xl font-semibold mb-4 text-center">
             Agregar Imagen al Carrusel
@@ -36,10 +37,12 @@
 
           <!-- Subir Imagen -->
           <div>
-            <label for="imagen" class="block font-medium">Seleccionar Imagen</label>
+            <label for="foto" class="block font-medium"
+              >Seleccionar Imagen</label
+            >
             <input
-              id="imagen"
-              name="imagen"
+              id="foto"
+              name="foto"
               type="file"
               required
               accept="image/*"
@@ -53,7 +56,9 @@
 
           <!-- Botones -->
           <div class="flex justify-end gap-2">
-            <button type="button" class="btn" id="btnCancelarAgregar">Cancelar</button>
+            <button type="button" class="btn" id="btnCancelarAgregar"
+              >Cancelar</button
+            >
             <button
               type="button"
               class="btn btn-success"
@@ -77,8 +82,7 @@
           <button id="btnCancelarConfirmarAgregar" class="btn">Cancelar</button>
           <button id="btnConfirmarAgregar" class="btn btn-success">
             <span class="btn-text">Guardar</span>
-            <span
-              class="btn-spinner hidden loading loading-spinner loading-sm"
+            <span class="btn-spinner hidden loading loading-spinner loading-sm"
             ></span>
           </button>
         </div>
@@ -93,11 +97,11 @@
           ¿Estás seguro de que deseas eliminar esta imagen del carrusel?
         </p>
         <div class="flex justify-end gap-2">
-          <button id="btnCancelarConfirmarEliminar" class="btn">Cancelar</button>
+          <button id="btnCancelarConfirmarEliminar" class="btn">Cancelar</button
+          >
           <button id="btnConfirmarEliminar" class="btn btn-success">
             <span class="btn-text">Eliminar</span>
-            <span
-              class="btn-spinner hidden loading loading-spinner loading-sm"
+            <span class="btn-spinner hidden loading loading-spinner loading-sm"
             ></span>
           </button>
         </div>
@@ -105,7 +109,10 @@
     </dialog>
 
     <!-- Lista de imágenes -->
-    <div id="listaImagenes" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+    <div
+      id="listaImagenes"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6"
+    >
       <!-- JS insertará aquí las tarjetas de imágenes -->
     </div>
 
@@ -119,20 +126,25 @@
 <script>
   const btnMostrarModal = document.getElementById("btnMostrarModalAgregar");
   const modalAgregar = document.getElementById("modalAgregarImagen");
-  const modalConfirmarAgregar = document.getElementById("modalConfirmarAgregar");
+  const modalConfirmarAgregar = document.getElementById(
+    "modalConfirmarAgregar"
+  );
   const btnCerrarModal = document.getElementById("btnCerrarModalAgregar");
   const btnCancelarAgregar = document.getElementById("btnCancelarAgregar");
-  const btnAbrirConfirmarGuardar = document.getElementById("btnAbrirConfirmarGuardar");
-  const btnCancelarConfirmarAgregar = document.getElementById("btnCancelarConfirmarAgregar");
+  const btnAbrirConfirmarGuardar = document.getElementById(
+    "btnAbrirConfirmarGuardar"
+  );
+  const btnCancelarConfirmarAgregar = document.getElementById(
+    "btnCancelarConfirmarAgregar"
+  );
   const btnConfirmarAgregar = document.getElementById("btnConfirmarAgregar");
 
-  const inputImagen = document.getElementById("imagen");
+  const inputImagen = document.getElementById("foto");
   const previewImagen = document.getElementById("previewImagen");
 
+  let imagenes = [];
 
-let imagenes = []
-
-async function cargarImagenes() {
+  async function cargarImagenes() {
     try {
       const res = await fetch("/api/inicio/obtener");
       const data = await res.json();
@@ -143,7 +155,7 @@ async function cargarImagenes() {
     }
   }
 
- // Previsualización de la imagen
+  // Previsualización de la imagen
   inputImagen.addEventListener("change", (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -154,15 +166,21 @@ async function cargarImagenes() {
     }
   });
 
-//##########################################################################################################
-//Codigos para guardar la imagen
+  //##########################################################################################################
+  //Codigos para guardar la imagen
 
   // Abrir modal de agregar
   btnMostrarModal.addEventListener("click", () => modalAgregar.showModal());
 
   // Cerrar modal de agregar
-  btnCerrarModal.addEventListener("click", () => modalAgregar.close());
-  btnCancelarAgregar.addEventListener("click", () => modalAgregar.close());
+  btnCerrarModal.addEventListener("click", () => {
+    limpiarFormularioAgregar();
+    modalAgregar.close();
+  });
+  btnCancelarAgregar.addEventListener("click", () => {
+    limpiarFormularioAgregar();
+    modalAgregar.close();
+  });
 
   // Validación antes de mostrar modal de confirmación
   btnAbrirConfirmarGuardar.addEventListener("click", () => {
@@ -179,36 +197,36 @@ async function cargarImagenes() {
   });
 
   // Botón cancelar en modal de confirmación
-  btnCancelarConfirmarAgregar.addEventListener("click", () => modalConfirmarAgregar.close());
+  btnCancelarConfirmarAgregar.addEventListener("click", () =>
+    modalConfirmarAgregar.close()
+  );
 
-async function generarIdUnico() {
-  let id;
-  let existe = true;
+  async function generarIdUnico() {
+    let id;
+    let existe = true;
 
-  while (existe) {
-    id = crypto.randomUUID(); // genera un ID único
-    existe = imagenes.some(img => img._id === id); // revisa en la lista cargada
+    while (existe) {
+      id = crypto.randomUUID(); // genera un ID único
+      existe = imagenes.some((img) => img._id === id); // revisa en la lista cargada
+    }
+
+    return id;
   }
 
-  return id;
-}
-
-
-// Boton para guardar imagen
+  // Boton para guardar imagen
   btnConfirmarAgregar.addEventListener("click", async () => {
     const boton = btnConfirmarAgregar;
     mostrarSpinnerEnBoton(boton);
 
     try {
-
       // --- Aquí ya es seguro subir archivos ---
-      const inputImagen = document.getElementById("imagen") as HTMLInputElement;
+      const inputImagen = document.getElementById("foto") as HTMLInputElement;
       const file = inputImagen.files?.[0];
       let fotoUrl = null;
 
       if (file) {
         const formDataImagen = new FormData();
-        formDataImagen.append("imagen", file);
+        formDataImagen.append("foto", file);
         formDataImagen.append("carpeta", "carrousel");
         //console.log('Carpeta en formData:', formDataImagen.get("carpeta"));
 
@@ -223,7 +241,7 @@ async function generarIdUnico() {
           throw new Error(dataImagen.error || "Error en subida");
 
         fotoUrl = dataImagen.url;
-      } 
+      }
 
       const id = await generarIdUnico();
       const nuevo = {
@@ -250,7 +268,8 @@ async function generarIdUnico() {
         showMessage("Imagen agregada correctamente", "success");
         modalAgregar.close();
         modalConfirmarAgregar.close();
-        previewImagen.classList.add("hidden");
+        limpiarFormularioAgregar();
+        await cargarImagenes();
       } else {
         showMessage("Error al agregar: " + result.error, "error");
       }
@@ -262,78 +281,70 @@ async function generarIdUnico() {
     }
   });
 
-
-
-
-
-
-cargarImagenes()
-
-
-
-
-
-
-
-
-
-
-
-
-
-function renderImagenes() {
-  const contenedor = document.getElementById("listaImagenes");
-  const mensajeVacio = document.getElementById("mensajeVacio");
-
-  contenedor.innerHTML = "";
-
-  if (imagenes.length === 0) {
-    mensajeVacio.textContent = "No hay imágenes registradas aún.";
-    mensajeVacio.classList.remove("hidden");
-    return;
+  function limpiarFormularioAgregar() {
+    // --- limpiar formulario e imagen ---
+    const form = document.getElementById(
+      "formAgregarImagen"
+    ) as HTMLFormElement;
+    form.reset(); // limpia el input file
+    previewImagen.src = ""; // limpia la preview
+    previewImagen.classList.add("hidden");
   }
 
-  mensajeVacio.classList.add("hidden");
+  cargarImagenes();
 
-  imagenes.forEach((img) => {
-    const card = document.createElement("div");
-    card.className =
-      "bg-white border border-gray-300 rounded-lg shadow-md p-3 flex flex-col items-center gap-3";
+  function renderImagenes() {
+    const contenedor = document.getElementById("listaImagenes");
+    const mensajeVacio = document.getElementById("mensajeVacio");
 
-    // Imagen
-    const imagenEl = document.createElement("img");
-    imagenEl.src = img.foto;
-    imagenEl.alt = "Imagen del carrusel";
-    imagenEl.className = "w-full h-48 object-cover rounded";
+    contenedor.innerHTML = "";
 
-    // Botones
-    const botones = document.createElement("div");
-    botones.className = "flex gap-3 mt-2";
+    if (imagenes.length === 0) {
+      mensajeVacio.textContent = "No hay imágenes registradas aún.";
+      mensajeVacio.classList.remove("hidden");
+      return;
+    }
 
-    const btnEditar = document.createElement("button");
-    btnEditar.textContent = "Editar";
-    btnEditar.className =
-      "px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600";
-    btnEditar.addEventListener("click", () => editarImagen(img._id));
+    mensajeVacio.classList.add("hidden");
 
-    const btnEliminar = document.createElement("button");
-    btnEliminar.textContent = "Eliminar";
-    btnEliminar.className =
-      "px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700";
-    btnEliminar.addEventListener("click", () => prepararEliminarImagen(img._id));
+    imagenes.forEach((img) => {
+      const card = document.createElement("div");
+      card.className =
+        "bg-white border border-gray-300 rounded-lg shadow-md p-3 flex flex-col items-center gap-3";
 
-    botones.appendChild(btnEditar);
-    botones.appendChild(btnEliminar);
+      // Imagen
+      const imagenEl = document.createElement("img");
+      imagenEl.src = img.foto;
+      imagenEl.alt = "Imagen del carrusel";
+      imagenEl.className = "w-full h-48 object-cover rounded";
 
-    card.appendChild(imagenEl);
-    card.appendChild(botones);
+      // Botones
+      const botones = document.createElement("div");
+      botones.className = "flex gap-3 mt-2";
 
-    contenedor.appendChild(card);
-  });
-}
+      const btnEditar = document.createElement("button");
+      btnEditar.textContent = "Editar";
+      btnEditar.className =
+        "px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600";
+      btnEditar.addEventListener("click", () => editarImagen(img._id));
 
+      const btnEliminar = document.createElement("button");
+      btnEliminar.textContent = "Eliminar";
+      btnEliminar.className =
+        "px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700";
+      btnEliminar.addEventListener("click", () =>
+        prepararEliminarImagen(img._id)
+      );
 
- 
+      botones.appendChild(btnEditar);
+      botones.appendChild(btnEliminar);
+
+      card.appendChild(imagenEl);
+      card.appendChild(botones);
+
+      contenedor.appendChild(card);
+    });
+  }
 
   // Función para mostrar mensajes flotantes
   function showMessage(mensaje, tipo = "info") {
@@ -381,7 +392,7 @@ function renderImagenes() {
     }, 3000);
   }
 
-   //datalles par evitar que se envien muchas peticiones al servidor
+  //datalles par evitar que se envien muchas peticiones al servidor
   function mostrarSpinnerEnBoton(boton) {
     const texto = boton.querySelector(".btn-text");
     const spinner = boton.querySelector(".btn-spinner");
