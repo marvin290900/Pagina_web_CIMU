@@ -10,7 +10,7 @@
       </h2>
       <button
         id="btnMostrarModalAgregar"
-        class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+        class="bg-blue-950 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
       >
         + Agregar Imagen
       </button>
@@ -50,18 +50,18 @@
             />
             <img
               id="previewImagen"
-              class="mt-4 w-64 h-40 object-cover rounded border hidden"
+              class="mt-4 w-120 h-40 object-cover rounded border hidden"
             />
           </div>
 
           <!-- Botones -->
           <div class="flex justify-end gap-2">
-            <button type="button" class="btn" id="btnCancelarAgregar"
+            <button type="button" class="btn border-1 border-blue-900" id="btnCancelarAgregar"
               >Cancelar</button
             >
             <button
               type="button"
-              class="btn btn-success"
+              class="btn bg-blue-900 text-white hover:bg-blue-700"
               id="btnAbrirConfirmarGuardar"
             >
               Guardar
@@ -79,9 +79,98 @@
           ¿Estás seguro de que deseas agregar esta imagen al carrusel?
         </p>
         <div class="flex justify-end gap-2">
-          <button id="btnCancelarConfirmarAgregar" class="btn">Cancelar</button>
-          <button id="btnConfirmarAgregar" class="btn btn-success">
-            <span class="btn-text">Guardar</span>
+          <button id="btnCancelarConfirmarAgregar" class="btn border-1 border-blue-900">Cancelar</button>
+          <button id="btnConfirmarAgregar" class="btn bg-blue-900 text-white hover:bg-blue-700">
+            <span class="btn-text ">Confirmar Guardar</span>
+            <span class="btn-spinner hidden loading loading-spinner loading-sm"
+            ></span>
+          </button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Modal para editar imagen -->
+    <dialog id="modalEditarImagen" class="modal">
+      <div class="modal-box max-w-lg">
+        <form
+          id="formEditarImagen"
+          class="space-y-5 bg-white p-6 rounded"
+          method="dialog"
+          enctype="multipart/form-data"
+        >
+          <button
+            class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+            type="button"
+            id="btnCerrarModalEditar">✕</button
+          >
+
+          <h2 class="text-xl font-semibold mb-4 text-center">
+            Editar Imagen del Carrusel
+          </h2>
+
+          <!-- Imagen actual -->
+          <div id="contenedorImagenActual">
+            <p class="font-medium mb-2">Imagen actual:</p>
+            <img
+              id="previewImagenEditar"
+              class="w-120 h-40 object-cover rounded border"
+            />
+            <button
+              type="button"
+              id="btnEliminarImagenActual"
+              class="mt-2 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+            >
+              Eliminar Imagen
+            </button>
+          </div>
+
+          <!-- Subir nueva imagen (oculto al inicio) -->
+          <div id="contenedorSubirNueva" class="hidden">
+            <label for="fotoEditar" class="block font-medium"
+              >Seleccionar nueva imagen</label
+            >
+            <input
+              id="fotoEditar"
+              name="fotoEditar"
+              type="file"
+              accept="image/*"
+              class="file-input file-input-bordered w-full"
+              required
+            />
+            <img
+              id="previewNuevaEditar"
+              class="mt-4 w-64 h-40 object-cover rounded border hidden"
+            />
+          </div>
+
+          <!-- Botones -->
+          <div class="flex justify-end gap-2">
+            <button type="button" class="btn border-1 border-blue-900" id="btnCancelarEditar"
+              >Cancelar</button
+            >
+            <button
+              type="button"
+              class="btn bg-blue-900 hover:bg-blue-700 text-white"
+              id="btnAbrirConfirmarEditar"
+            >
+              Guardar Cambios
+            </button>
+          </div>
+        </form>
+      </div>
+    </dialog>
+
+    <!-- Modal confirmar edición -->
+    <dialog id="modalConfirmarEditar" class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg mb-4">¿Guardar cambios?</h3>
+        <p class="text-sm text-gray-600 mb-4">
+          ¿Deseas confirmar los cambios en esta imagen del carrusel?
+        </p>
+        <div class="flex justify-end gap-2">
+          <button id="btnCancelarConfirmarEditar" class="btn border-1 border-blue-900">Cancelar</button>
+          <button id="btnConfirmarEditar" class="btn bg-blue-900 hover:bg-blue-700 text-white">
+            <span class="btn-text">Confirmar Cambios</span>
             <span class="btn-spinner hidden loading loading-spinner loading-sm"
             ></span>
           </button>
@@ -97,9 +186,9 @@
           ¿Estás seguro de que deseas eliminar esta imagen del carrusel?
         </p>
         <div class="flex justify-end gap-2">
-          <button id="btnCancelarConfirmarEliminar" class="btn">Cancelar</button
+          <button id="btnCancelarConfirmarEliminar" class="btn border-1 border-blue-900">Cancelar</button
           >
-          <button id="btnConfirmarEliminar" class="btn btn-success">
+          <button id="btnConfirmarEliminar" class="btn bg-blue-900 hover:bg-blue-700 text-white">
             <span class="btn-text">Eliminar</span>
             <span class="btn-spinner hidden loading loading-spinner loading-sm"
             ></span>
@@ -167,7 +256,7 @@
   });
 
   //##########################################################################################################
-  //Codigos para guardar la imagen
+  //CODIGOS PARA GUARDAR IMAGEN
 
   // Abrir modal de agregar
   btnMostrarModal.addEventListener("click", () => modalAgregar.showModal());
@@ -265,17 +354,17 @@
       const result = await res.json();
 
       if (result.ok) {
-        showMessage("Imagen agregada correctamente", "success");
+        showMessage("✅ Imagen agregada correctamente", "success");
         modalAgregar.close();
         modalConfirmarAgregar.close();
         limpiarFormularioAgregar();
         await cargarImagenes();
       } else {
-        showMessage("Error al agregar: " + result.error, "error");
+        showMessage("❌ Error al agregar: " + result.error, "error");
       }
     } catch (err) {
       console.error("Error al enviar:", err);
-      showMessage("Error al agregar", "error");
+      showMessage("❌ Error al agregar", "error");
     } finally {
       ocultarSpinnerEnBoton(boton);
     }
@@ -291,6 +380,242 @@
     previewImagen.classList.add("hidden");
   }
 
+  //##################################################################################################################
+
+  //###################################################################################################################
+  //CODIGOS PARA EDITAR LA IMAGEN
+
+  // --- Modal editar ---
+  const modalEditar = document.getElementById("modalEditarImagen");
+  const modalConfirmarEditar = document.getElementById("modalConfirmarEditar");
+
+  const btnCerrarModalEditar = document.getElementById("btnCerrarModalEditar");
+  const btnCancelarEditar = document.getElementById("btnCancelarEditar");
+  const btnAbrirConfirmarEditar = document.getElementById(
+    "btnAbrirConfirmarEditar"
+  );
+  const btnCancelarConfirmarEditar = document.getElementById(
+    "btnCancelarConfirmarEditar"
+  );
+  const btnConfirmarEditar = document.getElementById("btnConfirmarEditar");
+
+  const previewImagenEditar = document.getElementById("previewImagenEditar");
+  const previewNuevaEditar = document.getElementById("previewNuevaEditar");
+  const inputNuevaImagen = document.getElementById("fotoEditar");
+
+  const contenedorImagenActual = document.getElementById(
+    "contenedorImagenActual"
+  );
+  const contenedorSubirNueva = document.getElementById("contenedorSubirNueva");
+  const btnEliminarImagenActual = document.getElementById(
+    "btnEliminarImagenActual"
+  );
+
+  let imagenEnEdicion: any = null;
+  let marcarEliminarImagenActual = false;
+
+  function editarImagen(id: string) {
+    const img = imagenes.find((i) => i._id === id);
+    if (!img) return;
+
+    imagenEnEdicion = img;
+    marcarEliminarImagenActual = false;
+
+    // Mostrar imagen actual
+    previewImagenEditar.src = img.foto;
+    contenedorImagenActual.classList.remove("hidden");
+    contenedorSubirNueva.classList.add("hidden");
+
+    // Limpiar input nueva imagen
+    inputNuevaImagen.value = "";
+    previewNuevaEditar.classList.add("hidden");
+
+    modalEditar.showModal();
+  }
+
+  // Botón cerrar / cancelar
+  btnCerrarModalEditar.addEventListener("click", () => modalEditar.close());
+  btnCancelarEditar.addEventListener("click", () => modalEditar.close());
+
+  // Botón eliminar imagen actual (solo frontend hasta confirmar)
+  btnEliminarImagenActual.addEventListener("click", () => {
+    marcarEliminarImagenActual = true;
+    contenedorImagenActual.classList.add("hidden");
+    contenedorSubirNueva.classList.remove("hidden");
+  });
+
+  // Preview nueva imagen
+  inputNuevaImagen.addEventListener("change", (e: any) => {
+    const file = e.target.files[0];
+    if (file) {
+      previewNuevaEditar.src = URL.createObjectURL(file);
+      previewNuevaEditar.classList.remove("hidden");
+    } else {
+      previewNuevaEditar.classList.add("hidden");
+    }
+  });
+
+  // Validar antes de abrir confirmación
+  btnAbrirConfirmarEditar.addEventListener("click", () => {
+    // si no hay imagen actual y tampoco nueva, no dejar
+    if (marcarEliminarImagenActual && !inputNuevaImagen.files?.length) {
+      const form = document.getElementById(
+        "formEditarImagen"
+      ) as HTMLFormElement;
+      if (!form.checkValidity()) {
+        form.reportValidity(); // muestra mensajes nativos de error
+        return; // no abre el modal de confirmación
+      }
+    }
+    modalConfirmarEditar.showModal();
+  });
+
+  // Cancelar confirmación
+  btnCancelarConfirmarEditar.addEventListener("click", () =>
+    modalConfirmarEditar.close()
+  );
+
+  btnConfirmarEditar.addEventListener("click", async () => {
+    const boton = btnConfirmarEditar;
+    mostrarSpinnerEnBoton(boton);
+
+    try {
+      let nuevaUrl = imagenEnEdicion.foto;
+      let reemplazo = false; // 👈 Bandera para saber si hay que eliminar la anterior
+
+      // Si eliminaron la actual y subieron una nueva
+      if (marcarEliminarImagenActual && inputNuevaImagen.files?.length) {
+        const file = inputNuevaImagen.files[0];
+        const formData = new FormData();
+        formData.append("foto", file);
+        formData.append("carpeta", "carrousel");
+
+        const resImagen = await fetch("/api/subir_imagen", {
+          method: "POST",
+          body: formData,
+        });
+        if (!resImagen.ok) throw new Error("Error al subir nueva imagen");
+        const dataImagen = await resImagen.json();
+        if (!dataImagen.ok)
+          throw new Error(dataImagen.error || "Error en subida");
+
+        nuevaUrl = dataImagen.url;
+        reemplazo = true; // 👈 Se subió una nueva
+      }
+
+      // Actualizar documento en DB
+      const actualizado = {
+        id: imagenEnEdicion._id,
+        ...imagenEnEdicion,
+        foto: nuevaUrl,
+        creado_en: new Date().toISOString(),
+      };
+
+      const res = await fetch("/api/inicio/editar", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(actualizado),
+      });
+
+      if (!res.ok) throw new Error("Error al actualizar imagen");
+
+      const result = await res.json();
+      if (result.ok) {
+        // ✅ Si hubo reemplazo, borrar del servidor la foto anterior
+        if (
+          reemplazo &&
+          imagenEnEdicion.foto &&
+          imagenEnEdicion.foto !== nuevaUrl
+        ) {
+          await fetch("/api/inicio/eliminar_imagen", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ path: imagenEnEdicion.foto }),
+          });
+        }
+
+        showMessage("✅ Imagen actualizada correctamente", "success");
+        modalEditar.close();
+        modalConfirmarEditar.close();
+        await cargarImagenes();
+      } else {
+        showMessage("❌ Error al actualizar: " + result.error, "error");
+      }
+    } catch (err) {
+      console.error("Error al editar:", err);
+      showMessage("❌ Error al editar imagen", "error");
+    } finally {
+      ocultarSpinnerEnBoton(boton);
+    }
+  });
+
+  //###################################################################################################################
+
+  //###############################################################################################################
+  //CODIGO PARA ELIMINAR LA IMAGEN
+let idImagenAEliminar = null;
+
+// Botón cancelar eliminar (cierra modal)
+btnCancelarConfirmarEliminar.addEventListener("click", () => {
+  modalConfirmarEliminar.close();
+});
+
+// Preparar eliminación (abrir modal con el id)
+function prepararEliminarImagen(id) {
+  idImagenAEliminar = id;
+  modalConfirmarEliminar.showModal();
+}
+
+// Confirmar eliminar
+btnConfirmarEliminar.addEventListener("click", async () => {
+  const boton = btnConfirmarEliminar;
+  mostrarSpinnerEnBoton(boton);
+
+  if (!idImagenAEliminar) {
+    showMessage("❌ ID inválido para eliminar", "error");
+    ocultarSpinnerEnBoton(boton);
+    return;
+  }
+
+  // 🔥 Llamada a API para eliminar imagen
+  await eliminarImagenCarrusel(idImagenAEliminar);
+
+  // Limpiamos el id
+  idImagenAEliminar = null;
+
+  ocultarSpinnerEnBoton(boton);
+  modalConfirmarEliminar.close();
+
+  // Recargar lista
+  await cargarImagenes();
+});
+
+// Función para eliminar imagen en el servidor
+async function eliminarImagenCarrusel(id) {
+  try {
+    const respuesta = await fetch("/api/inicio/eliminar", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id }),
+    });
+
+    const resultado = await respuesta.json();
+
+    if (resultado.ok) {
+      showMessage("✅ Imagen eliminada correctamente", "success");
+    } else {
+      showMessage("❌ Error al eliminar: " + (resultado.error || "Desconocido"), "error");
+    }
+  } catch (err) {
+    console.error("❌ Error en eliminarImagenCarrusel:", err);
+    showMessage("❌ Error al conectar con el servidor", "error");
+  }
+}
+
+
+  //################################################################################################################
   cargarImagenes();
 
   function renderImagenes() {
@@ -325,13 +650,13 @@
       const btnEditar = document.createElement("button");
       btnEditar.textContent = "Editar";
       btnEditar.className =
-        "px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600";
+        "px-3 py-1 border-1 border-blue-900 text-black rounded hover:bg-gray-200";
       btnEditar.addEventListener("click", () => editarImagen(img._id));
 
       const btnEliminar = document.createElement("button");
       btnEliminar.textContent = "Eliminar";
       btnEliminar.className =
-        "px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700";
+        "px-3 py-1 bg-blue-900 text-white rounded hover:bg-blue-700";
       btnEliminar.addEventListener("click", () =>
         prepararEliminarImagen(img._id)
       );
