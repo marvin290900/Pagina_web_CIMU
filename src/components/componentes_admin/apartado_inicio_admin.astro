@@ -290,17 +290,26 @@
     modalConfirmarAgregar.close()
   );
 
-  async function generarIdUnico() {
+function generarIdAleatorio(longitud = 10) {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let id = "";
+  for (let i = 0; i < longitud; i++) {
+    const index = Math.floor(Math.random() * chars.length);
+    id += chars[index];
+  }
+  return `imagen_${id}`; // prefijo para identificar tipo
+}
+
+ async function generarIdUnico() {
   let idUnico = "";
   let existe = true;
 
   while (existe) {
-    const id = crypto.randomUUID(); // genera UUID
-    idUnico = `imagen_${id}`; // agrega prefijo
+    idUnico = generarIdAleatorio(12); // 12 caracteres aleatorios
 
-    // Verifica en CouchDB si ya existe
+    // Verifica si ya existe en CouchDB
     const res = await fetch(`/cimu/${idUnico}`);
-    existe = res.ok; // si existe, res.ok será true y repetimos
+    existe = res.ok; // true si ya existe
   }
 
   return idUnico;
@@ -317,8 +326,6 @@
       const inputImagen = document.getElementById("foto") as HTMLInputElement;
       const file = inputImagen.files?.[0];
       let fotoUrl = null;
-
-      console.log('Archivo seleccionado:', file);
 
       if (file) {
         const formDataImagen = new FormData();
@@ -338,9 +345,6 @@
 
         fotoUrl = dataImagen.url;
       }
-      console.log('URL de la imagen:', fotoUrl);
-
-
 
       const id = await generarIdUnico();
       const nuevo = {
