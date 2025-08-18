@@ -318,6 +318,8 @@
       const file = inputImagen.files?.[0];
       let fotoUrl = null;
 
+      console.log('Archivo seleccionado:', file);
+
       if (file) {
         const formDataImagen = new FormData();
         formDataImagen.append("foto", file);
@@ -336,6 +338,9 @@
 
         fotoUrl = dataImagen.url;
       }
+      console.log('URL de la imagen:', fotoUrl);
+
+
 
       const id = await generarIdUnico();
       const nuevo = {
@@ -345,7 +350,6 @@
         creado_en: new Date().toISOString(),
         foto: fotoUrl,
       };
-      console.log("Nuevo objeto a agregar:", nuevo);
 
       const res = await fetch("/api/inicio/agregar", {
         method: "POST",
