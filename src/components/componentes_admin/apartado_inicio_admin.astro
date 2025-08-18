@@ -291,16 +291,21 @@
   );
 
   async function generarIdUnico() {
-    let id;
-    let existe = true;
+  let idUnico = "";
+  let existe = true;
 
-    while (existe) {
-      id = crypto.randomUUID(); // genera un ID único
-      existe = imagenes.some((img) => img._id === id); // revisa en la lista cargada
-    }
+  while (existe) {
+    const id = crypto.randomUUID(); // genera UUID
+    idUnico = `imagen_${id}`; // agrega prefijo
 
-    return id;
+    // Verifica en CouchDB si ya existe
+    const res = await fetch(`/cimu/${idUnico}`);
+    existe = res.ok; // si existe, res.ok será true y repetimos
   }
+
+  return idUnico;
+}
+
 
   // Boton para guardar imagen
   btnConfirmarAgregar.addEventListener("click", async () => {
@@ -335,10 +340,12 @@
       const id = await generarIdUnico();
       const nuevo = {
         _id: id,
-        type: "carrousel",
+        type: "imagen",
+        categoria: "carrousel",
         creado_en: new Date().toISOString(),
         foto: fotoUrl,
       };
+      console.log("Nuevo objeto a agregar:", nuevo);
 
       const res = await fetch("/api/inicio/agregar", {
         method: "POST",

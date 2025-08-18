@@ -6,7 +6,7 @@ const DB_NAME = 'cimu';
 export async function getTodasLasImagenes() {
   try {
     const response = await couch.post(`/${DB_NAME}/_find`, {
-      selector: { type: 'carrousel' },
+      selector: { type: 'imagen', categoria: 'carrousel' },
     });
     return response.data.docs;
   } catch (error) {
