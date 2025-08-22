@@ -4,44 +4,6 @@ const { cimuLogo, uesLogoBlanco, plumaLogo, submarcaCIMU } = Astro.props;
 
 <footer id="footer" class="bg-gray-900 text-gray-200 p-5">
   <div class="footer sm:footer-horizontal px-10 mt-5">
-    <aside>
-      <div class="grid grid-cols-3 lg:grid-cols-3 gap-6 place-items-center">
-        <a href="/">
-        <img
-          src={cimuLogo.src}
-          alt="Logo Cimu"
-          title="Centro de Investigación Multidisciplinario FMOcc UES"
-          class="h-10 md:h-8 lg:h-10 xl:h-15 hover:scale-105 hover:brightness-110 transition-all duration-300"
-        />
-        </a> 
-        <a href="/">
-        <img
-          src={plumaLogo.src}
-          alt="Logo Pluma"
-          title="Multidisciplinaria Editorial"
-          class="h-10 md:h-8 lg:h-10 xl:h-15 hover:scale-105 hover:brightness-110 transition-all duration-300"
-        />
-        </a>
-
-        <a href="/">
-        <img
-          src={uesLogoBlanco.src}
-          alt="Logo Ues"
-          title="Universidad de El Salvador"
-          class="h-10 md:h-8 lg:h-10 xl:h-15 hover:scale-105 hover:brightness-110 transition-all duration-300"
-        />
-        </a>
-        <a href="/">
-        <img
-          src={submarcaCIMU.src}
-          alt="sub marca CIMU"
-          title="Sub marca CIMU"
-          class="h-10 md:h-8 lg:h-10 xl:h-15 hover:scale-105 hover:brightness-110 transition-all duration-300"
-        />
-        </a>
-        
-      </div>
-    </aside>
     <a href="/contactenos" title="Ponte en contacto con nostros" class="hover:scale-105 hover:brightness-110 transition-all duration-300">
       <h6 class="footer-title">Contacto</h6>
       <div class="flex items-center gap-2 my-1">
@@ -57,6 +19,23 @@ const { cimuLogo, uesLogoBlanco, plumaLogo, submarcaCIMU } = Astro.props;
         <span>editorial.occidente@ues.edu.sv</span>
       </div>
     </a>
+
+    <a href="/contactenos" title="Ponte en contacto con nostros" class="hover:scale-105 hover:brightness-110 transition-all duration-300">
+      <h6 class="footer-title">Dirección</h6>
+      <div class="flex items-center gap-2 my-1">
+        <span class="mdi mdi-map-marker text-gray-600"></span>
+        <span> Facultad Multidisciplinaria de Occidente,<br>Universidad de El Salvador.</span>
+      </div>
+    </a>
+
+    <a href="/contactenos" title="Ponte en contacto con nostros" class="hover:scale-105 hover:brightness-110 transition-all duration-300">
+      <h6 class="footer-title">Horario</h6>
+      <div class="flex items-center gap-2 my-1">
+        <span class="mdi mdi-clock text-gray-600"></span>
+        <span>Lunes a Viernes, 8:00 AM - 4:00 PM</span>
+      </div>
+    </a>
+
     <a href="/contactenos" class="avatar-group -space-x-6 flex hover:scale-105 hover:brightness-110 transition-all duration-300 " title="Ponte en contacto con nostros">
       <div
         class="avatar rounded-full bg-blue-600 w-12 h-12 flex items-center justify-center text-white text-xl border-white border-1"

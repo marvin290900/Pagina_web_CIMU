@@ -1,0 +1,755 @@
+---
+
+---
+
+<section id="apartadoCarrouselAdmin" class="py-1 bg-white text-black">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-sm sm:text-lg md:text-lg lg:text-2xl font-semibold">
+        Imágenes del Carrusel
+      </h2>
+      <button
+        id="btnMostrarModalAgregar"
+        class="bg-blue-950 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+      >
+        + Agregar Imagen
+      </button>
+    </div>
+
+    <!-- Modal para agregar imagen -->
+    <dialog id="modalAgregarImagen" class="modal">
+      <div class="modal-box max-w-lg">
+        <form
+          id="formAgregarImagen"
+          class="space-y-5 bg-white p-6 rounded"
+          method="dialog"
+          enctype="multipart/form-data"
+        >
+          <button
+            class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+            type="button"
+            id="btnCerrarModalAgregar">✕</button
+          >
+
+          <h2 class="text-xl font-semibold mb-4 text-center">
+            Agregar Imagen al Carrusel
+          </h2>
+
+          <!-- Subir Imagen -->
+          <div>
+            <label for="foto" class="block font-medium"
+              >Seleccionar Imagen</label
+            >
+            <input
+              id="foto"
+              name="foto"
+              type="file"
+              required
+              accept="image/*"
+              class="file-input file-input-bordered w-full"
+            />
+            <img
+              id="previewImagen"
+              class="mt-4 w-120 h-40 object-cover rounded border hidden"
+            />
+          </div>
+
+          <!-- Botones -->
+          <div class="flex justify-end gap-2">
+            <button type="button" class="btn border-1 border-blue-900" id="btnCancelarAgregar"
+              >Cancelar</button
+            >
+            <button
+              type="button"
+              class="btn bg-blue-900 text-white hover:bg-blue-700"
+              id="btnAbrirConfirmarGuardar"
+            >
+              Guardar
+            </button>
+          </div>
+        </form>
+      </div>
+    </dialog>
+
+    <!-- Modal para confirmar agregar imagen -->
+    <dialog id="modalConfirmarAgregar" class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg mb-4">¿Guardar nueva imagen?</h3>
+        <p class="text-sm text-gray-600 mb-4">
+          ¿Estás seguro de que deseas agregar esta imagen al carrusel?
+        </p>
+        <div class="flex justify-end gap-2">
+          <button id="btnCancelarConfirmarAgregar" class="btn border-1 border-blue-900">Cancelar</button>
+          <button id="btnConfirmarAgregar" class="btn bg-blue-900 text-white hover:bg-blue-700">
+            <span class="btn-text ">Confirmar Guardar</span>
+            <span class="btn-spinner hidden loading loading-spinner loading-sm"
+            ></span>
+          </button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Modal para editar imagen -->
+    <dialog id="modalEditarImagen" class="modal">
+      <div class="modal-box max-w-lg">
+        <form
+          id="formEditarImagen"
+          class="space-y-5 bg-white p-6 rounded"
+          method="dialog"
+          enctype="multipart/form-data"
+        >
+          <button
+            class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+            type="button"
+            id="btnCerrarModalEditar">✕</button
+          >
+
+          <h2 class="text-xl font-semibold mb-4 text-center">
+            Editar Imagen del Carrusel
+          </h2>
+
+          <!-- Imagen actual -->
+          <div id="contenedorImagenActual">
+            <p class="font-medium mb-2">Imagen actual:</p>
+            <img
+              id="previewImagenEditar"
+              class="w-120 h-40 object-cover rounded border"
+            />
+            <button
+              type="button"
+              id="btnEliminarImagenActual"
+              class="mt-2 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+            >
+              Eliminar Imagen
+            </button>
+          </div>
+
+          <!-- Subir nueva imagen (oculto al inicio) -->
+          <div id="contenedorSubirNueva" class="hidden">
+            <label for="fotoEditar" class="block font-medium"
+              >Seleccionar nueva imagen</label
+            >
+            <input
+              id="fotoEditar"
+              name="fotoEditar"
+              type="file"
+              accept="image/*"
+              class="file-input file-input-bordered w-full"
+              required
+            />
+            <img
+              id="previewNuevaEditar"
+              class="mt-4 w-64 h-40 object-cover rounded border hidden"
+            />
+          </div>
+
+          <!-- Botones -->
+          <div class="flex justify-end gap-2">
+            <button type="button" class="btn border-1 border-blue-900" id="btnCancelarEditar"
+              >Cancelar</button
+            >
+            <button
+              type="button"
+              class="btn bg-blue-900 hover:bg-blue-700 text-white"
+              id="btnAbrirConfirmarEditar"
+            >
+              Guardar Cambios
+            </button>
+          </div>
+        </form>
+      </div>
+    </dialog>
+
+    <!-- Modal confirmar edición -->
+    <dialog id="modalConfirmarEditar" class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg mb-4">¿Guardar cambios?</h3>
+        <p class="text-sm text-gray-600 mb-4">
+          ¿Deseas confirmar los cambios en esta imagen del carrusel?
+        </p>
+        <div class="flex justify-end gap-2">
+          <button id="btnCancelarConfirmarEditar" class="btn border-1 border-blue-900">Cancelar</button>
+          <button id="btnConfirmarEditar" class="btn bg-blue-900 hover:bg-blue-700 text-white">
+            <span class="btn-text">Confirmar Cambios</span>
+            <span class="btn-spinner hidden loading loading-spinner loading-sm"
+            ></span>
+          </button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Modal para confirmar eliminar imagen -->
+    <dialog id="modalConfirmarEliminar" class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg mb-4">¿Eliminar imagen?</h3>
+        <p class="text-sm text-gray-600 mb-4">
+          ¿Estás seguro de que deseas eliminar esta imagen del carrusel?
+        </p>
+        <div class="flex justify-end gap-2">
+          <button id="btnCancelarConfirmarEliminar" class="btn border-1 border-blue-900">Cancelar</button
+          >
+          <button id="btnConfirmarEliminar" class="btn bg-blue-900 hover:bg-blue-700 text-white">
+            <span class="btn-text">Eliminar</span>
+            <span class="btn-spinner hidden loading loading-spinner loading-sm"
+            ></span>
+          </button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Lista de imágenes -->
+    <div
+      id="listaImagenes"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6"
+    >
+      <!-- JS insertará aquí las tarjetas de imágenes -->
+    </div>
+
+    <!-- Mensaje cuando no hay imágenes -->
+    <p id="mensajeVacio" class="text-center text-gray-500 text-lg mt-6 hidden">
+      No hay imágenes en el carrusel.
+    </p>
+  </div>
+</section>
+
+<script>
+  const btnMostrarModal = document.getElementById("btnMostrarModalAgregar");
+  const modalAgregar = document.getElementById("modalAgregarImagen");
+  const modalConfirmarAgregar = document.getElementById(
+    "modalConfirmarAgregar"
+  );
+  const btnCerrarModal = document.getElementById("btnCerrarModalAgregar");
+  const btnCancelarAgregar = document.getElementById("btnCancelarAgregar");
+  const btnAbrirConfirmarGuardar = document.getElementById(
+    "btnAbrirConfirmarGuardar"
+  );
+  const btnCancelarConfirmarAgregar = document.getElementById(
+    "btnCancelarConfirmarAgregar"
+  );
+  const btnConfirmarAgregar = document.getElementById("btnConfirmarAgregar");
+
+  const inputImagen = document.getElementById("foto");
+  const previewImagen = document.getElementById("previewImagen");
+
+  let imagenes = [];
+
+  async function cargarImagenes() {
+    try {
+      const res = await fetch("/api/inicio/obtener");
+      const data = await res.json();
+      imagenes = data.docs || [];
+      await renderImagenes();
+    } catch (err) {
+      console.error("Error cargando investigadores:", err);
+    }
+  }
+
+  // Previsualización de la imagen
+  inputImagen.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      previewImagen.src = URL.createObjectURL(file);
+      previewImagen.classList.remove("hidden");
+    } else {
+      previewImagen.classList.add("hidden");
+    }
+  });
+
+  //##########################################################################################################
+  //CODIGOS PARA GUARDAR IMAGEN
+
+  // Abrir modal de agregar
+  btnMostrarModal.addEventListener("click", () => modalAgregar.showModal());
+
+  // Cerrar modal de agregar
+  btnCerrarModal.addEventListener("click", () => {
+    limpiarFormularioAgregar();
+    modalAgregar.close();
+  });
+  btnCancelarAgregar.addEventListener("click", () => {
+    limpiarFormularioAgregar();
+    modalAgregar.close();
+  });
+
+  // Validación antes de mostrar modal de confirmación
+  btnAbrirConfirmarGuardar.addEventListener("click", () => {
+    const form = document.getElementById(
+      "formAgregarImagen"
+    ) as HTMLFormElement;
+    if (!form.checkValidity()) {
+      form.reportValidity(); // muestra mensajes nativos de error
+      return; // no abre el modal de confirmación
+    }
+
+    // Si pasó la validación, abre el modal de confirmación
+    modalConfirmarAgregar.showModal();
+  });
+
+  // Botón cancelar en modal de confirmación
+  btnCancelarConfirmarAgregar.addEventListener("click", () =>
+    modalConfirmarAgregar.close()
+  );
+
+function generarIdAleatorio(longitud = 10) {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let id = "";
+  for (let i = 0; i < longitud; i++) {
+    const index = Math.floor(Math.random() * chars.length);
+    id += chars[index];
+  }
+  return `imagen_${id}`; // prefijo para identificar tipo
+}
+
+ async function generarIdUnico() {
+  let idUnico = "";
+  let existe = true;
+
+  while (existe) {
+    idUnico = generarIdAleatorio(12); // 12 caracteres aleatorios
+
+    // Verifica si ya existe en CouchDB
+    const res = await fetch(`/cimu/${idUnico}`);
+    existe = res.ok; // true si ya existe
+  }
+
+  return idUnico;
+}
+
+
+  // Boton para guardar imagen
+  btnConfirmarAgregar.addEventListener("click", async () => {
+    const boton = btnConfirmarAgregar;
+    mostrarSpinnerEnBoton(boton);
+
+    try {
+      // --- Aquí ya es seguro subir archivos ---
+      const inputImagen = document.getElementById("foto") as HTMLInputElement;
+      const file = inputImagen.files?.[0];
+      let fotoUrl = null;
+
+      if (file) {
+        const formDataImagen = new FormData();
+        formDataImagen.append("foto", file);
+        formDataImagen.append("carpeta", "carrousel");
+        //console.log('Carpeta en formData:', formDataImagen.get("carpeta"));
+
+        const resImagen = await fetch("/api/subir_imagen", {
+          method: "POST",
+          body: formDataImagen,
+        });
+
+        if (!resImagen.ok) throw new Error("Error al subir la imagen");
+        const dataImagen = await resImagen.json();
+        if (!dataImagen.ok)
+          throw new Error(dataImagen.error || "Error en subida");
+
+        fotoUrl = dataImagen.url;
+      }
+
+      const id = await generarIdUnico();
+      const nuevo = {
+        _id: id,
+        type: "imagen",
+        categoria: "carrousel",
+        creado_en: new Date().toISOString(),
+        foto: fotoUrl,
+      };
+
+      const res = await fetch("/api/inicio/agregar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(nuevo),
+      });
+
+      if (!res.ok) {
+        const error = await res.text();
+        throw new Error(`Error HTTP: ${res.status} - ${error}`);
+      }
+
+      const result = await res.json();
+
+      if (result.ok) {
+        showMessage("✅ Imagen agregada correctamente", "success");
+        modalAgregar.close();
+        modalConfirmarAgregar.close();
+        limpiarFormularioAgregar();
+        await cargarImagenes();
+      } else {
+        showMessage("❌ Error al agregar : " + result.error, "error");
+      }
+    } catch (err) {
+      console.error("Error al enviar:", err);
+      showMessage("❌ Error al agregar", "error");
+    } finally {
+      ocultarSpinnerEnBoton(boton);
+    }
+  });
+
+  function limpiarFormularioAgregar() {
+    // --- limpiar formulario e imagen ---
+    const form = document.getElementById(
+      "formAgregarImagen"
+    ) as HTMLFormElement;
+    form.reset(); // limpia el input file
+    previewImagen.src = ""; // limpia la preview
+    previewImagen.classList.add("hidden");
+  }
+
+  //##################################################################################################################
+
+  //###################################################################################################################
+  //CODIGOS PARA EDITAR LA IMAGEN
+
+  // --- Modal editar ---
+  const modalEditar = document.getElementById("modalEditarImagen");
+  const modalConfirmarEditar = document.getElementById("modalConfirmarEditar");
+
+  const btnCerrarModalEditar = document.getElementById("btnCerrarModalEditar");
+  const btnCancelarEditar = document.getElementById("btnCancelarEditar");
+  const btnAbrirConfirmarEditar = document.getElementById(
+    "btnAbrirConfirmarEditar"
+  );
+  const btnCancelarConfirmarEditar = document.getElementById(
+    "btnCancelarConfirmarEditar"
+  );
+  const btnConfirmarEditar = document.getElementById("btnConfirmarEditar");
+
+  const previewImagenEditar = document.getElementById("previewImagenEditar");
+  const previewNuevaEditar = document.getElementById("previewNuevaEditar");
+  const inputNuevaImagen = document.getElementById("fotoEditar");
+
+  const contenedorImagenActual = document.getElementById(
+    "contenedorImagenActual"
+  );
+  const contenedorSubirNueva = document.getElementById("contenedorSubirNueva");
+  const btnEliminarImagenActual = document.getElementById(
+    "btnEliminarImagenActual"
+  );
+
+  let imagenEnEdicion: any = null;
+  let marcarEliminarImagenActual = false;
+
+  function editarImagen(id: string) {
+    const img = imagenes.find((i) => i._id === id);
+    if (!img) return;
+
+    imagenEnEdicion = img;
+    marcarEliminarImagenActual = false;
+
+    // Mostrar imagen actual
+    previewImagenEditar.src = img.foto;
+    contenedorImagenActual.classList.remove("hidden");
+    contenedorSubirNueva.classList.add("hidden");
+
+    // Limpiar input nueva imagen
+    inputNuevaImagen.value = "";
+    previewNuevaEditar.classList.add("hidden");
+
+    modalEditar.showModal();
+  }
+
+  // Botón cerrar / cancelar
+  btnCerrarModalEditar.addEventListener("click", () => modalEditar.close());
+  btnCancelarEditar.addEventListener("click", () => modalEditar.close());
+
+  // Botón eliminar imagen actual (solo frontend hasta confirmar)
+  btnEliminarImagenActual.addEventListener("click", () => {
+    marcarEliminarImagenActual = true;
+    contenedorImagenActual.classList.add("hidden");
+    contenedorSubirNueva.classList.remove("hidden");
+  });
+
+  // Preview nueva imagen
+  inputNuevaImagen.addEventListener("change", (e: any) => {
+    const file = e.target.files[0];
+    if (file) {
+      previewNuevaEditar.src = URL.createObjectURL(file);
+      previewNuevaEditar.classList.remove("hidden");
+    } else {
+      previewNuevaEditar.classList.add("hidden");
+    }
+  });
+
+  // Validar antes de abrir confirmación
+  btnAbrirConfirmarEditar.addEventListener("click", () => {
+    // si no hay imagen actual y tampoco nueva, no dejar
+    if (marcarEliminarImagenActual && !inputNuevaImagen.files?.length) {
+      const form = document.getElementById(
+        "formEditarImagen"
+      ) as HTMLFormElement;
+      if (!form.checkValidity()) {
+        form.reportValidity(); // muestra mensajes nativos de error
+        return; // no abre el modal de confirmación
+      }
+    }
+    modalConfirmarEditar.showModal();
+  });
+
+  // Cancelar confirmación
+  btnCancelarConfirmarEditar.addEventListener("click", () =>
+    modalConfirmarEditar.close()
+  );
+
+  btnConfirmarEditar.addEventListener("click", async () => {
+    const boton = btnConfirmarEditar;
+    mostrarSpinnerEnBoton(boton);
+
+    try {
+      let nuevaUrl = imagenEnEdicion.foto;
+      let reemplazo = false; // 👈 Bandera para saber si hay que eliminar la anterior
+
+      // Si eliminaron la actual y subieron una nueva
+      if (marcarEliminarImagenActual && inputNuevaImagen.files?.length) {
+        const file = inputNuevaImagen.files[0];
+        const formData = new FormData();
+        formData.append("foto", file);
+        formData.append("carpeta", "carrousel");
+
+        const resImagen = await fetch("/api/subir_imagen", {
+          method: "POST",
+          body: formData,
+        });
+        if (!resImagen.ok) throw new Error("Error al subir nueva imagen");
+        const dataImagen = await resImagen.json();
+        if (!dataImagen.ok)
+          throw new Error(dataImagen.error || "Error en subida");
+
+        nuevaUrl = dataImagen.url;
+        reemplazo = true; // 👈 Se subió una nueva
+      }
+
+      // Actualizar documento en DB
+      const actualizado = {
+        id: imagenEnEdicion._id,
+        ...imagenEnEdicion,
+        foto: nuevaUrl,
+        creado_en: new Date().toISOString(),
+      };
+
+      const res = await fetch("/api/inicio/editar", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(actualizado),
+      });
+
+      if (!res.ok) throw new Error("Error al actualizar imagen");
+
+      const result = await res.json();
+      if (result.ok) {
+        // ✅ Si hubo reemplazo, borrar del servidor la foto anterior
+        if (
+          reemplazo &&
+          imagenEnEdicion.foto &&
+          imagenEnEdicion.foto !== nuevaUrl
+        ) {
+          await fetch("/api/inicio/eliminar_imagen", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ path: imagenEnEdicion.foto }),
+          });
+        }
+
+        showMessage("✅ Imagen actualizada correctamente", "success");
+        modalEditar.close();
+        modalConfirmarEditar.close();
+        await cargarImagenes();
+      } else {
+        showMessage("❌ Error al actualizar: " + result.error, "error");
+      }
+    } catch (err) {
+      console.error("Error al editar:", err);
+      showMessage("❌ Error al editar imagen", "error");
+    } finally {
+      ocultarSpinnerEnBoton(boton);
+    }
+  });
+
+  //###################################################################################################################
+
+  //###############################################################################################################
+  //CODIGO PARA ELIMINAR LA IMAGEN
+let idImagenAEliminar = null;
+
+// Botón cancelar eliminar (cierra modal)
+btnCancelarConfirmarEliminar.addEventListener("click", () => {
+  modalConfirmarEliminar.close();
+});
+
+// Preparar eliminación (abrir modal con el id)
+function prepararEliminarImagen(id) {
+  idImagenAEliminar = id;
+  modalConfirmarEliminar.showModal();
+}
+
+// Confirmar eliminar
+btnConfirmarEliminar.addEventListener("click", async () => {
+  const boton = btnConfirmarEliminar;
+  mostrarSpinnerEnBoton(boton);
+
+  if (!idImagenAEliminar) {
+    showMessage("❌ ID inválido para eliminar", "error");
+    ocultarSpinnerEnBoton(boton);
+    return;
+  }
+
+  // 🔥 Llamada a API para eliminar imagen
+  await eliminarImagenCarrusel(idImagenAEliminar);
+
+  // Limpiamos el id
+  idImagenAEliminar = null;
+
+  ocultarSpinnerEnBoton(boton);
+  modalConfirmarEliminar.close();
+
+  // Recargar lista
+  await cargarImagenes();
+});
+
+// Función para eliminar imagen en el servidor
+async function eliminarImagenCarrusel(id) {
+  try {
+    const respuesta = await fetch("/api/inicio/eliminar", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id }),
+    });
+
+    const resultado = await respuesta.json();
+
+    if (resultado.ok) {
+      showMessage("✅ Imagen eliminada correctamente", "success");
+    } else {
+      showMessage("❌ Error al eliminar: " + (resultado.error || "Desconocido"), "error");
+    }
+  } catch (err) {
+    console.error("❌ Error en eliminarImagenCarrusel:", err);
+    showMessage("❌ Error al conectar con el servidor", "error");
+  }
+}
+
+
+  //################################################################################################################
+  cargarImagenes();
+
+  function renderImagenes() {
+    const contenedor = document.getElementById("listaImagenes");
+    const mensajeVacio = document.getElementById("mensajeVacio");
+
+    contenedor.innerHTML = "";
+
+    if (imagenes.length === 0) {
+      mensajeVacio.textContent = "No hay imágenes registradas aún.";
+      mensajeVacio.classList.remove("hidden");
+      return;
+    }
+
+    mensajeVacio.classList.add("hidden");
+
+    imagenes.forEach((img) => {
+      const card = document.createElement("div");
+      card.className =
+        "bg-white border border-gray-300 rounded-lg shadow-md p-3 flex flex-col items-center gap-3";
+
+      // Imagen
+      const imagenEl = document.createElement("img");
+      imagenEl.src = img.foto;
+      imagenEl.alt = "Imagen del carrusel";
+      imagenEl.className = "w-full h-48 object-cover rounded";
+
+      // Botones
+      const botones = document.createElement("div");
+      botones.className = "flex gap-3 mt-2";
+
+      const btnEditar = document.createElement("button");
+      btnEditar.textContent = "Editar";
+      btnEditar.className =
+        "px-3 py-1 border-1 border-blue-900 text-black rounded hover:bg-gray-200";
+      btnEditar.addEventListener("click", () => editarImagen(img._id));
+
+      const btnEliminar = document.createElement("button");
+      btnEliminar.textContent = "Eliminar";
+      btnEliminar.className =
+        "px-3 py-1 bg-blue-900 text-white rounded hover:bg-blue-700";
+      btnEliminar.addEventListener("click", () =>
+        prepararEliminarImagen(img._id)
+      );
+
+      botones.appendChild(btnEditar);
+      botones.appendChild(btnEliminar);
+
+      card.appendChild(imagenEl);
+      card.appendChild(botones);
+
+      contenedor.appendChild(card);
+    });
+  }
+
+  // Función para mostrar mensajes flotantes
+  function showMessage(mensaje, tipo = "info") {
+    let contenedor = document.getElementById("message-container");
+    if (!contenedor) {
+      contenedor = document.createElement("div");
+      contenedor.id = "message-container";
+      contenedor.style.position = "fixed";
+      contenedor.style.top = "80px";
+      contenedor.style.left = "50%";
+      contenedor.style.transform = "translateX(-50%)";
+      contenedor.style.zIndex = "999999999";
+      document.body.appendChild(contenedor);
+    }
+
+    const mensajeElem = document.createElement("div");
+    mensajeElem.textContent = mensaje;
+    mensajeElem.style.marginBottom = "10px";
+    mensajeElem.style.padding = "12px 20px";
+    mensajeElem.style.borderRadius = "5px";
+    mensajeElem.style.color = "white";
+    mensajeElem.style.minWidth = "200px";
+    mensajeElem.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
+    mensajeElem.style.fontWeight = "600";
+    mensajeElem.style.fontFamily = "sans-serif";
+    mensajeElem.style.opacity = "1";
+    mensajeElem.style.transition = "opacity 0.5s ease";
+
+    switch (tipo) {
+      case "success":
+        mensajeElem.style.backgroundColor = "#28a745";
+        break;
+      case "error":
+        mensajeElem.style.backgroundColor = "#dc3545";
+        break;
+      default:
+        mensajeElem.style.backgroundColor = "#007bff";
+    }
+
+    contenedor.appendChild(mensajeElem);
+
+    setTimeout(() => {
+      mensajeElem.style.opacity = "0";
+      setTimeout(() => mensajeElem.remove(), 500);
+    }, 3000);
+  }
+
+  //datalles par evitar que se envien muchas peticiones al servidor
+  function mostrarSpinnerEnBoton(boton) {
+    const texto = boton.querySelector(".btn-text");
+    const spinner = boton.querySelector(".btn-spinner");
+    if (texto && spinner) {
+      texto.classList.add("hidden");
+      spinner.classList.remove("hidden");
+      boton.disabled = true;
+    }
+  }
+
+  function ocultarSpinnerEnBoton(boton) {
+    const texto = boton.querySelector(".btn-text");
+    const spinner = boton.querySelector(".btn-spinner");
+    if (texto && spinner) {
+      texto.classList.remove("hidden");
+      spinner.classList.add("hidden");
+      boton.disabled = false;
+    }
+  }
+</script>
