@@ -13,7 +13,9 @@
         <option value="laboratorio_publica">Laboratorio Pública</option>
       </select>
 
-      <button @click="abrirModalNueva" class="btn btn-success bg-green-600 text-white bold ml-auto hover:bg-green-700 transition">+ Nueva Investigación</button>
+      <button @click="abrirModalNueva"
+        class="btn btn-success bg-green-600 text-white bold ml-auto hover:bg-green-700 transition">+ Nueva
+        Investigación</button>
     </div>
 
     <!-- Grid de Cards -->
@@ -50,6 +52,19 @@
           </div>
 
           <div>
+            <label class="label">Descripcion</label>
+            <textarea v-model="investigacionEditando.descripcion"
+              class="textarea textarea-bordered w-full min-h-[120px]"
+              placeholder="Escribe aquí la descripción completa de la investigación..." required />
+          </div>
+
+          <div>
+            <label class="label">Autores</label>
+            <input v-model="investigacionEditando.autores" type="text" class="input input-bordered w-full"
+              placeholder="Escribe los nombres de los autores separados por comas" required />
+          </div>
+
+          <div>
             <label class="label">Programa</label>
             <select v-model="investigacionEditando.programa" class="select select-bordered w-full" required>
               <option value="">Selecciona</option>
@@ -68,7 +83,8 @@
 
           <div>
             <label class="label">Imagen</label>
-            <input type="file" @change="handleFileUpload" accept="image/*" class="file-input file-input-bordered w-full" />
+            <input type="file" @change="handleFileUpload" accept="image/jpeg,image/jpg,image/png,image/webp "
+              class="file-input file-input-bordered w-full"  />
             <img v-if="previewImage" :src="previewImage" class="mt-2 w-full h-48 object-cover rounded" />
           </div>
 
@@ -84,6 +100,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { couch } from '../../lib/couchDB'
 
 const filtroPrograma = ref('')
 const investigaciones = ref([])
@@ -95,11 +112,13 @@ let imagenSeleccionada = null
 async function cargarInvestigaciones() {
   const res = await fetch('http://68.183.19.227:5984/investigaciones/_all_docs?include_docs=true', {
     headers: {
-      Authorization: 'Basic ' + btoa('admin:am191392120')
+      Authorization: 'Basic ' + btoa('admin:paginawebcimu')
     }
   })
   const data = await res.json()
   investigaciones.value = data.rows.map(r => r.doc)
+
+
 }
 
 const investigacionesFiltradas = computed(() => {
@@ -108,10 +127,11 @@ const investigacionesFiltradas = computed(() => {
 })
 
 function abrirModalNueva() {
-  investigacionEditando.value = { titulo: '', programa: '', fecha: '', imagen: '' }
+  investigacionEditando.value = { titulo: '', programa: '', fecha: '', imagen: '', autores: '', descripcion: '' }
   previewImage.value = null
   imagenSeleccionada = null
   modal.value.showModal()
+   console.log('Modal ref:', modal.value)
 }
 
 function cerrarModal() {
@@ -127,14 +147,27 @@ function editarInvestigacion(inv) {
 function handleFileUpload(event) {
   const file = event.target.files[0]
   if (file) {
+    const tiposPermitidos = ["image/png", "image/jpeg", "image/webp"];
+    
+     if (!tiposPermitidos.includes(file.type)) {
+    alert("Solo se permiten imágenes PNG, JPEG o WebP");
+    event.target.value = ""; // Limpia el input
+    previewImage.value = null;
+    imagenSeleccionada = null;
+    return;
+  }
+
     imagenSeleccionada = file
     previewImage.value = URL.createObjectURL(file)
+    
   }
 }
 
 async function guardarInvestigacion() {
   const data = { ...investigacionEditando.value }
   const id = data._id || crypto.randomUUID()
+  data.autores = data.autores.split(",").map(a => a.trim())
+  console.log("Datos", data, "id", id);
 
   if (imagenSeleccionada) {
     // Simulación: subir imagen a tu backend en el futuro
@@ -150,7 +183,7 @@ async function guardarInvestigacion() {
   const res = await fetch(`http://68.183.19.227:5984/investigaciones/${id}`, {
     method: 'PUT',
     headers: {
-      Authorization: 'Basic ' + btoa('admin:am191392120'),
+      Authorization: 'Basic ' + btoa('admin:paginawebcimu'),
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(data)
@@ -164,7 +197,7 @@ async function eliminarInvestigacion(id, rev) {
   await fetch(`http://68.183.19.227:5984/investigaciones/${id}?rev=${rev}`, {
     method: 'DELETE',
     headers: {
-      Authorization: 'Basic ' + btoa('admin:am191392120')
+      Authorization: 'Basic ' + btoa('admin:paginawebcimu')
     }
   })
   await cargarInvestigaciones()

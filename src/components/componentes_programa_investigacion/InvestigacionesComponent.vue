@@ -87,12 +87,12 @@ async function cargar() {
   try {
     const res = await fetch('http://68.183.19.227:5984/investigaciones/_all_docs?include_docs=true', {
       headers: {
-        Authorization: 'Basic ' + btoa('admin:am191392120')
+        Authorization: 'Basic ' + btoa('admin:paginawebcimu')
       }
     })
 
     const data = await res.json()
-
+    console.log('Datos obtenidos:', data)
     let docs = data.rows
       .map(row => row.doc)
       .filter(doc => doc && doc.titulo) // Asegura que tenga contenido válido

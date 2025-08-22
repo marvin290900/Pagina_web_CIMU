@@ -122,7 +122,7 @@ const obtenerInvestigacion = async () => {
   try {
     const res = await fetch(`http://68.183.19.227:5984/investigaciones/${props.id}`, {
       headers: {
-        "Authorization": "Basic " + btoa("admin:am191392120")
+        "Authorization": "Basic " + btoa("admin:paginawebcimu")
       }
     });
 

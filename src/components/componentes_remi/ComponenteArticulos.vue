@@ -2,33 +2,28 @@
 // Simulación de datos (estos vendrían de CouchDB en el futuro)
 const articulosOriginales = [
   {
-    tipo: "Artículo Original",
-    titulo: "EL AULA INVERTIDA COMO ESTRATEGIA PARA MEJORAR HABILIDADES Y COMPETENCIAS COGNITIVAS EN LOS ESTUDIANTES",
-    autores: "Ruiter Álvaro Murillo Guzmán",
-    paginas: "17-27",
-    pdf: "/pdfs/aula-invertida.pdf"
-  },
-  {
-    tipo: "Artículo Original",
-    titulo: "LA DANZA DE LOS CHAPETONES EN EL MUNICIPIO DE PANCHIMALCO",
-    autores: "Jaime Ernesto Jiménez Hernández",
-    paginas: "28-54",
-    pdf: "/pdfs/danza-chapetones.pdf"
-  },
-  {
-    tipo: "Artículo Original",
-    titulo: "HISTORIA CRÍTICA DE LA EDUCACIÓN TÉCNICA SALVADOREÑA",
-    autores: "Roberto Gutiérrez",
-    paginas: "55-73",
-    pdf: "/pdfs/historia-educacion.pdf"
-  },
-  {
-    tipo: "Artículo Original",
-    titulo: "IDENTIDAD LOCAL Y VALOR HISTÓRICO COMO ESTRATEGIA DE TRANSFORMACIÓN ECONÓMICA EN EL CENTRO HISTÓRICO DE SANTA ANA",
-    autores: "Miguel Ángel Rivera Mendoza, Eber Wilfredo Caballero Pastul",
-    paginas: "74-92",
-    pdf: "/pdfs/identidad-local.pdf"
+    "_id": "articulo:2025-08-21:remi-001", 
+  "titulo": "LA DANZA DE LOS CHAPETONES EN EL MUNICIPIO DE PANCHIMALCO",
+  "autores": [
+    "Jaime Ernesto Jiménez Hernández"
+  ],
+  "tipo": "Articulo Original", 
+  "paginas": "28-54",
+  "fecha_publicacion": "2025-08-21",
+  "pdf_url": "/pdfs/danza-chapetones.pdf",
+  "keywords": [
+    "Danza",
+    "Panchimalco",
+    "Historia cultural"
+  ],
+  "estado": "publicado",  
+  "metadata": {
+    "subido_por": "admin",
+    "fecha_creacion": "2025-08-15",
+    "ultima_actualizacion": "2025-08-21"
   }
+  },
+  
 ];
 
 const articulosRevision = [

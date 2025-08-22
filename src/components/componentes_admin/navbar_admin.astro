@@ -2,7 +2,8 @@
 <div
   id="sidebarOverlay"
   class="fixed inset-0 bg-[#6B72804D] z-40 hidden transition-opacity duration-300"
-></div>
+>
+</div>
 
 <!-- Sidebar (oculto por defecto) -->
 <aside
@@ -19,31 +20,58 @@
 
   <!-- Menú de navegación -->
   <nav class="flex flex-col p-4 space-y-2 flex-1">
-    <a href="/admin/investigadores" class="hover:bg-gray-700 rounded px-3 py-2 flex items-center gap-2">
+    <a
+      href="/admin/investigadores"
+      class="hover:bg-gray-700 rounded px-3 py-2 flex items-center gap-2"
+    >
       <span class="mdi mdi-account-group-outline"></span> Investigadores/as
     </a>
-    <a href="/" class="hover:bg-gray-700 rounded px-3 py-2 flex items-center gap-2">
+    <a
+      href="/"
+      class="hover:bg-gray-700 rounded px-3 py-2 flex items-center gap-2"
+    >
       <span class="mdi mdi-post-outline"></span> Blog
     </a>
-    <a href="/" class="hover:bg-gray-700 rounded px-3 py-2 flex items-center gap-2">
+    <a
+      href="/"
+      class="hover:bg-gray-700 rounded px-3 py-2 flex items-center gap-2"
+    >
       <span class="mdi mdi-school-outline"></span> Multidisciplinaria
     </a>
-    <a href="/" class="hover:bg-gray-700 rounded px-3 py-2 flex items-center gap-2">
+    <a
+      href="/admin/remi"
+      class="hover:bg-gray-700 rounded px-3 py-2 flex items-center gap-2"
+    >
       <span class="mdi mdi-lan"></span> REMI
     </a>
-    <a href="/admin/investigacion" class="hover:bg-gray-700 rounded px-3 py-2 flex items-center gap-2">
+
+    <a
+      href="/admin/investigacion"
+      class="hover:bg-gray-700 rounded px-3 py-2 flex items-center gap-2"
+    >
       <span class="mdi mdi-file-document-multiple-outline"></span> Investigaciones
     </a>
   </nav>
 
+  <div class="collapse bg-base-100 border border-base-300">
+    <input type="radio" name="my-accordion-1" checked="checked" />
+    <div class="collapse-title font-semibold">How do I create an account?</div>
+    <div class="collapse-content text-sm">
+      Click the "Sign Up" button in the top right corner and follow the
+      registration process.
+    </div>
+  </div>
+
   <!-- Cerrar sesión -->
   <div class="p-4 border-t border-gray-700">
-    <a href="/logout" class="hover:bg-red-600 hover:text-white rounded px-3 py-2 flex items-center gap-2 text-red-400">
+    <a
+      href="/logout"
+      class="hover:bg-red-600 hover:text-white rounded px-3 py-2 flex items-center gap-2 text-red-400"
+    >
       <span class="mdi mdi-logout"></span> Cerrar sesión
     </a>
   </div>
 </aside>
-
 
 <!-- Encabezado principal -->
 <header
@@ -53,12 +81,18 @@
   <div class="w-full flex items-center justify-between px-4 md:px-6 h-10">
     <div class="flex items-center gap-3">
       <!-- Botón para mostrar el sidebar -->
-      <button id="toggleSidebar" class="btn btn-sm btn-ghost text-white focus:outline-none mdi mdi-menu text-2xl hover:bg-blue-950"/>
-        
-      <!-- Título -->
-      <a href="/admin/informacion" class="text-xs sm:text-xs md:text-lg lg:text-lg font-bold uppercase">Panel de Administración</a>
-    </div>
+      <button
+        id="toggleSidebar"
+        class="btn btn-sm btn-ghost text-white focus:outline-none mdi mdi-menu text-2xl hover:bg-blue-950"
+      ></button>
 
+      <!-- Título -->
+      <a
+        href="/admin/informacion"
+        class="text-xs sm:text-xs md:text-lg lg:text-lg font-bold uppercase"
+        >Panel de Administración</a
+      >
+    </div>
 
     <!-- Avatar usuario -->
     <div class="flex items-center">
@@ -72,7 +106,6 @@
     </div>
   </div>
 </header>
-
 
 <!-- Scripts -->
 <script is:inline>
@@ -103,5 +136,4 @@
       hideSidebar();
     });
   });
-
 </script>
