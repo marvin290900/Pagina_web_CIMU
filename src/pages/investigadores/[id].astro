@@ -197,22 +197,24 @@ console.log("Investigador obtenido:", investigador);
                 ) && <li>No hay contactos registrados</li>
               }
             </ul>
-            <h3 class="font-bold text-gray-900 mt-5 text-center mb-5">
-              Redes Sociales
-            </h3>
-            <div class="max-h-40 overflow-y-auto">
-              <ul
-                class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-2 gap-4 space-y-2"
-              >
-                {
-                  investigador.redesSociales?.map((red) => {
-                    const url = red.url;
-                    let iconClass = "mdi mdi-web";
-                    let color = "text-gray-500";
 
-                    const hostname = new URL(url).hostname;
 
-                    if (hostname.includes("facebook.com")) {
+
+{investigador.redesSociales?.length > 0 && (
+  <>
+    <h3 class="font-bold text-gray-900 mt-5 text-center mb-5">
+      Redes Sociales
+    </h3>
+    <div class="max-h-40 overflow-y-auto">
+      <ul class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-2 gap-4 space-y-2">
+        {investigador.redesSociales.map((red) => {
+          const url = red.url;
+          let iconClass = "mdi mdi-web";
+          let color = "text-gray-500";
+
+          const hostname = new URL(url).hostname;
+
+          if (hostname.includes("facebook.com")) {
                       iconClass = "mdi mdi-facebook";
                       color = "text-blue-600";
                     } else if (
@@ -303,22 +305,25 @@ console.log("Investigador obtenido:", investigador);
                       iconClass = "mdi mdi-coffee";
                       color = "text-pink-500";
                     }
+          return (
+            <li class="flex flex-col items-center gap-1">
+              <span class={`${iconClass} ${color} text-3xl`} />
+              <a
+                href={url}
+                target="_blank"
+                class="text-gray-800 hover:text-blue-600"
+              >
+                {red.nombre}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </>
+)}
 
-                    return (
-                      <li class="flex flex-col items-center gap-1">
-                        <span class={`${iconClass} ${color} text-3xl`} />
-                        <a
-                          href={url}
-                          target="_blank"
-                          class="text-gray-800 hover:text-blue-600"
-                        >
-                          {red.nombre}
-                        </a>
-                      </li>
-                    );
-                  }) || <li>No hay redes registradas</li>
-                }
-              </ul>
+            
             </div>
           </div>
         </div>
