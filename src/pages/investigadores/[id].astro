@@ -53,29 +53,31 @@ console.log("Investigador obtenido:", investigador);
     <!-- Botón flotante CV -->
     <!-- Botón flotante con texto -->
 <!-- Contenedor flotante -->
-<div class="fixed bottom-6 right-6 flex flex-col items-center group">
-  <!-- Botón flotante -->
-  <a
-    href={investigador.cv}
-    target="_blank"
-    class="bg-blue-600 hover:bg-blue-700 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg transition-all duration-300"
-    title="Ver CV"
-  >
-    <span class="mdi mdi-file-document text-2xl"></span>
-  </a>
-  <span class="text-sm mt-1 text-gray-800 font-medium">CV</span>
+{investigador.cv && (
+  <div class="fixed bottom-6 right-6 flex flex-col items-center group">
+    <a
+      href={investigador.cv}
+      target="_blank"
+      class="bg-blue-600 hover:bg-blue-700 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg transition-all duration-300"
+      title="Ver CV"
+    >
+      <span class="mdi mdi-file-document text-2xl"></span>
+    </a>
+    <span class="text-sm mt-1 text-gray-800 font-medium">CV</span>
 
-  <!-- Preview del CV -->
-  <div
-    class="absolute bottom-20 right-0 w-96 h-128 shadow-lg border border-gray-300 overflow-hidden hidden group-hover:block transition-all duration-300"
-  >
-    <iframe
-      src={investigador.cv}
-      class="w-full h-full"
-      frameborder="0"
-    ></iframe>
+    <!-- Preview del CV -->
+    <div
+      class="absolute bottom-20 right-0 w-96 h-128 shadow-lg border border-gray-300 overflow-hidden hidden group-hover:block transition-all duration-300"
+    >
+      <iframe
+        src={investigador.cv}
+        class="w-full h-full"
+        frameborder="0"
+      ></iframe>
+    </div>
   </div>
-</div>
+)}
+
 
 
 
