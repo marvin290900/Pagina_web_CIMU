@@ -1,130 +1,386 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import imagenDefault from "../../assets/default_investigador/imagen_default_1.png"
+import imagenDefault from "../../assets/default_investigador/imagen_default_1.png";
 
 import { getInvestigadorPorId } from "../../lib/investigadores.js";
 const { id } = Astro.params;
-console.log('ID recibido en la ruta:', id);
+console.log("ID recibido en la ruta:", id);
 const investigador = await getInvestigadorPorId(id);
-console.log('Investigador obtenido:', investigador);
+console.log("Investigador obtenido:", investigador);
 ---
 
 <Layout>
-  <main class="mt-20">
-
+  <section class="mt-2 md:mt-5 lg:mt-8">
     {
       investigador && (
-        <div class="container grid grid-cols-2 lg:grid-cols-2 gap-8 px-6 sm:px-6 md:px-12 lg:px-20">
-    
-    <div class="mt-8 p-6 text-center rounded-lg shadow-none bg-white flex items-center justify-center">
-      <div>
-        <p class="text-center text-lg sm:text-xl md:text-2xl lg:text-5xl font-bold text-gray-900">
-          <span class="text-xs md:text-[24px] lg:text-lg xl:text-6xl font-bold bg-clip-text text-transparent" style="background-image: linear-gradient(to right, #16182D, #283886);">
-            {investigador.nombre}
-          </span>
-        </p>
-        <p class="mt-4 text-center text-xs sm:text-[12px] md:text-lg lg:text-2xl text-gray-700">
-          {investigador.cargo}
-        </p>
-      </div>
-    </div>
+        <div class="w-full px-6 sm:px-2 md:px-5 lg:px-5 bg-white">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-1 lg:gap-8 md:gap-0.5 items-center">
+            <div class="text-center order-2 lg:order-1 md:p-1 lg:p-6 rounded-lg bg-white mt-1 sm:mt-1 md:mt-1 hover:scale-105 transition-transform duration-300">
+              <p class="font-bold text-gray-900">
+                <span
+                  class="text-2xl md:text-3xl lg:text-5xl xl:text-5xl font-bold bg-clip-text text-transparent"
+                  style="background-image: linear-gradient(to right, #16182D, #283886);"
+                >
+                  {investigador.nombre}
+                </span>
+              </p>
+              <p class="mt-1 text-sm sm:text-md md:text-xl lg:text-2xl text-gray-700">
+                {investigador.cargo}
+              </p>
+            </div>
 
-    
-    <div class="flex justify-center items-center relative bg-white py-10 sm:py-30 md:py-8 lg:py-5">
-      
-       <div class="mt-1 sm:mt-2 h-35 w-35 sm:h-20 sm:w-20 md:h-50 md:w-50 lg:w-105 lg:h-105 border-none bg-[#57252509] shadow-lg rounded-full  absolute animate-bounce"></div>
-      
-      <div class="mt-1 sm:mt-2 h-32 w-32 sm:h-15 sm:w-15 md:h-48 md:w-48 lg:w-100 lg:h-100 border-4 border-dashed border-[#2E8B57] rounded-full relative animate-bounce-spin"></div>
-        <img src={investigador.foto || imagenDefault.src} alt="Imagen animada" class="rounded-full w-30 h-30 md:w-46 md:h-46 lg:w-96 lg:h-96 object-cover border-4 border-white shadow-lg -mb-0.5  md:mb-6 lg:mb-10 animate-bounce absolute sm:translate-y-4 md:translate-y-4 lg:translate-y-6" />
-    </div>
-
-  </div>
+            <div class="flex justify-center items-center relative order-1 lg:order-2 mt-2 bg-white p-2">
+              <img
+                src={investigador.foto || imagenDefault.src}
+                alt="Imagen Investigador"
+                class="relative rounded-full border-4 border-gray-200 object-cover hover:scale-105 transition-transform duration-300
+                w-65 h-65 sm:w-65 sm:h-65 md:w-75 md:h-75 lg:w-85 lg:h-85"
+              />
+            </div>
+          </div>
+        </div>
       )
     }
 
-    <section id="investigador_seleccionado" class="py-8 bg-white text-center relative z-10">
-      <div class="container mx-auto">
-        <div class="text-black">
-          {
-            investigador ? (
-              <section class="p-8 max-w-3xl mx-auto">
-                <p>
-                  <strong>Cargo:</strong> {investigador.cargo}
-                </p>
-                <p>
-                  <strong>Correo:</strong> {investigador.correo}
-                </p>
-                <p>
-                  <strong>Biografía:</strong>{" "}
-                  {investigador.bio || "No disponible"}
-                </p>
-              </section>
-            ) : (
-              <p class="text-center text-red-600 mt-20">
-                Investigador no encontrado.
-              </p>
-            )
-          }
+    <!-- Se manda la variable que viene desde el servidor  -->
+    <div
+      id="investigador-data"
+      style="display:none"
+      data-investigador={JSON.stringify(investigador)}
+    >
+    </div>
+
+    <!-- Botón flotante CV -->
+    <!-- Botón flotante con texto -->
+<!-- Contenedor flotante -->
+<div class="fixed bottom-6 right-6 flex flex-col items-center group">
+  <!-- Botón flotante -->
+  <a
+    href={investigador.cv}
+    target="_blank"
+    class="bg-blue-600 hover:bg-blue-700 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg transition-all duration-300"
+    title="Ver CV"
+  >
+    <span class="mdi mdi-file-document text-2xl"></span>
+  </a>
+  <span class="text-sm mt-1 text-gray-800 font-medium">CV</span>
+
+  <!-- Preview del CV -->
+  <div
+    class="absolute bottom-20 right-0 w-96 h-128 shadow-lg border border-gray-300 overflow-hidden hidden group-hover:block transition-all duration-300"
+  >
+    <iframe
+      src={investigador.cv}
+      class="w-full h-full"
+      frameborder="0"
+    ></iframe>
+  </div>
+</div>
+
+
+
+    <section id="investigador_seleccionado" class="py-8 bg-white text-gray-800">
+      <div class="max-w-8xl mx-auto px-4">
+        <!-- Container principal -->
+        <div class="flex flex-col lg:flex-row gap-4">
+          <!-- Barra de tabs + contenido (más ancha) -->
+          <div class="flex-1 lg:flex-[4] p-4 rounded-lg">
+            <!-- Barra de tabs -->
+            <div
+              class="flex flex-col md:flex-row justify-start md:gap-4 gap-2 pb-2 mb-6"
+            >
+              <button
+                class="tab-btn lg:flex lg:items-center text-sm py-2 px-4 border-b-2 border-transparent hover:border-gray-400 text-left md:text-center"
+                data-tab="adscripciones"
+                ><span class="mdi mdi-domain mr-2 text-blue-500"
+                ></span>Adscripciones</button
+              >
+              <button
+                class="tab-btn lg:flex lg:items-center text-sm py-2 px-4 border-b-2 border-transparent hover:border-gray-400 text-left md:text-center"
+                data-tab="especialidad"
+                ><span class="mdi mdi-book mr-2 text-blue-500"
+                ></span>Especialidad</button
+              >
+              <button
+                class="tab-btn lg:flex lg:items-center text-sm py-2 px-4 border-b-2 border-transparent hover:border-gray-400 text-left md:text-center"
+                data-tab="resena"
+                ><span class="mdi mdi-comment-text mr-2 text-blue-500"
+                ></span>Reseña</button
+              >
+              <button
+                class="tab-btn lg:flex lg:items-center text-sm py-2 px-4 border-b-2 border-transparent hover:border-gray-400 text-left md:text-center"
+                data-tab="reconocimientos"
+                ><span class="mdi mdi-trophy mr-2 text-blue-500"
+                ></span>Reconocimientos</button
+              >
+              <button
+                class="tab-btn lg:flex lg:items-center text-sm py-2 px-4 border-b-2 border-transparent hover:border-gray-400 text-left md:text-center"
+                data-tab="educacion"
+                ><span class="mdi mdi-school mr-2 text-blue-500"
+                ></span>Educación</button
+              >
+              <button
+                class="tab-btn lg:flex lg:items-center text-sm py-2 px-4 border-b-2 border-transparent hover:border-gray-400 text-left md:text-center"
+                data-tab="redesTrabajo"
+                ><span class="mdi mdi-account-group mr-2 text-blue-500"
+                ></span>Redes de Trabajo</button
+              >
+            </div>
+
+            <!-- Contenido dinámico -->
+            <div id="tab-content" class="text-gray-700"></div>
+          </div>
+
+          <!-- Sección de redes y contactos (más estrecha) -->
+          <div
+            class="flex-shrink-0
+         w-full
+         max-w-full
+         sm:max-w-sm
+         md:max-w-full
+         lg:max-w-xs
+         p-6
+         rounded-lg
+         mr-10"
+          >
+            <h3 class="font-bold text-center text-gray-900 mb-2">Contactos</h3>
+            <ul class="space-y-2">
+              {
+                investigador.email && (
+                  <li class="flex items-center gap-2 break-words">
+                    <span class="mdi mdi-email text-gray-600 text-xl" />
+                    <a
+                      href={`mailto:${investigador.email}`}
+                      class="text-gray-800 hover:text-blue-600 text-md break-words max-w-full"
+                    >
+                      {investigador.email}
+                    </a>
+                  </li>
+                )
+              }
+
+              {
+                investigador.otrosCorreos?.map((correo) => (
+                  <li class="flex items-center gap-2">
+                    <span class="mdi mdi-email text-gray-600 text-xl" />
+                    <a
+                      href={`mailto:${correo}`}
+                      class="text-gray-800 hover:text-blue-600 text-md break-words max-w-full"
+                    >
+                      {correo}
+                    </a>
+                  </li>
+                ))
+              }
+
+              {
+                investigador.telefonos?.map((telefono) => (
+                  <li class="flex items-center gap-2">
+                    <span class="mdi mdi-phone text-green-600 text-xl" />
+                    <a
+                      href={`tel:${telefono}`}
+                      class="text-gray-800 hover:text-blue-600 text-md"
+                    >
+                      {telefono}
+                    </a>
+                  </li>
+                ))
+              }
+
+              {
+                !(
+                  investigador.email ||
+                  investigador.otrosCorreos?.length ||
+                  investigador.telefonos?.length
+                ) && <li>No hay contactos registrados</li>
+              }
+            </ul>
+            <h3 class="font-bold text-gray-900 mt-5 text-center mb-5">
+              Redes Sociales
+            </h3>
+            <div class="max-h-40 overflow-y-auto">
+              <ul
+                class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-2 gap-4 space-y-2"
+              >
+                {
+                  investigador.redesSociales?.map((red) => {
+                    const url = red.url;
+                    let iconClass = "mdi mdi-web";
+                    let color = "text-gray-500";
+
+                    const hostname = new URL(url).hostname;
+
+                    if (hostname.includes("facebook.com")) {
+                      iconClass = "mdi mdi-facebook";
+                      color = "text-blue-600";
+                    } else if (
+                      hostname.includes("twitter.com") ||
+                      hostname.includes("x.com")
+                    ) {
+                      iconClass = "mdi mdi-twitter";
+                      color = "text-sky-500";
+                    } else if (hostname.includes("linkedin.com")) {
+                      iconClass = "mdi mdi-linkedin";
+                      color = "text-blue-700";
+                    } else if (hostname.includes("instagram.com")) {
+                      iconClass = "mdi mdi-instagram";
+                      color = "text-pink-500";
+                    } else if (hostname.includes("researchgate.net")) {
+                      iconClass = "mdi mdi-web";
+                      color = "text-green-700";
+                    } else if (hostname.includes("scholar.google.com")) {
+                      iconClass = "mdi mdi-google";
+                      color = "text-red-600";
+                    } else if (hostname.includes("academia.edu")) {
+                      iconClass = "mdi mdi-school";
+                      color = "text-indigo-600";
+                    } else if (hostname.includes("mendeley.com")) {
+                      iconClass = "mdi mdi-book-open";
+                      color = "text-teal-600";
+                    } else if (hostname.includes("orcid.org")) {
+                      iconClass = "mdi mdi-web";
+                      color = "text-green-600";
+                    } else if (hostname.includes("github.com")) {
+                      iconClass = "mdi mdi-github";
+                      color = "text-gray-800";
+                    } else if (hostname.includes("gitlab.com")) {
+                      iconClass = "mdi mdi-gitlab";
+                      color = "text-orange-600";
+                    } else if (hostname.includes("loop.frontiersin.org")) {
+                      iconClass = "mdi mdi-web";
+                      color = "text-purple-600";
+                    } else if (hostname.includes("mysciencework.com")) {
+                      iconClass = "mdi mdi-flask";
+                      color = "text-orange-600";
+                    } else if (hostname.includes("methodspace.com")) {
+                      iconClass = "mdi mdi-lightbulb-on-outline";
+                      color = "text-yellow-600";
+                    } else if (hostname.includes("plazascience.com")) {
+                      iconClass = "mdi mdi-atom";
+                      color = "text-red-500";
+                    } else if (hostname.includes("divulgared.es")) {
+                      iconClass = "mdi mdi-earth";
+                      color = "text-green-500";
+                    } else if (hostname.includes("feelsynapsis.com")) {
+                      iconClass = "mdi mdi-brain";
+                      color = "text-purple-500";
+                    } else if (hostname.includes("researcherid.com")) {
+                      iconClass = "mdi mdi-account";
+                      color = "text-indigo-500";
+                    } else if (hostname.includes("figshare.com")) {
+                      iconClass = "mdi mdi-cloud-upload";
+                      color = "text-cyan-600";
+                    } else if (hostname.includes("zenodo.org")) {
+                      iconClass = "mdi mdi-cloud";
+                      color = "text-cyan-500";
+                    } else if (hostname.includes("osf.io")) {
+                      iconClass = "mdi mdi-database";
+                      color = "text-teal-500";
+                    } else if (hostname.includes("slideshare.net")) {
+                      iconClass = "mdi mdi-presentation";
+                      color = "text-orange-500";
+                    } else if (hostname.includes("dryad.org")) {
+                      iconClass = "mdi mdi-folder-open";
+                      color = "text-yellow-500";
+                    } else if (hostname.includes("publons.com")) {
+                      iconClass = "mdi mdi-web";
+                      color = "text-indigo-400";
+                    } else if (hostname.includes("webofscience.com")) {
+                      iconClass = "mdi mdi-web";
+                      color = "text-blue-400";
+                    } else if (hostname.includes("youtube.com")) {
+                      iconClass = "mdi mdi-youtube";
+                      color = "text-red-500";
+                    } else if (hostname.includes("vimeo.com")) {
+                      iconClass = "mdi mdi-vimeo";
+                      color = "text-blue-400";
+                    } else if (hostname.includes("patreon.com")) {
+                      iconClass = "mdi mdi-currency-usd";
+                      color = "text-orange-600";
+                    } else if (hostname.includes("ko-fi.com")) {
+                      iconClass = "mdi mdi-coffee";
+                      color = "text-pink-500";
+                    }
+
+                    return (
+                      <li class="flex flex-col items-center gap-1">
+                        <span class={`${iconClass} ${color} text-3xl`} />
+                        <a
+                          href={url}
+                          target="_blank"
+                          class="text-gray-800 hover:text-blue-600"
+                        >
+                          {red.nombre}
+                        </a>
+                      </li>
+                    );
+                  }) || <li>No hay redes registradas</li>
+                }
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </section>
-  </main>
+  </section>
+
+  <script type="module">
+    const investigadorEl = document.getElementById("investigador-data");
+    const investigador = JSON.parse(investigadorEl.dataset.investigador);
+
+    const tabs = document.querySelectorAll(".tab-btn");
+    const content = document.getElementById("tab-content");
+
+    // Variable para recordar el tab activo
+    let tabActivo = null;
+
+    const datos = {
+      adscripciones: investigador.adscripciones?.length
+        ? `<ul class="list-disc list-inside space-y-5 mb-4">${investigador.adscripciones.map((a) => `<li>${a}</li>`).join("")}</ul>`
+        : "No hay adscripciones registradas.",
+
+      especialidad: investigador.especialidad?.length
+        ? `<ul class="list-disc list-inside space-y-5 mb-4">${investigador.especialidad.map((e) => `<li>${e}</li>`).join("")}</ul>`
+        : "No hay especialidad registrada.",
+
+      resena: investigador.resena || "No hay reseña disponible.",
+
+      reconocimientos: investigador.reconocimientos?.length
+        ? `<ul class="list-disc list-inside space-y-5 mb-4">${investigador.reconocimientos.map((r) => `<li>${r}</li>`).join("")}</ul>`
+        : "No hay reconocimientos registrados.",
+
+      educacion: investigador.educacion?.length
+        ? `<ul class="list-disc list-inside space-y-5 mb-4">${investigador.educacion.map((e) => `<li>${e}</li>`).join("")}</ul>`
+        : "No hay educación registrada.",
+
+      redesTrabajo: investigador.redesTrabajo?.length
+        ? `<ul class="list-disc list-inside space-y-5 mb-4">${investigador.redesTrabajo.map((r) => `<li>${r}</li>`).join("")}</ul>`
+        : "No hay redes de trabajo registradas.",
+    };
+
+    // Función para activar un tab
+    function activarTab(tab) {
+      if (tabActivo) {
+        // Quitamos la línea del tab anterior
+        tabActivo.classList.remove("border-b-blue-500", "font-bold");
+      }
+      // Ponemos línea en el nuevo tab
+      tab.classList.add("border-b-blue-500", "font-bold");
+      tabActivo = tab;
+
+      const key = tab.dataset.tab;
+      content.innerHTML = datos[key];
+    }
+
+    // Asignamos click a cada tab
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        activarTab(tab);
+      });
+    });
+
+    // Activar por defecto el primer tab (Adscripciones)
+    const primerTab = tabs[0]; // Suponiendo que Adscripciones es el primero
+    activarTab(primerTab);
+  </script>
 </Layout>
-
-
-<style>
-  @keyframes zoom {
-    from {
-      transform: scale(1.1);
-    }
-    to {
-      transform: scale(1);
-    }
-  }
-
-  .animate-zoom {
-    animation: zoom 3s ease-in-out forwards;
-  }
-
-  @keyframes bounce {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-20px);
-    }
-  }
-
-  .animate-bounce {
-    animation: bounce 5s infinite ease-in-out;
-  }
-
-  @keyframes spin-slow {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  .animate-spin-slow {
-    animation: spin-slow 50s linear infinite;
-  }
-
-  
-  @keyframes bounceAndSpin {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-20px) rotate(20deg); 
-  }
-}
-
-.animate-bounce-spin {
-  animation: bounceAndSpin 5s infinite ease-in-out;
-}
-</style>
-
