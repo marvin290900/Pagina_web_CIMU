@@ -149,32 +149,35 @@ const {
         }
       </div>
 
-      <!-- Lista única combinada -->
-      <div class="mt-8 lg:ml-25 lg:mt-0 lg:w-1/3 text-left">
-        <h2
-          class="text-xl text-center md:text-2xl font-semibold text-gray-800 mb-4"
-        >
-          Lista de Investigadores/as
-        </h2>
-        <ul class="space-y-5 text-center">
-          {
-            [
-              ...InvestigadoresDirectivos,
-              ...InvestigadoresPasantes,
-              ...InvestigadoresExternos,
-            ].map((inv) => (
-              <li key={inv._id}>
-                <a
-                  href={`/investigadores/${encodeURIComponent(inv._id)}`}
-                  class="text-blue-900 text-lg lg:text-xl font-semibold hover:underline"
-                >
-                  {inv.nombre}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
+      <!-- Lista de investigadores/as -->
+      {[...InvestigadoresDirectivos, ...InvestigadoresPasantes, ...InvestigadoresExternos].length > 0 && (
+  <div class="mt-8 lg:ml-25 lg:mt-0 lg:w-1/3 text-left">
+    <h2
+      class="text-xl text-center md:text-2xl font-semibold text-gray-800 mb-4"
+    >
+      Lista de Investigadores/as
+    </h2>
+    <ul class="space-y-5 text-center">
+      {
+        [
+          ...InvestigadoresDirectivos,
+          ...InvestigadoresPasantes,
+          ...InvestigadoresExternos,
+        ].map((inv) => (
+          <li key={inv._id}>
+            <a
+              href={`/investigadores/${encodeURIComponent(inv._id)}`}
+              class="text-blue-900 text-lg lg:text-xl font-semibold hover:underline"
+            >
+              {inv.nombre}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+)}
+
     </div>
   </div>
 </section>

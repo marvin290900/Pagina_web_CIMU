@@ -1025,9 +1025,23 @@
       limpiarFormularioAgregar();
     });
 
+    const MAX_FOTO_MB = 5; // tamaño máximo de foto
+    const MAX_CV_MB = 5; // tamaño máximo de CV
+
     inputFoto.addEventListener("change", () => {
       const file = inputFoto.files?.[0];
-      if (file && file.type.startsWith("image/")) {
+      if (!file) return;
+
+      const sizeMB = file.size / (1024 * 1024);
+      if (sizeMB > MAX_FOTO_MB) {
+        alert(`La foto no puede superar los ${MAX_FOTO_MB} MB.`);
+        inputFoto.value = ""; // limpia el input
+        previewFoto.src = "";
+        previewFoto.classList.add("hidden");
+        return;
+      }
+
+      if (file.type.startsWith("image/")) {
         const reader = new FileReader();
         reader.onload = (e) => {
           previewFoto.src = e.target?.result as string;
@@ -1042,10 +1056,19 @@
 
     inputCV.addEventListener("change", () => {
       const file = inputCV.files?.[0];
+      if (!file) return;
 
-      if (file && file.type === "application/pdf") {
-        const url = URL.createObjectURL(file);
-        previewCV.src = url;
+      const sizeMB = file.size / (1024 * 1024);
+      if (sizeMB > MAX_CV_MB) {
+        alert(`El CV no puede superar los ${MAX_CV_MB} MB.`);
+        inputCV.value = "";
+        previewCV.src = "";
+        previewCV.classList.add("hidden");
+        return;
+      }
+
+      if (file.type === "application/pdf") {
+        previewCV.src = URL.createObjectURL(file);
         previewCV.classList.remove("hidden");
       } else {
         previewCV.src = "";
@@ -1431,31 +1454,67 @@
 
     // Previsualizar nueva foto
     document.getElementById("edit_foto").addEventListener("change", (e) => {
-      const file = e.target.files[0];
-      const preview = document.getElementById("previewFotoCambiar");
+  const file = (e.target as HTMLInputElement).files?.[0];
+  const preview = document.getElementById("previewFotoCambiar") as HTMLImageElement;
 
-      if (file) {
-        preview.src = URL.createObjectURL(file);
-        preview.classList.remove("hidden");
-      } else {
-        preview.classList.add("hidden");
-        preview.src = "";
-      }
-    });
+  if (!file) {
+    preview.src = "";
+    preview.classList.add("hidden");
+    return;
+  }
+
+  const sizeMB = file.size / (1024 * 1024);
+  if (sizeMB > MAX_FOTO_MB) {
+    alert(`La foto no puede superar los ${MAX_FOTO_MB} MB.`);
+    (e.target as HTMLInputElement).value = "";
+    preview.src = "";
+    preview.classList.add("hidden");
+    return;
+  }
+
+  if (file.type.startsWith("image/")) {
+    preview.src = URL.createObjectURL(file);
+    preview.classList.remove("hidden");
+  } else {
+    alert("El archivo debe ser una imagen.");
+    (e.target as HTMLInputElement).value = "";
+    preview.src = "";
+    preview.classList.add("hidden");
+  }
+});
+
 
     // Previsualizar nuevo CV
     document.getElementById("edit_cv").addEventListener("change", (e) => {
-      const file = e.target.files[0];
-      const preview = document.getElementById("previewCVCambiar");
+  const file = (e.target as HTMLInputElement).files?.[0];
+  const preview = document.getElementById("previewCVCambiar") as HTMLIFrameElement;
 
-      if (file) {
-        preview.src = URL.createObjectURL(file);
-        preview.classList.remove("hidden");
-      } else {
-        preview.classList.add("hidden");
-        preview.src = "";
-      }
-    });
+  if (!file) {
+    preview.src = "";
+    preview.classList.add("hidden");
+    return;
+  }
+
+  const sizeMB = file.size / (1024 * 1024);
+  if (sizeMB > MAX_CV_MB) {
+    alert(`El CV no puede superar los ${MAX_CV_MB} MB.`);
+    (e.target as HTMLInputElement).value = "";
+    preview.src = "";
+    preview.classList.add("hidden");
+    return;
+  }
+
+  if (file.type === "application/pdf") {
+    preview.src = URL.createObjectURL(file);
+    preview.classList.remove("hidden");
+  } else {
+    alert("El archivo debe ser un PDF.");
+    (e.target as HTMLInputElement).value = "";
+    preview.src = "";
+    preview.classList.add("hidden");
+  }
+});
+
 
     function editarInvestigador(id) {
       const inv = investigadores.find((i) => i._id === id);
