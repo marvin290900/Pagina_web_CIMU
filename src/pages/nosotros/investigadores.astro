@@ -5,14 +5,16 @@ import logoMultiPagina from "../../assets/logo_multi_pagina.png";
 import SeccionTodosInvestigadores from "../../components/componentes_nosotros/seccion_todos_investigadores.astro";
 import { getInvestigadoresDirectivos } from "../../lib/investigadores.js"
 import { getInvestigadoresPasantes } from "../../lib/investigadores.js"
+import { getInvestigadoresExternos } from "../../lib/investigadores.js"
 import imagenDefault from "../../assets/default_investigador/imagen_default_2.png"
 const InvestigadoresDirectivos = await getInvestigadoresDirectivos(); 
 const InvestigadoresPasantes = await getInvestigadoresPasantes();
+const InvestigadoresExternos = await getInvestigadoresExternos();
 ---
 
 <Layout>
   <main>
     <!-- <SeccionImagenGeneral titulo="" imagen={logoMultiPagina} /> -->
-    <SeccionTodosInvestigadores InvestigadoresDirectivos={InvestigadoresDirectivos} InvestigadoresPasantes={InvestigadoresPasantes} imagenDefault={imagenDefault}/>
+    <SeccionTodosInvestigadores InvestigadoresDirectivos={InvestigadoresDirectivos} InvestigadoresPasantes={InvestigadoresPasantes} InvestigadoresExternos={InvestigadoresExternos} imagenDefault={imagenDefault}/>
   </main>
 </Layout> 
