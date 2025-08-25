@@ -11,19 +11,22 @@ export async function GET({ request }) {
       });
     }
 
-    const res = await couch.get(`cimu-investigaciones/${id}`);
+    const res = await couch.get(`cimu-libros/${id}`);
 
     return new Response(JSON.stringify(res.data), {
       status: 200,
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
       },
     });
   } catch (error) {
     console.error("Error al obtener publicación por ID:", error.message);
-    return new Response(JSON.stringify({ error: 'Error al obtener publicación' }), {
-      status: 500,
-    });
+    return new Response(
+      JSON.stringify({ error: "Error al obtener publicación" }),
+      {
+        status: 500,
+      }
+    );
   }
 }

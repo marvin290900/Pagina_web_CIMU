@@ -234,7 +234,7 @@ const cambiarPagina = (pagina) => {
 };
 
 onMounted(() => {
-  fetch("/api/publicaciones/obtener")
+  fetch("/api/libros/obtener")
     .then((res) => res.json())
     .then((json) => {
       data.value = json.rows.map((i) => i.doc);
