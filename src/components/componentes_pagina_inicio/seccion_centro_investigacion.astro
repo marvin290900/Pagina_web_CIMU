@@ -1,5 +1,5 @@
 ---
-const { centroInvestigacion,investigador1 }  = Astro.props;
+const { centroInvestigacion, investigador1 } = Astro.props;
 ---
 
 <section id="seccionCentroInvestigacion" class="py-8 bg-white text-center">
@@ -76,28 +76,30 @@ const { centroInvestigacion,investigador1 }  = Astro.props;
       id="tercer_texto_centro_investigacion"
       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-5 px-4 transition-all duration-1000 opacity-0 translate-y-8"
     >
-      <div class="flex flex-col h-full w-full max-w-md mx-auto transform transition-transform duration-300 hover:scale-105">
-        <div class="borde-giratorio">
-          <div
-            class="contenido card bg-transparent text-black h-full flex flex-col rounded-2xl min-h-[220px] "
-          >
-            <div class="card-body flex-grow p-4">
-              <h2 class="card-title ">Misión</h2>
-              <p>
-                “Somos un centro de investigación científico de carácter
-                universitario, que realiza investigaciones considerando los
-                problemas más relevantes de la realidad regional, nacional e
-                internacional. Para lo cual, se dirige hacia la construcción de
-                conocimientos que puedan ser insertados al entorno social,
-                económico, productivo, cultural y ambiental”
-              </p>
-            </div>
+      <div
+        class="flex flex-col h-full w-full max-w-md mx-auto transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border rounded-xl border-blue-900"
+      >
+        <div
+          class="contenido card bg-transparent text-black h-full flex flex-col rounded-2xl min-h-[220px]"
+        >
+          <div class="card-body flex-grow p-4">
+            <h2 class="card-title">Misión</h2>
+            <p>
+              “Somos un centro de investigación científico de carácter
+              universitario, que realiza investigaciones considerando los
+              problemas más relevantes de la realidad regional, nacional e
+              internacional. Para lo cual, se dirige hacia la construcción de
+              conocimientos que puedan ser insertados al entorno social,
+              económico, productivo, cultural y ambiental”
+            </p>
           </div>
         </div>
       </div>
 
-      <div class="flex flex-col h-full w-full max-w-md mx-auto transform transition-transform duration-300 hover:scale-105">
-        <div class="borde-giratorio">
+      <div
+        class="flex flex-col h-full w-full max-w-md mx-auto transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border rounded-xl border-blue-900"
+      >
+        
           <div
             class="contenido card bg-transparent rounded-2xl text-black h-full flex flex-col min-h-[220px]"
           >
@@ -111,14 +113,14 @@ const { centroInvestigacion,investigador1 }  = Astro.props;
                 así al desarrollo social y el bienestar colectivo.”
               </p>
             </div>
-          </div>
+          
         </div>
       </div>
 
       <div
-        class="flex flex-col h-full w-full max-w-md sm:col-span-2 lg:col-span-1 mx-auto transform transition-transform duration-300 hover:scale-105"
+        class="flex flex-col h-full w-full max-w-md mx-auto transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border rounded-xl border-blue-900"
       >
-        <div class="borde-giratorio">
+       
           <div
             class="contenido card bg-transparent rounded-2xl text-black h-full flex flex-col min-h-[220px]"
           >
@@ -133,11 +135,10 @@ const { centroInvestigacion,investigador1 }  = Astro.props;
                 <li>Sinergia</li>
               </ul>
             </div>
-          </div>
+          
         </div>
       </div>
-    </div>  
-    
+    </div>
   </div>
 </section>
 
@@ -166,11 +167,11 @@ const { centroInvestigacion,investigador1 }  = Astro.props;
 <style>
   @keyframes girarBorde {
     0% {
-    background-position: 0% 50%;
-  }
-  100% {
-    background-position: 200% 50%;
-  }
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 200% 50%;
+    }
   }
 
   .borde-giratorio {

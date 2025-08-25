@@ -5,7 +5,7 @@ const DB_NAME = 'cimu';
 export async function getInvestigadoresDirectivos() {
   try {
     const response = await couch.post(`/${DB_NAME}/_find`, {
-      selector: { type: 'investigador', categoria: 'directivo' }
+      selector: { type: 'investigador', categoria: 'Directivo' }
     });
     return response.data.docs;
   } catch (error) {
@@ -17,7 +17,19 @@ export async function getInvestigadoresDirectivos() {
 export async function getInvestigadoresPasantes() {
   try {
     const response = await couch.post(`/${DB_NAME}/_find`, {
-      selector: { type: 'investigador', categoria: 'pasante' }
+      selector: { type: 'investigador', categoria: 'Investigador_Pasante' }
+    });
+    return response.data.docs;
+  } catch (error) {
+    console.error('Error al obtener investigadores:', error);
+    return [];
+  }
+}
+
+export async function getInvestigadoresExternos() {
+  try {
+    const response = await couch.post(`/${DB_NAME}/_find`, {
+      selector: { type: 'investigador', categoria: 'Investigador_Externo' }
     });
     return response.data.docs;
   } catch (error) {

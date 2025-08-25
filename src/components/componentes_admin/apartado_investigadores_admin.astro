@@ -6,7 +6,7 @@
       </h2>
       <button
         id="btnMostrarModalAgregar"
-        class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+        class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
       >
         + Agregar Investigador
       </button>
@@ -17,7 +17,7 @@
       <div class="modal-box max-w-3xl">
         <form
           id="formAgregarInvestigador"
-          class="space-y-5 bg-white p-6 rounded"
+          class="space-y-3 bg-white p-6 rounded"
           method="dialog"
           enctype="multipart/form-data"
         >
@@ -27,11 +27,12 @@
             id="btnCerrarModalAgregar">✕</button
           >
 
-          <h2 class="text-xl font-semibold mb-4 text-center">
+          <h2 class="text-xl font-bold mb-4 text-center">
             Agregar Investigador
           </h2>
 
           <!-- Nombre completo -->
+          <h3 class="font-semibold underline">Datos personales principales</h3>
           <div>
             <label for="nombre" class="block font-medium">Nombre completo</label
             >
@@ -64,6 +65,100 @@
             </small>
           </div>
 
+          <!-- Telefonos -->
+          <div id="telefonosSection">
+            <label class="block font-medium">Teléfonos</label>
+            <div class="space-y-2" id="telefonosContainer">
+              <div data-base="true">
+                <input
+                  type="number"
+                  name="telefonos[]"
+                  class="input w-full"
+                  placeholder="Ingrese teléfono"
+                  min="10000000"
+                  max="99999999"
+                />
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-sm mt-2"
+              id="btnAgregarTelefono">Agregar otro teléfono</button
+            >
+          </div>
+
+          <!-- Otros correos -->
+          <div id="otrosCorreosSection">
+            <label class="block font-medium">Otros correos</label>
+            <div class="space-y-2" id="otrosCorreosContainer">
+              <div data-base="true">
+                <input
+                  type="text"
+                  name="otrosCorreos[]"
+                  class="input w-full"
+                  placeholder="Ingrese otro correo"
+                />
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-sm mt-2"
+              id="btnAgregarOtroCorreo">Agregar otro correo</button
+            >
+          </div>
+
+          <h3 class="font-semibold mt-10 underline">Rol y Adscripción</h3>
+          <!-- Rol -->
+          <div>
+            <label for="rol" class="block font-medium">Rol</label>
+            <select
+              id="rol"
+              name="rol"
+              required
+              class="select select-bordered w-full"
+            >
+              <option value="">Selecciona una opción</option>
+              <option value="Directivo">Directivo</option>
+              <option value="Investigador_Pasante">Investigador Pasante</option>
+              <option value="Investigador_Externo">Investigador Externo</option>
+            </select>
+          </div>
+
+          <!-- Cargo en el centro de investigación -->
+          <div class="mt-2">
+            <label for="cargoCentro" class="block font-medium"
+              >Cargo en el centro de investigación</label
+            >
+            <input
+              id="cargoCentro"
+              name="cargoCentro"
+              type="text"
+              class="input w-full"
+              placeholder="Ingrese el cargo que ocupa en el centro"
+            />
+          </div>
+
+          <!-- Adscripción (con opción de agregar más) -->
+          <div id="adquisicionesSection">
+            <label class="block font-medium">Adscripción</label>
+            <div class="space-y-2" id="adquisicionesContainer">
+              <div data-base="true">
+                <input
+                  type="text"
+                  name="adquisiciones[]"
+                  class="input w-full"
+                  placeholder="Ingrese adscripción"
+                />
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-sm mt-2"
+              id="btnAgregarAdquisicion">Agregar otra adscripción</button
+            >
+          </div>
+
+          <h3 class="font-semibold mt-10 underline">Fotografía y CV</h3>
           <!-- Foto -->
           <div>
             <label for="foto" class="block font-medium">Foto</label>
@@ -80,66 +175,6 @@
               class="mt-4 w-32 h-32 object-cover rounded-full border hidden"
             />
           </div>
-
-          <!-- Rol -->
-          <div>
-            <label for="rol" class="block font-medium">Rol</label>
-            <select
-              id="rol"
-              name="rol"
-              required
-              class="select select-bordered w-full"
-            >
-              <option value="">Selecciona una opción</option>
-              <option value="directivo">Directivo</option>
-              <option value="pasante">Pasante</option>
-            </select>
-          </div>
-
-          <!-- Redes Sociales -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label for="facebook" class="block font-medium">Facebook</label>
-              <input
-                id="facebook"
-                name="facebook"
-                type="url"
-                class="input w-full"
-              />
-            </div>
-            <div>
-              <label for="twitter" class="block font-medium">Twitter / X</label>
-              <input
-                id="twitter"
-                name="twitter"
-                type="url"
-                class="input w-full"
-              />
-            </div>
-            <div>
-              <label for="linkedin" class="block font-medium">LinkedIn</label>
-              <input
-                id="linkedin"
-                name="linkedin"
-                type="url"
-                class="input w-full"
-              />
-            </div>
-          </div>
-
-          <!-- Publicaciones relevantes -->
-          <div>
-            <label for="publicaciones" class="block font-medium"
-              >Publicaciones relevantes</label
-            >
-            <textarea
-              id="publicaciones"
-              name="publicaciones"
-              rows="2"
-              placeholder="Separadas por comas"
-              class="textarea w-full"></textarea>
-          </div>
-
           <!-- Currículum en PDF -->
           <div>
             <label for="cv" class="block font-medium">Currículum (PDF)</label>
@@ -148,21 +183,144 @@
               name="cv"
               type="file"
               accept="application/pdf"
-              required
               class="file-input file-input-bordered w-full"
             />
             <iframe id="previewCV" class="mt-4 w-full h-64 border hidden"
             ></iframe>
           </div>
 
+          <h3 class="font-semibold mt-10 underline">Perfil profesional</h3>
+          <!-- Especialidad -->
+          <div id="especialidadSection">
+            <label class="block font-medium">Especialidad</label>
+            <div class="space-y-2" id="especialidadContainer">
+              <div data-base="true">
+                <input
+                  type="text"
+                  name="especialidad[]"
+                  class="input w-full"
+                  placeholder="Ingrese especialidad"
+                />
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-sm mt-2"
+              id="btnAgregarEspecialidad">Agregar otra especialidad</button
+            >
+          </div>
+
+          <!-- Reseña -->
+          <div>
+            <label for="resena" class="block font-medium">Reseña</label>
+            <textarea id="resena" name="resena" rows="3" class="textarea w-full"
+            ></textarea>
+          </div>
+
+          <h3 class="font-semibold mt-10 underline">Logros y trayectoria</h3>
+          <!-- Reconocimientos -->
+          <div id="reconocimientosSection">
+            <label class="block font-medium">Reconocimientos</label>
+            <div class="space-y-2" id="reconocimientosContainer">
+              <div data-base="true">
+                <input
+                  type="text"
+                  name="reconocimientos[]"
+                  class="input w-full"
+                  placeholder="Ingrese reconocimiento"
+                />
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-sm mt-2"
+              id="btnAgregarReconocimiento">Agregar otro reconocimiento</button
+            >
+          </div>
+
+          <!-- Educación -->
+          <div id="educacionSection">
+            <label class="block font-medium">Educación</label>
+            <div class="space-y-2" id="educacionContainer">
+              <div data-base="true">
+                <input
+                  type="text"
+                  name="educacion[]"
+                  class="input w-full"
+                  placeholder="Ingrese formación académica"
+                />
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-sm mt-2"
+              id="btnAgregarEducacion">Agregar otra educación</button
+            >
+          </div>
+
+          <h3 class="font-semibold mt-10 underline">
+            Redes de colaboración y trabajo
+          </h3>
+          <!-- Redes de Trabajo -->
+          <div id="redesSection">
+            <label class="block font-medium">Redes de Trabajo</label>
+            <div class="space-y-2" id="redesContainer">
+              <div data-base="true">
+                <input
+                  type="text"
+                  name="redes[]"
+                  class="input w-full"
+                  placeholder="Ingrese red de trabajo"
+                />
+              </div>
+            </div>
+            <button type="button" class="btn btn-sm mt-2" id="btnAgregarRed"
+              >Agregar otra red</button
+            >
+          </div>
+
+          <!-- Redes Sociales -->
+          <div id="redesSocialesSection">
+            <h4>Redes sociales</h4>
+            <div class="space-y-2" id="redesSocialesContainer">
+              <!-- Bloque fijo inicial -->
+              <div class="flex gap-2 items-center">
+                <input
+                  type="text"
+                  name="redesSocialesNombre[]"
+                  class="input w-1/3"
+                  placeholder="Nombre de la red social"
+                />
+                <input
+                  type="url"
+                  name="redesSocialesUrl[]"
+                  class="input w-2/3"
+                  placeholder="URL de la red social"
+                  pattern="https?://.+"
+                  title="Debe iniciar con http:// o https://"
+                />
+                <!-- Botón eliminar solo para bloques adicionales -->
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-sm mt-2"
+              id="btnAgregarRedSocial"
+            >
+              Agregar otra red social
+            </button>
+          </div>
+
           <!-- Botones -->
           <div class="flex justify-end gap-2">
-            <button type="button" class="btn" id="btnCancelarAgregar"
-              >Cancelar</button
+            <button
+              type="button"
+              class="btn border-blue-800"
+              id="btnCancelarAgregar">Cancelar</button
             >
             <button
               type="button"
-              class="btn btn-warning"
+              class="btn bg-blue-800 text-white hover:bg-blue-600"
               id="btnAbrirConfirmarGuardarAgregar">Guardar</button
             >
           </div>
@@ -172,10 +330,10 @@
 
     <!-- Modal para editar investigador -->
     <dialog id="modalEditarInvestigador" class="modal">
-      <div class="modal-box">
+      <div class="modal-box max-w-3xl">
         <form
           id="formEditarInvestigador"
-          class="space-y-5 bg-gray-100 p-6 rounded shadow"
+          class="space-y-5 bg-white p-6 rounded"
           method="dialog"
         >
           <button
@@ -185,8 +343,12 @@
           >
 
           <input type="hidden" id="edit_id" />
+          <h2 class="text-xl font-bold mb-4 text-center">
+            Editar Investigador
+          </h2>
 
           <!-- Editar Nombre Completo -->
+          <h3 class="font-semibold underline">Datos personales principales</h3>
           <div>
             <label for="edit_nombre" class="block font-medium"
               >Nombre completo</label
@@ -200,21 +362,71 @@
             />
           </div>
 
-          <!-- Editar Correo Electrónico -->
-          <div>
-            <label for="edit_email" class="block font-medium"
-              >Correo electrónico</label
+          <!-- Telefonos Editar-->
+          <div id="telefonosEditarSection">
+            <label class="block font-medium">Teléfonos</label>
+            <div class="space-y-2" id="telefonosEditarContainer">
+              <div data-base="true">
+                <input
+                  type="number"
+                  name="telefonosEditar[]"
+                  class="input w-full"
+                  placeholder="Ingrese teléfono"
+                  min="10000000"
+                  max="99999999"
+                />
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-sm mt-2"
+              id="btnAgregarTelefonoEditar">Agregar otro teléfono</button
             >
-            <input
-              id="edit_email"
-              name="edit_email"
-              type="email"
-              required
-              class="input"
-            />
           </div>
 
-          <!-- Foto -->
+          <!-- Otros correos Editar-->
+          <div id="otrosCorreosEditarSection">
+            <label class="block font-medium">Otros correos</label>
+            <div class="space-y-2" id="otrosCorreosEditarContainer">
+              <div data-base="true">
+                <input
+                  type="text"
+                  name="otrosCorreosEditar[]"
+                  class="input w-full"
+                  placeholder="Ingrese otro correo"
+                />
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-sm mt-2"
+              id="btnAgregarOtroCorreoEditar">Agregar otro correo</button
+            >
+          </div>
+
+          <h3 class="font-semibold mt-10 underline">Adscripción</h3>
+
+          <!-- Adscripción Editar -->
+          <div id="adquisicionesEditarSection">
+            <label class="block font-medium">Adscripción</label>
+            <div class="space-y-2" id="adquisicionesEditarContainer">
+              <div data-base="true">
+                <input
+                  type="text"
+                  name="adquisicionesEditar[]"
+                  class="input w-full"
+                  placeholder="Ingrese adscripción"
+                />
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-sm mt-2"
+              id="btnAgregarAdquisicionEditar">Agregar otra adscripción</button
+            >
+          </div>
+
+          <!-- Foto Editar -->
           <div>
             <label for="edit_foto" class="block font-medium">Foto</label>
             <div id="fotoActualContainer" class="mb-2 hidden">
@@ -241,7 +453,7 @@
             />
           </div>
 
-          <!-- CV -->
+          <!-- CV Editar-->
           <div>
             <label for="edit_cv" class="block font-medium"
               >Currículum (PDF)</label
@@ -265,15 +477,146 @@
             ></iframe>
           </div>
 
+          <h3 class="font-semibold mt-10 underline">Perfil profesional</h3>
+          <!-- Especialidad Editar -->
+          <div id="especialidadEditarSection">
+            <label class="block font-medium">Especialidad</label>
+            <div class="space-y-2" id="especialidadEditarContainer">
+              <div data-base="true">
+                <input
+                  type="text"
+                  name="especialidadEditar[]"
+                  class="input w-full"
+                  placeholder="Ingrese especialidad"
+                />
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-sm mt-2"
+              id="btnAgregarEspecialidadEditar"
+              >Agregar otra especialidad</button
+            >
+          </div>
+
+          <!-- Reseña Editar-->
+          <div>
+            <label for="resenaEditar" class="block font-medium">Reseña</label>
+            <textarea
+              id="resenaEditar"
+              name="resenaEditar"
+              rows="3"
+              class="textarea w-full"></textarea>
+          </div>
+
+          <h3 class="font-semibold mt-10 underline">Logros y trayectoria</h3>
+          <!-- Reconocimientos Editar-->
+          <div id="reconocimientosEditarSection">
+            <label class="block font-medium">Reconocimientos</label>
+            <div class="space-y-2" id="reconocimientosEditarContainer">
+              <div data-base="true">
+                <input
+                  type="text"
+                  name="reconocimientosEditar[]"
+                  class="input w-full"
+                  placeholder="Ingrese reconocimiento"
+                />
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-sm mt-2"
+              id="btnAgregarReconocimientoEditar"
+              >Agregar otro reconocimiento</button
+            >
+          </div>
+
+          <!-- Educación Editar-->
+          <div id="educacionEditarSection">
+            <label class="block font-medium">Educación</label>
+            <div class="space-y-2" id="educacionEditarContainer">
+              <div data-base="true">
+                <input
+                  type="text"
+                  name="educacionEditar[]"
+                  class="input w-full"
+                  placeholder="Ingrese formación académica"
+                />
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-sm mt-2"
+              id="btnAgregarEducacionEditar">Agregar otra educación</button
+            >
+          </div>
+
+          <h3 class="font-semibold mt-10 underline">
+            Redes de colaboración y trabajo
+          </h3>
+          <!-- Redes de Trabajo Editar-->
+          <div id="redesEditarSection">
+            <label class="block font-medium">Redes de Trabajo</label>
+            <div class="space-y-2" id="redesEditarContainer">
+              <div data-base="true">
+                <input
+                  type="text"
+                  name="redesEditar[]"
+                  class="input w-full"
+                  placeholder="Ingrese red de trabajo"
+                />
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-sm mt-2"
+              id="btnAgregarRedEditar">Agregar otra red</button
+            >
+          </div>
+
+          <!-- Redes Sociales Editar-->
+          <div id="redesSocialesEditarSection">
+            <h4>Redes sociales</h4>
+            <div class="space-y-2" id="redesSocialesEditarContainer">
+              <!-- Bloque fijo inicial -->
+              <div class="flex gap-2 items-center">
+                <input
+                  type="text"
+                  name="redesSocialesNombreEditar[]"
+                  class="input w-1/3"
+                  placeholder="Nombre de la red social"
+                />
+                <input
+                  type="url"
+                  name="redesSocialesUrlEditar[]"
+                  class="input w-2/3"
+                  placeholder="URL de la red social"
+                  pattern="https?://.+"
+                  title="Debe iniciar con http:// o https://"
+                />
+                <!-- Botón eliminar solo para bloques adicionales -->
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-sm mt-2"
+              id="btnAgregarRedSocialEditar"
+            >
+              Agregar otra red social
+            </button>
+          </div>
+
           <!-- Botones -->
           <div class="flex justify-end gap-2">
-            <button type="button" class="btn" id="btnCancelarEdicion"
-              >Cancelar</button
+            <button
+              type="button"
+              class="btn border-blue-800"
+              id="btnCancelarEdicion">Cancelar</button
             >
             <button
               type="button"
-              class="btn btn-warning"
-              id="btnAbrirConfirmarGuardar">Guardar</button
+              class="btn bg-blue-800 text-white"
+              id="btnAbrirConfirmarGuardar">Cambiar</button
             >
           </div>
         </form>
@@ -290,8 +633,9 @@
           class="border border-gray-300 rounded px-2 py-1"
         >
           <option value="">Todos</option>
-          <option value="directivo">Directivos</option>
-          <option value="pasante">Pasantes</option>
+          <option value="Directivo">Directivos</option>
+          <option value="Investigador_Pasante">Investigadores Pasantes</option>
+          <option value="Investigador_Externo">Investigadores Externos</option>
         </select>
 
         <div
@@ -328,24 +672,50 @@
             >✕</button
           >
         </form>
+        <h3 id="modalNombre" class="text-lg text-center font-bold mb-2"></h3>
+        <p id="modalCorreo" class="text-sm text-center text-gray-700 mb-1"></p>
+        <p id="modalCategoria" class="text-sm text-center text-gray-500 mb-1">
+        </p>
         <div class="text-center mb-4">
           <img
             id="modalImagen"
             class="mx-auto w-20 h-20 rounded-full object-cover border"
           />
         </div>
-        <div id="modalRedes" class="flex justify-center gap-4 mb-4"></div>
-        <h3 id="modalNombre" class="text-lg font-bold mb-2"></h3>
-        <p id="modalCorreo" class="text-sm text-gray-700 mb-1"></p>
-        <p id="modalDepartamento" class="text-sm text-gray-600 mb-1"></p>
-        <p id="modalDescripcion" class="text-sm text-gray-500"></p>
+        <p id="modalCargo" class="text-sm text-center text-gray-900 mb-1"></p>
+        <div id="modalTelefonos" class="text-sm text-gray-600 mb-2"></div>
+        <div id="modalOtrosCorreos" class="text-sm text-gray-600 mb-2"></div>
+        <p class="text-sm text-gray-600"><b>Reseña:</b></p>
+        <p id="modalResena" class="text-sm text-gray-500 mb-1"></p>
+
+        <div id="modalEspecialidad" class="text-sm text-gray-600 mb-2"></div>
+
+        <div id="modalAdscripciones" class="text-sm text-gray-600 mb-2"></div>
+
+        <div id="modalReconocimientos" class="text-sm text-gray-600 mb-2"></div>
+        <div id="modalEducacion" class="text-sm text-gray-600 mb-2"></div>
+        <div id="modalRedesTrabajo" class="text-sm text-gray-600 mb-2"></div>
         <!-- Sección para mostrar CV -->
         <div class="mt-4">
-          <label class="block font-medium">Currículum Vitae (PDF)</label>
+          <p class="text-sm text-gray-600 mt-5 mb-2"><b>CV</b></p>
           <iframe
             id="modalCV"
             class="w-full h-64 border"
             style="border-radius: 0.5rem"></iframe>
+        </div>
+        <p class="text-sm text-gray-600 mt-5 mb-2"><b>Redes sociales:</b></p>
+        <div id="modalRedes" class="flex flex-wrap justify-center gap-4 mb-4">
+        </div>
+        <!-- Fechas de creación y actualización -->
+        <div class="row gap-6 mb-2 text-[12px] text-gray-600">
+          <p>
+            <span class="font-semibold">Creado:</span>
+            <span id="modalCreado"></span>
+          </p>
+          <p>
+            <span class="font-semibold">Ultima actualización:</span>
+            <span id="modalActualizacion"></span>
+          </p>
         </div>
       </div>
     </dialog>
@@ -358,8 +728,12 @@
           ¿Estás seguro de que deseas agregar este nuevo investigador?
         </p>
         <div class="flex justify-end gap-2">
-          <button id="btnCancelarConfirmarAgregar" class="btn">Cancelar</button>
-          <button id="btnConfirmarAgregar" class="btn btn-success"
+          <button id="btnCancelarConfirmarAgregar" class="btn border-blue-800"
+            >Cancelar</button
+          >
+          <button
+            id="btnConfirmarAgregar"
+            class="btn bg-blue-800 text-white hover:bg-blue-600"
             ><span class="btn-text">Guardar</span>
             <span class="btn-spinner hidden loading loading-spinner loading-sm"
             ></span></button
@@ -390,8 +764,10 @@
       <div class="modal-box">
         <h3 class="font-bold text-lg mb-4">¿Deseas guardar los cambios?</h3>
         <div class="flex justify-end gap-2">
-          <button id="btnCancelarGuardar" class="btn">Cancelar</button>
-          <button id="btnConfirmarGuardar" class="btn btn-warning"
+          <button id="btnCancelarGuardar" class="btn border-blue-800"
+            >Cancelar</button
+          >
+          <button id="btnConfirmarGuardar" class="btn bg-blue-800 text-white"
             ><span class="btn-text">Guardar Cambios</span>
             <span class="btn-spinner hidden loading loading-spinner loading-sm"
             ></span></button
@@ -408,840 +784,1470 @@
       <span class="loading loading-spinner loading-xl"></span>
     </div>
   </div>
-</section>
 
-<script>
-  const modalConfirmarAgregar = document.getElementById(
-    "modalConfirmarAgregar"
-  ) as HTMLDialogElement;
-  const btnAbrirConfirmarGuardarAgregar = document.getElementById(
-    "btnAbrirConfirmarGuardarAgregar"
-  ) as HTMLButtonElement;
-  const btnCancelarConfirmarAgregar = document.getElementById(
-    "btnCancelarConfirmarAgregar"
-  ) as HTMLButtonElement;
-  const btnConfirmarAgregar = document.getElementById(
-    "btnConfirmarAgregar"
-  ) as HTMLButtonElement;
-  const btnCancelarAgregar = document.getElementById(
-    "btnCancelarAgregar"
-  ) as HTMLButtonElement;
-  const modalAgregar = document.getElementById(
-    "modalAgregarInvestigador"
-  ) as HTMLDialogElement;
-  const btnMostrarModalAgregar = document.getElementById(
-    "btnMostrarModalAgregar"
-  ) as HTMLButtonElement;
-  const btnCerrarModalAgregar = document.getElementById(
-    "btnCerrarModalAgregar"
-  ) as HTMLButtonElement;
-  const modalEditar = document.getElementById(
-    "modalEditarInvestigador"
-  ) as HTMLDialogElement;
-  const form = document.getElementById(
-    "formAgregarInvestigador"
-  ) as HTMLFormElement;
-  const formEditar = document.getElementById(
-    "formEditarInvestigador"
-  ) as HTMLFormElement;
-  const btnCerrarModalEditar = document.getElementById(
-    "btnCerrarModalEditar"
-  ) as HTMLButtonElement;
-  const btnCancelarEdicion = document.getElementById(
-    "btnCancelarEdicion"
-  ) as HTMLButtonElement;
-  const btnAbrirConfirmarGuardar = document.getElementById(
-    "btnAbrirConfirmarGuardar"
-  ) as HTMLButtonElement;
-
-  const modalConfirmarGuardar = document.getElementById(
-    "modalConfirmarGuardar"
-  ) as HTMLDialogElement;
-  const btnCancelarGuardar = document.getElementById(
-    "btnCancelarGuardar"
-  ) as HTMLButtonElement;
-  const btnConfirmarGuardar = document.getElementById(
-    "btnConfirmarGuardar"
-  ) as HTMLButtonElement;
-
-  const modalConfirmarEliminar = document.getElementById(
-    "modalConfirmarEliminar"
-  ) as HTMLDialogElement;
-  const btnCancelarEliminar = document.getElementById(
-    "btnCancelarEliminar"
-  ) as HTMLButtonElement;
-  const btnConfirmarEliminar = document.getElementById(
-    "btnConfirmarEliminar"
-  ) as HTMLButtonElement;
-
-  const listaInvestigadores = document.getElementById(
-    "listaInvestigadores"
-  ) as HTMLDivElement;
-  const filtroCategoria = document.getElementById(
-    "filtroCategoria"
-  ) as HTMLSelectElement;
-  const filtroNombre = document.getElementById(
-    "filtroNombre"
-  ) as HTMLInputElement;
-  const btnLimpiarFiltroNombre = document.getElementById(
-    "btnLimpiarFiltroNombre"
-  ) as HTMLButtonElement;
-
-  const inputFoto = document.getElementById("foto") as HTMLInputElement;
-  const previewFoto = document.getElementById(
-    "previewFoto"
-  ) as HTMLImageElement;
-
-  const inputCV = document.getElementById("cv") as HTMLInputElement;
-  const previewCV = document.getElementById("previewCV") as HTMLIFrameElement;
-
-  let investigadores = [];
-  let idAEliminar = null;
-
-  let eliminarFoto = false;
-  let eliminarCV = false;
-
-  async function cargarInvestigadores() {
-    try {
-      const res = await fetch("/api/investigadores/obtener");
-      const data = await res.json();
-      investigadores = data.docs || [];
-      await renderInvestigadores();
-    } catch (err) {
-      console.error("Error cargando investigadores:", err);
-    }
-  }
-
-  //######################################################################################
-  //CODIGOS PARA AGREGAR INVESTIGADORES NUEVOS
-
-  btnMostrarModalAgregar.addEventListener("click", () => {
-    modalAgregar.showModal();
-  });
-
-  btnAbrirConfirmarGuardarAgregar.addEventListener("click", () => {
+  <script>
+    const modalConfirmarAgregar = document.getElementById(
+      "modalConfirmarAgregar"
+    ) as HTMLDialogElement;
+    const btnAbrirConfirmarGuardarAgregar = document.getElementById(
+      "btnAbrirConfirmarGuardarAgregar"
+    ) as HTMLButtonElement;
+    const btnCancelarConfirmarAgregar = document.getElementById(
+      "btnCancelarConfirmarAgregar"
+    ) as HTMLButtonElement;
+    const btnConfirmarAgregar = document.getElementById(
+      "btnConfirmarAgregar"
+    ) as HTMLButtonElement;
+    const btnCancelarAgregar = document.getElementById(
+      "btnCancelarAgregar"
+    ) as HTMLButtonElement;
+    const modalAgregar = document.getElementById(
+      "modalAgregarInvestigador"
+    ) as HTMLDialogElement;
+    const btnMostrarModalAgregar = document.getElementById(
+      "btnMostrarModalAgregar"
+    ) as HTMLButtonElement;
+    const btnCerrarModalAgregar = document.getElementById(
+      "btnCerrarModalAgregar"
+    ) as HTMLButtonElement;
+    const modalEditar = document.getElementById(
+      "modalEditarInvestigador"
+    ) as HTMLDialogElement;
     const form = document.getElementById(
       "formAgregarInvestigador"
     ) as HTMLFormElement;
-    if (!form.checkValidity()) {
-      form.reportValidity(); // muestra mensajes nativos de error
-      return; // no abre el modal de confirmación
-    }
-
-    // Si pasó la validación, abre el modal de confirmación
-    modalConfirmarAgregar.showModal();
-  });
-
-  btnCancelarAgregar.addEventListener("click", () => {
-    modalAgregar.close();
-    limpiarFormularioAgregar();
-  });
-
-  btnCancelarConfirmarAgregar.addEventListener("click", () => {
-    modalConfirmarAgregar.close();
-  });
-
-  btnCerrarModalAgregar.addEventListener("click", () => {
-    modalAgregar.close();
-    limpiarFormularioAgregar();
-  });
-
-  inputFoto.addEventListener("change", () => {
-    const file = inputFoto.files?.[0];
-    if (file && file.type.startsWith("image/")) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        previewFoto.src = e.target?.result as string;
-        previewFoto.classList.remove("hidden");
-      };
-      reader.readAsDataURL(file);
-    } else {
-      previewFoto.src = "";
-      previewFoto.classList.add("hidden");
-    }
-  });
-
-  inputCV.addEventListener("change", () => {
-    const file = inputCV.files?.[0];
-
-    if (file && file.type === "application/pdf") {
-      const url = URL.createObjectURL(file);
-      previewCV.src = url;
-      previewCV.classList.remove("hidden");
-    } else {
-      previewCV.src = "";
-      previewCV.classList.add("hidden");
-    }
-  });
-
-  // Boton para guardar investigador
-  btnConfirmarAgregar.addEventListener("click", async () => {
-    const boton = btnConfirmarAgregar;
-    mostrarSpinnerEnBoton(boton);
-
-    try {
-      const formData = new FormData(form);
-      const email = formData.get("email")?.toString().toLowerCase().trim();
-      const idTransformado = `${email.replace(/@/g, "_")}`;
-
-      const inputEmail = document.getElementById("email") as HTMLInputElement;
-      const mensajeCorreo = document.getElementById("mensajeCorreoExistente");
-
-      // Validar si ya existe un investigador con ese ID
-      const existe = investigadores.some((inv) => inv._id === idTransformado);
-      if (existe) {
-        // Mostrar error y salir antes de subir archivos
-        inputEmail.classList.add(
-          "border",
-          "border-red-500",
-          "focus:border-red-500"
-        );
-        mensajeCorreo.classList.remove("hidden");
-
-        modalConfirmarAgregar.close();
-        ocultarSpinnerEnBoton(boton);
-        inputEmail.focus();
-        return;
-      } else {
-        // Limpiar errores si no existe
-        inputEmail.classList.remove(
-          "border",
-          "border-red-500",
-          "focus:border-red-500"
-        );
-        mensajeCorreo.classList.add("hidden");
-      }
-
-      inputEmail.addEventListener("input", () => {
-        inputEmail.classList.remove(
-          "border",
-          "border-red-500",
-          "focus:border-red-500"
-        );
-        mensajeCorreo.classList.add("hidden");
-      });
-
-      // --- Aquí ya es seguro subir archivos ---
-      const inputFoto = document.getElementById("foto") as HTMLInputElement;
-      const file = inputFoto.files?.[0];
-      let fotoUrl = null;
-
-      if (file) {
-        const formDataImagen = new FormData();
-        formDataImagen.append("foto", file);
-        formDataImagen.append("carpeta", "investigadores_fotos");
-        //console.log('Carpeta en formData:', formDataImagen.get("carpeta"));
-
-        const resImagen = await fetch("/api/subir_imagen", {
-          method: "POST",
-          body: formDataImagen,
-        });
-
-        if (!resImagen.ok) throw new Error("Error al subir la imagen");
-        const dataImagen = await resImagen.json();
-        if (!dataImagen.ok)
-          throw new Error(dataImagen.error || "Error en subida");
-
-        fotoUrl = dataImagen.url;
-      }
-
-      const inputCV = document.getElementById("cv") as HTMLInputElement;
-      const cvFile = inputCV.files?.[0];
-      let cvUrl = null;
-
-      if (cvFile) {
-        const formDataCV = new FormData();
-        formDataCV.append("cv", cvFile);
-        formDataCV.append("carpeta", "cv_pdfs");
-        //console.log('Carpeta en formData:', formDataCV.get("carpeta"));
-
-        const resCV = await fetch("/api/investigadores/subir_cv", {
-          method: "POST",
-          body: formDataCV,
-        });
-
-        if (!resCV.ok) throw new Error("Error al subir el CV");
-        const dataCV = await resCV.json();
-        if (!dataCV.ok)
-          throw new Error(dataCV.error || "Error en subida de CV");
-
-        cvUrl = dataCV.url;
-      }
-
-      // --- Armar objeto y guardar ---
-      console.log("Foto URL:", fotoUrl);
-      console.log("CV URL:", cvUrl);
-
-      const nuevo = {
-        _id: idTransformado,
-        nombre: formData.get("nombre"),
-        email: formData.get("email"),
-        departamento: formData.get("departamento"),
-        descripcion: formData.get("descripcion"),
-        categoria: formData.get("rol"),
-        type: "investigador",
-        telefonos: formData.get("telefonos"),
-        creado_en: new Date().toISOString(),
-        foto: fotoUrl,
-        cv: cvUrl,
-        redes: {
-          facebook: formData.get("facebook"),
-          twitter: formData.get("twitter"),
-          linkedin: formData.get("linkedin"),
-        },
-      };
-
-      const res = await fetch("/api/investigadores/agregar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(nuevo),
-      });
-
-      if (!res.ok) {
-        const error = await res.text();
-        throw new Error(`Error HTTP: ${res.status} - ${error}`);
-      }
-
-      const result = await res.json();
-
-      if (result.ok) {
-        showMessage("Investigador agregado correctamente", "success");
-        form.reset();
-        limpiarFormularioAgregar();
-        modalAgregar.close();
-        modalConfirmarAgregar.close();
-        await cargarInvestigadores();
-      } else {
-        showMessage("Error al agregar: " + result.error, "error");
-      }
-    } catch (err) {
-      console.error("Error al enviar:", err);
-      showMessage("Error al agregar", "error");
-    } finally {
-      ocultarSpinnerEnBoton(boton);
-    }
-  });
-
-  function limpiarFormularioAgregar() {
-    const form = document.getElementById(
-      "formAgregarInvestigador"
+    const formEditar = document.getElementById(
+      "formEditarInvestigador"
     ) as HTMLFormElement;
-    form.reset(); // Limpia los campos automáticamente
+    const btnCerrarModalEditar = document.getElementById(
+      "btnCerrarModalEditar"
+    ) as HTMLButtonElement;
+    const btnCancelarEdicion = document.getElementById(
+      "btnCancelarEdicion"
+    ) as HTMLButtonElement;
+    const btnAbrirConfirmarGuardar = document.getElementById(
+      "btnAbrirConfirmarGuardar"
+    ) as HTMLButtonElement;
 
-    // Ocultar la imagen de previsualización
+    const modalConfirmarGuardar = document.getElementById(
+      "modalConfirmarGuardar"
+    ) as HTMLDialogElement;
+    const btnCancelarGuardar = document.getElementById(
+      "btnCancelarGuardar"
+    ) as HTMLButtonElement;
+    const btnConfirmarGuardar = document.getElementById(
+      "btnConfirmarGuardar"
+    ) as HTMLButtonElement;
+
+    const modalConfirmarEliminar = document.getElementById(
+      "modalConfirmarEliminar"
+    ) as HTMLDialogElement;
+    const btnCancelarEliminar = document.getElementById(
+      "btnCancelarEliminar"
+    ) as HTMLButtonElement;
+    const btnConfirmarEliminar = document.getElementById(
+      "btnConfirmarEliminar"
+    ) as HTMLButtonElement;
+
+    const listaInvestigadores = document.getElementById(
+      "listaInvestigadores"
+    ) as HTMLDivElement;
+    const filtroCategoria = document.getElementById(
+      "filtroCategoria"
+    ) as HTMLSelectElement;
+    const filtroNombre = document.getElementById(
+      "filtroNombre"
+    ) as HTMLInputElement;
+    const btnLimpiarFiltroNombre = document.getElementById(
+      "btnLimpiarFiltroNombre"
+    ) as HTMLButtonElement;
+
+    const inputFoto = document.getElementById("foto") as HTMLInputElement;
     const previewFoto = document.getElementById(
       "previewFoto"
     ) as HTMLImageElement;
-    previewFoto.src = "";
-    previewFoto.classList.add("hidden");
 
-    // Opcional: limpiar campos manuales si es necesario (como select con valores por defecto, etc.)
-    const camposTexto = form.querySelectorAll("input, textarea, select");
-    camposTexto.forEach((campo) => {
-      if (campo instanceof HTMLInputElement && campo.type === "file") {
-        campo.value = ""; // reset archivo
+    const inputCV = document.getElementById("cv") as HTMLInputElement;
+    const previewCV = document.getElementById("previewCV") as HTMLIFrameElement;
+
+    let investigadores = [];
+    let idAEliminar = null;
+
+    let eliminarFoto = false;
+    let eliminarCV = false;
+
+    async function cargarInvestigadores() {
+      try {
+        const res = await fetch("/api/investigadores/obtener");
+        const data = await res.json();
+        investigadores = data.docs || [];
+        await renderInvestigadores();
+      } catch (err) {
+        console.error("Error cargando investigadores:", err);
+      }
+    }
+
+    //######################################################################################
+    //CODIGOS PARA AGREGAR INVESTIGADORES NUEVOS
+
+    document.addEventListener("DOMContentLoaded", () => {
+      function crearCampo(nombreCampo, placeholder) {
+        const div = document.createElement("div");
+        div.className = "flex gap-2 items-center";
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.name = `${nombreCampo}[]`;
+        input.placeholder = placeholder;
+        input.className = "input w-full";
+
+        const btnEliminar = document.createElement("button");
+        btnEliminar.type = "button";
+        btnEliminar.className = "btn btn-sm btn-error";
+        btnEliminar.textContent = "✕";
+        btnEliminar.addEventListener("click", () => div.remove());
+
+        div.appendChild(input);
+        div.appendChild(btnEliminar);
+        return div;
+      }
+
+      function manejarAgregar(botonId, contenedorId, nombreCampo, placeholder) {
+        document.getElementById(botonId).addEventListener("click", () => {
+          const contenedor = document.getElementById(contenedorId);
+          contenedor.appendChild(crearCampo(nombreCampo, placeholder));
+        });
+      }
+
+      manejarAgregar(
+        "btnAgregarAdquisicion",
+        "adquisicionesContainer",
+        "adquisiciones",
+        "Ingrese adscripción"
+      );
+      manejarAgregar(
+        "btnAgregarReconocimiento",
+        "reconocimientosContainer",
+        "reconocimientos",
+        "Ingrese reconocimiento"
+      );
+      manejarAgregar(
+        "btnAgregarEducacion",
+        "educacionContainer",
+        "educacion",
+        "Ingrese formación académica"
+      );
+      manejarAgregar(
+        "btnAgregarRed",
+        "redesContainer",
+        "redes",
+        "Ingrese red de trabajo"
+      );
+      manejarAgregar(
+        "btnAgregarTelefono",
+        "telefonosContainer",
+        "telefonos",
+        "Ingrese teléfono"
+      );
+      manejarAgregar(
+        "btnAgregarOtroCorreo",
+        "otrosCorreosContainer",
+        "otrosCorreos",
+        "Ingrese otro correo"
+      );
+      manejarAgregar(
+        "btnAgregarEspecialidad",
+        "especialidadContainer",
+        "especialidad",
+        "Ingrese especialidad"
+      );
+    });
+
+    const btnAgregarRedSocial = document.getElementById("btnAgregarRedSocial");
+    const containerRedes = document.getElementById("redesSocialesContainer");
+
+    // Agregar nueva red social
+    btnAgregarRedSocial.addEventListener("click", () => {
+      const nuevo = document.createElement("div");
+      nuevo.classList.add("flex", "gap-2", "items-center");
+      nuevo.innerHTML = `
+    <input
+      type="text"
+      name="redesSocialesNombre[]"
+      class="input w-1/3"
+      placeholder="Nombre de la red social"
+    />
+    <input
+      type="url"
+      name="redesSocialesUrl[]"
+      class="input w-2/3"
+      placeholder="URL de la red social"
+    />
+    <button type="button" class="btn btn-error btn-sm btnEliminarRed">✕</button>
+  `;
+      containerRedes.appendChild(nuevo);
+
+      // Evento para eliminar solo este bloque
+      nuevo.querySelector(".btnEliminarRed").addEventListener("click", (e) => {
+        e.preventDefault();
+        nuevo.remove();
+      });
+    });
+
+    btnMostrarModalAgregar.addEventListener("click", () => {
+      modalAgregar.showModal();
+    });
+
+    btnAbrirConfirmarGuardarAgregar.addEventListener("click", () => {
+      const form = document.getElementById(
+        "formAgregarInvestigador"
+      ) as HTMLFormElement;
+      if (!form.checkValidity()) {
+        form.reportValidity(); // muestra mensajes nativos de error
+        return; // no abre el modal de confirmación
+      }
+
+      // Si pasó la validación, abre el modal de confirmación
+      modalConfirmarAgregar.showModal();
+    });
+
+    btnCancelarAgregar.addEventListener("click", () => {
+      modalAgregar.close();
+      limpiarFormularioAgregar();
+    });
+
+    btnCancelarConfirmarAgregar.addEventListener("click", () => {
+      modalConfirmarAgregar.close();
+    });
+
+    btnCerrarModalAgregar.addEventListener("click", () => {
+      modalAgregar.close();
+      limpiarFormularioAgregar();
+    });
+
+    const MAX_FOTO_MB = 5; // tamaño máximo de foto
+    const MAX_CV_MB = 5; // tamaño máximo de CV
+
+    inputFoto.addEventListener("change", () => {
+      const file = inputFoto.files?.[0];
+      if (!file) return;
+
+      const sizeMB = file.size / (1024 * 1024);
+      if (sizeMB > MAX_FOTO_MB) {
+        alert(`La foto no puede superar los ${MAX_FOTO_MB} MB.`);
+        inputFoto.value = ""; // limpia el input
+        previewFoto.src = "";
+        previewFoto.classList.add("hidden");
+        return;
+      }
+
+      if (file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          previewFoto.src = e.target?.result as string;
+          previewFoto.classList.remove("hidden");
+        };
+        reader.readAsDataURL(file);
+      } else {
+        previewFoto.src = "";
+        previewFoto.classList.add("hidden");
       }
     });
-    previewCV.src = "";
-    previewCV.classList.add("hidden");
-  }
-  //####################################################################################
 
-  //###################################################################################################
-  //CODIGOS PARA EDITAR INVESTIGADOR
+    inputCV.addEventListener("change", () => {
+      const file = inputCV.files?.[0];
+      if (!file) return;
 
-  btnCerrarModalEditar.addEventListener("click", () => {
-    modalEditar.close();
-  });
+      const sizeMB = file.size / (1024 * 1024);
+      if (sizeMB > MAX_CV_MB) {
+        alert(`El CV no puede superar los ${MAX_CV_MB} MB.`);
+        inputCV.value = "";
+        previewCV.src = "";
+        previewCV.classList.add("hidden");
+        return;
+      }
 
-  btnCancelarEdicion.addEventListener("click", () => {
-    modalEditar.close();
-  });
-
-  btnAbrirConfirmarGuardar.addEventListener("click", () => {
-    modalConfirmarGuardar.showModal();
-  });
-
-  btnCancelarGuardar.addEventListener("click", () => {
-    modalConfirmarGuardar.close();
-  });
-
-  document
-    .getElementById("btnEliminarFotoEdit")
-    .addEventListener("click", () => {
-      eliminarFoto = true;
-      document.getElementById("fotoActualContainer").classList.add("hidden");
-      document.getElementById("edit_foto").classList.remove("hidden");
+      if (file.type === "application/pdf") {
+        previewCV.src = URL.createObjectURL(file);
+        previewCV.classList.remove("hidden");
+      } else {
+        previewCV.src = "";
+        previewCV.classList.add("hidden");
+      }
     });
 
-  document.getElementById("btnEliminarCVEdit").addEventListener("click", () => {
-    eliminarCV = true;
-    document.getElementById("cvActualContainer").classList.add("hidden");
-    document.getElementById("edit_cv").classList.remove("hidden");
-  });
+    // Boton para guardar investigador
+    btnConfirmarAgregar.addEventListener("click", async () => {
+      const boton = btnConfirmarAgregar;
+      mostrarSpinnerEnBoton(boton);
 
-  // Previsualizar nueva foto
-  document.getElementById("edit_foto").addEventListener("change", (e) => {
-    const file = e.target.files[0];
-    const preview = document.getElementById("previewFotoCambiar");
+      try {
+        const formData = new FormData(form);
+        const email = formData.get("email")?.toString().toLowerCase().trim();
+        const idTransformado = `${email.replace(/@/g, "_")}`;
 
-    if (file) {
-      preview.src = URL.createObjectURL(file);
-      preview.classList.remove("hidden");
-    } else {
-      preview.classList.add("hidden");
-      preview.src = "";
-    }
-  });
+        const inputEmail = document.getElementById("email") as HTMLInputElement;
+        const mensajeCorreo = document.getElementById("mensajeCorreoExistente");
 
-  // Previsualizar nuevo CV
-  document.getElementById("edit_cv").addEventListener("change", (e) => {
-    const file = e.target.files[0];
-    const preview = document.getElementById("previewCVCambiar");
+        // Validar si ya existe un investigador con ese ID
+        const existe = investigadores.some((inv) => inv._id === idTransformado);
+        if (existe) {
+          // Mostrar error y salir antes de subir archivos
+          inputEmail.classList.add(
+            "border",
+            "border-red-500",
+            "focus:border-red-500"
+          );
+          mensajeCorreo.classList.remove("hidden");
 
-    if (file) {
-      preview.src = URL.createObjectURL(file);
-      preview.classList.remove("hidden");
-    } else {
-      preview.classList.add("hidden");
-      preview.src = "";
-    }
-  });
-
-  function editarInvestigador(id) {
-    const inv = investigadores.find((i) => i._id === id);
-    if (!inv) return alert("Investigador no encontrado");
-
-    eliminarFoto = false;
-    eliminarCV = false;
-
-    document.getElementById("edit_id").value = inv._id;
-    document.getElementById("edit_nombre").value = inv.nombre || "";
-    document.getElementById("edit_email").value = inv.email || "";
-
-    // Foto
-    const previewFoto = document.getElementById("previewFotoEdit");
-    const fotoContainer = document.getElementById("fotoActualContainer");
-    const inputFoto = document.getElementById("edit_foto");
-    if (inv.foto) {
-      previewFoto.src = inv.foto;
-      fotoContainer.classList.remove("hidden");
-      inputFoto.classList.add("hidden");
-      document.getElementById("previewFotoCambiar").classList.add("hidden"); // OCULTAR preview nuevo
-    } else {
-      fotoContainer.classList.add("hidden");
-      inputFoto.classList.remove("hidden");
-      document.getElementById("previewFotoCambiar").classList.add("hidden");
-    }
-
-    // Limpiar input de archivo y preview si había uno cargado antes
-    inputFoto.value = "";
-    document.getElementById("previewFotoCambiar").src = "";
-    document.getElementById("previewFotoCambiar").classList.add("hidden");
-
-    // CV
-    const previewCV = document.getElementById("previewCVEedit");
-    const cvContainer = document.getElementById("cvActualContainer");
-    const inputCV = document.getElementById("edit_cv");
-    if (inv.cv) {
-      previewCV.src = inv.cv;
-      cvContainer.classList.remove("hidden");
-      inputCV.classList.add("hidden");
-      document.getElementById("previewCVCambiar").classList.add("hidden");
-    } else {
-      cvContainer.classList.add("hidden");
-      inputCV.classList.remove("hidden");
-      document.getElementById("previewCVCambiar").classList.add("hidden");
-    }
-    modalEditar.showModal();
-  }
-
-  //Boton para confirmar guardar cambio a la hora de editar investigador
-  btnConfirmarGuardar.addEventListener("click", async () => {
-    const boton = btnConfirmarGuardar;
-    mostrarSpinnerEnBoton(boton);
-
-    const id = document.getElementById("edit_id").value;
-    const actualizado = {
-      nombre: document.getElementById("edit_nombre").value,
-      email: document.getElementById("edit_email").value,
-    };
-
-    const investigador = investigadores.find((i) => i._id === id);
-    let nuevaFotoUrl = investigador.foto;
-    let nuevoCVUrl = investigador.cv;
-
-    try {
-      // Subir nueva foto si se eliminó la actual o se eligió otra
-      const inputFoto = document.getElementById("edit_foto");
-      const nuevaFoto = inputFoto.files?.[0];
-
-      if (eliminarFoto || nuevaFoto) {
-        if (nuevaFoto) {
-          const fd = new FormData();
-          fd.append("foto", nuevaFoto);
-          fd.append("carpeta", "investigadores_fotos");
-          const res = await fetch("/api/subir_imagen", {
-            method: "POST",
-            body: fd,
-          });
-          const json = await res.json();
-          if (!json.ok) throw new Error(json.error);
-          nuevaFotoUrl = json.url;
+          modalConfirmarAgregar.close();
+          ocultarSpinnerEnBoton(boton);
+          inputEmail.focus();
+          return;
         } else {
-          nuevaFotoUrl = null;
+          // Limpiar errores si no existe
+          inputEmail.classList.remove(
+            "border",
+            "border-red-500",
+            "focus:border-red-500"
+          );
+          mensajeCorreo.classList.add("hidden");
         }
+
+        inputEmail.addEventListener("input", () => {
+          inputEmail.classList.remove(
+            "border",
+            "border-red-500",
+            "focus:border-red-500"
+          );
+          mensajeCorreo.classList.add("hidden");
+        });
+
+        // --- Aquí ya es seguro subir archivos ---
+        const inputFoto = document.getElementById("foto") as HTMLInputElement;
+        const file = inputFoto.files?.[0];
+        let fotoUrl = null;
+
+        if (file) {
+          const formDataImagen = new FormData();
+          formDataImagen.append("foto", file);
+          formDataImagen.append("carpeta", "investigadores_fotos");
+          //console.log('Carpeta en formData:', formDataImagen.get("carpeta"));
+
+          const resImagen = await fetch("/api/subir_imagen", {
+            method: "POST",
+            body: formDataImagen,
+          });
+
+          if (!resImagen.ok) throw new Error("Error al subir la imagen");
+          const dataImagen = await resImagen.json();
+          if (!dataImagen.ok)
+            throw new Error(dataImagen.error || "Error en subida");
+
+          fotoUrl = dataImagen.url;
+        }
+
+        const inputCV = document.getElementById("cv") as HTMLInputElement;
+        const cvFile = inputCV.files?.[0];
+        let cvUrl = null;
+
+        if (cvFile) {
+          const formDataCV = new FormData();
+          formDataCV.append("cv", cvFile);
+          formDataCV.append("carpeta", "cv_pdfs");
+          //console.log('Carpeta en formData:', formDataCV.get("carpeta"));
+
+          const resCV = await fetch("/api/investigadores/subir_cv", {
+            method: "POST",
+            body: formDataCV,
+          });
+
+          if (!resCV.ok) throw new Error("Error al subir el CV");
+          const dataCV = await resCV.json();
+          if (!dataCV.ok)
+            throw new Error(dataCV.error || "Error en subida de CV");
+
+          cvUrl = dataCV.url;
+        }
+
+        const redesSocialesNombres = formData.getAll("redesSocialesNombre[]");
+        const redesSocialesUrls = formData.getAll("redesSocialesUrl[]");
+
+        const redesSociales = redesSocialesNombres
+          .map((nombre, index) => {
+            const url = redesSocialesUrls[index];
+            if (nombre.trim() !== "" && url.trim() !== "") {
+              return { nombre: nombre.trim(), url: url.trim() };
+            }
+            return null;
+          })
+          .filter((v) => v !== null);
+
+        const nuevo = {
+          _id: idTransformado,
+          nombre: formData.get("nombre"),
+          email: formData.get("email"),
+          telefonos: formData
+            .getAll("telefonos[]")
+            .filter((v) => typeof v === "string" && v.trim() !== ""),
+          otrosCorreos: formData
+            .getAll("otrosCorreos[]")
+            .filter((v) => typeof v === "string" && v.trim() !== ""),
+          categoria: formData.get("rol"),
+          cargo: formData.get("cargoCentro"),
+          type: "investigador",
+          adscripciones: formData
+            .getAll("adquisiciones[]")
+            .filter((v) => typeof v === "string" && v.trim() !== ""),
+          foto: fotoUrl,
+          cv: cvUrl,
+          especialidad: formData
+            .getAll("especialidad[]")
+            .filter((v) => typeof v === "string" && v.trim() !== ""),
+          resena: formData.get("resena"),
+          reconocimientos: formData
+            .getAll("reconocimientos[]")
+            .filter((v) => typeof v === "string" && v.trim() !== ""),
+          educacion: formData
+            .getAll("educacion[]")
+            .filter((v) => typeof v === "string" && v.trim() !== ""),
+          redesTrabajo: formData
+            .getAll("redes[]")
+            .filter((v) => typeof v === "string" && v.trim() !== ""),
+          redesSociales: redesSociales,
+
+          creado_en: formatearFecha(new Date().toISOString()),
+          actualizacion: formatearFecha(new Date().toISOString()),
+        };
+
+        const res = await fetch("/api/investigadores/agregar", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(nuevo),
+        });
+
+        if (!res.ok) {
+          const error = await res.text();
+          throw new Error(`Error HTTP: ${res.status} - ${error}`);
+        }
+
+        const result = await res.json();
+
+        if (result.ok) {
+          showMessage("Investigador agregado correctamente", "success");
+          form.reset();
+          limpiarFormularioAgregar();
+          modalAgregar.close();
+          modalConfirmarAgregar.close();
+          await cargarInvestigadores();
+        } else {
+          showMessage("Error al agregar: " + result.error, "error");
+        }
+      } catch (err) {
+        console.error("Error al enviar:", err);
+        showMessage("Error al agregar", "error");
+      } finally {
+        ocultarSpinnerEnBoton(boton);
+      }
+    });
+
+    function limpiarFormularioAgregar() {
+      const form = document.getElementById(
+        "formAgregarInvestigador"
+      ) as HTMLFormElement;
+      form.reset(); // Limpia los campos automáticamente
+
+      // Ocultar la imagen de previsualización
+      const previewFoto = document.getElementById(
+        "previewFoto"
+      ) as HTMLImageElement;
+      previewFoto.src = "";
+      previewFoto.classList.add("hidden");
+
+      // Opcional: limpiar campos manuales si es necesario (como select con valores por defecto, etc.)
+      const camposTexto = form.querySelectorAll("input, textarea, select");
+      camposTexto.forEach((campo) => {
+        if (campo instanceof HTMLInputElement && campo.type === "file") {
+          campo.value = ""; // reset archivo
+        }
+      });
+      previewCV.src = "";
+      previewCV.classList.add("hidden");
+
+      // Limpiar campos dinámicos
+      [
+        "adquisicionesContainer",
+        "reconocimientosContainer",
+        "educacionContainer",
+        "redesContainer",
+        "telefonosContainer",
+        "otrosCorreosContainer",
+        "especialidadContainer",
+        "redesSocialesContainer",
+      ].forEach((id) => {
+        const container = document.getElementById(id);
+        if (container) {
+          container.querySelectorAll("div").forEach((div) => {
+            if (div.dataset.base !== "true") {
+              div.remove(); // Elimina solo los que no son base
+            } else {
+              const input = div.querySelector("input");
+              if (input) input.value = ""; // Limpia el valor del base
+            }
+          });
+        }
+      });
+    }
+    //####################################################################################
+
+    //###################################################################################################
+    //CODIGOS PARA EDITAR INVESTIGADOR
+
+    document.addEventListener("DOMContentLoaded", () => {
+      function crearCampo(nombreCampo, placeholder) {
+        const div = document.createElement("div");
+        div.className = "flex gap-2 items-center mb-2";
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.name = `${nombreCampo}[]`;
+        input.placeholder = placeholder;
+        input.className = "input w-full";
+
+        const btnEliminar = document.createElement("button");
+        btnEliminar.type = "button";
+        btnEliminar.className = "btn btn-sm btn-error";
+        btnEliminar.textContent = "✕";
+        btnEliminar.addEventListener("click", () => div.remove());
+
+        div.appendChild(input);
+        div.appendChild(btnEliminar);
+        return div;
       }
 
-      // Subir nuevo CV si se eliminó el actual o se eligió otro
-      const inputCV = document.getElementById("edit_cv");
-      const nuevoCV = inputCV.files?.[0];
-
-      if (eliminarCV || nuevoCV) {
-        if (nuevoCV) {
-          const fd = new FormData();
-          fd.append("cv", nuevoCV);
-          fd.append("carpeta", "cv_pdfs");
-          const res = await fetch("/api/investigadores/subir_cv", {
-            method: "POST",
-            body: fd,
-          });
-          const json = await res.json();
-          if (!json.ok) throw new Error(json.error);
-          nuevoCVUrl = json.url;
-        } else {
-          nuevoCVUrl = null;
-        }
+      function manejarAgregar(botonId, contenedorId, nombreCampo, placeholder) {
+        document.getElementById(botonId).addEventListener("click", () => {
+          const contenedor = document.getElementById(contenedorId);
+          contenedor.appendChild(crearCampo(nombreCampo, placeholder));
+        });
       }
 
-      // Enviar datos actualizados
-      const res = await fetch(`/api/investigadores/editar`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id,
-          ...actualizado,
-          foto: nuevaFotoUrl,
-          cv: nuevoCVUrl,
-        }),
+      // Teléfonos
+      manejarAgregar(
+        "btnAgregarTelefonoEditar",
+        "telefonosEditarContainer",
+        "telefonosEditar",
+        "Ingrese teléfono"
+      );
+
+      // Otros correos
+      manejarAgregar(
+        "btnAgregarOtroCorreoEditar",
+        "otrosCorreosEditarContainer",
+        "otrosCorreosEditar",
+        "Ingrese otro correo"
+      );
+
+      // Adscripciones
+      manejarAgregar(
+        "btnAgregarAdquisicionEditar",
+        "adquisicionesEditarContainer",
+        "adquisicionesEditar",
+        "Ingrese adscripción"
+      );
+
+      // Especialidades
+      manejarAgregar(
+        "btnAgregarEspecialidadEditar",
+        "especialidadEditarContainer",
+        "especialidadEditar",
+        "Ingrese especialidad"
+      );
+
+      // Reconocimientos
+      manejarAgregar(
+        "btnAgregarReconocimientoEditar",
+        "reconocimientosEditarContainer",
+        "reconocimientosEditar",
+        "Ingrese reconocimiento"
+      );
+
+      // Educación
+      manejarAgregar(
+        "btnAgregarEducacionEditar",
+        "educacionEditarContainer",
+        "educacionEditar",
+        "Ingrese formación académica"
+      );
+
+      // Redes de trabajo
+      manejarAgregar(
+        "btnAgregarRedEditar",
+        "redesEditarContainer",
+        "redesEditar",
+        "Ingrese red de trabajo"
+      );
+
+      // Redes sociales (nombre + URL)
+      const btnAgregarRedSocial = document.getElementById(
+        "btnAgregarRedSocialEditar"
+      );
+      const containerRedes = document.getElementById(
+        "redesSocialesEditarContainer"
+      );
+
+      btnAgregarRedSocial.addEventListener("click", () => {
+        const div = document.createElement("div");
+        div.classList.add("flex", "gap-2", "items-center", "mb-2");
+        div.innerHTML = `
+      <input type="text" name="redesSocialesNombreEditar[]" class="input w-1/3" placeholder="Nombre de la red social" />
+      <input type="url" name="redesSocialesUrlEditar[]" class="input w-2/3" placeholder="URL de la red social" pattern="https?://.+" title="Debe iniciar con http:// o https://" />
+      <button type="button" class="btn btn-sm btn-error btnEliminarRed">✕</button>
+    `;
+        containerRedes.appendChild(div);
+
+        div.querySelector(".btnEliminarRed").addEventListener("click", (e) => {
+          e.preventDefault();
+          div.remove();
+        });
+      });
+    });
+
+    btnCerrarModalEditar.addEventListener("click", () => {
+      modalEditar.close();
+    });
+
+    btnCancelarEdicion.addEventListener("click", () => {
+      modalEditar.close();
+    });
+
+    btnAbrirConfirmarGuardar.addEventListener("click", () => {
+      const form = document.getElementById(
+        "formEditarInvestigador"
+      ) as HTMLFormElement;
+      if (!form.checkValidity()) {
+        form.reportValidity(); // muestra mensajes nativos de error
+        return; // no abre el modal de confirmación
+      }
+      modalConfirmarGuardar.showModal();
+    });
+
+    btnCancelarGuardar.addEventListener("click", () => {
+      modalConfirmarGuardar.close();
+    });
+
+    document
+      .getElementById("btnEliminarFotoEdit")
+      .addEventListener("click", () => {
+        eliminarFoto = true;
+        document.getElementById("fotoActualContainer").classList.add("hidden");
+        document.getElementById("edit_foto").classList.remove("hidden");
       });
 
-      const result = await res.json();
-      if (result.ok) {
-        // ✅ Aquí puedes eliminar archivos antiguos si fueron reemplazados
-        if (
-          (eliminarFoto || nuevaFoto) &&
-          investigador.foto &&
-          investigador.foto !== nuevaFotoUrl
-        ) {
-          await fetch("/api/investigadores/eliminar_archivo", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ path: investigador.foto }),
-          });
-        }
+    document
+      .getElementById("btnEliminarCVEdit")
+      .addEventListener("click", () => {
+        eliminarCV = true;
+        document.getElementById("cvActualContainer").classList.add("hidden");
+        document.getElementById("edit_cv").classList.remove("hidden");
+      });
 
-        // ✅ Eliminar CV anterior si fue reemplazado
-        if (
-          (eliminarCV || nuevoCV) &&
-          investigador.cv &&
-          investigador.cv !== nuevoCVUrl
-        ) {
-          await fetch("/api/investigadores/eliminar_archivo", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ path: investigador.cv }),
-          });
-        }
+    // Previsualizar nueva foto
+    document.getElementById("edit_foto").addEventListener("change", (e) => {
+  const file = (e.target as HTMLInputElement).files?.[0];
+  const preview = document.getElementById("previewFotoCambiar") as HTMLImageElement;
 
-        showMessage("Cambios guardados correctamente", "success");
-        modalConfirmarGuardar.close();
-        modalEditar.close();
-        await cargarInvestigadores();
+  if (!file) {
+    preview.src = "";
+    preview.classList.add("hidden");
+    return;
+  }
+
+  const sizeMB = file.size / (1024 * 1024);
+  if (sizeMB > MAX_FOTO_MB) {
+    alert(`La foto no puede superar los ${MAX_FOTO_MB} MB.`);
+    (e.target as HTMLInputElement).value = "";
+    preview.src = "";
+    preview.classList.add("hidden");
+    return;
+  }
+
+  if (file.type.startsWith("image/")) {
+    preview.src = URL.createObjectURL(file);
+    preview.classList.remove("hidden");
+  } else {
+    alert("El archivo debe ser una imagen.");
+    (e.target as HTMLInputElement).value = "";
+    preview.src = "";
+    preview.classList.add("hidden");
+  }
+});
+
+
+    // Previsualizar nuevo CV
+    document.getElementById("edit_cv").addEventListener("change", (e) => {
+  const file = (e.target as HTMLInputElement).files?.[0];
+  const preview = document.getElementById("previewCVCambiar") as HTMLIFrameElement;
+
+  if (!file) {
+    preview.src = "";
+    preview.classList.add("hidden");
+    return;
+  }
+
+  const sizeMB = file.size / (1024 * 1024);
+  if (sizeMB > MAX_CV_MB) {
+    alert(`El CV no puede superar los ${MAX_CV_MB} MB.`);
+    (e.target as HTMLInputElement).value = "";
+    preview.src = "";
+    preview.classList.add("hidden");
+    return;
+  }
+
+  if (file.type === "application/pdf") {
+    preview.src = URL.createObjectURL(file);
+    preview.classList.remove("hidden");
+  } else {
+    alert("El archivo debe ser un PDF.");
+    (e.target as HTMLInputElement).value = "";
+    preview.src = "";
+    preview.classList.add("hidden");
+  }
+});
+
+
+    function editarInvestigador(id) {
+      const inv = investigadores.find((i) => i._id === id);
+      if (!inv) return alert("Investigador no encontrado");
+
+      eliminarFoto = false;
+      eliminarCV = false;
+
+      const placeholders = {
+        telefonosEditarContainer: "Ingrese teléfono",
+        otrosCorreosEditarContainer: "Ingrese otro correo",
+        adquisicionesEditarContainer: "Ingrese adscripción",
+        especialidadEditarContainer: "Ingrese especialidad",
+        reconocimientosEditarContainer: "Ingrese reconocimiento",
+        educacionEditarContainer: "Ingrese formación académica",
+        redesEditarContainer: "Ingrese red de trabajo",
+      };
+
+      // Campos simples
+      document.getElementById("edit_id").value = inv._id || "";
+      document.getElementById("edit_nombre").value = inv.nombre || "";
+      document.getElementById("resenaEditar").value = inv.resena || "";
+
+      // Campos dinámicos
+      const setDinamico = (containerId, valores) => {
+        const container = document.getElementById(containerId);
+        container.innerHTML = ""; // Limpiar
+        if (!valores || valores.length === 0) valores = [""]; // mínimo un input
+
+        valores.forEach((val) => {
+          const div = document.createElement("div");
+          div.classList.add("flex", "gap-2", "items-center", "mb-2");
+          div.innerHTML = `<input type="text" name="${containerId}[]" class="input w-full" value="${val}" placeholder="${placeholders[containerId]}" />`;
+
+          // Botón eliminar
+          const btnEliminar = document.createElement("button");
+          btnEliminar.type = "button";
+          btnEliminar.className = "btn btn-sm btn-error ";
+          btnEliminar.textContent = "✕";
+          btnEliminar.addEventListener("click", () => div.remove());
+          div.appendChild(btnEliminar);
+
+          container.appendChild(div);
+        });
+      };
+
+      // Aplicar a todos los campos dinámicos
+      setDinamico("telefonosEditarContainer", inv.telefonos);
+      setDinamico("otrosCorreosEditarContainer", inv.otrosCorreos);
+      setDinamico("adquisicionesEditarContainer", inv.adscripciones);
+      setDinamico("especialidadEditarContainer", inv.especialidad);
+      setDinamico("reconocimientosEditarContainer", inv.reconocimientos);
+      setDinamico("educacionEditarContainer", inv.educacion);
+      setDinamico("redesEditarContainer", inv.redesTrabajo);
+
+      // Redes sociales (nombre + url)
+      const redesContainer = document.getElementById(
+        "redesSocialesEditarContainer"
+      );
+      redesContainer.innerHTML = "";
+
+      const redes =
+        inv.redesSociales && inv.redesSociales.length > 0
+          ? inv.redesSociales
+          : [{ nombre: "", url: "" }];
+      redes.forEach((red) => {
+        const div = document.createElement("div");
+        div.classList.add("flex", "gap-2", "items-center", "mb-2");
+
+        const inputNombre = document.createElement("input");
+        inputNombre.type = "text";
+        inputNombre.name = "redesSocialesNombreEditar[]";
+        inputNombre.className = "input w-1/3";
+        inputNombre.value = red.nombre || "";
+        inputNombre.placeholder = "Nombre de la red social";
+
+        const inputUrl = document.createElement("input");
+        inputUrl.type = "url";
+        inputUrl.name = "redesSocialesUrlEditar[]";
+        inputUrl.className = "input w-2/3";
+        inputUrl.value = red.url || "";
+        inputUrl.placeholder = "URL de la red social";
+        inputUrl.pattern = "https?://.+";
+        inputUrl.title = "Debe iniciar con http:// o https://";
+
+        const btnEliminar = document.createElement("button");
+        btnEliminar.type = "button";
+        btnEliminar.className = "btn btn-sm btn-error";
+        btnEliminar.textContent = "✕";
+        btnEliminar.addEventListener("click", () => div.remove());
+
+        div.appendChild(inputNombre);
+        div.appendChild(inputUrl);
+        div.appendChild(btnEliminar);
+        redesContainer.appendChild(div);
+      });
+
+      // Foto
+      const previewFoto = document.getElementById("previewFotoEdit");
+      const fotoContainer = document.getElementById("fotoActualContainer");
+      const inputFoto = document.getElementById("edit_foto");
+      if (inv.foto) {
+        previewFoto.src = inv.foto;
+        fotoContainer.classList.remove("hidden");
+        inputFoto.classList.add("hidden");
+        document.getElementById("previewFotoCambiar").classList.add("hidden"); // OCULTAR preview nuevo
       } else {
+        fotoContainer.classList.add("hidden");
+        inputFoto.classList.remove("hidden");
+        document.getElementById("previewFotoCambiar").classList.add("hidden");
+      }
+
+      // Limpiar input de archivo y preview si había uno cargado antes
+      inputFoto.value = "";
+      document.getElementById("previewFotoCambiar").src = "";
+      document.getElementById("previewFotoCambiar").classList.add("hidden");
+
+      // CV
+      const previewCV = document.getElementById("previewCVEedit");
+      const cvContainer = document.getElementById("cvActualContainer");
+      const inputCV = document.getElementById("edit_cv");
+      if (inv.cv) {
+        previewCV.src = inv.cv;
+        cvContainer.classList.remove("hidden");
+        inputCV.classList.add("hidden");
+        document.getElementById("previewCVCambiar").classList.add("hidden");
+      } else {
+        cvContainer.classList.add("hidden");
+        inputCV.classList.remove("hidden");
+        document.getElementById("previewCVCambiar").classList.add("hidden");
+      }
+      modalEditar.showModal();
+    }
+
+    //Boton para confirmar guardar cambio a la hora de editar investigador
+    btnConfirmarGuardar.addEventListener("click", async () => {
+      const boton = btnConfirmarGuardar;
+      mostrarSpinnerEnBoton(boton);
+
+      const id = document.getElementById("edit_id").value;
+      const actualizado = {
+        nombre: document.getElementById("edit_nombre").value,
+        resena: document.getElementById("resenaEditar").value,
+        actualizacion: formatearFecha(new Date().toISOString()),
+      };
+
+      // Función para recoger valores de campos dinámicos
+      const obtenerValoresDinamicos = (containerId) => {
+        const inputs = document.querySelectorAll(`#${containerId} input`);
+        return Array.from(inputs)
+          .map((i) => i.value)
+          .filter((v) => v.trim() !== "");
+      };
+
+      // Campos dinámicos
+      actualizado.telefonos = obtenerValoresDinamicos(
+        "telefonosEditarContainer"
+      );
+      actualizado.otrosCorreos = obtenerValoresDinamicos(
+        "otrosCorreosEditarContainer"
+      );
+      actualizado.adscripciones = obtenerValoresDinamicos(
+        "adquisicionesEditarContainer"
+      );
+      actualizado.especialidad = obtenerValoresDinamicos(
+        "especialidadEditarContainer"
+      );
+      actualizado.reconocimientos = obtenerValoresDinamicos(
+        "reconocimientosEditarContainer"
+      );
+      actualizado.educacion = obtenerValoresDinamicos(
+        "educacionEditarContainer"
+      );
+      actualizado.redesTrabajo = obtenerValoresDinamicos(
+        "redesEditarContainer"
+      );
+
+      // Redes sociales (nombre + url)
+      const redesSociales = [];
+      document
+        .querySelectorAll("#redesSocialesEditarContainer > div")
+        .forEach((div) => {
+          const nombre =
+            div.querySelector('input[name="redesSocialesNombreEditar[]"]')
+              ?.value || "";
+          const url =
+            div.querySelector('input[name="redesSocialesUrlEditar[]"]')
+              ?.value || "";
+          if (nombre || url) redesSociales.push({ nombre, url });
+        });
+      actualizado.redesSociales = redesSociales;
+
+      const investigador = investigadores.find((i) => i._id === id);
+      let nuevaFotoUrl = investigador.foto;
+      let nuevoCVUrl = investigador.cv;
+
+      try {
+        // Subir nueva foto si se eliminó la actual o se eligió otra
+        const inputFoto = document.getElementById("edit_foto");
+        const nuevaFoto = inputFoto.files?.[0];
+
+        if (eliminarFoto || nuevaFoto) {
+          if (nuevaFoto) {
+            const fd = new FormData();
+            fd.append("foto", nuevaFoto);
+            fd.append("carpeta", "investigadores_fotos");
+            const res = await fetch("/api/subir_imagen", {
+              method: "POST",
+              body: fd,
+            });
+            const json = await res.json();
+            if (!json.ok) throw new Error(json.error);
+            nuevaFotoUrl = json.url;
+          } else {
+            nuevaFotoUrl = null;
+          }
+        }
+
+        // Subir nuevo CV si se eliminó el actual o se eligió otro
+        const inputCV = document.getElementById("edit_cv");
+        const nuevoCV = inputCV.files?.[0];
+
+        if (eliminarCV || nuevoCV) {
+          if (nuevoCV) {
+            const fd = new FormData();
+            fd.append("cv", nuevoCV);
+            fd.append("carpeta", "cv_pdfs");
+            const res = await fetch("/api/investigadores/subir_cv", {
+              method: "POST",
+              body: fd,
+            });
+            const json = await res.json();
+            if (!json.ok) throw new Error(json.error);
+            nuevoCVUrl = json.url;
+          } else {
+            nuevoCVUrl = null;
+          }
+        }
+
+        // Enviar datos actualizados
+        const res = await fetch(`/api/investigadores/editar`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id,
+            ...actualizado,
+            foto: nuevaFotoUrl,
+            cv: nuevoCVUrl,
+          }),
+        });
+
+        const result = await res.json();
+        if (result.ok) {
+          // ✅ Aquí puedes eliminar archivos antiguos si fueron reemplazados
+          if (
+            (eliminarFoto || nuevaFoto) &&
+            investigador.foto &&
+            investigador.foto !== nuevaFotoUrl
+          ) {
+            await fetch("/api/investigadores/eliminar_archivo", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ path: investigador.foto }),
+            });
+          }
+
+          // ✅ Eliminar CV anterior si fue reemplazado
+          if (
+            (eliminarCV || nuevoCV) &&
+            investigador.cv &&
+            investigador.cv !== nuevoCVUrl
+          ) {
+            await fetch("/api/investigadores/eliminar_archivo", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ path: investigador.cv }),
+            });
+          }
+
+          showMessage("Cambios guardados correctamente", "success");
+          modalConfirmarGuardar.close();
+          modalEditar.close();
+          await cargarInvestigadores();
+        } else {
+          showMessage("Error al guardar", "error");
+        }
+      } catch (err) {
+        console.error("Error al guardar:", err);
         showMessage("Error al guardar", "error");
+      } finally {
+        ocultarSpinnerEnBoton(boton);
       }
-    } catch (err) {
-      console.error("Error al guardar:", err);
-      showMessage("Error al guardar", "error");
-    } finally {
-      ocultarSpinnerEnBoton(boton);
-    }
-  });
-
-  //###################################################################################################
-
-  //###############################################################################################
-  //CODIGOS PARA ELIMINAR INVESTIGADOR
-
-  btnCancelarEliminar.addEventListener("click", () => {
-    modalConfirmarEliminar.close();
-  });
-
-  function prepararEliminarInvestigador(id) {
-    idAEliminar = id;
-    modalConfirmarEliminar.showModal();
-  }
-
-  //Boton para confirmar eliminar investigador
-  btnConfirmarEliminar.addEventListener("click", async () => {
-    const boton = btnConfirmarEliminar;
-    mostrarSpinnerEnBoton(boton);
-
-    if (!idAEliminar) {
-      showMessage("ID inválido para eliminar", "error");
-      ocultarSpinnerEnBoton(boton);
-      return;
-    }
-
-    // Llamamos a la función para eliminar el investigador por ID
-    await eliminarInvestigador(idAEliminar);
-
-    // Limpiamos el id almacenado
-    idAEliminar = null;
-
-    ocultarSpinnerEnBoton(boton);
-
-    // Cerramos el modal de confirmación
-    modalConfirmarEliminar.close();
-
-    // Recargamos la lista para actualizar la UI
-    await cargarInvestigadores();
-  });
-
-  async function eliminarInvestigador(id) {
-    const respuesta = await fetch("/api/investigadores/eliminar", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id }),
     });
 
-    const resultado = await respuesta.json();
+    //###################################################################################################
 
-    if (resultado.ok) {
-      showMessage("Investigador eliminado correctamente", "success");
-      // Aquí podrías volver a cargar la lista o actualizar la UI
-    } else {
-      showMessage("Error al eliminar: " + resultado.error, "error");
-    }
-  }
-  //###################################################################################################
+    //###############################################################################################
+    //CODIGOS PARA ELIMINAR INVESTIGADOR
 
-  //###############################################################################################
-  //MOSTRAR INVESTIGADORES Y RENDERIZARLOS
-  function mostrarModalInvestigador(inv) {
-    const modal = document.getElementById(
-      "modalInvestigador"
-    ) as HTMLDialogElement;
-    document.getElementById("modalNombre")!.textContent = inv.nombre;
-    document.getElementById("modalCorreo")!.textContent = inv.email;
-    document.getElementById("modalDepartamento")!.textContent =
-      "Departamento: " + (inv.departamento || "");
-    document.getElementById("modalDescripcion")!.textContent =
-      inv.descripcion || "";
-    document.getElementById("modalImagen")!.src = `${inv.foto}`;
-
-    const contenedorRedes = document.getElementById("modalRedes")!;
-    contenedorRedes.innerHTML = ""; // limpiar
-
-    const redes = inv.redes || {};
-    if (redes.facebook)
-      contenedorRedes.innerHTML += `<a href="${redes.facebook}" target="_blank"><i class="mdi mdi-facebook text-blue-600 text-xl"></i></a>`;
-    if (redes.twitter)
-      contenedorRedes.innerHTML += `<a href="${redes.twitter}" target="_blank"><i class="mdi mdi-twitter text-sky-500 text-xl"></i></a>`;
-    if (redes.linkedin)
-      contenedorRedes.innerHTML += `<a href="${redes.linkedin}" target="_blank"><i class="mdi mdi-linkedin text-blue-700 text-xl"></i></a>`;
-
-    document.getElementById("modalCV")!.setAttribute("src", inv.cv || "");
-
-    modal.showModal();
-  }
-
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-  });
-
-  function renderInvestigadores() {
-    const categoriaSeleccionada = filtroCategoria.value.toLowerCase();
-    const textoBusqueda = filtroNombre.value.toLowerCase();
-    const mensajeVacio = document.getElementById("mensajeVacio");
-
-    const filtrados = investigadores.filter((inv) => {
-      const coincideCategoria =
-        !categoriaSeleccionada ||
-        inv.categoria?.toLowerCase() === categoriaSeleccionada;
-      const coincideNombre = inv.nombre?.toLowerCase().includes(textoBusqueda);
-      return coincideCategoria && coincideNombre;
+    btnCancelarEliminar.addEventListener("click", () => {
+      modalConfirmarEliminar.close();
     });
 
-    listaInvestigadores.innerHTML = "";
+    function prepararEliminarInvestigador(id) {
+      idAEliminar = id;
+      modalConfirmarEliminar.showModal();
+    }
 
-    if (filtrados.length === 0) {
-      let mensaje = "";
+    //Boton para confirmar eliminar investigador
+    btnConfirmarEliminar.addEventListener("click", async () => {
+      const boton = btnConfirmarEliminar;
+      mostrarSpinnerEnBoton(boton);
 
-      if (investigadores.length === 0) {
-        mensaje = "No hay investigadores registrados aún.";
-      } else if (categoriaSeleccionada && textoBusqueda) {
-        mensaje = `No se encontraron investigadores en la categoría "${categoriaSeleccionada}" que coincidan con "${textoBusqueda}".`;
-      } else if (categoriaSeleccionada) {
-        mensaje = `No hay investigadores en la categoría "${categoriaSeleccionada}".`;
-      } else if (textoBusqueda) {
-        mensaje = `No se encontró ningún investigador con el nombre "${textoBusqueda}".`;
+      if (!idAEliminar) {
+        showMessage("ID inválido para eliminar", "error");
+        ocultarSpinnerEnBoton(boton);
+        return;
+      }
+
+      // Llamamos a la función para eliminar el investigador por ID
+      await eliminarInvestigador(idAEliminar);
+
+      // Limpiamos el id almacenado
+      idAEliminar = null;
+
+      ocultarSpinnerEnBoton(boton);
+
+      // Cerramos el modal de confirmación
+      modalConfirmarEliminar.close();
+
+      // Recargamos la lista para actualizar la UI
+      await cargarInvestigadores();
+    });
+
+    async function eliminarInvestigador(id) {
+      const respuesta = await fetch("/api/investigadores/eliminar", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
+
+      const resultado = await respuesta.json();
+
+      if (resultado.ok) {
+        showMessage("Investigador eliminado correctamente", "success");
+        // Aquí podrías volver a cargar la lista o actualizar la UI
       } else {
-        mensaje = "No se encontraron investigadores.";
+        showMessage("Error al eliminar: " + resultado.error, "error");
       }
+    }
+    //###################################################################################################
 
-      mensajeVacio.textContent = mensaje;
-      mensajeVacio.classList.remove("hidden");
-      return;
+    //###############################################################################################
+    //MOSTRAR INVESTIGADORES Y RENDERIZARLOS
+    function listaConViñetas(titulo: string, items: string[]) {
+      return `<b>${titulo}</b>
+          <ul class="list-disc list-inside pl-5 space-y-1">
+            ${items.map((i) => `<li>${i}</li>`).join("")}
+          </ul>`;
     }
 
-    mensajeVacio.classList.add("hidden");
+    function mostrarModalInvestigador(inv) {
+      const modal = document.getElementById(
+        "modalInvestigador"
+      ) as HTMLDialogElement;
+      document.getElementById("modalNombre")!.textContent = inv.nombre;
+      document.getElementById("modalCorreo")!.textContent = inv.email;
+      document.getElementById("modalCategoria")!.textContent = inv.categoria;
+      document.getElementById("modalCreado")!.textContent = inv.creado_en;
+      document.getElementById("modalActualizacion")!.textContent =
+        inv.actualizacion;
+      document.getElementById("modalCargo")!.textContent = inv.cargo;
+      document.getElementById("modalImagen")!.src = `${inv.foto}`;
+      // Nuevos campos
+      document.getElementById("modalAdscripciones")!.innerHTML =
+        inv.adscripciones
+          ? listaConViñetas("Adscripciones:", inv.adscripciones)
+          : "No se ingresaron Adscripciones";
 
-    filtrados.forEach((inv) => {
-      const card = document.createElement("div");
-      card.className =
-        "border border-gray-300 p-4 rounded-lg shadow-sm bg-white flex justify-between items-center";
+      document.getElementById("modalResena")!.textContent = inv.resena
+        ? `${inv.resena}`
+        : "No se ingreso una reseña";
 
-      const infoDiv = document.createElement("div");
-      infoDiv.className = "flex items-center gap-4 cursor-pointer";
-      infoDiv.innerHTML = `
+      // Listas dinámicas
+      document.getElementById("modalEspecialidad")!.innerHTML = inv.especialidad
+        ?.length
+        ? listaConViñetas("Especialidad:", inv.especialidad)
+        : "No se ingresaron especialidades";
+      document.getElementById("modalTelefonos")!.innerHTML = inv.telefonos
+        ?.length
+        ? listaConViñetas("Teléfonos:", inv.telefonos)
+        : "No se ingresaron números de telefonos";
+
+      document.getElementById("modalOtrosCorreos")!.innerHTML = inv.otrosCorreos
+        ?.length
+        ? listaConViñetas("Otros correos:", inv.otrosCorreos)
+        : "No se ingresaron otros correos";
+
+      document.getElementById("modalReconocimientos")!.innerHTML = inv
+        .reconocimientos?.length
+        ? listaConViñetas("Reconocimientos:", inv.reconocimientos)
+        : "No se ingresaron reconociminetos";
+
+      document.getElementById("modalEducacion")!.innerHTML = inv.educacion
+        ?.length
+        ? listaConViñetas("Educación:", inv.educacion)
+        : "No se ingresó la educación";
+
+      document.getElementById("modalRedesTrabajo")!.innerHTML = inv.redesTrabajo
+        ?.length
+        ? listaConViñetas("Redes de trabajo:", inv.redesTrabajo)
+        : "No se ingresaron redes de trabajo";
+
+      // Redes sociales dinámicas
+      const contenedorRedes = document.getElementById("modalRedes")!;
+      contenedorRedes.innerHTML = ""; // limpiar
+
+      const redes = inv.redesSociales || []; // Array de objetos { nombre, url }
+
+      redes.forEach((red: { nombre: string; url: string }) => {
+        let iconClass = "mdi mdi-web";
+        let color = "text-gray-600"; // color por defecto
+
+        try {
+          const hostname = new URL(red.url).hostname.toLowerCase();
+
+          if (hostname.includes("facebook.com")) {
+            iconClass = "mdi mdi-facebook";
+            color = "text-blue-600";
+          } else if (
+            hostname.includes("twitter.com") ||
+            hostname.includes("x.com")
+          ) {
+            iconClass = "mdi mdi-twitter";
+            color = "text-sky-500";
+          } else if (hostname.includes("linkedin.com")) {
+            iconClass = "mdi mdi-linkedin";
+            color = "text-blue-700";
+          } else if (hostname.includes("instagram.com")) {
+            iconClass = "mdi mdi-instagram";
+            color = "text-pink-500";
+          } else if (hostname.includes("researchgate.net")) {
+            iconClass = "mdi mdi-web";
+            color = "text-green-700";
+          } else if (hostname.includes("scholar.google.com")) {
+            iconClass = "mdi mdi-google";
+            color = "text-red-600";
+          } else if (hostname.includes("academia.edu")) {
+            iconClass = "mdi mdi-school";
+            color = "text-indigo-600";
+          } else if (hostname.includes("mendeley.com")) {
+            iconClass = "mdi mdi-book-open";
+            color = "text-teal-600";
+          } else if (hostname.includes("orcid.org")) {
+            iconClass = "mdi mdi-web";
+            color = "text-green-600";
+          } else if (hostname.includes("github.com")) {
+            iconClass = "mdi mdi-github";
+            color = "text-gray-800";
+          } else if (hostname.includes("gitlab.com")) {
+            iconClass = "mdi mdi-gitlab";
+            color = "text-orange-600";
+          } else if (hostname.includes("loop.frontiersin.org")) {
+            iconClass = "mdi mdi-web";
+            color = "text-purple-600";
+          } else if (hostname.includes("mysciencework.com")) {
+            iconClass = "mdi mdi-flask";
+            color = "text-orange-600";
+          } else if (hostname.includes("methodspace.com")) {
+            iconClass = "mdi mdi-lightbulb-on-outline";
+            color = "text-yellow-600";
+          } else if (hostname.includes("plazascience.com")) {
+            iconClass = "mdi mdi-atom";
+            color = "text-red-500";
+          } else if (hostname.includes("divulgared.es")) {
+            iconClass = "mdi mdi-earth";
+            color = "text-green-500";
+          } else if (hostname.includes("feelsynapsis.com")) {
+            iconClass = "mdi mdi-brain";
+            color = "text-purple-500";
+          } else if (hostname.includes("researcherid.com")) {
+            iconClass = "mdi mdi-account";
+            color = "text-indigo-500";
+          } else if (hostname.includes("figshare.com")) {
+            iconClass = "mdi mdi-cloud-upload";
+            color = "text-cyan-600";
+          } else if (hostname.includes("zenodo.org")) {
+            iconClass = "mdi mdi-cloud";
+            color = "text-cyan-500";
+          } else if (hostname.includes("osf.io")) {
+            iconClass = "mdi mdi-database";
+            color = "text-teal-500";
+          } else if (hostname.includes("slideshare.net")) {
+            iconClass = "mdi mdi-presentation";
+            color = "text-orange-500";
+          } else if (hostname.includes("dryad.org")) {
+            iconClass = "mdi mdi-folder-open";
+            color = "text-yellow-500";
+          } else if (hostname.includes("publons.com")) {
+            iconClass = "mdi mdi-web";
+            color = "text-indigo-400";
+          } else if (hostname.includes("webofscience.com")) {
+            iconClass = "mdi mdi-web";
+            color = "text-blue-400";
+          } else if (hostname.includes("youtube.com")) {
+            iconClass = "mdi mdi-youtube";
+            color = "text-red-500";
+          } else if (hostname.includes("vimeo.com")) {
+            iconClass = "mdi mdi-vimeo";
+            color = "text-blue-400";
+          } else if (hostname.includes("patreon.com")) {
+            iconClass = "mdi mdi-currency-usd";
+            color = "text-orange-600";
+          } else if (hostname.includes("ko-fi.com")) {
+            iconClass = "mdi mdi-coffee";
+            color = "text-pink-500";
+          }
+        } catch (e) {
+          console.warn("URL inválida:", red.url);
+        }
+
+        contenedorRedes.innerHTML += `
+      <a href="${red.url}" target="_blank" title="${red.nombre}" class="mx-1">
+        <i class="${iconClass} ${color} text-2xl hover:scale-110 transition-transform duration-200"></i>
+      </a>
+    `;
+      });
+
+      document.getElementById("modalCV")!.setAttribute("src", inv.cv || "");
+
+      modal.showModal();
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+    });
+
+    function renderInvestigadores() {
+      const categoriaSeleccionada = filtroCategoria.value.toLowerCase();
+      const textoBusqueda = filtroNombre.value.toLowerCase();
+      const mensajeVacio = document.getElementById("mensajeVacio");
+
+      const filtrados = investigadores.filter((inv) => {
+        const coincideCategoria =
+          !categoriaSeleccionada ||
+          inv.categoria?.toLowerCase() === categoriaSeleccionada;
+        const coincideNombre = inv.nombre
+          ?.toLowerCase()
+          .includes(textoBusqueda);
+        return coincideCategoria && coincideNombre;
+      });
+
+      listaInvestigadores.innerHTML = "";
+
+      if (filtrados.length === 0) {
+        let mensaje = "";
+
+        if (investigadores.length === 0) {
+          mensaje = "No hay investigadores registrados aún.";
+        } else if (categoriaSeleccionada && textoBusqueda) {
+          mensaje = `No se encontraron investigadores en la categoría "${categoriaSeleccionada}" que coincidan con "${textoBusqueda}".`;
+        } else if (categoriaSeleccionada) {
+          mensaje = `No hay investigadores en la categoría "${categoriaSeleccionada}".`;
+        } else if (textoBusqueda) {
+          mensaje = `No se encontró ningún investigador con el nombre "${textoBusqueda}".`;
+        } else {
+          mensaje = "No se encontraron investigadores.";
+        }
+
+        mensajeVacio.textContent = mensaje;
+        mensajeVacio.classList.remove("hidden");
+        return;
+      }
+
+      mensajeVacio.classList.add("hidden");
+
+      filtrados.forEach((inv) => {
+        const card = document.createElement("div");
+        card.className =
+          "border border-gray-300 p-4 rounded-lg shadow-sm bg-white flex justify-between items-center";
+
+        const infoDiv = document.createElement("div");
+        infoDiv.className = "flex items-center gap-4 cursor-pointer";
+        infoDiv.innerHTML = `
       <img src="${inv.foto}" class="w-16 h-16 rounded-full object-cover border" />
       <div>
         <h3 class="text-sm sm:text-sm md:text-lg lg:text-lg font-semibold">${inv.nombre}</h3>
-        <p class="text-sm text-gray-700">${inv.email}</p>
-        <p class="text-sm text-gray-600">${inv.departamento || ""}</p>
-        <p class="text-sm text-gray-500">${inv.descripcion || ""}</p>
+        <p class="text-[12px]  sm:text-[12px] md:text-lg lg:text-md text-gray-700">${inv.email}</p>
+        <p class="text-[12px]  sm:text-[12px] md:text-lg lg:text-md text-gray-500">${inv.categoria}</p>
       </div>
     `;
-      infoDiv.addEventListener("click", () => mostrarModalInvestigador(inv));
+        infoDiv.addEventListener("click", () => mostrarModalInvestigador(inv));
 
-      const botones = document.createElement("div");
-      botones.className = "flex flex-col sm:flex-row gap-2 ";
+        const botones = document.createElement("div");
+        botones.className = "flex flex-col sm:flex-row gap-2 ";
 
-      const btnEditar = document.createElement("button");
-      btnEditar.textContent = "Editar";
-      btnEditar.className =
-        "px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600";
-      btnEditar.addEventListener("click", () => editarInvestigador(inv._id));
+        const btnEditar = document.createElement("button");
+        btnEditar.textContent = "Editar";
+        btnEditar.className =
+          "px-3 py-1 bg-white text-gray-800 border border-gray-800 rounded hover:bg-gray-300 transition-colors duration-200";
+        btnEditar.addEventListener("click", () => editarInvestigador(inv._id));
 
-      const btnEliminar = document.createElement("button");
-      btnEliminar.textContent = "Eliminar";
-      btnEliminar.className =
-        "px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700";
-      btnEliminar.addEventListener("click", () =>
-        prepararEliminarInvestigador(inv._id)
-      );
+        const btnEliminar = document.createElement("button");
+        btnEliminar.textContent = "Eliminar";
+        btnEliminar.className =
+          "px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors duration-200";
+        btnEliminar.addEventListener("click", () =>
+          prepararEliminarInvestigador(inv._id)
+        );
 
-      botones.appendChild(btnEditar);
-      botones.appendChild(btnEliminar);
+        botones.appendChild(btnEditar);
+        botones.appendChild(btnEliminar);
 
-      card.appendChild(infoDiv);
-      card.appendChild(botones);
-      listaInvestigadores.appendChild(card);
-    });
-  }
-
-  cargarInvestigadores();
-
-  //###############################################################################################
-
-  //FUncion para mostrar mesanje personalizado
-  function showMessage(mensaje, tipo = "info") {
-    // Crear contenedor si no existe
-    let contenedor = document.getElementById("message-container");
-    if (!contenedor) {
-      contenedor = document.createElement("div");
-      contenedor.id = "message-container";
-      contenedor.style.position = "fixed";
-      contenedor.style.top = "80px";
-      contenedor.style.left = "50%";
-      contenedor.style.transform = "translateX(-50%)";
-      contenedor.style.zIndex = "999999999";
-      document.body.appendChild(contenedor);
+        card.appendChild(infoDiv);
+        card.appendChild(botones);
+        listaInvestigadores.appendChild(card);
+      });
     }
 
-    // Crear el mensaje
-    const mensajeElem = document.createElement("div");
-    mensajeElem.textContent = mensaje;
-    mensajeElem.style.marginBottom = "10px";
-    mensajeElem.style.padding = "12px 20px";
-    mensajeElem.style.borderRadius = "5px";
-    mensajeElem.style.color = "white";
-    mensajeElem.style.minWidth = "200px";
-    mensajeElem.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
-    mensajeElem.style.fontWeight = "600";
-    mensajeElem.style.fontFamily = "sans-serif";
-    mensajeElem.style.cursor = "default";
-    mensajeElem.style.opacity = "1";
-    mensajeElem.style.transition = "opacity 0.5s ease";
-    mensajeElem.style.position = "relative";
-    mensajeElem.style.zIndex = "999999999";
+    cargarInvestigadores();
 
-    // Colores según tipo
-    switch (tipo) {
-      case "success":
-        mensajeElem.style.backgroundColor = "#28a745";
-        break;
-      case "error":
-        mensajeElem.style.backgroundColor = "#dc3545";
-        break;
-      case "info":
-      default:
-        mensajeElem.style.backgroundColor = "#007bff";
-        break;
-    }
+    //###############################################################################################
 
-    contenedor.appendChild(mensajeElem);
+    //FUncion para mostrar mesanje personalizado
+    function showMessage(mensaje, tipo = "info") {
+      // Crear contenedor si no existe
+      let contenedor = document.getElementById("message-container");
+      if (!contenedor) {
+        contenedor = document.createElement("div");
+        contenedor.id = "message-container";
+        contenedor.style.position = "fixed";
+        contenedor.style.top = "80px";
+        contenedor.style.left = "50%";
+        contenedor.style.transform = "translateX(-50%)";
+        contenedor.style.zIndex = "999999999";
+        document.body.appendChild(contenedor);
+      }
 
-    // Desaparece después de 3 segundos
-    setTimeout(() => {
-      mensajeElem.style.opacity = "0";
+      // Crear el mensaje
+      const mensajeElem = document.createElement("div");
+      mensajeElem.textContent = mensaje;
+      mensajeElem.style.marginBottom = "10px";
+      mensajeElem.style.padding = "12px 20px";
+      mensajeElem.style.borderRadius = "5px";
+      mensajeElem.style.color = "white";
+      mensajeElem.style.minWidth = "200px";
+      mensajeElem.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
+      mensajeElem.style.fontWeight = "600";
+      mensajeElem.style.fontFamily = "sans-serif";
+      mensajeElem.style.cursor = "default";
+      mensajeElem.style.opacity = "1";
+      mensajeElem.style.transition = "opacity 0.5s ease";
+      mensajeElem.style.position = "relative";
+      mensajeElem.style.zIndex = "999999999";
+
+      // Colores según tipo
+      switch (tipo) {
+        case "success":
+          mensajeElem.style.backgroundColor = "#28a745";
+          break;
+        case "error":
+          mensajeElem.style.backgroundColor = "#dc3545";
+          break;
+        case "info":
+        default:
+          mensajeElem.style.backgroundColor = "#007bff";
+          break;
+      }
+
+      contenedor.appendChild(mensajeElem);
+
+      // Desaparece después de 3 segundos
       setTimeout(() => {
-        mensajeElem.remove();
-      }, 500);
-    }, 3000);
-  }
+        mensajeElem.style.opacity = "0";
+        setTimeout(() => {
+          mensajeElem.remove();
+        }, 500);
+      }, 3000);
+    }
 
-  // Funcion para filtrar por categoria
-  filtroCategoria.addEventListener("change", renderInvestigadores);
-  filtroNombre.addEventListener("input", () => {
-    if (filtroNombre.value.length > 0) {
-      btnLimpiarFiltroNombre.style.display = "block";
-    } else {
+    // Funcion para filtrar por categoria
+    filtroCategoria.addEventListener("change", renderInvestigadores);
+    filtroNombre.addEventListener("input", () => {
+      if (filtroNombre.value.length > 0) {
+        btnLimpiarFiltroNombre.style.display = "block";
+      } else {
+        btnLimpiarFiltroNombre.style.display = "none";
+      }
+      renderInvestigadores();
+    });
+
+    // Boton para limpiar filtro de nombre
+    btnLimpiarFiltroNombre.addEventListener("click", () => {
+      filtroNombre.value = "";
       btnLimpiarFiltroNombre.style.display = "none";
-    }
-    renderInvestigadores();
-  });
+      filtroNombre.focus();
+      renderInvestigadores();
+    });
 
-  // Boton para limpiar filtro de nombre
-  btnLimpiarFiltroNombre.addEventListener("click", () => {
-    filtroNombre.value = "";
-    btnLimpiarFiltroNombre.style.display = "none";
-    filtroNombre.focus();
-    renderInvestigadores();
-  });
-
-  //datalles par evitar que se envien muchas peticiones al servidor
-  function mostrarSpinnerEnBoton(boton) {
-    const texto = boton.querySelector(".btn-text");
-    const spinner = boton.querySelector(".btn-spinner");
-    if (texto && spinner) {
-      texto.classList.add("hidden");
-      spinner.classList.remove("hidden");
-      boton.disabled = true;
+    //datalles par evitar que se envien muchas peticiones al servidor
+    function mostrarSpinnerEnBoton(boton) {
+      const texto = boton.querySelector(".btn-text");
+      const spinner = boton.querySelector(".btn-spinner");
+      if (texto && spinner) {
+        texto.classList.add("hidden");
+        spinner.classList.remove("hidden");
+        boton.disabled = true;
+      }
     }
-  }
 
-  function ocultarSpinnerEnBoton(boton) {
-    const texto = boton.querySelector(".btn-text");
-    const spinner = boton.querySelector(".btn-spinner");
-    if (texto && spinner) {
-      texto.classList.remove("hidden");
-      spinner.classList.add("hidden");
-      boton.disabled = false;
+    function ocultarSpinnerEnBoton(boton) {
+      const texto = boton.querySelector(".btn-text");
+      const spinner = boton.querySelector(".btn-spinner");
+      if (texto && spinner) {
+        texto.classList.remove("hidden");
+        spinner.classList.add("hidden");
+        boton.disabled = false;
+      }
     }
-  }
-</script>
+
+    function formatearFecha(fecha) {
+      const f = new Date(fecha); // Asegura que sea objeto Date
+      const opciones = {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      };
+      return f.toLocaleString("es-ES", opciones);
+    }
+  </script>
+</section>

@@ -2,19 +2,21 @@
 const { TodasLasImagenes } = Astro.props;
 ---
 
-<section id="seccionImagenesInicio" class="relative w-full overflow-hidden h-[50vh] sm:h-[50vh] md:h-[40vh] lg:h-[70vh]">
-  <div class="relative w-full h-full">
-    <div id="carousel" class="flex h-full transition-transform duration-1000 ease-in-out">
+<section id="seccionImagenesInicio" 
+  class="relative w-full flex justify-center py-6 bg-white">
+  
+  <div class="relative w-full max-w-[1000px] aspect-[851/315] overflow-hidden rounded-lg shadow-md">
+    <div id="carousel" class="flex transition-transform duration-1000 ease-in-out h-full">
       {TodasLasImagenes.concat(TodasLasImagenes).map((img) => (
-        <div class="w-full flex-shrink-0 h-full">
-          <img src={img.foto} class="w-full h-full object-cover rounded-lg" />
+        <div class="flex-shrink-0 w-full h-full">
+          <img src={img.foto} class="w-full h-full object-contain" />
         </div>
       ))}
     </div>
 
     <!-- Flechas -->
-    <button id="prevBtn" class="absolute top-1/2 left-0 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 z-30">&#10094;</button>
-    <button id="nextBtn" class="absolute top-1/2 right-0 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 z-30">&#10095;</button>
+    <button id="prevBtn" class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70">&#10094;</button>
+    <button id="nextBtn" class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70">&#10095;</button>
   </div>
 </section>
 

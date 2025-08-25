@@ -6,10 +6,10 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo, decanato, plumaLogo,remiLogo } =
 <!-- Se muestra cuando esta en laptop y tablet -->
 <header
   id="mainHeader"
-  class="w-full z-50 transition-colors duration-300 text-white shadow-none"
+  class="w-full z-50 transition-colors duration-300 text-[#1D2D50] shadow-none"
 >
   <!-- FILA 1 - LOGOS -->
-  <div class="flex flex-col sm:flex-row items-center py-3 justify-center bg-[#283886]">
+  <div class="flex flex-col sm:flex-row items-center py-3 justify-center bg-white">
     <!-- Logo + Texto -->
     <div class="flex items-center">
       <a href="/">
@@ -56,7 +56,7 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo, decanato, plumaLogo,remiLogo } =
 
       <a href="/" class="flex items-center h-20">
         <img
-          src={uesLogoBlanco.src}
+          src={uesLogoRojo.src}
           alt="uesLogo"
           title="Universidad de El Salvador"
           class="h-10 sm:h-10 md:h-10 lg:h-15 transition-all duration-300 hover:scale-105 hover:brightness-110"
@@ -67,7 +67,7 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo, decanato, plumaLogo,remiLogo } =
 
   <!-- FILA 2 - MENU -->
   <!-- Menú para pantallas grandes -->
-  <div class="flex items-center justify-center py-1 bg-[#1D2D50]">
+  <div class="flex items-center justify-center py-1 bg-gray-100 text-[#1D2D50]">
     <!-- Menu para pantallas grandes -->
     <div class="hidden sm:block mr-10 md:mr-5">
       <ul class="menu menu-horizontal px-1" id="menuPrincipal">
