@@ -1,0 +1,10 @@
+---
+import LayoutAdmin from "../../layouts/Layout_admin.astro";
+import SeccionLibrosAdmin from "../../components/componentes_admin/libros/apartado_libros_admin.vue";
+---
+
+<LayoutAdmin>
+  <main>
+    <SeccionLibrosAdmin client:load />
+  </main>
+</LayoutAdmin>
