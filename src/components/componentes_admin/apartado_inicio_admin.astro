@@ -56,8 +56,10 @@
 
           <!-- Botones -->
           <div class="flex justify-end gap-2">
-            <button type="button" class="btn border-1 border-blue-900" id="btnCancelarAgregar"
-              >Cancelar</button
+            <button
+              type="button"
+              class="btn border-1 border-blue-900"
+              id="btnCancelarAgregar">Cancelar</button
             >
             <button
               type="button"
@@ -79,9 +81,15 @@
           ¿Estás seguro de que deseas agregar esta imagen al carrusel?
         </p>
         <div class="flex justify-end gap-2">
-          <button id="btnCancelarConfirmarAgregar" class="btn border-1 border-blue-900">Cancelar</button>
-          <button id="btnConfirmarAgregar" class="btn bg-blue-900 text-white hover:bg-blue-700">
-            <span class="btn-text ">Confirmar Guardar</span>
+          <button
+            id="btnCancelarConfirmarAgregar"
+            class="btn border-1 border-blue-900">Cancelar</button
+          >
+          <button
+            id="btnConfirmarAgregar"
+            class="btn bg-blue-900 text-white hover:bg-blue-700"
+          >
+            <span class="btn-text">Confirmar Guardar</span>
             <span class="btn-spinner hidden loading loading-spinner loading-sm"
             ></span>
           </button>
@@ -145,8 +153,10 @@
 
           <!-- Botones -->
           <div class="flex justify-end gap-2">
-            <button type="button" class="btn border-1 border-blue-900" id="btnCancelarEditar"
-              >Cancelar</button
+            <button
+              type="button"
+              class="btn border-1 border-blue-900"
+              id="btnCancelarEditar">Cancelar</button
             >
             <button
               type="button"
@@ -168,8 +178,14 @@
           ¿Deseas confirmar los cambios en esta imagen del carrusel?
         </p>
         <div class="flex justify-end gap-2">
-          <button id="btnCancelarConfirmarEditar" class="btn border-1 border-blue-900">Cancelar</button>
-          <button id="btnConfirmarEditar" class="btn bg-blue-900 hover:bg-blue-700 text-white">
+          <button
+            id="btnCancelarConfirmarEditar"
+            class="btn border-1 border-blue-900">Cancelar</button
+          >
+          <button
+            id="btnConfirmarEditar"
+            class="btn bg-blue-900 hover:bg-blue-700 text-white"
+          >
             <span class="btn-text">Confirmar Cambios</span>
             <span class="btn-spinner hidden loading loading-spinner loading-sm"
             ></span>
@@ -186,9 +202,14 @@
           ¿Estás seguro de que deseas eliminar esta imagen del carrusel?
         </p>
         <div class="flex justify-end gap-2">
-          <button id="btnCancelarConfirmarEliminar" class="btn border-1 border-blue-900">Cancelar</button
+          <button
+            id="btnCancelarConfirmarEliminar"
+            class="btn border-1 border-blue-900">Cancelar</button
           >
-          <button id="btnConfirmarEliminar" class="btn bg-blue-900 hover:bg-blue-700 text-white">
+          <button
+            id="btnConfirmarEliminar"
+            class="btn bg-blue-900 hover:bg-blue-700 text-white"
+          >
             <span class="btn-text">Eliminar</span>
             <span class="btn-spinner hidden loading loading-spinner loading-sm"
             ></span>
@@ -245,14 +266,53 @@
   }
 
   // Previsualización de la imagen
+  const MAX_IMAGEN_MB = 5; // tamaño máximo en MB
+  const validImageTypes = ["image/png", "image/jpeg"];
+  const validExtensions = [".png", ".jpg", ".jpeg"];
+
   inputImagen.addEventListener("change", (e) => {
     const file = e.target.files[0];
-    if (file) {
-      previewImagen.src = URL.createObjectURL(file);
-      previewImagen.classList.remove("hidden");
-    } else {
+    if (!file) {
+      previewImagen.src = "";
       previewImagen.classList.add("hidden");
+      return;
     }
+
+    // Validar tamaño
+    const sizeMB = file.size / (1024 * 1024);
+    if (sizeMB > MAX_IMAGEN_MB) {
+      alert(`La imagen no puede superar los ${MAX_IMAGEN_MB} MB.`);
+      e.target.value = "";
+      previewImagen.src = "";
+      previewImagen.classList.add("hidden");
+      return;
+    }
+
+    // Validar tipo MIME
+    if (!validImageTypes.includes(file.type)) {
+      alert("Solo se permiten imágenes PNG o JPG.");
+      e.target.value = "";
+      previewImagen.src = "";
+      previewImagen.classList.add("hidden");
+      return;
+    }
+
+    // Validar extensión
+    const fileName = file.name.toLowerCase();
+    const hasValidExtension = validExtensions.some((ext) =>
+      fileName.endsWith(ext)
+    );
+    if (!hasValidExtension) {
+      alert("La imagen debe tener extensión .png o .jpg");
+      e.target.value = "";
+      previewImagen.src = "";
+      previewImagen.classList.add("hidden");
+      return;
+    }
+
+    // Previsualizar si es válido
+    previewImagen.src = URL.createObjectURL(file);
+    previewImagen.classList.remove("hidden");
   });
 
   //##########################################################################################################
@@ -290,31 +350,31 @@
     modalConfirmarAgregar.close()
   );
 
-function generarIdAleatorio(longitud = 10) {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let id = "";
-  for (let i = 0; i < longitud; i++) {
-    const index = Math.floor(Math.random() * chars.length);
-    id += chars[index];
-  }
-  return `imagen_${id}`; // prefijo para identificar tipo
-}
-
- async function generarIdUnico() {
-  let idUnico = "";
-  let existe = true;
-
-  while (existe) {
-    idUnico = generarIdAleatorio(12); // 12 caracteres aleatorios
-
-    // Verifica si ya existe en CouchDB
-    const res = await fetch(`/cimu/${idUnico}`);
-    existe = res.ok; // true si ya existe
+  function generarIdAleatorio(longitud = 10) {
+    const chars =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let id = "";
+    for (let i = 0; i < longitud; i++) {
+      const index = Math.floor(Math.random() * chars.length);
+      id += chars[index];
+    }
+    return `imagen_${id}`; // prefijo para identificar tipo
   }
 
-  return idUnico;
-}
+  async function generarIdUnico() {
+    let idUnico = "";
+    let existe = true;
 
+    while (existe) {
+      idUnico = generarIdAleatorio(12); // 12 caracteres aleatorios
+
+      // Verifica si ya existe en CouchDB
+      const res = await fetch(`/cimu/${idUnico}`);
+      existe = res.ok; // true si ya existe
+    }
+
+    return idUnico;
+  }
 
   // Boton para guardar imagen
   btnConfirmarAgregar.addEventListener("click", async () => {
@@ -461,13 +521,48 @@ function generarIdAleatorio(longitud = 10) {
 
   // Preview nueva imagen
   inputNuevaImagen.addEventListener("change", (e: any) => {
-    const file = e.target.files[0];
-    if (file) {
-      previewNuevaEditar.src = URL.createObjectURL(file);
-      previewNuevaEditar.classList.remove("hidden");
-    } else {
+    const file = e.target.files?.[0];
+    if (!file) {
+      previewNuevaEditar.src = "";
       previewNuevaEditar.classList.add("hidden");
+      return;
     }
+
+    // Validar tamaño
+    const sizeMB = file.size / (1024 * 1024);
+    if (sizeMB > MAX_IMAGEN_MB) {
+      alert(`La imagen no puede superar los ${MAX_IMAGEN_MB} MB.`);
+      e.target.value = "";
+      previewNuevaEditar.src = "";
+      previewNuevaEditar.classList.add("hidden");
+      return;
+    }
+
+    // Validar tipo MIME
+    if (!validImageTypes.includes(file.type)) {
+      alert("Solo se permiten imágenes PNG o JPG.");
+      e.target.value = "";
+      previewNuevaEditar.src = "";
+      previewNuevaEditar.classList.add("hidden");
+      return;
+    }
+
+    // Validar extensión
+    const fileName = file.name.toLowerCase();
+    const hasValidExtension = validExtensions.some((ext) =>
+      fileName.endsWith(ext)
+    );
+    if (!hasValidExtension) {
+      alert("La imagen debe tener extensión .png o .jpg");
+      e.target.value = "";
+      previewNuevaEditar.src = "";
+      previewNuevaEditar.classList.add("hidden");
+      return;
+    }
+
+    // Si pasa todas las validaciones, mostrar previsualización
+    previewNuevaEditar.src = URL.createObjectURL(file);
+    previewNuevaEditar.classList.remove("hidden");
   });
 
   // Validar antes de abrir confirmación
@@ -568,67 +663,69 @@ function generarIdAleatorio(longitud = 10) {
 
   //###############################################################################################################
   //CODIGO PARA ELIMINAR LA IMAGEN
-let idImagenAEliminar = null;
+  let idImagenAEliminar = null;
 
-// Botón cancelar eliminar (cierra modal)
-btnCancelarConfirmarEliminar.addEventListener("click", () => {
-  modalConfirmarEliminar.close();
-});
+  // Botón cancelar eliminar (cierra modal)
+  btnCancelarConfirmarEliminar.addEventListener("click", () => {
+    modalConfirmarEliminar.close();
+  });
 
-// Preparar eliminación (abrir modal con el id)
-function prepararEliminarImagen(id) {
-  idImagenAEliminar = id;
-  modalConfirmarEliminar.showModal();
-}
-
-// Confirmar eliminar
-btnConfirmarEliminar.addEventListener("click", async () => {
-  const boton = btnConfirmarEliminar;
-  mostrarSpinnerEnBoton(boton);
-
-  if (!idImagenAEliminar) {
-    showMessage("❌ ID inválido para eliminar", "error");
-    ocultarSpinnerEnBoton(boton);
-    return;
+  // Preparar eliminación (abrir modal con el id)
+  function prepararEliminarImagen(id) {
+    idImagenAEliminar = id;
+    modalConfirmarEliminar.showModal();
   }
 
-  // 🔥 Llamada a API para eliminar imagen
-  await eliminarImagenCarrusel(idImagenAEliminar);
+  // Confirmar eliminar
+  btnConfirmarEliminar.addEventListener("click", async () => {
+    const boton = btnConfirmarEliminar;
+    mostrarSpinnerEnBoton(boton);
 
-  // Limpiamos el id
-  idImagenAEliminar = null;
-
-  ocultarSpinnerEnBoton(boton);
-  modalConfirmarEliminar.close();
-
-  // Recargar lista
-  await cargarImagenes();
-});
-
-// Función para eliminar imagen en el servidor
-async function eliminarImagenCarrusel(id) {
-  try {
-    const respuesta = await fetch("/api/inicio/eliminar", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id }),
-    });
-
-    const resultado = await respuesta.json();
-
-    if (resultado.ok) {
-      showMessage("✅ Imagen eliminada correctamente", "success");
-    } else {
-      showMessage("❌ Error al eliminar: " + (resultado.error || "Desconocido"), "error");
+    if (!idImagenAEliminar) {
+      showMessage("❌ ID inválido para eliminar", "error");
+      ocultarSpinnerEnBoton(boton);
+      return;
     }
-  } catch (err) {
-    console.error("❌ Error en eliminarImagenCarrusel:", err);
-    showMessage("❌ Error al conectar con el servidor", "error");
-  }
-}
 
+    // 🔥 Llamada a API para eliminar imagen
+    await eliminarImagenCarrusel(idImagenAEliminar);
+
+    // Limpiamos el id
+    idImagenAEliminar = null;
+
+    ocultarSpinnerEnBoton(boton);
+    modalConfirmarEliminar.close();
+
+    // Recargar lista
+    await cargarImagenes();
+  });
+
+  // Función para eliminar imagen en el servidor
+  async function eliminarImagenCarrusel(id) {
+    try {
+      const respuesta = await fetch("/api/inicio/eliminar", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
+
+      const resultado = await respuesta.json();
+
+      if (resultado.ok) {
+        showMessage("✅ Imagen eliminada correctamente", "success");
+      } else {
+        showMessage(
+          "❌ Error al eliminar: " + (resultado.error || "Desconocido"),
+          "error"
+        );
+      }
+    } catch (err) {
+      console.error("❌ Error en eliminarImagenCarrusel:", err);
+      showMessage("❌ Error al conectar con el servidor", "error");
+    }
+  }
 
   //################################################################################################################
   cargarImagenes();
@@ -663,15 +760,15 @@ async function eliminarImagenCarrusel(id) {
       botones.className = "flex gap-3 mt-2";
 
       const btnEditar = document.createElement("button");
-      btnEditar.textContent = "Editar";
+      btnEditar.textContent = "";
       btnEditar.className =
-        "px-3 py-1 border-1 border-blue-900 text-black rounded hover:bg-gray-200";
+        "px-3 mdi mdi-square-edit-outline text-gray-800 text-3xl transition-transform duration-200 hover:scale-125 hover:text-gray-600";
       btnEditar.addEventListener("click", () => editarImagen(img._id));
 
       const btnEliminar = document.createElement("button");
-      btnEliminar.textContent = "Eliminar";
+      btnEliminar.textContent = "";
       btnEliminar.className =
-        "px-3 py-1 bg-blue-900 text-white rounded hover:bg-blue-700";
+        "px-3 mdi mdi-delete-outline text-red-500 text-3xl transition-transform duration-200 hover:scale-125 hover:text-red-600";
       btnEliminar.addEventListener("click", () =>
         prepararEliminarImagen(img._id)
       );

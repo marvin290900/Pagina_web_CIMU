@@ -1025,39 +1025,62 @@
       limpiarFormularioAgregar();
     });
 
-    const MAX_FOTO_MB = 5; // tamaño máximo de foto
-    const MAX_CV_MB = 5; // tamaño máximo de CV
+    const MAX_FOTO_MB = 5; // Tamaño máximo de foto
+    const MAX_CV_MB = 15; // Tamaño máximo de CV
 
     inputFoto.addEventListener("change", () => {
       const file = inputFoto.files?.[0];
       if (!file) return;
 
+      // Validar tamaño
       const sizeMB = file.size / (1024 * 1024);
       if (sizeMB > MAX_FOTO_MB) {
         alert(`La foto no puede superar los ${MAX_FOTO_MB} MB.`);
-        inputFoto.value = ""; // limpia el input
+        inputFoto.value = "";
         previewFoto.src = "";
         previewFoto.classList.add("hidden");
         return;
       }
 
-      if (file.type.startsWith("image/")) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          previewFoto.src = e.target?.result as string;
-          previewFoto.classList.remove("hidden");
-        };
-        reader.readAsDataURL(file);
-      } else {
+      // Validar tipo MIME
+      const validImageTypes = ["image/png", "image/jpeg"];
+      if (!validImageTypes.includes(file.type)) {
+        alert("Solo se permiten imágenes PNG o JPG.");
+        inputFoto.value = "";
         previewFoto.src = "";
         previewFoto.classList.add("hidden");
+        return;
       }
+
+      // Validar extensión
+      const fileName = file.name.toLowerCase();
+      const validExtensions = [".png", ".jpg", ".jpeg"];
+      const hasValidExtension = validExtensions.some((ext) =>
+        fileName.endsWith(ext)
+      );
+
+      if (!hasValidExtension) {
+        alert("La foto debe tener extensión .png o .jpg");
+        inputFoto.value = "";
+        previewFoto.src = "";
+        previewFoto.classList.add("hidden");
+        return;
+      }
+
+      // Previsualizar si es válido
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previewFoto.src = e.target?.result as string;
+        previewFoto.classList.remove("hidden");
+      };
+      reader.readAsDataURL(file);
     });
 
     inputCV.addEventListener("change", () => {
       const file = inputCV.files?.[0];
       if (!file) return;
 
+      // Validar tamaño
       const sizeMB = file.size / (1024 * 1024);
       if (sizeMB > MAX_CV_MB) {
         alert(`El CV no puede superar los ${MAX_CV_MB} MB.`);
@@ -1067,13 +1090,28 @@
         return;
       }
 
-      if (file.type === "application/pdf") {
-        previewCV.src = URL.createObjectURL(file);
-        previewCV.classList.remove("hidden");
-      } else {
+      // Validar tipo MIME
+      if (file.type !== "application/pdf") {
+        alert("Solo se permiten archivos PDF.");
+        inputCV.value = "";
         previewCV.src = "";
         previewCV.classList.add("hidden");
+        return;
       }
+
+      // Validar extensión
+      const fileName = file.name.toLowerCase();
+      if (!fileName.endsWith(".pdf")) {
+        alert("El CV debe ser un archivo PDF");
+        inputCV.value = "";
+        previewCV.src = "";
+        previewCV.classList.add("hidden");
+        return;
+      }
+
+      // Previsualizar si es válido
+      previewCV.src = URL.createObjectURL(file);
+      previewCV.classList.remove("hidden");
     });
 
     // Boton para guardar investigador
@@ -1452,69 +1490,105 @@
         document.getElementById("edit_cv").classList.remove("hidden");
       });
 
-    // Previsualizar nueva foto
+    // ==================== VALIDACIÓN FOTO EN EDICIÓN ====================
     document.getElementById("edit_foto").addEventListener("change", (e) => {
-  const file = (e.target as HTMLInputElement).files?.[0];
-  const preview = document.getElementById("previewFotoCambiar") as HTMLImageElement;
+      const file = (e.target as HTMLInputElement).files?.[0];
+      const preview = document.getElementById(
+        "previewFotoCambiar"
+      ) as HTMLImageElement;
 
-  if (!file) {
-    preview.src = "";
-    preview.classList.add("hidden");
-    return;
-  }
+      if (!file) {
+        preview.src = "";
+        preview.classList.add("hidden");
+        return;
+      }
 
-  const sizeMB = file.size / (1024 * 1024);
-  if (sizeMB > MAX_FOTO_MB) {
-    alert(`La foto no puede superar los ${MAX_FOTO_MB} MB.`);
-    (e.target as HTMLInputElement).value = "";
-    preview.src = "";
-    preview.classList.add("hidden");
-    return;
-  }
+      // Validar tamaño
+      const sizeMB = file.size / (1024 * 1024);
+      if (sizeMB > MAX_FOTO_MB) {
+        alert(`La foto no puede superar los ${MAX_FOTO_MB} MB.`);
+        (e.target as HTMLInputElement).value = "";
+        preview.src = "";
+        preview.classList.add("hidden");
+        return;
+      }
 
-  if (file.type.startsWith("image/")) {
-    preview.src = URL.createObjectURL(file);
-    preview.classList.remove("hidden");
-  } else {
-    alert("El archivo debe ser una imagen.");
-    (e.target as HTMLInputElement).value = "";
-    preview.src = "";
-    preview.classList.add("hidden");
-  }
-});
+      // Validar tipo MIME
+      const validImageTypes = ["image/png", "image/jpeg"];
+      if (!validImageTypes.includes(file.type)) {
+        alert("Solo se permiten imágenes PNG o JPG.");
+        (e.target as HTMLInputElement).value = "";
+        preview.src = "";
+        preview.classList.add("hidden");
+        return;
+      }
 
+      // Validar extensión
+      const fileName = file.name.toLowerCase();
+      const validExtensions = [".png", ".jpg", ".jpeg"];
+      const hasValidExtension = validExtensions.some((ext) =>
+        fileName.endsWith(ext)
+      );
 
-    // Previsualizar nuevo CV
+      if (!hasValidExtension) {
+        alert("La foto debe tener extensión .png o .jpg");
+        (e.target as HTMLInputElement).value = "";
+        preview.src = "";
+        preview.classList.add("hidden");
+        return;
+      }
+
+      // Previsualizar si es válido
+      preview.src = URL.createObjectURL(file);
+      preview.classList.remove("hidden");
+    });
+
+    // ==================== VALIDACIÓN CV EN EDICIÓN ====================
     document.getElementById("edit_cv").addEventListener("change", (e) => {
-  const file = (e.target as HTMLInputElement).files?.[0];
-  const preview = document.getElementById("previewCVCambiar") as HTMLIFrameElement;
+      const file = (e.target as HTMLInputElement).files?.[0];
+      const preview = document.getElementById(
+        "previewCVCambiar"
+      ) as HTMLIFrameElement;
 
-  if (!file) {
-    preview.src = "";
-    preview.classList.add("hidden");
-    return;
-  }
+      if (!file) {
+        preview.src = "";
+        preview.classList.add("hidden");
+        return;
+      }
 
-  const sizeMB = file.size / (1024 * 1024);
-  if (sizeMB > MAX_CV_MB) {
-    alert(`El CV no puede superar los ${MAX_CV_MB} MB.`);
-    (e.target as HTMLInputElement).value = "";
-    preview.src = "";
-    preview.classList.add("hidden");
-    return;
-  }
+      // Validar tamaño
+      const sizeMB = file.size / (1024 * 1024);
+      if (sizeMB > MAX_CV_MB) {
+        alert(`El CV no puede superar los ${MAX_CV_MB} MB.`);
+        (e.target as HTMLInputElement).value = "";
+        preview.src = "";
+        preview.classList.add("hidden");
+        return;
+      }
 
-  if (file.type === "application/pdf") {
-    preview.src = URL.createObjectURL(file);
-    preview.classList.remove("hidden");
-  } else {
-    alert("El archivo debe ser un PDF.");
-    (e.target as HTMLInputElement).value = "";
-    preview.src = "";
-    preview.classList.add("hidden");
-  }
-});
+      // Validar tipo MIME
+      if (file.type !== "application/pdf") {
+        alert("Solo se permiten archivos PDF.");
+        (e.target as HTMLInputElement).value = "";
+        preview.src = "";
+        preview.classList.add("hidden");
+        return;
+      }
 
+      // Validar extensión
+      const fileName = file.name.toLowerCase();
+      if (!fileName.endsWith(".pdf")) {
+        alert("El CV debe ser un archivo PDF");
+        (e.target as HTMLInputElement).value = "";
+        preview.src = "";
+        preview.classList.add("hidden");
+        return;
+      }
+
+      // Previsualizar si es válido
+      preview.src = URL.createObjectURL(file);
+      preview.classList.remove("hidden");
+    });
 
     function editarInvestigador(id) {
       const inv = investigadores.find((i) => i._id === id);
@@ -2114,15 +2188,15 @@
         botones.className = "flex flex-col sm:flex-row gap-2 ";
 
         const btnEditar = document.createElement("button");
-        btnEditar.textContent = "Editar";
+        btnEditar.textContent = '';
         btnEditar.className =
-          "px-3 py-1 bg-white text-gray-800 border border-gray-800 rounded hover:bg-gray-300 transition-colors duration-200";
+          "px-3 mdi mdi-square-edit-outline text-gray-800 text-3xl transition-transform duration-200 hover:scale-125 hover:text-gray-600";
         btnEditar.addEventListener("click", () => editarInvestigador(inv._id));
 
         const btnEliminar = document.createElement("button");
-        btnEliminar.textContent = "Eliminar";
+        btnEliminar.textContent = "";
         btnEliminar.className =
-          "px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors duration-200";
+          "px-3 mdi mdi-delete-outline text-red-500 text-3xl transition-transform duration-200 hover:scale-125 hover:text-red-600";
         btnEliminar.addEventListener("click", () =>
           prepararEliminarInvestigador(inv._id)
         );
