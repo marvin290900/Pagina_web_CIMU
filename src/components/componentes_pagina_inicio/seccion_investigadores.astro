@@ -29,9 +29,9 @@ const { InvestigadoresDirectivos, imagenDefault } = Astro.props;
             href={`/investigadores/${encodeURIComponent(inv._id)}`}
             class="flex flex-col items-center w-full max-w-xs border-2 border-transparent rounded-xl transition-transform duration-300 hover:scale-105 hover:shadow-2xl hover:border-[#28388659] cursor-pointer"
           >
-            <div class="relative w-28 h-28 flex items-center justify-center mb-2 ">
+            <div class="relative w-30 h-30 flex items-center justify-center mb-2 ">
               <div class="absolute inset-0 rounded-full border-1 border-[#28388659] " />
-              <div class="w-24 h-24 rounded-full overflow-hidden bg-white z-10">
+              <div class="w-28 h-28 rounded-full overflow-hidden bg-white z-10">
                 <img
                   src={
                     inv.foto && inv.foto.trim() !== ""
