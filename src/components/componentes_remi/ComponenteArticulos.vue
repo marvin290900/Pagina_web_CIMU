@@ -1,64 +1,3 @@
-<script setup>
-// Simulación de datos (estos vendrían de CouchDB en el futuro)
-const articulosOriginales = [
-  {
-    "_id": "articulo:2025-08-21:remi-001", 
-  "titulo": "LA DANZA DE LOS CHAPETONES EN EL MUNICIPIO DE PANCHIMALCO",
-  "autores": [
-    "Jaime Ernesto Jiménez Hernández"
-  ],
-  "tipo": "Articulo Original", 
-  "paginas": "28-54",
-  "fecha_publicacion": "2025-08-21",
-  "pdf_url": "/pdfs/danza-chapetones.pdf",
-  "keywords": [
-    "Danza",
-    "Panchimalco",
-    "Historia cultural"
-  ],
-  "estado": "publicado",  
-  "metadata": {
-    "subido_por": "admin",
-    "fecha_creacion": "2025-08-15",
-    "ultima_actualizacion": "2025-08-21"
-  }
-  },
-  
-];
-
-const articulosRevision = [
-  {
-    tipo: "Artículos de revisión",
-    titulo: "EDUCACIÓN AMBIENTAL Y USO SOSTENIBLE DEL AGUA EN REGIONES ÁRIDAS: UNA REVISIÓN BIBLIOMÉTRICA Y SISTEMÁTICA",
-    autores: "Yvonne Cutipa, Delia Mamani",
-    paginas: "93-120",
-    pdf: "/pdfs/educacion-ambiental.pdf"
-  },
-  {
-    tipo: "Artículos de revisión",
-    titulo: "EL CURRÍCULUM, UNA REFLEXIÓN EDUCATIVA DESDE LOS MODELOS DE ENSEÑANZA",
-    autores: "Ana Karla Zetino Escalante",
-    paginas: "121-129",
-    pdf: "/pdfs/curriculum.pdf"
-  }
-];
-
-// FUTURO: Aquí iría la conexión a CouchDB
-/*
-import { onMounted, ref } from 'vue';
-const articulosOriginales = ref([]);
-const articulosRevision = ref([]);
-
-onMounted(async () => {
-  const resOriginales = await fetch('http://tu-couchdb/articulos?tipo=original');
-  articulosOriginales.value = await resOriginales.json();
-
-  const resRevision = await fetch('http://tu-couchdb/articulos?tipo=revision');
-  articulosRevision.value = await resRevision.json();
-});
-*/
-</script>
-
 <template>
   <div class="max-w-4xl mx-auto p-4 space-y-8">
     <!-- Tarjeta Artículos Originales -->
@@ -105,3 +44,66 @@ onMounted(async () => {
 <style scoped>
 /* Puedes personalizar más el diseño aquí si quieres */
 </style>
+
+<script setup>
+const props = defineProps({
+  articulosOriginales: String,
+  articulosRevision: String
+});
+
+  console.log("Articulos Originales Props:", props.articulosOriginales);
+  console.log("Articulos Revision Props:", props.articulosRevision);
+//   "autores": [
+//     "Jaime Ernesto Jiménez Hernández"
+//   ],
+//   "tipo": "Articulo Original", 
+//   "paginas": "28-54",
+//   "fecha_publicacion": "2025-08-21",
+//   "pdf_url": "/pdfs/danza-chapetones.pdf",
+//   "keywords": [
+//     "Danza",
+//     "Panchimalco",
+//     "Historia cultural"
+//   ],
+//   "estado": "publicado",  
+//   "metadata": {
+//     "subido_por": "admin",
+//     "fecha_creacion": "2025-08-15",
+//     "ultima_actualizacion": "2025-08-21"
+//   }
+//   },
+  
+// ];
+
+// const articulosRevision = [
+//   {
+//     tipo: "Artículos de revisión",
+//     titulo: "EDUCACIÓN AMBIENTAL Y USO SOSTENIBLE DEL AGUA EN REGIONES ÁRIDAS: UNA REVISIÓN BIBLIOMÉTRICA Y SISTEMÁTICA",
+//     autores: "Yvonne Cutipa, Delia Mamani",
+//     paginas: "93-120",
+//     pdf: "/pdfs/educacion-ambiental.pdf"
+//   },
+//   {
+//     tipo: "Artículos de revisión",
+//     titulo: "EL CURRÍCULUM, UNA REFLEXIÓN EDUCATIVA DESDE LOS MODELOS DE ENSEÑANZA",
+//     autores: "Ana Karla Zetino Escalante",
+//     paginas: "121-129",
+//     pdf: "/pdfs/curriculum.pdf"
+//   }
+// ];
+
+// FUTURO: Aquí iría la conexión a CouchDB
+
+// import { onMounted, ref } from 'vue';
+// const articulosOriginales = ref([]);
+// const articulosRevision = ref([]);
+// // const autores = ref([]);
+// const volumen = ref(null);
+// onMounted(async () => {
+//   const resOriginales = await fetch('/api/remi/obtener_revista');
+//   const data = await resOriginales.json();
+//   console.log("DATA", data);
+//   volumen.value = data.volumen;
+// });
+
+</script>

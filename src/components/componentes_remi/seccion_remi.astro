@@ -2,24 +2,40 @@
 import portada from "../../assets/remi/remi.png";
 import latinrevLogo from "../../assets/remi/latinrev.jpg"; // logo LatinREV
 import openAccessLogo from "../../assets/remi/open-access.jpg"; // logo Open Access
-import ComponenteArticulos from "./ComponenteArticulos.vue"
+import ComponenteArticulos from "./ComponenteArticulos.vue";
 
+let numero = {};
+let editorial = {};
+let articulosOriginales = [];
+let articulosRevision = [];
 
-const numero = {
-  titulo: "Vol. 3 Núm. 2 (2024): REMI vol.3 número 2 julio-diciembre",
-  descripcion: `REMI es una revista de Acceso Abierto, semestral, gratuita, revisada por pares evaluadores, 
+try {
+  const resOriginales = await fetch(
+    "http://localhost:4321/api/remi/obtener_revista",
+  );
+  const data = await resOriginales.json();
+
+  articulosOriginales = data.data.articulosOriginales;
+  articulosRevision = data.data.articulosRevision;
+  numero = {
+    titulo: data.data.titulo,
+    descripcion: `REMI es una revista de Acceso Abierto, semestral, gratuita, revisada por pares evaluadores, 
   que acepta de forma continua manuscritos de carácter multidisciplinario, 
   sin costo de publicación para los autores.`,
-  publicado: "2025-06-02",
-  enlacePdf: "https://revistas.ues.edu.sv/index.php/remi/issue/view/420/681"
-};
+    publicado: data.data.publicado,
+    enlacePdf: data.data.urlPDF,
+  };
 
-const editorial = {
-  titulo: "APUNTES SOBRE LA REDACCIÓN DE TEXTOS CIENTÍFICOS",
-  autor: "Obed Mejía",
-  paginas: "12-16",
-  enlace: "https://revistas.ues.edu.sv/index.php/remi/article/view/3437/4428"
-};
+  editorial = {
+    titulo: data.data.editorialTitulo,
+    autor: data.data.editorialAutor,
+    paginas: data.data.editorialPaginas,
+    enlace: data.data.editorialPDF,
+  };
+} catch (error) {
+  console.error("Error al obtener los datos:", error);
+}
+console.log("Articulos Originales:", articulosOriginales);
 ---
 
 <div class="max-w-4xl mx-auto mt-4 p-4">
@@ -30,13 +46,13 @@ const editorial = {
   <div class="flex flex-col sm:flex-row gap-6 mt-4">
     <!-- Imagen y botón -->
     <div class="flex flex-col items-center sm:items-start">
-      <img 
-        src={portada.src} 
+      <img
+        src={portada.src}
         alt="Portada REMI"
         class="w-64 rounded-lg shadow-lg"
       />
-      <a 
-        href={numero.enlacePdf} 
+      <a
+        href={numero.enlacePdf}
         class="btn btn-primary mt-4"
         target="_blank"
         rel="noopener noreferrer"
@@ -47,9 +63,11 @@ const editorial = {
 
     <!-- Descripción + indexaciones -->
     <div class="flex-1">
-      <p class="mb-4">REMI es una revista de Acceso Abierto, semestral, gratuita, revisada por pares evaluadores, 
-  que acepta de forma continua manuscritos de carácter multidisciplinario, 
-  sin costo de publicación para los autores.</p>
+      <p class="mb-4">
+        REMI es una revista de Acceso Abierto, semestral, gratuita, revisada por
+        pares evaluadores, que acepta de forma continua manuscritos de carácter
+        multidisciplinario, sin costo de publicación para los autores.
+      </p>
       <p class="font-semibold mb-4">
         Publicado: <span class="font-normal">{numero.publicado}</span>
       </p>
@@ -71,8 +89,8 @@ const editorial = {
         {editorial.autor} — {editorial.paginas}
       </p>
       <div class="card-actions mt-2">
-        <a 
-          href={editorial.enlace} 
+        <a
+          href={editorial.enlace}
           class="btn btn-outline btn-sm"
           target="_blank"
           rel="noopener noreferrer"
@@ -82,7 +100,49 @@ const editorial = {
       </div>
     </div>
   </div>
-  </div>
-  <ComponenteArticulos client:load></ComponenteArticulos>
-
 </div>
+
+
+<div class="max-w-4xl mx-auto p-4 space-y-8">
+  <!-- Tarjeta Artículos Originales -->
+  <div class="bg-white shadow-md rounded-lg p-6">
+    <h2 class="text-lg font-bold border-b pb-2 mb-4">Artículos originales</h2>
+    {articulosOriginales.map((art, index) => (
+      <div key={index} class="mb-6">
+        <h3 class="font-bold text-blue-700"><a href={art.article} target="_blank" rel="noopener noreferrer">{art.tipo} {art.titulo}</a></h3>
+        <p class="text-gray-700">{Array.isArray(art.autor) ? art.autor.join(", ") : art.autor}</p>
+        <div class="flex items-center justify-between mt-2">
+          <a href={art.enlace} target="_blank" class="btn btn-outline btn-sm">
+            📄 Ver PDF
+          </a>
+          <span class="text-gray-500">{art.paginas}</span>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <!-- Tarjeta Artículos de Revisión -->
+  <div class="bg-white shadow-md rounded-lg p-6">
+    <h2 class="text-lg font-bold border-b pb-2 mb-4">Artículos de revisión</h2>
+    {articulosRevision.map((art, index) => (
+      <div key={index} class="mb-6">
+        <h3 class="font-bold text-blue-700"><a href={art.article} target="_blank" rel="noopener noreferrer">{art.tipo} {art.titulo}</a></h3>
+        <p class="text-gray-700">{Array.isArray(art.autor) ? art.autor.join(", ") : art.autor}</p>
+        <div class="flex items-center justify-between mt-2">
+          <a href={art.enlace} target="_blank" class="btn btn-outline btn-sm">
+            📄 Ver PDF
+          </a>
+          <span class="text-gray-500">{art.paginas}</span>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <!-- Información adicional -->
+  <div class="bg-white shadow-md rounded-lg p-6">
+    <p>REMI es una revista de Acceso Abierto, semestral, gratuita, revisada por pares evaluadores, que acepta de forma continua manuscritos de carácter multidisciplinario sin costo de publicación para los autores.</p>
+    <img src="/remi/creativecommon.png" alt="Descripción de la imagen" class="my-4"/>
+    <p>Revista Multidisciplinaria de Investigación por Facultad Multidisciplinaria de Occidente, Universidad de El Salvador se distribuye bajo una Licencia Creative Commons Atribución-NoComercial 4.0 Internacional.</p>
+  </div>
+</div>
+
