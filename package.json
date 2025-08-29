@@ -20,6 +20,7 @@
     "formidable": "^3.5.4",
     "jsdom": "^26.1.0",
     "markdown-it": "^14.1.0",
+    "pdf-thumbnail": "^1.0.6",
     "swiper": "^11.2.8",
     "tailwindcss": "^4.1.10",
     "vue3-markdown-it": "^1.0.10",
