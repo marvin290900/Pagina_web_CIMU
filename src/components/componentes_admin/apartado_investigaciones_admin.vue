@@ -220,6 +220,7 @@ async function guardarInvestigacion() {
       investigacionEditando.value.imagenURL = imagenURL
       previewImage.value = imagenURL
     }
+    
 
     // 2) armar objeto JSON que espera Zod (claves exactas)
     const body = {
@@ -240,7 +241,7 @@ async function guardarInvestigacion() {
     }
 
     // 3) enviar JSON al endpoint validado por Zod
-    const res = await fetch('/api/investigaciones', {
+    const res = await fetch('/api/investigaciones/investigaciones', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
