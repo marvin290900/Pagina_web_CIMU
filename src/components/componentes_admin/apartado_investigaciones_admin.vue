@@ -1,36 +1,24 @@
 <template>
   <section class="p-4">
-    <h1 class="text-2xl font-bold mb-6">Panel de Investigaciones</h1>
+    <h1 class="text-2xl font-bold mb-6">Panel de Investigaciones  </h1>
 
-    <!-- Filtro y botón -->
-    <div class="mb-4 flex flex-col sm:flex-row sm:items-center gap-2">
-      <select v-model="filtroPrograma" class="select select-bordered max-w-xs">
-        <option value="">Todos los programas</option>
-        <option value="sociologico">Sociológicos</option>
-        <option value="juridico">Jurídicos</option>
-        <option value="medio_ambiente">Medio Ambiente</option>
-        <option value="inclusion">Inclusión</option>
-        <option value="laboratorio_publica">Laboratorio Pública</option>
-      </select>
+    <!-- Botón para nueva investigación -->
+    <button @click="abrirModalNueva" class="btn btn-success mb-4">+ Nueva Investigación</button>
 
-      <button @click="abrirModalNueva"
-        class="btn btn-success bg-green-600 text-white bold ml-auto hover:bg-green-700 transition">+ Nueva
-        Investigación</button>
-    </div>
-
-    <!-- Grid de Cards -->
+    <!-- Lista temporal de investigaciones -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      <div v-for="inv in investigacionesFiltradas" :key="inv._id" class="card bg-base-100 shadow-md">
+      <div v-for="(inv, index) in investigaciones" :key="index" class="card bg-base-100 shadow-md">
         <figure>
           <img :src="inv.imagen" alt="imagen" class="object-cover h-48 w-full" />
         </figure>
         <div class="card-body">
           <h2 class="card-title">{{ inv.titulo }}</h2>
+          <p><strong>Autores:</strong> {{ inv.autores.join(", ") }}</p>
           <p><strong>Programa:</strong> {{ inv.programa }}</p>
           <p><strong>Fecha:</strong> {{ formatDate(inv.fecha) }}</p>
           <div class="card-actions justify-end">
-            <button @click="editarInvestigacion(inv)" class="btn btn-sm btn-info">Editar</button>
-            <button @click="eliminarInvestigacion(inv._id, inv._rev)" class="btn btn-sm btn-error">Eliminar</button>
+            <button @click="editarInvestigacion(inv, index)" class="btn btn-sm btn-info">Editar</button>
+            <button @click="eliminarInvestigacion(index)" class="btn btn-sm btn-error">Eliminar</button>
           </div>
         </div>
       </div>
@@ -38,174 +26,149 @@
 
     <!-- Modal -->
     <dialog ref="modal" class="modal">
-      <div class="modal-box">
+      <form method="dialog" class="modal-box w-11/12 max-w-2xl" @submit.prevent="guardarInvestigacion">
         <h3 class="font-bold text-lg mb-4">
-          {{ investigacionEditando?._id ? 'Editar' : 'Nueva' }} Investigación
+          {{ investigacionEditando.index !== null ? 'Editar' : 'Nueva' }} Investigación
         </h3>
-        <form @submit.prevent="guardarInvestigacion" class="space-y-4">
-          <input type="hidden" v-model="investigacionEditando._id" />
-          <input type="hidden" v-model="investigacionEditando._rev" />
 
-          <div>
-            <label class="label">Título</label>
-            <input v-model="investigacionEditando.titulo" type="text" class="input input-bordered w-full" required />
-          </div>
+        <div class="flex flex-col gap-3">
+          <input v-model="investigacionEditando.titulo" type="text" placeholder="Título*"
+            class="input input-bordered w-full" required />
 
-          <div>
-            <label class="label">Descripcion</label>
-            <textarea v-model="investigacionEditando.descripcion"
-              class="textarea textarea-bordered w-full min-h-[120px]"
-              placeholder="Escribe aquí la descripción completa de la investigación..." required />
-          </div>
+          <textarea v-model="investigacionEditando.resumen" maxlength="300"
+            class="textarea textarea-bordered w-full min-h-[120px]"
+            placeholder="Escribe un resumen breve de la investigación..." required></textarea>
+          <p class="text-sm text-gray-500">{{ investigacionEditando.resumen.length }}/300 caracteres</p>
 
-          <div>
-            <label class="label">Autores</label>
-            <input v-model="investigacionEditando.autores" type="text" class="input input-bordered w-full"
-              placeholder="Escribe los nombres de los autores separados por comas" required />
-          </div>
+          <textarea
+    v-model="investigacionEditando.descripcion"
+    maxlength="1000"
+    class="textarea textarea-bordered w-full min-h-[120px]"
+    placeholder="Escribe aquí la descripción completa de la investigación..."
+    required
+  ></textarea>
+  <p class="text-sm text-gray-500">{{ investigacionEditando.descripcion.length }}/1000 caracteres</p>
 
-          <div>
-            <label class="label">Programa</label>
-            <select v-model="investigacionEditando.programa" class="select select-bordered w-full" required>
-              <option value="">Selecciona</option>
-              <option value="sociologico">Sociológicos</option>
-              <option value="juridico">Jurídicos</option>
-              <option value="medio_ambiente">Medio Ambiente</option>
-              <option value="inclusion">Inclusión</option>
-              <option value="laboratorio_publica">Laboratorio Pública</option>
-            </select>
-          </div>
+          <input v-model="autoresInput" type="text" placeholder="Autores (separados por coma)*"
+            class="input input-bordered w-full" required />
 
-          <div>
-            <label class="label">Fecha</label>
-            <input v-model="investigacionEditando.fecha" type="date" class="input input-bordered w-full" required />
-          </div>
+          <select v-model="investigacionEditando.programa" class="select select-bordered w-full" required>
+            <option value="">Selecciona programa</option>
+            <option value="sociologico">Sociológicos</option>
+            <option value="juridico">Jurídicos</option>
+            <option value="medio_ambiente">Medio Ambiente</option>
+            <option value="inclusion">Inclusión</option>
+            <option value="laboratorio_publica">Laboratorio Pública</option>
+          </select>
 
-          <div>
-            <label class="label">Imagen</label>
-            <input type="file" @change="handleFileUpload" accept="image/jpeg,image/jpg,image/png,image/webp "
-              class="file-input file-input-bordered w-full"  />
-            <img v-if="previewImage" :src="previewImage" class="mt-2 w-full h-48 object-cover rounded" />
-          </div>
+          <input v-model="investigacionEditando.fecha" type="date" class="input input-bordered w-full" required />
 
-          <div class="modal-action">
-            <button type="button" class="btn" @click="cerrarModal">Cancelar</button>
-            <button type="submit" class="btn btn-primary">Guardar</button>
-          </div>
-        </form>
-      </div>
+          <input v-model="investigacionEditando.uri" type="text" placeholder="URI (Opcional)" class="input input-bordered w-full" />
+          <input v-model="investigacionEditando.keywords" type="text" placeholder="Palabras Claves*" class="input input-bordered w-full"
+            required />
+
+          <label class="label">Subir PDF</label>
+          <input type="file" @change="handleFileUpload" accept="application/pdf"
+            class="file-input file-input-bordered w-full" />
+          <img v-if="previewImage" :src="previewImage" class="mt-2 w-full h-48 object-cover rounded" />
+        </div>
+
+        <div class="modal-action">
+          <button type="button" class="btn btn-outline" @click="cerrarModal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">{{ investigacionEditando.index !== null ? 'Actualizar' :
+            'Guardar' }}</button>
+        </div>
+      </form>
     </dialog>
   </section>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { couch } from '../../lib/couchDB'
+import { ref } from 'vue'
 
-const filtroPrograma = ref('')
 const investigaciones = ref([])
-const investigacionEditando = ref({})
+const investigacionEditando = ref({ titulo: '', descripcion: '', resumen: '', autores: [], programa: '', fecha: '', imagen: '', index: null, uri: '' })
+const autoresInput = ref('')
+const keywordsInput = ref('')
 const previewImage = ref(null)
 const modal = ref(null)
-let imagenSeleccionada = null
+let pdfSeleccionado = null
 
-async function cargarInvestigaciones() {
-  const res = await fetch('http://68.183.19.227:5984/investigaciones/_all_docs?include_docs=true', {
-    headers: {
-      Authorization: 'Basic ' + btoa('admin:paginawebcimu')
-    }
-  })
-  const data = await res.json()
-  investigaciones.value = data.rows.map(r => r.doc)
-
-
-}
-
-const investigacionesFiltradas = computed(() => {
-  if (!filtroPrograma.value) return investigaciones.value
-  return investigaciones.value.filter(i => i.programa === filtroPrograma.value)
-})
 
 function abrirModalNueva() {
-  investigacionEditando.value = { titulo: '', programa: '', fecha: '', imagen: '', autores: '', descripcion: '' }
+  investigacionEditando.value = { titulo: '', descripcion: '', resumen: '', autores: [], programa: '', fecha: '', imagen: '', index: null, uri: '' }
+  autoresInput.value = ''
   previewImage.value = null
-  imagenSeleccionada = null
+  pdfSeleccionado = null
   modal.value.showModal()
-   console.log('Modal ref:', modal.value)
 }
 
 function cerrarModal() {
   modal.value.close()
 }
 
-function editarInvestigacion(inv) {
-  investigacionEditando.value = { ...inv }
+function editarInvestigacion(inv, index) {
+  investigacionEditando.value = { ...inv, index }
+  autoresInput.value = inv.autores.join(', ')
   previewImage.value = inv.imagen || null
   modal.value.showModal()
 }
 
 function handleFileUpload(event) {
   const file = event.target.files[0]
-  if (file) {
-    const tiposPermitidos = ["image/png", "image/jpeg", "image/webp"];
-    
-     if (!tiposPermitidos.includes(file.type)) {
-    alert("Solo se permiten imágenes PNG, JPEG o WebP");
-    event.target.value = ""; // Limpia el input
-    previewImage.value = null;
-    imagenSeleccionada = null;
-    return;
+  if (!file) return
+  if (file.type !== 'application/pdf') {
+    pdfSeleccionado = null
+    return
   }
-
-    imagenSeleccionada = file
-    previewImage.value = URL.createObjectURL(file)
-    
-  }
+  pdfSeleccionado = file
+  // Ojo: esto no muestra thumbnail, solo ícono/preview temporal
+  previewImage.value = "/pdf-icon.png"
 }
 
 async function guardarInvestigacion() {
-  const data = { ...investigacionEditando.value }
-  const id = data._id || crypto.randomUUID()
-  data.autores = data.autores.split(",").map(a => a.trim())
-  console.log("Datos", data, "id", id);
+  investigacionEditando.value.autores = autoresInput.value.split(',').map(a => a.trim()).filter(a => a)
 
-  if (imagenSeleccionada) {
-    // Simulación: subir imagen a tu backend en el futuro
-    const formData = new FormData()
-    formData.append('file', imagenSeleccionada)
+  // --- Preparar FormData ---
+  const formData = new FormData()
+  formData.append("titulo", investigacionEditando.value.titulo)
+  formData.append("resumen", investigacionEditando.value.resumen)
+  formData.append("descripcion", investigacionEditando.value.descripcion)
+  formData.append("programa", investigacionEditando.value.programa)
+  formData.append("fecha", investigacionEditando.value.fecha)
+  formData.append("uri", investigacionEditando.value.uri)
+  formData.append("keywords", investigacionEditando.value.keywords)
+  formData.append("autores", JSON.stringify(investigacionEditando.value.autores))
 
-    // await fetch('/api/upload', { method: 'POST', body: formData })
-    // const imageUrl = await respuestaDelBackend()
-    const imageUrl = previewImage.value
-    data.imagen = imageUrl
+  if (pdfSeleccionado) {
+    formData.append("pdf", pdfSeleccionado)
   }
 
-  const res = await fetch(`http://68.183.19.227:5984/investigaciones/${id}`, {
-    method: 'PUT',
-    headers: {
-      Authorization: 'Basic ' + btoa('admin:paginawebcimu'),
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-  })
+  try {
+    const res = await fetch("/api/subir_pdf", {
+      method: "POST",
+      body: formData
+    })
 
-  await cargarInvestigaciones()
-  cerrarModal()
+    const data = await res.json()
+    console.log("Respuesta del servidor:", data)
+
+    if (data.ok) {
+      investigaciones.value.push(data.investigacion)
+      cerrarModal()
+    } else {
+      console.error("Error al guardar:", data.error)
+    }
+  } catch (err) {
+    console.error("Error de red:", err)
+  }
 }
 
-async function eliminarInvestigacion(id, rev) {
-  await fetch(`http://68.183.19.227:5984/investigaciones/${id}?rev=${rev}`, {
-    method: 'DELETE',
-    headers: {
-      Authorization: 'Basic ' + btoa('admin:paginawebcimu')
-    }
-  })
-  await cargarInvestigaciones()
+function eliminarInvestigacion(index) {
+  investigaciones.value.splice(index, 1)
 }
 
 function formatDate(fecha) {
-  return new Date(fecha).toLocaleDateString()
+  return fecha ? new Date(fecha).toLocaleDateString() : ''
 }
-
-onMounted(cargarInvestigaciones)
 </script>
