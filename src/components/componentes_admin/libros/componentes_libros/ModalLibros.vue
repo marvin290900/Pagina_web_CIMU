@@ -87,7 +87,7 @@
           <div
             v-for="(palabra, index) in palabrasClave"
             :key="index"
-            class="badge badge-soft badge-info"
+            class="badge badge-soft badge-info py-4 rounded-full"
           >
             {{ palabra }}
             <button
@@ -100,6 +100,9 @@
         </div>
       </div>
     </form>
+    <div v-for="investigador in investigadores" :key="investigador._id">
+      <img :src="investigador.foto" alt="" />
+    </div>
     <div class="modal-action">
       <form method="dialog">
         <!-- if there is a button, it will close the modal -->
@@ -110,9 +113,23 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 const palabrasClave = ref([]);
 const palabraClave = ref("");
+
+const investigadores = ref([]);
+
+const obtenerInvestigadores = () => {
+  fetch("/api/investigadores/obtener")
+    .then((response) => response.json())
+    .then((dataResponse) => {
+      investigadores.value = dataResponse.docs;
+      console.log(dataResponse.docs);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 
 const agregarPalabraClave = () => {
   if (palabraClave.value) {
@@ -134,4 +151,8 @@ const eliminarPalabra = (texto) => {
   );
   console.log(palabrasClave.value);
 };
+
+onMounted(() => {
+  obtenerInvestigadores();
+});
 </script>
