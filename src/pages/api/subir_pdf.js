@@ -72,9 +72,9 @@ export async function POST({ request }) {
         // pdftoppm puede escribir warnings en stderr aunque salga 0
         console.warn("pdftoppm stderr:", stderr.toString());
       }
-
+      const origin = new URL(request.url).origin; 
       const thumbFileName = `${timestamp}-thumb.png`;
-      thumbnailUrl = `/uploads/${carpeta}/${thumbFileName}`;
+      thumbnailUrl = `${origin}/uploads/${carpeta}/${thumbFileName}`;
     } catch (thumbErr) {
       // Si falla la generación (pdftoppm no instalado o fallo) lo registramos y seguimos
       if (String(thumbErr).includes("pdftoppm_no_instalado")) {
@@ -85,7 +85,8 @@ export async function POST({ request }) {
       thumbnailUrl = null;
     }
 
-    const pdfUrl = `/uploads/${carpeta}/${pdfFileName}`;
+    
+    const pdfUrl = `${origin}/uploads/${carpeta}/${pdfFileName}`;
 
     return new Response(JSON.stringify({ ok: true, pdfUrl, thumbnailUrl }), { status: 200, headers: { "Content-Type": "application/json" } });
   } catch (error) {

@@ -220,6 +220,7 @@ async function guardarInvestigacion() {
       investigacionEditando.value.imagenURL = imagenURL
       previewImage.value = imagenURL
     }
+    
 
     // 2) armar objeto JSON que espera Zod (claves exactas)
     const body = {
