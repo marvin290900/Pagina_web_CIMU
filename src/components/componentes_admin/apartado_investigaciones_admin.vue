@@ -8,8 +8,9 @@
     <!-- Lista temporal de investigaciones -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       <div v-for="(inv, index) in investigaciones" :key="index" class="card bg-base-100 shadow-md">
-        <figure>
-          <img v-if="inv.imagenURL" :src="inv.imagenURL" alt="thumbnail" class="object-cover h-48 w-full" />
+        <figure class="bg-gray-50 overflow-hidden rounded">
+          <img v-if="inv.imagenURL" :src="inv.imagenURL" alt="thumbnail"
+            class="w-full h-48 object-contain object-center bg-white" loading="lazy" decoding="async" />
           <div v-else class="h-48 w-full flex items-center justify-center bg-gray-100 text-gray-500">PDF</div>
         </figure>
         <div class="card-body">
@@ -17,7 +18,8 @@
           <p><strong>Autores:</strong> {{ inv.investigadores?.join(", ") }}</p>
           <p><strong>Programa:</strong> {{ inv.programa }}</p>
           <p><strong>Fecha:</strong> {{ formatDate(inv["Fecha de publicacion"]) }}</p>
-          <p v-if="inv.pdfURL" class="truncate">📄 <a :href="inv.pdfURL" target="_blank" class="text-blue-500 underline">Ver PDF</a></p>
+          <p v-if="inv.pdfURL" class="truncate">📄 <a :href="inv.pdfURL" target="_blank"
+              class="text-blue-500 underline">Ver PDF</a></p>
           <div class="card-actions justify-end">
             <button @click="editarInvestigacion(inv, index)" class="btn btn-sm btn-info">Editar</button>
             <button @click="eliminarInvestigacion(index)" class="btn btn-sm btn-error">Eliminar</button>
@@ -42,13 +44,9 @@
             placeholder="Escribe un resumen breve de la investigación..." required></textarea>
           <p class="text-sm text-gray-500">{{ investigacionEditando.resumen.length }}/300 caracteres</p>
 
-          <textarea
-            v-model="investigacionEditando.descripcion"
-            maxlength="1000"
+          <textarea v-model="investigacionEditando.descripcion" maxlength="1000"
             class="textarea textarea-bordered w-full min-h-[120px]"
-            placeholder="Escribe aquí la descripción completa de la investigación..."
-            required
-          ></textarea>
+            placeholder="Escribe aquí la descripción completa de la investigación..." required></textarea>
           <p class="text-sm text-gray-500">{{ investigacionEditando.descripcion.length }}/1000 caracteres</p>
 
           <input v-model="autoresInput" type="text" placeholder="Autores (separados por coma)*"
@@ -65,16 +63,18 @@
 
           <input v-model="investigacionEditando.fecha" type="date" class="input input-bordered w-full" required />
 
-          <input v-model="investigacionEditando.uri" type="text" placeholder="URI (Opcional)" class="input input-bordered w-full" />
-          <input v-model="keywordsInput" type="text" placeholder="Palabras Claves* (ej: A,B,C)" class="input input-bordered w-full"
-            required />
+          <input v-model="investigacionEditando.uri" type="text" placeholder="URI (Opcional)"
+            class="input input-bordered w-full" />
+          <input v-model="keywordsInput" type="text" placeholder="Palabras Claves* (ej: A,B,C)"
+            class="input input-bordered w-full" required />
 
           <label class="label">Subir PDF</label>
           <input type="file" ref="pdfInput" @change="handleFileUpload" accept="application/pdf"
             class="file-input file-input-bordered w-full" />
 
           <div v-if="pdfSeleccionado" class="flex items-center gap-3">
-            <div class="flex-1 text-sm text-gray-600">📄 {{ pdfSeleccionado.name }} ({{ humanFileSize(pdfSeleccionado.size) }})</div>
+            <div class="flex-1 text-sm text-gray-600">📄 {{ pdfSeleccionado.name }} ({{
+              humanFileSize(pdfSeleccionado.size) }})</div>
             <div class="text-sm">{{ uploadStatus }}</div>
           </div>
 
@@ -87,7 +87,8 @@
 
         <div class="modal-action">
           <button type="button" class="btn btn-outline" @click="cerrarModal">Cancelar</button>
-          <button :disabled="saving" type="submit" class="btn btn-primary">{{ saving ? 'Guardando...' : (investigacionEditando.index !== null ? 'Actualizar' : 'Guardar') }}</button>
+          <button :disabled="saving" type="submit" class="btn btn-primary">{{ saving ? 'Guardando...' :
+            (investigacionEditando.index !== null ? 'Actualizar' : 'Guardar') }}</button>
         </div>
       </form>
     </dialog>
@@ -220,7 +221,7 @@ async function guardarInvestigacion() {
       investigacionEditando.value.imagenURL = imagenURL
       previewImage.value = imagenURL
     }
-    
+
 
     // 2) armar objeto JSON que espera Zod (claves exactas)
     const body = {
@@ -277,5 +278,7 @@ function formatDate(fecha) {
 </script>
 
 <style scoped>
-.modal::backdrop { background: rgba(0,0,0,0.5); }
+.modal::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
 </style>
