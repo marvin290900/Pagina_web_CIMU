@@ -166,11 +166,11 @@
             </a>
           </div>
           <div>
-            <p class="text-[#111418] text-base font-medium leading-normal">
+            <p class="font-medium text-xl">
               {{ investigacion.titulo }}
             </p>
             <p class="text-[#637488] text-sm font-normal leading-normal">
-              {{ investigacion.institucion }}
+              {{ investigacion.editorial }}
             </p>
           </div>
         </div>

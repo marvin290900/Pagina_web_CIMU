@@ -5,6 +5,42 @@ import SeccionRemi from "../../components/componentes_remi/seccion_remi.astro";
 
 <Layout>
   <main>
-    <SeccionRemi />
+    <div class="max-w-4xl mx-auto mt-4 p-4 space-y-4 mb-16">
+      <h1 class="text-2xl font-bold mb-4">Contacto</h1>
+
+      <p class="mb-8">
+        Universidad de El salvador. Facultad Multidisciplinaria de Occidente,
+        Santa Ana, El Salvador
+      </p>
+
+      <!-- Row con separación -->
+      <div class="flex flex-row gap-x-12">
+        <div class="contact primary">
+          <h2 class="font-bold mb-2">Contacto principal</h2>
+
+          <div class="name">Marvin Obed Mejía Carmona</div>
+
+          <div class="affiliation">
+            Universidad de El Salvador, Facultad Multidisciplinaria de Occidente
+          </div>
+
+          <div class="text-blue-500 hover:underline">
+            <a href="mailto:obed.mejia@ues.edu.sv">obed.mejia@ues.edu.sv</a>
+          </div>
+        </div>
+
+        <div class="contact support">
+          <h2 class="font-bold mb-2">Contacto de soporte</h2>
+
+          <div class="name">Patricia Gabriela Marroquín de Sosa</div>
+
+          <div class="text-blue-500 hover:underline">
+            <a href="mailto:revista.fmocc@ues.edu.sv">
+              revista.fmocc@ues.edu.sv
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 </Layout>
