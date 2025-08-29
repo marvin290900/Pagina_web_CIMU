@@ -240,7 +240,7 @@ async function guardarInvestigacion() {
     }
 
     // 3) enviar JSON al endpoint validado por Zod
-    const res = await fetch('/api/investigaciones', {
+    const res = await fetch('/api/investigaciones/investigaciones', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
