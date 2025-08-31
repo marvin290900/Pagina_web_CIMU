@@ -77,3 +77,50 @@
       });
     }
   }
+
+  export async function PUT({ request, params }) {
+  try {
+    const id = params.id; // si usas rutas dinámicas tipo /api/investigaciones/[id]
+    if (!id) {
+      return new Response(
+        JSON.stringify({ ok: false, error: "Falta el id" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    const body = await request.json();
+
+    const parsed = InvestigacionSchema.safeParse(body);
+    if (!parsed.success) {
+      return new Response(
+        JSON.stringify({ ok: false, error: parsed.error.flatten() }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // 1. Obtener doc actual
+    const current = await couch.get("investigaciones", id);
+
+    // 2. Construir nuevo doc con _id y _rev
+    const updatedDoc = {
+      ...current.data, // mantenemos lo que ya tenía
+      ...parsed.data,  // sobreescribimos con lo validado
+      _id: id,
+      _rev: current.data._rev,
+    };
+
+    // 3. Guardar en CouchDB
+    const respuesta = await couch.put("investigaciones", id, updatedDoc);
+
+    return new Response(
+      JSON.stringify({ ok: true, data: respuesta.data }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
+    );
+  } catch (error) {
+    console.error("Error al actualizar investigación:", error);
+    return new Response(
+      JSON.stringify({ ok: false, error: String(error) }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
+}

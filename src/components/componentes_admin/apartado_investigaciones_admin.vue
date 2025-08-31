@@ -49,8 +49,32 @@
             placeholder="Escribe aquí la descripción completa de la investigación..." required></textarea>
           <p class="text-sm text-gray-500">{{ investigacionEditando.descripcion.length }}/1000 caracteres</p>
 
-          <input v-model="autoresInput" type="text" placeholder="Autores (separados por coma)*"
-            class="input input-bordered w-full" required />
+          
+          <div ref="dropdownRef">
+            <!-- Input de búsqueda -->
+            <input type="text" v-model="search" placeholder="Investigadores..." class="input input-bordered w-full mb-2"
+              @focus="showDropdown = true" />
+
+            <!-- Lista desplegable -->
+            <ul v-if="showDropdown && filteredOptions.length"
+              class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full mt-1 max-h-48 overflow-y-auto">
+              <li v-for="(option, index) in filteredOptions" :key="index">
+                <button class="w-full text-left" @click="selectOption(option)">
+                  {{ option }}
+                </button>
+              </li>
+            </ul>
+
+            <!-- Opciones seleccionadas -->
+            <div class="flex flex-wrap gap-2 mt-3">
+              <div v-for="(item, index) in selected" :key="index" class="badge badge-primary gap-2">
+                {{ item }}
+                <button class="btn btn-xs btn-circle btn-ghost" @click="removeOption(index)">
+                  ✕
+                </button>
+              </div>
+            </div>
+          </div>
 
           <select v-model="investigacionEditando.programa" class="select select-bordered w-full" required>
             <option value="">Selecciona programa</option>
@@ -96,7 +120,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 
 const investigaciones = ref([])
 const investigacionEditando = ref({ titulo: '', descripcion: '', resumen: '', investigadores: [], programa: '', fecha: '', pdfURL: '', imagenURL: '', index: null, URI: '', 'palabras clave': '' })
@@ -104,15 +128,21 @@ const autoresInput = ref('')
 const keywordsInput = ref('')
 const previewImage = ref(null)
 const modal = ref(null)
+const search = ref("")
+const showDropdown = ref(false)
 let pdfSeleccionado = null
 
 const uploading = ref(false)
 const uploadProgress = ref(0)
 const uploadStatus = ref('')
 const saving = ref(false)
+const dropdownRef = ref(null);
+const selected = ref([])
+const options = ref([])
 
 function abrirModalNueva() {
   investigacionEditando.value = { titulo: '', descripcion: '', resumen: '', investigadores: [], programa: '', fecha: '', pdfURL: '', imagenURL: '', index: null, URI: '', 'palabras clave': '' }
+  selected.value = []
   autoresInput.value = ''
   keywordsInput.value = ''
   previewImage.value = null
@@ -125,6 +155,28 @@ function abrirModalNueva() {
 
 function cerrarModal() {
   modal.value.close()
+}
+
+
+// Filtrar por búsqueda y quitar los ya seleccionados
+const filteredOptions = computed(() => {
+  return options.value.filter(
+    (opt) =>
+      opt.toLowerCase().includes(search.value.toLowerCase()) &&
+      !selected.value.includes(opt)
+  )
+})
+
+// Seleccionar opción
+const selectOption = (option) => {
+  selected.value.push(option)
+  search.value = "" // limpiar búsqueda
+  showDropdown.value = false
+}
+
+// Quitar opción
+const removeOption = (index) => {
+  selected.value.splice(index, 1)
 }
 
 function editarInvestigacion(inv, index) {
@@ -203,8 +255,8 @@ async function uploadPdfAndGetUrls() {
 
 async function guardarInvestigacion() {
   // validaciones básicas en cliente
-  if (!investigacionEditando.value.titulo || !autoresInput.value.trim() || !investigacionEditando.value.fecha) {
-    alert('Completa los campos obligatorios: título, autores y fecha')
+  if (!investigacionEditando.value.titulo || !investigacionEditando.value.fecha || selected.value.length === 0) {
+    alert('Completa los campos obligatorios: título, investigadores y fecha')
     return
   }
 
@@ -275,6 +327,38 @@ function eliminarInvestigacion(index) {
 function formatDate(fecha) {
   return fecha ? new Date(fecha).toLocaleDateString() : ''
 }
+
+//Dropdown 
+const handleClickOutside = (event) => {
+  if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
+ 
+    showDropdown.value = false;
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("click", handleClickOutside);
+
+  // Conseguir Investigadores
+  fetch('/api/investigadores/obtener')
+    .then(response => response.json())
+    .then(data => {
+      if (data.ok) {
+        console.log('Investigadores obtenidos:', data.docs);
+        options.value = data.docs.map(doc => doc.nombre).filter(Boolean);
+      } else {
+        console.error('Error al obtener investigadores:', data.error);
+      }
+    })
+    .catch(error => {
+      console.error('Error de red:', error);
+    });
+
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleClickOutside);
+});
 </script>
 
 <style scoped>

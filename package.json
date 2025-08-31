@@ -1,32 +1,32 @@
-{
-  "name": "",
-  "type": "module",
-  "version": "0.0.1",
-  "scripts": {
-    "dev": "astro dev --host",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro",
-    "start": "node ./dist/server/entry.mjs"
-  },
-  "dependencies": {
-    "@astrojs/node": "^9.3.0",
-    "@astrojs/vue": "^5.1.0",
-    "@tailwindcss/vite": "^4.1.10",
-    "astro": "^5.5.6",
-    "axios": "^1.10.0",
-    "daisyui": "^5.0.43",
-    "dotenv": "^17.1.0",
-    "formidable": "^3.5.4",
-    "jsdom": "^26.1.0",
-    "markdown-it": "^14.1.0",
-    "pdf-thumbnail": "^1.0.6",
-    "swiper": "^11.2.8",
-    "tailwindcss": "^4.1.10",
-    "vue3-markdown-it": "^1.0.10",
-    "zod": "^3.25.76"
-  },
-  "devDependencies": {
-    "@tailwindcss/typography": "^0.5.16"
+  {
+    "name": "",
+    "type": "module",
+    "version": "0.0.1",
+    "scripts": {
+      "dev": "astro dev --host",
+      "build": "astro build",
+      "preview": "astro preview",
+      "astro": "astro",
+      "start": "node ./dist/server/entry.mjs"
+    },
+    "dependencies": {
+      "@astrojs/node": "^9.3.0",
+      "@astrojs/vue": "^5.1.0",
+      "@tailwindcss/vite": "^4.1.10",
+      "astro": "^5.5.6",
+      "axios": "^1.10.0",
+      "daisyui": "^5.0.43",
+      "dotenv": "^17.1.0",
+      "formidable": "^3.5.4",
+      "jsdom": "^26.1.0",
+      "markdown-it": "^14.1.0",
+      "pdf-thumbnail": "^1.0.6",
+      "swiper": "^11.2.8",
+      "tailwindcss": "^4.1.10",
+      "vue3-markdown-it": "^1.0.10",
+      "zod": "^3.25.76"
+    },
+    "devDependencies": {
+      "@tailwindcss/typography": "^0.5.16"
+    }
   }
-}
