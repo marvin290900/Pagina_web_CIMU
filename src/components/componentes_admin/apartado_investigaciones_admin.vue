@@ -256,7 +256,7 @@ async function uploadPdfAndGetUrls() {
 async function guardarInvestigacion() {
   // validaciones básicas en cliente
   if (!investigacionEditando.value.titulo || !investigacionEditando.value.fecha || selected.value.length === 0) {
-    alert('Completa los campos obligatorios: título, investigadores y fecha')
+    alert('Completa los campos obligatorios: título, investigadores  y fecha')
     return
   }
 
@@ -281,7 +281,7 @@ async function guardarInvestigacion() {
       resumen: investigacionEditando.value.resumen,
       descripcion: investigacionEditando.value.descripcion,
       programa: investigacionEditando.value.programa,
-      investigadores: investigacionEditando.value.investigadores,
+      investigadores: selected.value,
       "Fecha de publicacion": investigacionEditando.value.fecha, // YYYY-MM-DD from input
       URI: investigacionEditando.value.URI || '',
       "palabras clave": keywordsInput.value || '',
