@@ -13,20 +13,20 @@
         <!-- Columna izquierda -->
 
         <div class="space-y-4 md:col-span-1">
-          <img :src="investigacion.imagen" alt="Portada" class="w-full object-cover border rounded shadow" />
+          <img :src="investigacion.imagenURL" alt="Portada" class="w-full object-cover border rounded shadow" />
 
           <!-- Archivos -->
-          <div v-if="investigacion.archivo" class="text-sm">
+          <div v-if="investigacion.pdfURL" class="text-sm">
             <h2 class="font-semibold text-gray-700 mb-1">Archivos</h2>
-            <a :href="investigacion.archivo.url" class="text-blue-600 hover:underline break-all" download>
-              {{ investigacion.archivo.nombre }} ({{ investigacion.archivo.peso }})
+            <a :href="investigacion.pdfURL" class="text-blue-600 hover:underline break-all" download>
+              {{ investigacion.titulo }}.pdf
             </a>
           </div>
 
           <!-- Fecha -->
           <div>
             <h2 class="font-semibold text-gray-700 text-sm">Fecha</h2>
-            <p class="text-gray-600 text-sm">{{ formatDate(investigacion.fecha) }}</p>
+            <p class="text-gray-600 text-sm">{{ formatDate(investigacion.fecha_publicacion) }}</p>
           </div>
 
           <!-- Autores -->
@@ -52,27 +52,31 @@
         <div class="md:col-span-2 space-y-6">
           <h1 class="text-3xl font-bold text-gray-900">{{ investigacion.titulo }}</h1>
 
-          <!-- Resumen -->
+          <!-- Descripción -->
           <div>
-            <h2 class="font-semibold text-lg text-gray-800">Descripcion</h2>
+            <h2 class="font-semibold text-lg text-gray-800">Descripción</h2>
             <p class="text-gray-700 prose prose-md whitespace-pre-line leading-relaxed text-justify">
               {{ investigacion.descripcion }}
+            </p>
+          </div>
+
+          <!-- Resumen -->
+          <div>
+            <h2 class="font-semibold text-lg text-gray-800">Resumen</h2>
+            <p class="text-gray-700 prose prose-md whitespace-pre-line leading-relaxed text-justify">
+              {{ investigacion.resumen }}
             </p>
           </div>
 
           <div>
             <h2 class="font-semibold text-lg">Archivos</h2>
 
-            <div v-if="investigacion.archivos?.length">
-              <ul class="list-disc pl-5 space-y-1">
-                <li v-for="(archivo, index) in investigacion.archivos" :key="index">
-                  <a :href="archivo" target="_blank"
-                    class="text-blue-800 visited:text-purple-800 hover:underline break-all">
-                    {{ archivo }}
-                  </a>
-                </li>
-              </ul>
-            </div>
+            <div v-if="investigacion.pdfURL" >
+            
+            <a :href="investigacion.pdfURL" class="text-blue-600 hover:underline break-all" download>
+              {{ investigacion.titulo }}.pdf
+            </a>
+          </div>
 
             <p v-else class="text-gray-500">No hay archivos disponibles.</p>
           </div>
@@ -120,12 +124,8 @@ const formatDate = (fecha) => {
 // Función para obtener la investigación desde el backend
 const obtenerInvestigacion = async () => {
   try {
-    const res = await fetch(`http://68.183.19.227:5984/investigaciones/${props.id}`, {
-      headers: {
-        "Authorization": "Basic " + btoa("admin:paginawebcimu")
-      }
-    });
-
+    const res = await fetch(`/api/investigaciones/${props.id}`)
+    console.log('Respuesta del servidor:', res)
     if (!res.ok) {
       if (res.status === 404) {
         error.value = 'Investigación no encontrada.'
@@ -136,10 +136,11 @@ const obtenerInvestigacion = async () => {
       return
     }
 
-    investigacion.value = await res.json()
+    const data = await res.json()
+    investigacion.value = data.data
+  
     error.value = null // Limpia cualquier error anterior
-    console.log('Investigación cargada:', investigacion.value)
-
+    
   } catch (err) {
     console.error('Error de red:', err)
     error.value = 'Error de red al obtener la investigación.'

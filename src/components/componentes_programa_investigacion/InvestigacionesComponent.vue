@@ -45,15 +45,15 @@
             class="block border rounded-xl overflow-hidden shadow-lg hover:shadow-xl transform transition-transform duration-300 hover:scale-105 cursor-pointer"
           >
             <img
-              v-if="investigacion.imagen"
-              :src="investigacion.imagen"
+              v-if="investigacion.imagenURL"
+              :src="investigacion.imagenURL"
               alt="Imagen de investigación"
               class="w-full h-48 object-cover"
             />
             <div class="p-4">
               <h3 class="font-semibold text-lg text-gray-800">{{ investigacion.titulo }}</h3>
-              <p class="text-sm text-gray-600 mt-1">{{ investigacion.programa }}</p>
-              <p class="text-sm text-gray-500 mt-2">{{ formatDate(investigacion.fecha) }}</p>
+              <p class="text-sm text-gray-600 mt-1">{{ investigacion.programa  }}</p>
+              <p class="text-sm text-gray-500 mt-2">{{ formatDate(investigacion.fecha_publicacion) }}</p>
               <p
                 v-if="investigacion.description"
                 class="text-sm text-gray-700 mt-2 line-clamp-3 overflow-hidden"
@@ -85,15 +85,12 @@ function formatDate(dateStr) {
 
 async function cargar() {
   try {
-    const res = await fetch('http://68.183.19.227:5984/investigaciones/_all_docs?include_docs=true', {
-      headers: {
-        Authorization: 'Basic ' + btoa('admin:paginawebcimu')
-      }
-    })
+    const res = await fetch('/api/investigaciones/investigaciones')
 
-    const data = await res.json()
-    console.log('Datos obtenidos:', data)
-    let docs = data.rows
+    const data = await res.json() 
+
+    console.log('Datos obtenidos:', data.data)
+    let docs = data.data.rows
       .map(row => row.doc)
       .filter(doc => doc && doc.titulo) // Asegura que tenga contenido válido
 
@@ -101,7 +98,12 @@ async function cargar() {
     if (programa.value) {
       docs = docs.filter(doc => doc.programa === programa.value)
     }
-
+    docs = docs.map(doc => {
+      return {
+        ...doc,
+        programa: doc.programa.replace(/_/g, ' ')
+      }
+    })
     // Filtro por recientes (ordenar por fecha)
     if (modo.value === 'recientes') {
       const haceUnAnio = new Date()

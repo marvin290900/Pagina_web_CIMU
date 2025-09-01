@@ -220,7 +220,6 @@ function cancelar() {
 async function confirmar() {
   showModal.value = false
   const body = { id: investigacionSeleccionada.value.id }
-  console.log("INVESTIGACION A ELIMINAR", body)
   // Aquí pones la lógica que quieres ejecutar
 
   const res = await fetch('/api/investigaciones/investigaciones', {
