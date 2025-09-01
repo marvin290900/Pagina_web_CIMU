@@ -22,28 +22,29 @@
               class="text-blue-500 underline">Ver PDF</a></p>
           <div class="card-actions justify-end">
             <button @click="editarInvestigacion(inv, index)" class="btn btn-sm btn-info">Editar</button>
-            <button @click="abrirConfirm" class="btn btn-sm btn-error">Eliminar</button>
-            <input type="checkbox" id="confirm-modal" class="modal-toggle" v-model="showModal">
+            <button @click="abrirConfirm(inv)" class="btn btn-sm btn-error">Eliminar</button>
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <input type="checkbox" id="confirm-modal" class="modal-toggle" v-model="showModal">
     <div class="modal">
       <div class="modal-box">
         <h3 class="font-bold text-lg">¿Estás seguro?</h3>
         <p class="py-4">Esta acción no se puede deshacer.</p>
         <div class="modal-action">
           <button class="btn" @click="cancelar">Cancelar</button>
-          <button class="btn btn-error" @click="confirmar(index)">Sí, eliminar</button>
+          <button class="btn btn-error" @click="confirmar">Sí, eliminar</button>
         </div>
       </div>
     </div>
-   
-    <div v-if="visible" :class="['toast fixed top-5 right-5 z-50', tipoClase]" @click="cerrarToast">
-      <div>
-        <span>{{ mensaje }}</span>
-      </div>
-    </div>
-          </div>
-        </div>
-      </div>
-    </div>
+
+    
 
     <!-- Modal -->
     <dialog ref="modal" class="modal">
@@ -66,11 +67,11 @@
             placeholder="Escribe aquí la descripción completa de la investigación..." required></textarea>
           <p class="text-sm text-gray-500">{{ investigacionEditando.descripcion.length }}/1000 caracteres</p>
 
-          
+
           <div ref="dropdownRef">
             <!-- Input de búsqueda -->
-            <input type="text" v-model="search" placeholder="Investigadores...*" class="input input-bordered w-full mb-2"
-              @focus="showDropdown = true" />
+            <input type="text" v-model="search" placeholder="Investigadores...*"
+              class="input input-bordered w-full mb-2" @focus="showDropdown = true" />
 
             <!-- Lista desplegable -->
             <ul v-if="showDropdown && filteredOptions.length"
@@ -113,9 +114,9 @@
           <input type="file" ref="pdfInput" @change="handleFileUpload" accept="application/pdf"
             class="file-input file-input-bordered w-full" />
 
-          <div v-if="pdfSeleccionado" class="flex items-center gap-3">
-            <div class="flex-1 text-sm text-gray-600">📄 {{ pdfSeleccionado.name }} ({{
-              humanFileSize(pdfSeleccionado.size) }})</div>
+          <div v-if="pdfInput" class="flex items-center gap-3">
+            <!-- <div class="flex-1 text-sm text-gray-600">📄 {{ pdfInput.name }} ({{
+              humanFileSize(pdfInput.size) }})</div> -->
             <div class="text-sm">{{ uploadStatus }}</div>
           </div>
 
@@ -148,6 +149,7 @@ const modal = ref(null)
 const search = ref("")
 const showDropdown = ref(false)
 let pdfSeleccionado = null
+const pdfInput = ref(null)
 
 const uploading = ref(false)
 const uploadProgress = ref(0)
@@ -158,9 +160,9 @@ const selected = ref([])
 const options = ref([])
 const editando = ref(false);
 const showModal = ref(false)
-const visible = ref(false)
-const mensaje = ref('')
-const tipoClase = ref('alert alert-info')
+
+const investigacionSeleccionada = ref(null)
+
 
 function abrirModalNueva() {
   investigacionEditando.value = { titulo: '', descripcion: '', resumen: '', investigadores: [], programa: '', fecha: '', pdfURL: '', imagenURL: '', index: null, URI: '', 'palabras clave': '' }
@@ -174,7 +176,8 @@ function abrirModalNueva() {
   uploadStatus.value = ''
   modal.value.showModal()
   editando.value = false;
-  
+   if (pdfInput.value.value) pdfInput.value.value = ''
+
 }
 
 function cerrarModal() {
@@ -182,11 +185,11 @@ function cerrarModal() {
 }
 
 async function getInvestigacion() {
-   const listRes = await fetch('/api/investigaciones/investigaciones');
-    const listJson = await listRes.json();
-    if (listRes.ok && listJson.ok) {
-      investigaciones.value = listJson.data.rows; // conserva estructura esperada por el template
-    }
+  const listRes = await fetch('/api/investigaciones/investigaciones');
+  const listJson = await listRes.json();
+  if (listRes.ok && listJson.ok) {
+    investigaciones.value = listJson.data.rows; // conserva estructura esperada por el template
+  }
 }
 
 function mostrarToast(texto, tipo = 'neutral', duracion = 3000) {
@@ -199,39 +202,35 @@ function mostrarToast(texto, tipo = 'neutral', duracion = 3000) {
   }, duracion);
 }
 
-function tipoClaseDaisy(tipo) {
-  switch(tipo) {
-    case 'success': return 'alert-success';
-    case 'error': return 'alert-error';
-    case 'warning': return 'alert-warning';
-    default: return 'alert-neutral'; // ya es seguro
-  }
-}
+
 
 // Función que abre el confirm
-function abrirConfirm() {
+function abrirConfirm(inv) {
   showModal.value = true
+  investigacionSeleccionada.value = inv
 }
 
 // Función para cancelar
 function cancelar() {
   showModal.value = false
+  investigacionSeleccionada.value = null
 }
 
 // Función para confirmar
-async function confirmar(index) {
+async function confirmar() {
   showModal.value = false
-  const body = {id: investigaciones.value[index].id}
+  const body = { id: investigacionSeleccionada.value.id }
+  console.log("INVESTIGACION A ELIMINAR", body)
   // Aquí pones la lógica que quieres ejecutar
-  
+
   const res = await fetch('/api/investigaciones/investigaciones', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    })
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  })
   if (res.ok) {
     console.log('¡Confirmado!', res);
-    mostrarToast('Investigación eliminada correctamente', 'success');
+   
     getInvestigacion();
   } else {
     console.error('Error al eliminar:', res);
@@ -262,27 +261,28 @@ const removeOption = (index) => {
 
 function editarInvestigacion(inv, index) {
   investigacionEditando.value = { ...inv.doc, index }
-  investigacionEditando.value.fecha = inv.doc.fecha_publicacion   || '' // YYYY-MM-DD
+  investigacionEditando.value.fecha = inv.doc.fecha_publicacion || '' // YYYY-MM-DD
 
   selected.value = inv.doc.investigadores ? [...inv.doc.investigadores] : []
- 
 
+  pdfSeleccionado = null
   keywordsInput.value = inv.doc.palabras_clave || ''
-   const pk = inv.doc.palabras_clave;
-   console.log("No hay palabras clave", pk)
+  const pk = inv.doc.palabras_clave;
+  console.log("No hay palabras clave", pk)
   if (pk.length > 0) {
     keywordsInput.value = pk.join(", ");
-     console.log("KEYWORDS INPUT", keywordsInput.value)
+    console.log("KEYWORDS INPUT", keywordsInput.value)
   } else {
-    
+
     keywordsInput.value = pk[0] || "";
-     
+
   }
 
   previewImage.value = inv.doc.imagenURL || null
   modal.value.showModal()
   editando.value = true
-  
+  if (pdfInput.value.value) pdfInput.value.value = null
+
 }
 
 function handleFileUpload(event) {
@@ -295,6 +295,7 @@ function handleFileUpload(event) {
   }
   pdfSeleccionado = file
   previewImage.value = null // will be set after upload (thumbnail)
+  console.log("pdfSeleccionado:", pdfSeleccionado)
   uploadStatus.value = 'Listo para subir'
 }
 
@@ -372,7 +373,7 @@ async function guardarInvestigacion() {
       previewImage.value = imagenURL
     }
 
-  
+
 
 
     // 2) armar objeto JSON que espera Zod (claves exactas)
@@ -394,31 +395,31 @@ async function guardarInvestigacion() {
     }
 
     let res = null;
-    if(editando.value && investigacionEditando.value._id){
+    if (editando.value && investigacionEditando.value._id) {
       // Editando, obtener _id y _rev del doc actual
       body.id = investigacionEditando.value._id
       res = await fetch('/api/investigaciones/investigaciones', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    })
-    console.log("RESPUESTA",res)
-    }else{
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      })
+      console.log("RESPUESTA", res)
+    } else {
       delete body.id // asegurarse que no hay id
       res = await fetch('/api/investigaciones/investigaciones', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    })
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      })
     }
-    
-    
+
+
     const data = await res.json()
     if (!res.ok || !data.ok) {
       console.error('Error del servidor:', data)
       alert('Error guardando investigación: ' + (data.error ? JSON.stringify(data.error) : res.statusText))
       return
-    }else{
+    } else {
       console.log('Investigación guardada:', data)
     }
 
@@ -445,17 +446,17 @@ function formatDate(fecha) {
 //Dropdown 
 const handleClickOutside = (event) => {
   if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
- 
+
     showDropdown.value = false;
   }
 };
 
 onMounted(() => {
   document.addEventListener("click", handleClickOutside);
-  
+
   getInvestigacion()
   // Conseguir investigaciones
- 
+
 
   // Conseguir Investigadores
   fetch('/api/investigadores/obtener')
