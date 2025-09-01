@@ -9,20 +9,37 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       <div v-for="(inv, index) in investigaciones" :key="index" class="card bg-base-100 shadow-md">
         <figure class="bg-gray-50 overflow-hidden rounded">
-          <img v-if="inv.imagenURL" :src="inv.imagenURL" alt="thumbnail"
+          <img v-if="inv.doc.imagenURL" :src="inv.doc.imagenURL" alt="thumbnail"
             class="w-full h-48 object-contain object-center bg-white" loading="lazy" decoding="async" />
           <div v-else class="h-48 w-full flex items-center justify-center bg-gray-100 text-gray-500">PDF</div>
         </figure>
         <div class="card-body">
-          <h2 class="card-title">{{ inv.titulo }}</h2>
-          <p><strong>Autores:</strong> {{ inv.investigadores?.join(", ") }}</p>
-          <p><strong>Programa:</strong> {{ inv.programa }}</p>
-          <p><strong>Fecha:</strong> {{ formatDate(inv["Fecha de publicacion"]) }}</p>
-          <p v-if="inv.pdfURL" class="truncate">📄 <a :href="inv.pdfURL" target="_blank"
+          <h2 class="card-title">{{ inv.doc.titulo }}</h2>
+          <p><strong>Autores:</strong> {{ inv.doc.investigadores?.join(", ") }}</p>
+          <p><strong>Programa:</strong> {{ inv.doc.programa }}</p>
+          <p><strong>Fecha:</strong> {{ formatDate(inv.doc.fecha_publicacion) }}</p>
+          <p v-if="inv.doc.pdfURL" class="truncate">📄 <a :href="inv.doc.pdfURL" target="_blank"
               class="text-blue-500 underline">Ver PDF</a></p>
           <div class="card-actions justify-end">
             <button @click="editarInvestigacion(inv, index)" class="btn btn-sm btn-info">Editar</button>
-            <button @click="eliminarInvestigacion(index)" class="btn btn-sm btn-error">Eliminar</button>
+            <button @click="abrirConfirm" class="btn btn-sm btn-error">Eliminar</button>
+            <input type="checkbox" id="confirm-modal" class="modal-toggle" v-model="showModal">
+    <div class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg">¿Estás seguro?</h3>
+        <p class="py-4">Esta acción no se puede deshacer.</p>
+        <div class="modal-action">
+          <button class="btn" @click="cancelar">Cancelar</button>
+          <button class="btn btn-error" @click="confirmar(index)">Sí, eliminar</button>
+        </div>
+      </div>
+    </div>
+   
+    <div v-if="visible" :class="['toast fixed top-5 right-5 z-50', tipoClase]" @click="cerrarToast">
+      <div>
+        <span>{{ mensaje }}</span>
+      </div>
+    </div>
           </div>
         </div>
       </div>
@@ -52,7 +69,7 @@
           
           <div ref="dropdownRef">
             <!-- Input de búsqueda -->
-            <input type="text" v-model="search" placeholder="Investigadores..." class="input input-bordered w-full mb-2"
+            <input type="text" v-model="search" placeholder="Investigadores...*" class="input input-bordered w-full mb-2"
               @focus="showDropdown = true" />
 
             <!-- Lista desplegable -->
@@ -139,6 +156,11 @@ const saving = ref(false)
 const dropdownRef = ref(null);
 const selected = ref([])
 const options = ref([])
+const editando = ref(false);
+const showModal = ref(false)
+const visible = ref(false)
+const mensaje = ref('')
+const tipoClase = ref('alert alert-info')
 
 function abrirModalNueva() {
   investigacionEditando.value = { titulo: '', descripcion: '', resumen: '', investigadores: [], programa: '', fecha: '', pdfURL: '', imagenURL: '', index: null, URI: '', 'palabras clave': '' }
@@ -151,10 +173,69 @@ function abrirModalNueva() {
   uploadProgress.value = 0
   uploadStatus.value = ''
   modal.value.showModal()
+  editando.value = false;
+  
 }
 
 function cerrarModal() {
   modal.value.close()
+}
+
+async function getInvestigacion() {
+   const listRes = await fetch('/api/investigaciones/investigaciones');
+    const listJson = await listRes.json();
+    if (listRes.ok && listJson.ok) {
+      investigaciones.value = listJson.data.rows; // conserva estructura esperada por el template
+    }
+}
+
+function mostrarToast(texto, tipo = 'neutral', duracion = 3000) {
+  const toast = document.createElement('div');
+  toast.className = `alert ${tipoClaseDaisy(tipo)} shadow-lg fixed top-5 right-5 z-50`;
+  toast.textContent = texto;
+  document.body.appendChild(toast);
+  setTimeout(() => {
+    toast.remove();
+  }, duracion);
+}
+
+function tipoClaseDaisy(tipo) {
+  switch(tipo) {
+    case 'success': return 'alert-success';
+    case 'error': return 'alert-error';
+    case 'warning': return 'alert-warning';
+    default: return 'alert-neutral'; // ya es seguro
+  }
+}
+
+// Función que abre el confirm
+function abrirConfirm() {
+  showModal.value = true
+}
+
+// Función para cancelar
+function cancelar() {
+  showModal.value = false
+}
+
+// Función para confirmar
+async function confirmar(index) {
+  showModal.value = false
+  const body = {id: investigaciones.value[index].id}
+  // Aquí pones la lógica que quieres ejecutar
+  
+  const res = await fetch('/api/investigaciones/investigaciones', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    })
+  if (res.ok) {
+    console.log('¡Confirmado!', res);
+    mostrarToast('Investigación eliminada correctamente', 'success');
+    getInvestigacion();
+  } else {
+    console.error('Error al eliminar:', res);
+  }
 }
 
 
@@ -180,11 +261,28 @@ const removeOption = (index) => {
 }
 
 function editarInvestigacion(inv, index) {
-  investigacionEditando.value = { ...inv, index }
-  autoresInput.value = (inv.investigadores || []).join(', ')
-  keywordsInput.value = inv['palabras clave'] || ''
-  previewImage.value = inv.imagenURL || null
+  investigacionEditando.value = { ...inv.doc, index }
+  investigacionEditando.value.fecha = inv.doc.fecha_publicacion   || '' // YYYY-MM-DD
+
+  selected.value = inv.doc.investigadores ? [...inv.doc.investigadores] : []
+ 
+
+  keywordsInput.value = inv.doc.palabras_clave || ''
+   const pk = inv.doc.palabras_clave;
+   console.log("No hay palabras clave", pk)
+  if (pk.length > 0) {
+    keywordsInput.value = pk.join(", ");
+     console.log("KEYWORDS INPUT", keywordsInput.value)
+  } else {
+    
+    keywordsInput.value = pk[0] || "";
+     
+  }
+
+  previewImage.value = inv.doc.imagenURL || null
   modal.value.showModal()
+  editando.value = true
+  
 }
 
 function handleFileUpload(event) {
@@ -274,6 +372,8 @@ async function guardarInvestigacion() {
       previewImage.value = imagenURL
     }
 
+  
+
 
     // 2) armar objeto JSON que espera Zod (claves exactas)
     const body = {
@@ -293,22 +393,36 @@ async function guardarInvestigacion() {
       }
     }
 
-    // 3) enviar JSON al endpoint validado por Zod
-    const res = await fetch('/api/investigaciones/investigaciones', {
+    let res = null;
+    if(editando.value && investigacionEditando.value._id){
+      // Editando, obtener _id y _rev del doc actual
+      body.id = investigacionEditando.value._id
+      res = await fetch('/api/investigaciones/investigaciones', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    })
+    console.log("RESPUESTA",res)
+    }else{
+      delete body.id // asegurarse que no hay id
+      res = await fetch('/api/investigaciones/investigaciones', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
     })
-
+    }
+    
+    
     const data = await res.json()
     if (!res.ok || !data.ok) {
       console.error('Error del servidor:', data)
       alert('Error guardando investigación: ' + (data.error ? JSON.stringify(data.error) : res.statusText))
       return
+    }else{
+      console.log('Investigación guardada:', data)
     }
 
-    // añadir a lista local (usar el objeto normalizado que enviaste)
-    investigaciones.value.push(body)
+    getInvestigacion()
     cerrarModal()
   } catch (err) {
     console.error('Error:', err)
@@ -320,9 +434,9 @@ async function guardarInvestigacion() {
   }
 }
 
-function eliminarInvestigacion(index) {
-  investigaciones.value.splice(index, 1)
-}
+
+
+
 
 function formatDate(fecha) {
   return fecha ? new Date(fecha).toLocaleDateString() : ''
@@ -338,6 +452,10 @@ const handleClickOutside = (event) => {
 
 onMounted(() => {
   document.addEventListener("click", handleClickOutside);
+  
+  getInvestigacion()
+  // Conseguir investigaciones
+ 
 
   // Conseguir Investigadores
   fetch('/api/investigadores/obtener')
