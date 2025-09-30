@@ -1,0 +1,111 @@
+---
+import LayoutGaceta from "../../../layouts/Layout_gaceta.astro";
+import CardPublicacion from "../../../components/componentes_gaceta/components/CardPublicacion.vue";
+const { id } = Astro.params;
+
+if (!id) {
+  return Astro.redirect("/404");
+}
+
+const responseAutor = await fetch(
+  `http://localhost:4321/api/gaceta/actualidad/buscar?id=${id}&coleccion=autores`
+);
+const autor = await responseAutor.json();
+
+const publicaciones = await Promise.all(
+  autor.publicaciones.map(async (publicacion) => {
+    const response = await fetch(
+      `http://localhost:4321/api/gaceta/obtener?id=${publicacion.id}&categoria=${publicacion.tipo}`
+    );
+    return await response.json();
+  })
+);
+---
+
+<LayoutGaceta>
+  <main>
+    <div class="mb-12 w-11/12 xl:w-3/5 mx-auto my-12">
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <!-- Banner del perfil -->
+        <div class="relative h-48 bg-gradient-to-r from-blue-600 to-indigo-700">
+          <div class="absolute inset-0 bg-black bg-opacity-20">
+            <img
+              class="object-cover w-full h-full"
+              src="https://t3.ftcdn.net/jpg/03/73/78/44/360_F_373784438_lEuzytWcTtLRdZ9CFks7I81yG3lOiSWK.jpg"
+              alt=""
+            />
+          </div>
+          <div class="absolute -bottom-16 left-8">
+            <img
+              src={autor.foto}
+              alt="Foto de perfil"
+              class="w-32 h-32 rounded-full border-4 border-white shadow-xl object-cover"
+            />
+          </div>
+        </div>
+
+        <!-- Información del autor -->
+        <div class="pt-20 px-8 pb-8">
+          <div
+            class="flex flex-col md:flex-row md:items-center md:justify-between"
+          >
+            <div>
+              <h1 class="text-3xl font-bold text-gray-900">
+                {autor.nombre}
+              </h1>
+              <p class="text-gray-600 mt-1 flex items-center">
+                <span class="mdi mdi-email text-black/25 pr-1"></span>
+                {autor.correo}
+              </p>
+            </div>
+          </div>
+
+          <!-- Biografía -->
+          <div class="mt-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-2">Biografía</h2>
+            <p class="text-gray-600 leading-relaxed max-w-3xl">
+              {autor.biografia}
+            </p>
+          </div>
+
+          <!-- Estadísticas y redes sociales -->
+          <div
+            class="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between"
+          >
+            <div class="flex space-x-8 mb-4 sm:mb-0">
+              <div class="text-center">
+                <p class="text-2xl font-bold text-blue-500">
+                  {autor.publicaciones.length}
+                </p>
+                <p class="text-sm text-gray-500">Publicaciones</p>
+              </div>
+            </div>
+
+            <div class="flex space-x-4">
+              <a
+                href="https://twitter.com/luis_dev"
+                target="_blank"
+                class="text-blue-400 hover:text-blue-600 transition-colors text-3xl"
+              >
+                <span class="mdi mdi-twitter"></span>
+              </a>
+              <a
+                href="https://linkedin.com/in/luisalfaro"
+                target="_blank"
+                class="text-blue-700 hover:text-blue-900 transition-colors text-3xl"
+              >
+                <span class="mdi mdi-linkedin"></span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <section class="mb-12 w-11/12 xl:w-3/5 mx-auto my-12">
+      <h2 class="text-2xl">Publicaciones</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8 py-8">
+        <CardPublicacion publicaciones={publicaciones} client:load />
+      </div>
+    </section>
+  </main>
+</LayoutGaceta>

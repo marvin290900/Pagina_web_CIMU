@@ -28,49 +28,136 @@ import gaceta from "../assets/logos/gaceta.png";
   </head>
   <body>
     <header>
-      <div class="w-full flex justify-center py-3">
+      <div class="w-full justify-center py-3 hidden lg:flex">
         <img src={gaceta.src} alt="Logo de gaceta" class="w-1/4" />
       </div>
-      <!-- Navigation -->
-      <nav class="shadow-md">
-        <div class="container mx-auto px-4 flex w-full justify-center">
-          <div
-            class="flex flex-wrap justify-center md:justify-start gap-1 py-3"
-          >
-            <a
-              href="/gaceta"
-              class="nav-link px-4 py-2 rounded-md"
-              data-category="
-              all">Inicio</a
+      <div class="drawer z-50">
+        <input id="my-drawer" type="checkbox" class="drawer-toggle" />
+
+        <!-- Contenido principal -->
+        <div class="drawer-content bg">
+          <div class="navbar bg-principal shadow-sm text-white">
+            <div
+              class="flex justify-between items-center w-full md:w-[80%] mx-auto"
             >
-            <a
-              href="/gaceta/categorias/opinion"
-              class="nav-link px-4 py-2 rounded-md"
-              data-category="politica">Opinión Multidisciplinaria</a
-            >
-            <a
-              href="/gaceta/categorias/actualidad"
-              class="nav-link px-4 py-2 rounded-md"
-              data-category="economia">Actualidad</a
-            >
-            <a
-              href="/gaceta/categorias/audio_visuales"
-              class="nav-link px-4 py-2 rounded-md"
-              data-category="deportes">Audio visuales</a
-            >
-            <a
-              href="/gaceta/categorias/vida_universitaria"
-              class="nav-link px-4 py-2 rounded-md"
-              data-category="cultura">Vida universitaria</a
-            >
-            <a
-              href="/gaceta/categorias/memorias"
-              class="nav-link px-4 py-2 rounded-md"
-              data-category="tecnologia">Memoria colectiva</a
-            >
+              <!-- Logo -->
+              <div class="flex lg:hidden">
+                <a href="#seccionImagenesInicio">
+                  <img
+                    src={gaceta.src}
+                    alt="logo de la empresa"
+                    class="w-36 md:"
+                  />
+                </a>
+              </div>
+
+              <!-- Botón hamburguesa en móvil -->
+              <div class="lg:hidden">
+                <label for="my-drawer" class="btn btn-ghost-black">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 6h16M4 12h16M4 18h16"></path>
+                  </svg>
+                </label>
+              </div>
+
+              <!-- Menú horizontal en escritorio -->
+              <div class="hidden lg:flex mx-auto">
+                <ul
+                  class="container mx-auto px-4 flex w-full justify-center text-black"
+                >
+                  <li>
+                    <a
+                      href="/gaceta"
+                      class="nav-link px-4 py-2 rounded-md"
+                      data-category="all">Inicio</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/gaceta/opinion"
+                      class="nav-link px-4 py-2 rounded-md"
+                      data-category="politica">Opinión Multidisciplinaria</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/gaceta/actualidad"
+                      class="nav-link px-4 py-2 rounded-md"
+                      data-category="economia">Actualidad</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/gaceta/audiovisuales"
+                      class="nav-link px-4 py-2 rounded-md"
+                      data-category="deportes">Audio visuales</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/gaceta/vida_universitaria"
+                      class="nav-link px-4 py-2 rounded-md"
+                      data-category="cultura">Vida universitaria</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/gaceta/memoria"
+                      class="nav-link px-4 py-2 rounded-md"
+                      data-category="tecnologia">Memoria colectiva</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
-      </nav>
+
+        <!-- Menú lateral (drawer) para móvil -->
+        <div class="drawer-side">
+          <label for="my-drawer" class="drawer-overlay"></label>
+          <ul class="menu p-4 w-64 min-h-full bg-base-200 text-base-content">
+            <li>
+              <a href="/gaceta" data-category="all">Inicio</a>
+            </li>
+            <li>
+              <a href="/gaceta/opinion" data-category="politica"
+                >Opinión Multidisciplinaria</a
+              >
+            </li>
+            <li>
+              <a href="/gaceta/actualidad" data-category="economia"
+                >Actualidad</a
+              >
+            </li>
+            <li>
+              <a href="/gaceta/audiovisuales" data-category="deportes"
+                >Audio visuales</a
+              >
+            </li>
+            <li>
+              <a href="/gaceta/vida_universitaria" data-category="cultura"
+                >Vida universitaria</a
+              >
+            </li>
+            <li>
+              <a href="/gaceta/memoria" data-category="tecnologia"
+                >Memoria colectiva</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
     </header>
     <main class="zoom-fade-in-up">
       <slot />
@@ -118,7 +205,7 @@ import gaceta from "../assets/logos/gaceta.png";
     left: 0;
     width: 0;
     height: 2px;
-    background-color: #f97316;
+    background-color: #dc0f0f;
     transition: width 0.3s ease;
   }
   .nav-link:hover::after,

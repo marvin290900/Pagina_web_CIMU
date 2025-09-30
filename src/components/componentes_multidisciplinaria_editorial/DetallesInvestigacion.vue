@@ -130,7 +130,6 @@ const props = defineProps({
     required: true,
   },
 });
-``;
 
 onMounted(() => {
   fetch(`/api/libros/buscar?id=${props.id}`)

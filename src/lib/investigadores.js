@@ -1,15 +1,15 @@
-import { couch } from './couchDB.js';
+import { couch } from "./couchDB.js";
 
-const DB_NAME = 'cimu';   
+const DB_NAME = "cimu";
 
 export async function getInvestigadoresDirectivos() {
   try {
     const response = await couch.post(`/${DB_NAME}/_find`, {
-      selector: { type: 'investigador', categoria: 'Directivo' }
+      selector: { type: "investigador", categoria: "Directivo" },
     });
     return response.data.docs;
   } catch (error) {
-    console.error('Error al obtener investigadores:', error);
+    console.error("Error al obtener investigadores:", error);
     return [];
   }
 }
@@ -17,11 +17,11 @@ export async function getInvestigadoresDirectivos() {
 export async function getInvestigadoresPasantes() {
   try {
     const response = await couch.post(`/${DB_NAME}/_find`, {
-      selector: { type: 'investigador', categoria: 'Investigador_Pasante' }
+      selector: { type: "investigador", categoria: "Investigador_Pasante" },
     });
     return response.data.docs;
   } catch (error) {
-    console.error('Error al obtener investigadores:', error);
+    console.error("Error al obtener investigadores:", error);
     return [];
   }
 }
@@ -29,11 +29,11 @@ export async function getInvestigadoresPasantes() {
 export async function getInvestigadoresExternos() {
   try {
     const response = await couch.post(`/${DB_NAME}/_find`, {
-      selector: { type: 'investigador', categoria: 'Investigador_Externo' }
+      selector: { type: "investigador", categoria: "Investigador_Externo" },
     });
     return response.data.docs;
   } catch (error) {
-    console.error('Error al obtener investigadores:', error);
+    console.error("Error al obtener investigadores:", error);
     return [];
   }
 }
@@ -44,7 +44,7 @@ export async function getInvestigadorPorId(id) {
     const response = await couch.get(`/${DB_NAME}/${id}`);
     return response.data;
   } catch (error) {
-    console.error('Error al obtener investigador:', error);
+    console.error("Error al obtener investigador:", error);
     return null;
   }
 }
@@ -52,11 +52,11 @@ export async function getInvestigadorPorId(id) {
 export async function getTodosLosInvestigadores() {
   try {
     const response = await couch.post(`/${DB_NAME}/_find`, {
-      selector: { type: 'investigador' },
+      selector: { type: "investigador" },
     });
     return response.data.docs;
   } catch (error) {
-    console.error('Error al obtener todos los investigadores:', error);
+    console.error("Error al obtener todos los investigadores:", error);
     return [];
   }
 }
@@ -77,20 +77,19 @@ export async function actualizarInvestigador(id, datosActualizados) {
     const response = await couch.put(`/${DB_NAME}/${id}`, docActualizado);
     return { ok: true, data: response.data };
   } catch (error) {
-    console.error('Error al actualizar investigador:', error);
+    console.error("Error al actualizar investigador:", error);
     return { ok: false, error };
   }
 }
 
-
 export async function eliminarInvestigador(id, rev) {
   try {
     const response = await couch.delete(`/${DB_NAME}/${id}`, {
-      params: { rev }
+      params: { rev },
     });
     return { ok: true, data: response.data };
   } catch (error) {
-    console.error('Error al eliminar el investigador:', error);
+    console.error("Error al eliminar el investigador:", error);
     return { ok: false, error };
   }
 }
