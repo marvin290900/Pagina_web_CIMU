@@ -345,13 +345,7 @@ console.log("Investigador obtenido:", investigador);
         <span class="mdi mdi-lightbulb-on mr-2 text-yellow-600"></span>
         Proyectos de Investigación
       </button>
-      <button
-        class="pub-tab-btn text-sm py-2 px-4 border-b-2 border-transparent hover:border-gray-400"
-        data-tab="capitulos"
-      >
-        <span class="mdi mdi-library-books mr-2 text-blue-600"></span>
-        Capítulos
-      </button>
+      
     </div>
 
     <!-- Contenido dinámico -->
@@ -438,9 +432,6 @@ console.log("Investigador obtenido:", investigador);
       ? `<ul class="list-disc list-inside space-y-2">${investigador.proyectos.map((p) => `<li>${p}</li>`).join("")}</ul>`
       : "No hay proyectos de investigación registrados.",
 
-    capitulos: investigador.capitulos?.length
-      ? `<ul class="list-disc list-inside space-y-2">${investigador.capitulos.map((c) => `<li>${c}</li>`).join("")}</ul>`
-      : "No hay capítulos registrados.",
   };
 
   function activarPubTab(tab) {
