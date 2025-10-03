@@ -1,6 +1,6 @@
 import { couch } from './couchDB.js';
 
-const DB_NAME = 'cimu';   
+const DB_NAME = 'carrousel_imagenes';   
 
 
 export async function getTodasLasImagenes() {

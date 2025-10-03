@@ -78,10 +78,7 @@ console.log("Investigador obtenido:", investigador);
   </div>
 )}
 
-
-
-
-    <section id="investigador_seleccionado" class="py-8 bg-white text-gray-800">
+    <section id="investigador_seleccionado" class="py-8 bg-white text-gray-800 xl:ml-10">
       <div class="max-w-8xl mx-auto px-4">
         <!-- Container principal -->
         <div class="flex flex-col lg:flex-row gap-4">
@@ -133,91 +130,70 @@ console.log("Investigador obtenido:", investigador);
             <div id="tab-content" class="text-gray-700"></div>
           </div>
 
-          <!-- Sección de redes y contactos (más estrecha) -->
-          <div
-            class="flex-shrink-0
-         w-full
-         max-w-full
-         sm:max-w-sm
-         md:max-w-full
-         lg:max-w-xs
-         p-6
-         rounded-lg
-         mr-10"
+          <!-- Sección de contactos con scroll -->
+<div
+  class="flex-shrink-0
+    w-full
+    max-w-full
+    sm:max-w-sm
+    md:max-w-full
+    lg:max-w-xs
+    p-6
+    rounded-lg
+    mr-10"
+>
+  <h3 class="font-bold text-center text-gray-900 mb-2">Contactos</h3>
+
+  <!-- Contenido en scroll -->
+  <div class="max-h-64 overflow-y-auto pr-2">
+    <ul class="space-y-2">
+      {investigador.email && (
+        <li class="flex items-center gap-2 break-words">
+          <span class="mdi mdi-email text-gray-600 text-xl" />
+          <a
+            href={`mailto:${investigador.email}`}
+            class="text-gray-800 hover:text-blue-600 text-md break-words max-w-full"
           >
-            <h3 class="font-bold text-center text-gray-900 mb-2">Contactos</h3>
-            <ul class="space-y-2">
-              {
-                investigador.email && (
-                  <li class="flex items-center gap-2 break-words">
-                    <span class="mdi mdi-email text-gray-600 text-xl" />
-                    <a
-                      href={`mailto:${investigador.email}`}
-                      class="text-gray-800 hover:text-blue-600 text-md break-words max-w-full"
-                    >
-                      {investigador.email}
-                    </a>
-                  </li>
-                )
-              }
+            {investigador.email}
+          </a>
+        </li>
+      )}
 
-              {
-                investigador.otrosCorreos?.map((correo) => (
-                  <li class="flex items-center gap-2">
-                    <span class="mdi mdi-email text-gray-600 text-xl" />
-                    <a
-                      href={`mailto:${correo}`}
-                      class="text-gray-800 hover:text-blue-600 text-md break-words max-w-full"
-                    >
-                      {correo}
-                    </a>
-                  </li>
-                ))
-              }
+      {investigador.otrosCorreos?.map((correo) => (
+        <li class="flex items-center gap-2">
+          <span class="mdi mdi-email text-gray-600 text-xl" />
+          <a
+            href={`mailto:${correo}`}
+            class="text-gray-800 hover:text-blue-600 text-md break-words max-w-full"
+          >
+            {correo}
+          </a>
+        </li>
+      ))}
 
-              {
-                investigador.telefonos?.map((telefono) => (
-                  <li class="flex items-center gap-2">
-                    <span class="mdi mdi-phone text-green-600 text-xl" />
-                    <a
-                      href={`tel:${telefono}`}
-                      class="text-gray-800 hover:text-blue-600 text-md"
-                    >
-                      {telefono}
-                    </a>
-                  </li>
-                ))
-              }
+      {investigador.telefonos?.map((telefono) => (
+        <li class="flex items-center gap-2">
+          <span class="mdi mdi-phone text-green-600 text-xl" />
+          <a
+            href={`tel:${telefono}`}
+            class="text-gray-800 hover:text-blue-600 text-md"
+          >
+            {telefono}
+          </a>
+        </li>
+      ))}
 
-              {
-                !(
-                  investigador.email ||
-                  investigador.otrosCorreos?.length ||
-                  investigador.telefonos?.length
-                ) && <li>No hay contactos registrados</li>
-              }
-            </ul>
+      {investigador.redesSociales?.map((red) => {
+        const url = red.url;
+        let iconClass = "mdi mdi-web";
+        let color = "text-gray-500";
 
+        const hostname = new URL(url).hostname;
 
-
-{investigador.redesSociales?.length > 0 && (
-  <>
-    <h3 class="font-bold text-gray-900 mt-5 text-center mb-5">
-      Redes Sociales
-    </h3>
-    <div class="max-h-40 overflow-y-auto">
-      <ul class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-2 gap-4 space-y-2">
-        {investigador.redesSociales.map((red) => {
-          const url = red.url;
-          let iconClass = "mdi mdi-web";
-          let color = "text-gray-500";
-
-          const hostname = new URL(url).hostname;
-
-          if (hostname.includes("facebook.com")) {
-                      iconClass = "mdi mdi-facebook";
-                      color = "text-blue-600";
-                    } else if (
+        if (hostname.includes("facebook.com")) {
+          iconClass = "mdi mdi-facebook";
+          color = "text-blue-600";
+        } else if (
                       hostname.includes("twitter.com") ||
                       hostname.includes("x.com")
                     ) {
@@ -226,6 +202,9 @@ console.log("Investigador obtenido:", investigador);
                     } else if (hostname.includes("linkedin.com")) {
                       iconClass = "mdi mdi-linkedin";
                       color = "text-blue-700";
+                    } else if (hostname.includes("orcid.org")) {
+                      iconClass = "mdi mdi-account-circle";
+                      color = "text-[#A6CE39]";
                     } else if (hostname.includes("instagram.com")) {
                       iconClass = "mdi mdi-instagram";
                       color = "text-pink-500";
@@ -305,41 +284,97 @@ console.log("Investigador obtenido:", investigador);
                       iconClass = "mdi mdi-coffee";
                       color = "text-pink-500";
                     }
-          return (
-            <li class="flex flex-col items-center gap-1">
-              <span class={`${iconClass} ${color} text-3xl`} />
-              <a
-                href={url}
-                target="_blank"
-                class="text-gray-800 hover:text-blue-600"
-              >
-                {red.nombre}
-              </a>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
-  </>
-)}
 
-            
+        return (
+          <li class="flex items-center gap-2">
+            <span class={`${iconClass} ${color} text-xl`} />
+            <a
+              href={url}
+              target="_blank"
+              class="text-gray-800 hover:text-blue-600 text-md"
+            >
+              {red.nombre}
+            </a>
+          </li>
+        );
+      })}
+
+      {!(
+        investigador.email ||
+        investigador.otrosCorreos?.length ||
+        investigador.telefonos?.length ||
+        investigador.redesSociales?.length
+      ) && <li>No hay contactos registrados</li>}
+    </ul> 
             </div>
           </div>
+
+
         </div>
       </div>
     </section>
+
+    <!-- Sección de Publicaciones Relevantes -->
+<section id="publicaciones_relevantes" class="py-10 bg-gray-50 text-gray-800 ">
+  <div class="max-w-7xl mx-auto px-4">
+    <p class="text-lg font-bold mb-6 text-center text-primary">
+      <span class="text-lg md:text-lg lg:text-lg xl:text-lg font-bold bg-clip-text text-transparent"
+                  style="background-image: linear-gradient(to right, #16182D, #283886);">Publicaciones Relevantes</span>
+    </p>
+
+    <!-- Barra de tabs -->
+    <div class="flex flex-col md:flex-row justify-center gap-4 pb-2 mb-6">
+      <button
+        class="pub-tab-btn text-sm py-2 px-4 border-b-2 border-transparent hover:border-gray-400"
+        data-tab="libros"
+      >
+        <span class="mdi mdi-book-open-variant mr-2 text-indigo-600"></span>
+        Libros
+      </button>
+      <button
+        class="pub-tab-btn text-sm py-2 px-4 border-b-2 border-transparent hover:border-gray-400"
+        data-tab="articulos"
+      >
+        <span class="mdi mdi-file-document-outline mr-2 text-green-600"></span>
+        Artículos
+      </button>
+      <button
+        class="pub-tab-btn text-sm py-2 px-4 border-b-2 border-transparent hover:border-gray-400"
+        data-tab="proyectos"
+      >
+        <span class="mdi mdi-lightbulb-on mr-2 text-yellow-600"></span>
+        Proyectos de Investigación
+      </button>
+      <button
+        class="pub-tab-btn text-sm py-2 px-4 border-b-2 border-transparent hover:border-gray-400"
+        data-tab="capitulos"
+      >
+        <span class="mdi mdi-library-books mr-2 text-blue-600"></span>
+        Capítulos
+      </button>
+    </div>
+
+    <!-- Contenido dinámico -->
+    <div id="pub-tab-content" class="text-gray-700"></div>
+  </div>
+</section>
+
+
   </section>
 
   <script type="module">
     const investigadorEl = document.getElementById("investigador-data");
     const investigador = JSON.parse(investigadorEl.dataset.investigador);
 
+    const publicacionesContent = document.getElementById("pub-tab-content");
+  const pubTabs = document.querySelectorAll(".pub-tab-btn");
+
     const tabs = document.querySelectorAll(".tab-btn");
     const content = document.getElementById("tab-content");
 
     // Variable para recordar el tab activo
     let tabActivo = null;
+    let pubTabActivo = null;
 
     const datos = {
       adscripciones: investigador.adscripciones?.length
@@ -389,5 +424,44 @@ console.log("Investigador obtenido:", investigador);
     // Activar por defecto el primer tab (Adscripciones)
     const primerTab = tabs[0]; // Suponiendo que Adscripciones es el primero
     activarTab(primerTab);
+
+    const publicaciones = {
+    libros: investigador.libros?.length
+      ? `<ul class="list-disc list-inside space-y-2">${investigador.libros.map((l) => `<li>${l}</li>`).join("")}</ul>`
+      : "No hay libros registrados.",
+
+    articulos: investigador.articulos?.length
+      ? `<ul class="list-disc list-inside space-y-2">${investigador.articulos.map((a) => `<li>${a}</li>`).join("")}</ul>`
+      : "No hay artículos registrados.",
+
+    proyectos: investigador.proyectos?.length
+      ? `<ul class="list-disc list-inside space-y-2">${investigador.proyectos.map((p) => `<li>${p}</li>`).join("")}</ul>`
+      : "No hay proyectos de investigación registrados.",
+
+    capitulos: investigador.capitulos?.length
+      ? `<ul class="list-disc list-inside space-y-2">${investigador.capitulos.map((c) => `<li>${c}</li>`).join("")}</ul>`
+      : "No hay capítulos registrados.",
+  };
+
+  function activarPubTab(tab) {
+    if (pubTabActivo) {
+      pubTabActivo.classList.remove("border-b-blue-500", "font-bold");
+    }
+    tab.classList.add("border-b-blue-500", "font-bold");
+    pubTabActivo = tab;
+
+    const key = tab.dataset.tab;
+    publicacionesContent.innerHTML = publicaciones[key];
+  }
+
+  pubTabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      activarPubTab(tab);
+    });
+  });
+
+  // Activar por defecto "Libros"
+  const primerPubTab = pubTabs[0];
+  activarPubTab(primerPubTab);
   </script>
 </Layout>

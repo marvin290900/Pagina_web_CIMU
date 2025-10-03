@@ -3,7 +3,7 @@ import { couch } from '../../../lib/couchDB.js';
 export async function POST({ request }) {
   try {
     const body = await request.json();
-    const respuesta = await couch.post('cimu', body); // <-- nombre de tu base
+    const respuesta = await couch.post('carrousel_imagenes', body); // <-- nombre de tu base
     return new Response(JSON.stringify({ ok: true, data: respuesta.data }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },

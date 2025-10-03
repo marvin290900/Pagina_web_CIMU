@@ -1,0 +1,27 @@
+Formulas Estado de resultados
+Ventas
+Ventas Netas = Ventas totales - Rebajas y devoluciones en ventas
+
+Compras
+Compra total = compras + gastos en compras
+Compras netas = compra total - rebajas y devoluciones en compras 
+
+
+Disponibilidad de productos vendidos para el periodo = inventario inicial + compras netas
+Costos de productos vendidos = Disponibilidad de productos vendidos para el periodo - inventario final
+Utilidad bruta = Ventas netas - costos de los productos vendidos
+Utilidad operativa = utilidad bruta - gasto operativo (gasto de ventas,gasto administrativo,gasto financiero)
+Utilidad antes de impuestos = utilidad opertativa +- (+Otros ingresos, -gastos fuera del giro empresarial) --> si sale negativo se resta sino se suma
+Utilidad despues de impuestos = Utilidad antes de impuestos - (impuesto sobre la renta 25%,Reserva legal 7%)
+150,000 o mas --> 30% , 150,000 o menos -->25%
+
+Indicadores financieros
+Indicadores de Liquidez
+Liquidez corriente = Activos corrientes / pasivos corrientes
+Razon rapida ( prueba acida) = (Activos corrientes - Inventarios)  / pasivos corrientes
+
+Indicadores de actividad
+Rotacion de inventarios = costos de los bienes vendidos / inventario
+Periodo promedio de cobro (PPC) = cuentas por cobrar /( ventas diarias promedio/365) 
+Periodo promedio de pago (PPP) = Cuentas por cobrar / (promedio de compras diarias / 365) -->sino hay compras se agarra el 70% de los productos vendidos
+Rotacion de los activos totales = ventas / total de activos
