@@ -64,7 +64,8 @@ export async function POST({ request }) {
     }
 
     const respuesta = await couch.post("investigaciones", parsed.data);
-
+    console.log("Respuesta de CouchDB:", respuesta.data._id);
+   
     return new Response(JSON.stringify({ ok: true, data: respuesta.data }), {
       status: 200,
       headers: { "Content-Type": "application/json" },

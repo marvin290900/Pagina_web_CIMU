@@ -1,0 +1,330 @@
+---
+// src/components/componentes_programa_investigacion/programa_de_investigacion.astro
+const programas = [
+  {
+    id: 1,
+    slug: 'estudios-sociologicos',
+    nombre: 'Programa de Estudios Sociológicos',
+    descripcion: 'Estudia estructuras, relaciones e instituciones sociales, abarcando fenómenos como violencia, equidad, salud, participación, etc.',
+    icono: '🔬',
+    tags: ['Violencia', 'Equidad', 'Salud', 'Participación'],
+    investigacionesActivas: 3
+  },
+  {
+    id: 2,
+    slug: 'opinion-publica',
+    nombre: 'Laboratorio de Opinión Pública',
+    descripcion: 'Se centra en medir percepciones ciudadanas sobre política, seguridad, educación, equidad y otros temas sociales relevantes.',
+    icono: '📊',
+    tags: ['Política', 'Seguridad', 'Educación'],
+    investigacionesActivas: 2
+  },
+  {
+    id: 3,
+    slug: 'juridicos-politicos',
+    nombre: 'Programa de Estudios Jurídicos y Políticos',
+    descripcion: 'Analiza las normas, instituciones y prácticas jurídicas y políticas, con enfoque en equidad, democracia, derechos y gobernabilidad.',
+    icono: '⚖️',
+    tags: ['Democracia', 'Derechos', 'Gobernabilidad'],
+    investigacionesActivas: 4
+  },
+  {
+    id: 4,
+    slug: 'tierra-medio-ambiente',
+    nombre: 'Programa de Estudios de la Tierra y Medio Ambiente',
+    descripcion: 'Estudia el entorno natural y su interacción con las comunidades humanas, desde una perspectiva sustentable e interdisciplinaria.',
+    icono: '🌍',
+    tags: ['Sustentabilidad', 'Ecosistemas', 'Cambio Climático'],
+    investigacionesActivas: 5
+  },
+  {
+    id: 5,
+    slug: 'genero-inclusion',
+    nombre: 'Programa de Estudios de Género e Inclusión',
+    descripcion: 'Aborda desigualdades de género y busca promover inclusión en todos los ámbitos sociales, educativos y de salud.',
+    icono: '🤝',
+    tags: ['Género', 'Inclusión', 'Equidad'],
+    investigacionesActivas: 3
+  }
+];
+
+// Título de la página
+const pageTitle = 'Programas de Investigación | CIMU - FMOcc UES';
+---
+
+<!DOCTYPE html>
+<html lang="es">
+
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content flex flex-col items-center text-center">
+            <h1>Programas de Investigación</h1>
+            <p> 
+                Impulsamos programas de investigación orientados a generar soluciones 
+                innovadoras y aplicar el conocimiento científico en áreas clave para 
+                el desarrollo regional y social.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="programs-grid">
+            {programas.map((programa) => (
+                <article class="program-card">
+                    
+                    
+                    <h3>{programa.nombre}</h3>
+                    
+                    <p>{programa.descripcion}</p>
+                    
+                    <div class="tags">
+                        {programa.tags.map((tag) => (
+                            <span class="tag">{tag}</span>
+                        ))}
+                    </div>
+                    
+                    
+                    
+                    <a 
+                        href={`/investigaciones/programas/${programa.slug}`}
+                        class="btn-explore"
+                    >
+                        Explorar programa →
+                    </a>
+                </article>
+            ))}
+        </div>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <h3>¿Tienes una propuesta de investigación?</h3>
+            <p>
+                Si eres investigador, estudiante o tienes una idea de investigación 
+                que podría aportar al desarrollo social y regional, nos encantaría conocerla.
+            </p>
+            <a href="/contactenos" class="btn-secondary">
+                Contáctanos
+            </a>
+        </section>
+    </main>
+</body>
+</html>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #f5f5f5;
+    }
+    
+
+    
+  
+    /* Hero Section */
+    .hero {
+        background: linear-gradient(135deg, #283886 0%, #2a5298 100%);
+        color: white;
+        padding: 4rem 5%;
+        text-align: center;
+    }
+    
+    .hero-content {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    
+    .hero p {
+        font-size: 1.1rem;
+        opacity: 0.95;
+        line-height: 1.7;
+    }
+    
+    /* Container */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 3rem 5%;
+    }
+    
+    /* Programs Grid */
+    .programs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+    
+    @media (min-width: 1024px) {
+        .programs-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    /* Program Card */
+    .program-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .program-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        border-color: #2a5298;
+    }
+    
+    .program-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .program-card h3 {
+        font-size: 1.4rem;
+        color: #1e3c72;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    
+    .program-card p {
+        color: #666;
+        margin-bottom: 1.5rem;
+        line-height: 1.7;
+        flex-grow: 1;
+    }
+    
+    /* Tags */
+    .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .tag {
+        background: #e3f2fd;
+        color: #1976d2;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+    
+    /* Program Stats */
+    .program-stats {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    /* Button Explore */
+    .btn-explore {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        background: #2a5298;
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+    
+    .btn-explore:hover {
+        background: #1e3c72;
+        gap: 0.8rem;
+    }
+    
+    /* CTA Section */
+    .cta-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        margin-top: 3rem;
+        border: 2px dashed #ccc;
+    }
+    
+    .cta-section h3 {
+        color: #1e3c72;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+    }
+    
+    .cta-section p {
+        color: #666;
+        margin-bottom: 1.5rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .btn-secondary {
+        display: inline-block;
+        background: transparent;
+        color: #2a5298;
+        padding: 0.8rem 1.5rem;
+        border: 2px solid #2a5298;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+        background: #2a5298;
+        color: white;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero h1 {
+            font-size: 2rem;
+        }
+        
+        .hero p {
+            font-size: 1rem;
+        }
+        
+        .programs-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        
+        .container {
+            padding: 2rem 1rem;
+        }
+    }
+</style>

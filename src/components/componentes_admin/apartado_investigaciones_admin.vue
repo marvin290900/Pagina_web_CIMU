@@ -57,15 +57,15 @@
           <input v-model="investigacionEditando.titulo" type="text" placeholder="Título*"
             class="input input-bordered w-full" required />
 
-          <textarea v-model="investigacionEditando.resumen" maxlength="300"
+          <textarea v-model="investigacionEditando.resumen" maxlength="1000"
             class="textarea textarea-bordered w-full min-h-[120px]"
             placeholder="Escribe un resumen breve de la investigación..." required></textarea>
-          <p class="text-sm text-gray-500">{{ investigacionEditando.resumen.length }}/300 caracteres</p>
+          <p class="text-sm text-gray-500">{{ investigacionEditando.resumen.length }}/1000 caracteres</p>
 
-          <textarea v-model="investigacionEditando.descripcion" maxlength="1000"
+          <textarea v-model="investigacionEditando.descripcion" maxlength="500"
             class="textarea textarea-bordered w-full min-h-[120px]"
             placeholder="Escribe aquí la descripción completa de la investigación..." required></textarea>
-          <p class="text-sm text-gray-500">{{ investigacionEditando.descripcion.length }}/1000 caracteres</p>
+          <p class="text-sm text-gray-500">{{ investigacionEditando.descripcion.length }}/500 caracteres</p>
 
 
           <div ref="dropdownRef">
@@ -78,7 +78,7 @@
               class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full mt-1 max-h-48 overflow-y-auto">
               <li v-for="(option, index) in filteredOptions" :key="index">
                 <button class="w-full text-left" @click="selectOption(option)">
-                  {{ option }}
+                  {{ option.nombre }}
                 </button>
               </li>
             </ul>
@@ -86,7 +86,7 @@
             <!-- Opciones seleccionadas -->
             <div class="flex flex-wrap gap-2 mt-3">
               <div v-for="(item, index) in selected" :key="index" class="badge badge-primary gap-2">
-                {{ item }}
+                {{ item.nombre }}
                 <button class="btn btn-xs btn-circle btn-ghost" @click="removeOption(index)">
                   ✕
                 </button>
@@ -96,11 +96,11 @@
 
           <select v-model="investigacionEditando.programa" class="select select-bordered w-full" required>
             <option value="">Selecciona programa</option>
-            <option value="sociologico">Sociológicos</option>
-            <option value="juridico">Jurídicos</option>
-            <option value="medio_ambiente">Medio Ambiente</option>
-            <option value="inclusion">Inclusión</option>
-            <option value="laboratorio_publica">Laboratorio Pública</option>
+            <option value="estudios-sociologicos">Sociológicos</option>
+            <option value="juridicos-politicos">Jurídicos</option>
+            <option value="tierra-medio-ambiente">Medio Ambiente</option>
+            <option value="genero-inclusion">Inclusión</option>
+            <option value="opinion-publica">Laboratorio Pública</option>
           </select>
 
           <input v-model="investigacionEditando.fecha" type="date" class="input input-bordered w-full" required />
@@ -156,8 +156,8 @@ const uploadProgress = ref(0)
 const uploadStatus = ref('')
 const saving = ref(false)
 const dropdownRef = ref(null);
-const selected = ref([])
-const options = ref([])
+const selected = ref([]) // investigadores seleccionados
+const options = ref([]) // todas las opciones posibles
 const editando = ref(false);
 const showModal = ref(false)
 
@@ -241,8 +241,8 @@ async function confirmar() {
 const filteredOptions = computed(() => {
   return options.value.filter(
     (opt) =>
-      opt.toLowerCase().includes(search.value.toLowerCase()) &&
-      !selected.value.includes(opt)
+      opt.nombre.toLowerCase().includes(search.value.toLowerCase()) &&
+      !selected.value.includes(opt.nombre)
   )
 })
 
@@ -362,6 +362,7 @@ async function guardarInvestigacion() {
   try {
     // preparar autores
     investigacionEditando.value.investigadores = autoresInput.value.split(',').map(a => a.trim()).filter(Boolean)
+    console.log("Autores:", investigacionEditando.value.investigadores)
 
     // 1) subir PDF y obtener URLs (si hay pdf seleccionado)
     const { pdfURL, imagenURL } = await uploadPdfAndGetUrls().catch(err => { throw err })
@@ -371,6 +372,7 @@ async function guardarInvestigacion() {
       investigacionEditando.value.imagenURL = imagenURL
       previewImage.value = imagenURL
     }
+    console.log("Imagen URL:", imagenURL)
 
 
 
@@ -422,6 +424,7 @@ async function guardarInvestigacion() {
       console.log('Investigación guardada:', data)
     }
 
+
     getInvestigacion()
     cerrarModal()
   } catch (err) {
@@ -462,8 +465,9 @@ onMounted(() => {
     .then(response => response.json())
     .then(data => {
       if (data.ok) {
-        console.log('Investigadores obtenidos:', data.docs);
-        options.value = data.docs.map(doc => doc.nombre).filter(Boolean);
+        // Mapear para obtener solo nombres e ids, y filtrar valores inválidos
+        options.value = data.docs.map(doc => { return { nombre: doc.nombre, id: doc._id } }).filter(Boolean);
+       
       } else {
         console.error('Error al obtener investigadores:', data.error);
       }
