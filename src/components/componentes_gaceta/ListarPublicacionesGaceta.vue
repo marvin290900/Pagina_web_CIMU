@@ -9,7 +9,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import CardPublicacion from "../components/CardPublicacion.vue";
+import CardPublicacion from "./components/CardPublicacion.vue";
 
 const publicaciones = ref([]);
 

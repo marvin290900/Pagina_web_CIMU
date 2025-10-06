@@ -20,7 +20,7 @@
         <img
           :src="img.url"
           :alt="img.descripcion || 'Imagen ' + (index + 1)"
-          class="w-full h-full object-contain"
+          class="w-full h-full max-h-[400px] object-contain"
         />
       </div>
     </div>

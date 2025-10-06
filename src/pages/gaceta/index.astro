@@ -1,7 +1,10 @@
 ---
 import LayoutGaceta from "../../layouts/Layout_gaceta.astro";
+import NoticaDestacada from "../../components/componentes_gaceta/inicio/noticaDestacada.vue";
+import NoticiasDestacadas from "../../components/componentes_gaceta/inicio/noticiasDestacadas.vue";
 ---
 
 <LayoutGaceta>
-  <h1>Gaceta</h1>
+  <NoticaDestacada client:load />
+  <NoticiasDestacadas client:load />
 </LayoutGaceta>

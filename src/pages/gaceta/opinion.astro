@@ -1,12 +1,10 @@
 ---
 import LayoutGaceta from "../../layouts/Layout_gaceta.astro";
-import ListarPublicaciones from "../../components/componentes_gaceta/actualidad/ListarPublicacionesGaceta.vue";
+import ListarPublicaciones from "../../components/componentes_gaceta/ListarPublicacionesGaceta.vue";
 
 const coleccion = "opinion"; //nombre de la coleccion
 ---
 
 <LayoutGaceta>
-  <main>
-    <ListarPublicaciones coleccion={coleccion} client:load />
-  </main>
+  <ListarPublicaciones coleccion={coleccion} client:load />
 </LayoutGaceta>

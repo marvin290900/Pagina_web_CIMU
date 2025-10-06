@@ -1,6 +1,6 @@
 <template>
   <article
-    class="news-card bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer fade-in"
+    class="bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer fade-in"
     v-for="publicacion in props.publicaciones"
     :key="publicacion._id"
   >
@@ -10,7 +10,7 @@
         :alt="publicacion.imagenes.portada.descripcion"
         class="w-full h-48 object-cover"
       />
-      <div class="p-6">
+      <div class="p-6 h-full">
         <div class="flex items-center justify-between mb-3">
           <div class="badge badge-soft badge-error">
             {{ publicacion.categoria }}
@@ -52,6 +52,8 @@ const props = defineProps({
     required: true,
   },
 });
+
+console.log(props.publicaciones);
 </script>
 
 <style lang="scss" scoped></style>
