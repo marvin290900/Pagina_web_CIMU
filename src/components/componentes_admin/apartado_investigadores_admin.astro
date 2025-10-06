@@ -1253,7 +1253,9 @@
             .getAll("redes[]")
             .filter((v) => typeof v === "string" && v.trim() !== ""),
           redesSociales: redesSociales,
-
+          libros: [],
+          revistas: [],
+          proyectos_investigacion: [],
           creado_en: formatearFecha(new Date().toISOString()),
           actualizacion: formatearFecha(new Date().toISOString()),
         };
