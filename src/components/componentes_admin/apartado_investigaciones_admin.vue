@@ -396,6 +396,7 @@ async function guardarInvestigacion() {
       }
     }
 
+    console.log(body)
     let res = null;
     if (editando.value && investigacionEditando.value._id) {
       // Editando, obtener _id y _rev del doc actual

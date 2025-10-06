@@ -15,7 +15,7 @@ export const InvestigacionSchemaRaw = z
     descripcion: z.string().min(1).max(1000, "máx 1000 caracteres"),
     programa: z.string().min(1, "programa es requerido"),
     investigadores: z.array(z.object({
-      _id: z.string().min(1, "ID del investigador requerido"),
+      id: z.string().min(1, "ID del investigador requerido"),
       nombre: z.string().min(1, "Nombre del investigador requerido"),
     })).min(1, "al menos 1 autor"),
     "Fecha de publicacion": DateOnly,
