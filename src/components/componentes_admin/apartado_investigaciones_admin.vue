@@ -373,6 +373,7 @@ async function guardarInvestigacion() {
       previewImage.value = imagenURL
     }
     console.log("Imagen URL:", imagenURL)
+    console.log("autores", selected.value)
 
 
 
@@ -467,6 +468,7 @@ onMounted(() => {
       if (data.ok) {
         // Mapear para obtener solo nombres e ids, y filtrar valores inválidos
         options.value = data.docs.map(doc => { return { nombre: doc.nombre, id: doc._id } }).filter(Boolean);
+        console.log("Opciones de investigadores:", options.value);
        
       } else {
         console.error('Error al obtener investigadores:', data.error);

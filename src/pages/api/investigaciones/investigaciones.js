@@ -14,7 +14,10 @@ export const InvestigacionSchemaRaw = z
     resumen: z.string().min(1).max(300, "máx 300 caracteres"),
     descripcion: z.string().min(1).max(1000, "máx 1000 caracteres"),
     programa: z.string().min(1, "programa es requerido"),
-    investigadores: z.array(z.string().min(1)).min(1, "al menos 1 autor"),
+    investigadores: z.array(z.object({
+      _id: z.string().min(1, "ID del investigador requerido"),
+      nombre: z.string().min(1, "Nombre del investigador requerido"),
+    })).min(1, "al menos 1 autor"),
     "Fecha de publicacion": DateOnly,
     URI: z
       .string()
@@ -65,7 +68,7 @@ export async function POST({ request }) {
 
     const respuesta = await couch.post("investigaciones", parsed.data);
     console.log("Respuesta de CouchDB:", respuesta.data._id);
-   
+
     return new Response(JSON.stringify({ ok: true, data: respuesta.data }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
