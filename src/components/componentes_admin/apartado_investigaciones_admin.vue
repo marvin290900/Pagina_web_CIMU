@@ -242,7 +242,7 @@ const filteredOptions = computed(() => {
   return options.value.filter(
     (opt) =>
       opt.nombre.toLowerCase().includes(search.value.toLowerCase()) &&
-      !selected.value.includes(opt.nombre)
+      !selected.value.includes(opt)
   )
 })
 
