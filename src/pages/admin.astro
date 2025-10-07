@@ -2,6 +2,12 @@
 import LayoutAdmin from "../layouts/Layout_admin.astro";
 
 import MostrarDatosAdmin from "../components/componentes_admin/mostrarDatos_admin.astro";
+const user = Astro.locals.user;
+console.log("Usuario en admin.astro:", user);
+
+if (!user) {
+  return Astro.redirect('/login');
+}
 ---
 
 <LayoutAdmin>

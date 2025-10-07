@@ -115,7 +115,7 @@ try {
       titulo: inv.titulo,
       resumen: inv.resumen,
       investigadorPrincipal: inv.investigadores[0] || "Sin autor",
-      coinvestigadores: inv.investigadores.slice(1) || [],
+      coinvestigadores: inv.investigadores,
       año: inv.fecha_publicacion.split("-")[0],
       tipo: inv.tipo || "Cualitativa", // ajusta según tu DB
       estado: inv.estado || "activa",   // ajusta según tu DB
@@ -228,14 +228,10 @@ const pageTitle = `${programa.nombre} | CIMU - FMOcc UES`;
 
                         <div class="investigacion-meta">
                             <span>📅 {inv.año}</span>
-                            <span>👤 {inv.investigadorPrincipal}</span>
+                            <span>👤 {inv.coinvestigadores.map(i => i.nombre).join(', ')}</span>
                         </div>
 
-                        {inv.coinvestigadores.length > 0 && (
-                            <div class="coinvestigadores">
-                                <small>Con: {inv.coinvestigadores.join(', ')}</small>
-                            </div>
-                        )}
+                       
 
                         <p class="resumen">{inv.resumen}</p>
 

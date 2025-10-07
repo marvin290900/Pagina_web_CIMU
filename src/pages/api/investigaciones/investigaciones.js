@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { couch } from "../../../lib/couchDB.js";
+import { requireAuth } from "../../../lib/apiAuth.js";
 
 const DateOnly = z
   .string()
@@ -54,10 +55,12 @@ export const InvestigacionSchema = InvestigacionSchemaRaw.transform((v) => ({
   },
 }));
 
-export async function POST({ request }) {
+export async function POST({ request, cookies }) {
   try {
-    const body = await request.json();
+    const auth = await requireAuth(request, cookies);
+    if (!auth.authorized) return auth.response;
 
+    let body = await request.json();
     const parsed = InvestigacionSchema.safeParse(body);
     if (!parsed.success) {
       return new Response(
@@ -68,6 +71,15 @@ export async function POST({ request }) {
 
     const respuesta = await couch.post("investigaciones", parsed.data);
     console.log("Respuesta de CouchDB:", respuesta.data._id);
+    // Actualizar cada investigador
+    body = {
+      id: respuesta.data._id,
+      nombre: parsed.data.titulo,
+    }
+    
+    await Promise.all(parsed.data.investigadores.map(inv => {
+      return couch.post(`/investigadores/_design/investigadores/_update/agregarProyecto/${inv.id}`, body);
+    }));
 
     return new Response(JSON.stringify({ ok: true, data: respuesta.data }), {
       status: 200,
@@ -84,7 +96,9 @@ export async function POST({ request }) {
 
 export async function PUT({ request }) {
   try {
-    const body = await request.json();
+    const auth = await requireAuth(request, cookies);
+    if (!auth.authorized) return auth.response;
+    let body = await request.json();
 
     // ⚠️ Ahora sacamos el id directamente del body
     const { id, ...rest } = body;
@@ -124,6 +138,16 @@ export async function PUT({ request }) {
     // 3. Guardar en CouchDB
     console.log("DOC ACTUALIZADO:", updatedDoc);
     const respuesta = await couch.put(`investigaciones/${id}`, updatedDoc);
+
+    //Actualizar investigadores
+    body = {
+      id: respuesta.data._id,
+      nombre: parsed.data.titulo,
+    }
+    
+    await Promise.all(parsed.data.investigadores.map(inv => {
+      return couch.post(`/investigadores/_design/investigadores/_update/agregarProyecto/${inv.id}`, body);
+    }));
 
     return new Response(JSON.stringify({ ok: true, data: respuesta.data }), {
       status: 200,

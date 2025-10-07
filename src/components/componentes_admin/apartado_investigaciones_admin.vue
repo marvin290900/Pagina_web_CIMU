@@ -15,7 +15,7 @@
         </figure>
         <div class="card-body">
           <h2 class="card-title">{{ inv.doc.titulo }}</h2>
-          <p><strong>Autores:</strong> {{ inv.doc.investigadores?.join(", ") }}</p>
+          <p><strong>Autores:</strong> {{ inv.doc.investigadores?.map(i => i.nombre).join(", ") }}</p>
           <p><strong>Programa:</strong> {{ inv.doc.programa }}</p>
           <p><strong>Fecha:</strong> {{ formatDate(inv.doc.fecha_publicacion) }}</p>
           <p v-if="inv.doc.pdfURL" class="truncate">📄 <a :href="inv.doc.pdfURL" target="_blank"
