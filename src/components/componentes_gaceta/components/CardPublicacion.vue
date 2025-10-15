@@ -1,8 +1,6 @@
 <template>
   <article
     class="bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer fade-in"
-    v-for="publicacion in props.publicaciones"
-    :key="publicacion._id"
   >
     <a :href="`/gaceta/${publicacion._id}?categoria=${publicacion.tipo}`">
       <img
@@ -25,11 +23,11 @@
             }}
           </h4>
         </div>
-        <h3 class="text-xl font-bold mb-3 hover:text-blue-600 transition">
+        <h3 class="text-xl font-bold mb-3 hover:text-red-600 transition">
           {{ publicacion.titulo }}
         </h3>
         <p class="text-gray-600 mb-4">
-          {{ publicacion.contenido.slice(0, 150) }}...
+          {{ publicacion.contenido.slice(0, 100) }}...
         </p>
         <div class="flex items-center text-gray-500 text-sm">
           <i class="far fa-clock mr-2"></i>
@@ -47,13 +45,13 @@
 <script setup>
 // Props
 const props = defineProps({
-  publicaciones: {
-    type: Array,
+  publicacion: {
+    type: Object,
     required: true,
   },
 });
 
-console.log(props.publicaciones);
+console.log(props.publicacion);
 </script>
 
 <style lang="scss" scoped></style>
