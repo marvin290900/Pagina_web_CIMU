@@ -1,7 +1,7 @@
-import fs from 'fs';
-import path from 'path';
+import fs from "fs";
+import path from "path";
 
-const BASE_PATH = '/var/www/cimu/public/uploads'; // Cambia esto a la ruta absoluta de tu carpeta public
+const BASE_PATH = "/var/www/cimu/public/uploads"; // Cambia esto a la ruta absoluta de tu carpeta public
 
 export async function POST({ request }) {
   try {
@@ -9,19 +9,22 @@ export async function POST({ request }) {
     const formData = await request.formData();
 
     // El input file debe llamarse "foto" (debe coincidir con el name del input)
-    const file = formData.get('foto');
+    const file = formData.get("foto");
 
     if (!file) {
-      return new Response(JSON.stringify({ ok: false, error: 'No se envió ninguna imagen' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return new Response(
+        JSON.stringify({ ok: false, error: "No se envió ninguna imagen" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
     }
 
     // Obtener el nombre de la carpeta (por ejemplo: 'investigadores', 'libros', etc.)
     // Si no viene, usar 'uploads' por defecto
-    const carpeta = formData.get('carpeta')?.toString().trim() || 'uploads';
-    console.log('Carpeta recibida:', carpeta);
+    const carpeta = formData.get("carpeta")?.toString().trim() || "uploads";
+    console.log("Carpeta recibida:", carpeta);
 
     // Convertimos la imagen a un buffer para guardarla
     const arrayBuffer = await file.arrayBuffer();
@@ -38,7 +41,7 @@ export async function POST({ request }) {
     // Crear un nombre único para la imagen para evitar sobreescrituras
     const timestamp = Date.now();
     // Extraemos extensión original del archivo o usamos .bin si no tiene
-    const ext = path.extname(file.name) || '.bin';
+    const ext = path.extname(file.name) || ".bin";
     const fileName = `${timestamp}${ext}`;
 
     // Ruta final del archivo
@@ -53,13 +56,13 @@ export async function POST({ request }) {
     // Devolvemos el resultado con el link
     return new Response(JSON.stringify({ ok: true, url: publicUrl }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error('Error al guardar la imagen:', error);
+    console.error("Error al guardar la imagen:", error);
     return new Response(JSON.stringify({ ok: false, error: error.message }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { "Content-Type": "application/json" },
     });
   }
 }
