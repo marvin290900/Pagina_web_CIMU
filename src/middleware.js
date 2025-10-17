@@ -29,8 +29,12 @@ export const onRequest = defineMiddleware(async (context, next) => {
   
   
   // Guardar en locals
+
+  console.log("MIDDLEWARE USER:", user);
   locals.session = session;
   locals.user = user;
+
+  console.log("MIDDLEWARE USER:", locals.user);
   
   // Verificar rutas protegidas
   const isProtectedRoute = protectedRoutes.some(route => 
@@ -55,10 +59,6 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return redirect('/login?redirect=' + url.pathname);
   }
   
-  // Verificar permisos de admin
-  if (url.pathname.startsWith('/admin') && !user?.isAdmin) {
-    return redirect('/dashboard');
-  }
   
   return next();
 });
