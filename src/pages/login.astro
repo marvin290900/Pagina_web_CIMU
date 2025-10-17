@@ -84,14 +84,28 @@ const redirectTo = url.searchParams.get('redirect') || '/admin';
           password: formData.get("password"),
         }),
         headers: { "Content-Type": "application/json" },
+        credentials: 'include' 
       });
+
+      console.log('2. Response status:', res.status);
+      console.log('3. Response headers:', [...res.headers.entries()]);
       
       const data = await response.json();
 
-      if (response.ok) {
-        console.log("Login exitoso", redirectTo, "redirigiendo...");
+        console.log('4. Response data:', data);
+
+      if (res.ok) {
+        console.log('5. Login exitoso!');
+        console.log('6. Cookies actuales:', document.cookie);
+        console.log('7. Redirigiendo a:', redirectTo);
+        
+        // Pequeña espera para asegurar que la cookie se guarde
+        await new Promise(resolve => setTimeout(resolve, 200));
+        
         window.location.href = redirectTo;
       } else {
+        console.log('5. Login falló:', data.error);
+        document.getElementById("mensajeError").textContent = data.error;
         document.getElementById("mensajeError").classList.remove("hidden");
       }
 
