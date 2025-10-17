@@ -87,9 +87,9 @@ const redirectTo = url.searchParams.get('redirect') || '/admin';
         credentials: 'include' 
       });
 
-      console.log('2. Response status:', res.status);
-      console.log('3. Response headers:', [...res.headers.entries()]);
-      
+      console.log('2. Response status:', response.status);
+      console.log('3. Response headers:', [...response.headers.entries()]);
+
       const data = await response.json();
 
         console.log('4. Response data:', data);
@@ -102,7 +102,7 @@ const redirectTo = url.searchParams.get('redirect') || '/admin';
         // Pequeña espera para asegurar que la cookie se guarde
         await new Promise(resolve => setTimeout(resolve, 200));
         
-        // window.location.href = redirectTo;
+        window.location.href = redirectTo;
       } else {
         console.log('5. Login falló:', data.error);
         document.getElementById("mensajeError").textContent = data.error;

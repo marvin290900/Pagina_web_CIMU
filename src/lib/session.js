@@ -122,7 +122,7 @@ export function createSessionCookie(token, expiresAt) {
     attributes: {
       path: '/',
       httpOnly: true,
-      secure: import.meta.env.PROD, // ✅ Así de simple
+      secure: false, // ✅ Así de simple
       sameSite: 'lax',
       expires: expiresAt
     }
