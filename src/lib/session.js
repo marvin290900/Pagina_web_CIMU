@@ -24,7 +24,7 @@ export async function createSession(userId) {
     token,
     userId,
     expiresAt: expiresAt.toISOString(),
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
   };
 
   await couch.put(`/sessions/${sessionId}`, session);
@@ -131,13 +131,16 @@ export async function invalidateSession(token) {
 
 // Crear cookie de sesión
 export function createSessionCookie(token, expiresAt) {
+  // Detectar si estamos en producción
+  const isProduction = process.env.NODE_ENV === 'production' || import.meta.env.PROD;
+  
   return {
     name: SESSION_COOKIE_NAME,
     value: token,
     attributes: {
       path: '/',
       httpOnly: true,
-      secure: import.meta.env.PROD,
+      secure: isProduction, // true en producción, false en desarrollo
       sameSite: 'lax',
       expires: expiresAt
     }
@@ -146,13 +149,15 @@ export function createSessionCookie(token, expiresAt) {
 
 // Crear cookie vacía (para logout)
 export function createBlankSessionCookie() {
+  const isProduction = process.env.NODE_ENV === 'production' || import.meta.env.PROD;
+  
   return {
     name: SESSION_COOKIE_NAME,
     value: '',
     attributes: {
       path: '/',
       httpOnly: true,
-      secure: import.meta.env.PROD,
+      secure: isProduction, // true en producción, false en desarrollo
       sameSite: 'lax',
       maxAge: 0
     }
