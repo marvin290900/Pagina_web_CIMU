@@ -1,3 +1,200 @@
+<script setup>
+import { ref, watch } from "vue";
+
+const props = defineProps({
+  usuario: {
+    type: Object,
+    default: () => ({}),
+  },
+  modo: {
+    type: String,
+    default: "crear",
+  },
+});
+
+const emit = defineEmits(["cerrar", "guardar"]);
+
+// Estado del formulario
+const guardando = ref(false);
+const subiendoImagen = ref(false);
+const previewImagen = ref(null);
+const fileInput = ref(null);
+const archivoSeleccionado = ref(null); // Guardar el archivo seleccionado
+
+// Datos del formulario
+const formData = ref({
+  _id: "",
+  nombre: "",
+  correo: "",
+  estado: "",
+  biografia: "",
+  foto: "",
+  redes_sociales: {
+    facebook: "",
+    twitter: "",
+    linkedin: "",
+    youtube: "",
+  },
+});
+
+// Función para resetear el formulario
+const resetearFormulario = () => {
+  formData.value = {
+    _id: "",
+    nombre: "",
+    correo: "",
+    estado: "",
+    biografia: "",
+    foto: "",
+    redes_sociales: {
+      facebook: "",
+      twitter: "",
+      linkedin: "",
+      youtube: "",
+    },
+  };
+  previewImagen.value = null;
+  archivoSeleccionado.value = null;
+
+  if (fileInput.value) {
+    fileInput.value.value = "";
+  }
+};
+
+// Observar cambios en la prop usuario
+watch(
+  () => props.usuario,
+  (nuevoUsuario) => {
+    if (nuevoUsuario && Object.keys(nuevoUsuario).length > 0) {
+      formData.value = {
+        _id: nuevoUsuario._id || "",
+        nombre: nuevoUsuario.nombre || "",
+        correo: nuevoUsuario.correo || "",
+        estado: nuevoUsuario.estado || "",
+        biografia: nuevoUsuario.biografia || "",
+        foto: nuevoUsuario.foto || "",
+        redes_sociales: {
+          facebook: nuevoUsuario.redes_sociales?.facebook || "",
+          twitter: nuevoUsuario.redes_sociales?.twitter || "",
+          linkedin: nuevoUsuario.redes_sociales?.linkedin || "",
+          youtube: nuevoUsuario.redes_sociales?.youtube || "",
+        },
+      };
+      previewImagen.value = null;
+      archivoSeleccionado.value = null;
+      console.log("Datos cargados para editar:", formData.value);
+    } else {
+      resetearFormulario();
+    }
+  },
+  { immediate: true, deep: true }
+);
+
+// Función para manejar la selección de archivo (solo preview, NO sube todavía)
+const handleFileSelect = (event) => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  // Guardar el archivo para subirlo después
+  archivoSeleccionado.value = file;
+
+  // Crear preview local
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    previewImagen.value = e.target.result;
+  };
+  reader.readAsDataURL(file);
+
+  console.log("Archivo seleccionado:", file.name);
+};
+
+// Función para subir la imagen (se llama al guardar)
+const subirImagen = async () => {
+  if (!archivoSeleccionado.value) {
+    console.log("No hay archivo para subir");
+    return null;
+  }
+
+  try {
+    console.log("Iniciando subida de imagen:", archivoSeleccionado.value);
+    subiendoImagen.value = true;
+    console.log("Subiendo imagen...");
+
+    const formDataImagen = new FormData();
+    formDataImagen.append("foto", archivoSeleccionado.value);
+    formDataImagen.append("carpeta", "autores");
+
+    const resImagen = await fetch("/api/subir_imagen", {
+      method: "POST",
+      body: formDataImagen,
+    });
+
+    if (!resImagen.ok) {
+      throw new Error("Error al subir la imagen");
+    }
+
+    const dataImagen = await resImagen.json();
+
+    if (!dataImagen.ok) {
+      throw new Error(dataImagen.error || "Error en subida de imagen");
+    }
+
+    console.log("Imagen subida correctamente:", dataImagen.url);
+    return dataImagen.url;
+  } catch (error) {
+    console.error("Error al subir imagen:", error);
+    throw error;
+  } finally {
+    subiendoImagen.value = false;
+  }
+};
+
+// Función para cerrar el modal
+const cerrar = () => {
+  resetearFormulario();
+  emit("cerrar");
+};
+
+// Función para guardar
+const guardar = async () => {
+  try {
+    guardando.value = true;
+
+    // Validar datos básicos
+    if (
+      !formData.value.nombre ||
+      !formData.value.correo ||
+      !formData.value.estado
+    ) {
+      alert("Por favor completa los campos obligatorios");
+      guardando.value = false;
+      return;
+    }
+
+    // Si hay un archivo seleccionado, subirlo primero
+    if (archivoSeleccionado.value) {
+      console.log("Subiendo imagen antes de guardar...");
+      const fotoUrl = await subirImagen();
+
+      if (fotoUrl) {
+        formData.value.foto = fotoUrl;
+        console.log("URL de foto guardada:", fotoUrl);
+      }
+    }
+
+    console.log("Guardando usuario con datos:", formData.value);
+
+    // Emitir evento con los datos
+    emit("guardar", { ...formData.value });
+  } catch (error) {
+    console.error("Error al guardar:", error);
+    alert(`Error al guardar el usuario: ${error.message}`);
+  } finally {
+    guardando.value = false;
+  }
+};
+</script>
+
 <template>
   <div class="modal-box w-11/12 max-w-3xl">
     <form method="dialog">
@@ -54,7 +251,7 @@
         <h3 class="px-4 pb-3">Foto de perfil</h3>
 
         <!-- Preview de la foto -->
-        <div v-if="formData.foto || previewImagen" class="px-4 pb-3">
+        <div v-if="previewImagen || formData.foto" class="px-4 pb-3">
           <img
             :src="previewImagen || formData.foto"
             alt="Preview"
@@ -67,18 +264,24 @@
           <input
             ref="fileInput"
             type="file"
-            @change="handleFileUpload"
+            @change="handleFileSelect"
             accept="image/*"
             class="file-input file-input-primary w-full"
           />
 
-          <!-- Indicador de carga -->
+          <!-- Indicador de archivo seleccionado -->
+          <div v-if="archivoSeleccionado" class="text-sm text-green-600">
+            ✓ Imagen seleccionada: {{ archivoSeleccionado.name }}
+            <span class="text-gray-500">(se subirá al guardar)</span>
+          </div>
+
+          <!-- Indicador de carga al guardar -->
           <div
             v-if="subiendoImagen"
-            class="flex items-center gap-2 text-sm text-gray-500"
+            class="flex items-center gap-2 text-sm text-blue-500"
           >
             <span class="loading loading-spinner loading-sm"></span>
-            Subiendo imagen...
+            Subiendo imagen al servidor...
           </div>
         </div>
       </div>
@@ -128,18 +331,22 @@
 
       <!-- Botones de acción -->
       <div class="modal-action">
-        <button type="button" class="btn" @click="cerrar">Cancelar</button>
+        <button type="button" class="btn" @click="cerrar" :disabled="guardando">
+          Cancelar
+        </button>
         <button
           type="submit"
           class="btn btn-primary"
           :disabled="guardando || subiendoImagen"
         >
           <span
-            v-if="guardando"
+            v-if="guardando || subiendoImagen"
             class="loading loading-spinner loading-sm"
           ></span>
           {{
-            guardando
+            subiendoImagen
+              ? "Subiendo imagen..."
+              : guardando
               ? "Guardando..."
               : modo === "crear"
               ? "Crear"
@@ -150,190 +357,3 @@
     </form>
   </div>
 </template>
-
-<script setup>
-import { ref, watch } from "vue";
-
-const props = defineProps({
-  usuario: {
-    type: Object,
-    default: () => ({}),
-  },
-  modo: {
-    type: String,
-    default: "crear",
-  },
-});
-
-const emit = defineEmits(["cerrar", "guardar"]);
-
-// Estado del formulario
-const guardando = ref(false);
-const subiendoImagen = ref(false);
-const previewImagen = ref(null);
-const fileInput = ref(null);
-
-// Datos del formulario
-const formData = ref({
-  _id: "",
-  nombre: "",
-  correo: "",
-  estado: "",
-  biografia: "",
-  foto: "",
-  redes_sociales: {
-    facebook: "",
-    twitter: "",
-    linkedin: "",
-    youtube: "",
-  },
-});
-
-// Función para resetear el formulario
-const resetearFormulario = () => {
-  formData.value = {
-    _id: "",
-    nombre: "",
-    correo: "",
-    estado: "",
-    biografia: "",
-    foto: "",
-    redes_sociales: {
-      facebook: "",
-      twitter: "",
-      linkedin: "",
-      youtube: "",
-    },
-  };
-  previewImagen.value = null;
-
-  // Limpiar el input de archivo
-  if (fileInput.value) {
-    fileInput.value.value = "";
-  }
-};
-
-// Observar cambios en la prop usuario
-watch(
-  () => props.usuario,
-  (nuevoUsuario) => {
-    if (nuevoUsuario && Object.keys(nuevoUsuario).length > 0) {
-      formData.value = {
-        _id: nuevoUsuario._id || "",
-        nombre: nuevoUsuario.nombre || "",
-        correo: nuevoUsuario.correo || "",
-        estado: nuevoUsuario.estado || "",
-        biografia: nuevoUsuario.biografia || "",
-        foto: nuevoUsuario.foto || "",
-        redes_sociales: {
-          facebook: nuevoUsuario.redes_sociales?.facebook || "",
-          twitter: nuevoUsuario.redes_sociales?.twitter || "",
-          linkedin: nuevoUsuario.redes_sociales?.linkedin || "",
-          youtube: nuevoUsuario.redes_sociales?.youtube || "",
-        },
-      };
-      previewImagen.value = null;
-      console.log("Datos cargados para editar:", formData.value);
-    } else {
-      resetearFormulario();
-    }
-  },
-  { immediate: true, deep: true }
-);
-
-// Función para manejar la subida de archivo
-const handleFileUpload = async (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  try {
-    subiendoImagen.value = true;
-
-    // Crear preview local
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      previewImagen.value = e.target.result;
-    };
-    reader.readAsDataURL(file);
-
-    // Crear FormData para enviar la imagen
-    const formDataUpload = new FormData();
-    formDataUpload.append("foto", file);
-    formDataUpload.append("carpeta", "autores"); // Nombre de la carpeta donde se guardará
-
-    // Subir imagen a la API
-    const response = await fetch("/api/subir_imagen", {
-      method: "POST",
-      body: formDataUpload,
-    });
-
-    if (!response.ok) {
-      throw new Error("Error al subir la imagen");
-    }
-
-    const resultado = await response.json();
-
-    if (resultado.ok && resultado.url) {
-      // Guardar la URL pública en el formulario
-      formData.value.foto = resultado.url;
-      console.log("Imagen subida correctamente:", resultado.url);
-    } else {
-      throw new Error(resultado.error || "Error al subir la imagen");
-    }
-  } catch (error) {
-    console.error("Error al subir imagen:", error);
-    alert(`Error al subir la imagen: ${error.message}`);
-
-    // Limpiar preview y input si hay error
-    previewImagen.value = null;
-    if (fileInput.value) {
-      fileInput.value.value = "";
-    }
-  } finally {
-    subiendoImagen.value = false;
-  }
-};
-
-// Función para cerrar el modal
-const cerrar = () => {
-  resetearFormulario();
-  emit("cerrar");
-};
-
-// Función para guardar
-const guardar = async () => {
-  try {
-    guardando.value = true;
-
-    // Validar datos básicos
-    if (
-      !formData.value.nombre ||
-      !formData.value.correo ||
-      !formData.value.estado
-    ) {
-      alert("Por favor completa los campos obligatorios");
-      return;
-    }
-
-    // Validar que la imagen se haya subido si se seleccionó
-    if (subiendoImagen.value) {
-      alert("Espera a que termine de subirse la imagen");
-      return;
-    }
-
-    console.log("Guardando usuario:", formData.value);
-
-    // Emitir evento con los datos
-    emit("guardar", { ...formData.value });
-  } catch (error) {
-    console.error("Error al guardar:", error);
-    alert("Error al guardar el usuario");
-  } finally {
-    guardando.value = false;
-  }
-};
-</script>
-
-<style scoped>
-/* Estilos adicionales si los necesitas */
-</style>

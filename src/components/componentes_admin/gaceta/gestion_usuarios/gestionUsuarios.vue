@@ -123,29 +123,106 @@ const cerrarModal = () => {
 
 // Función para guardar (crear o editar)
 // En tu función guardarUsuario del componente padre
-const guardarUsuario = async (usuarioData) => {
-  try {
-    const metodo = modoModal.value === "crear" ? "POST" : "PUT";
-    const url =
-      modoModal.value === "crear"
-        ? "/api/gaceta/crear?coleccion=autores"
-        : `/api/gaceta/actualizar?coleccion=autores&id=${usuarioData._id}`;
+// const guardarUsuario = async (usuarioData) => {
+//   try {
+//     const metodo = modoModal.value === "crear" ? "POST" : "PUT";
+//     const url =
+//       modoModal.value === "crear"
+//         ? "/api/gaceta/crear?coleccion=autores"
+//         : `/api/gaceta/actualizar?coleccion=autores&id=${usuarioData._id}`;
 
-    const response = await fetch(url, {
-      method: metodo,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(usuarioData),
-    });
+//     const response = await fetch(url, {
+//       method: metodo,
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify(usuarioData),
+//     });
+
+//     if (!response.ok) {
+//       const error = await response.json();
+//       throw new Error(error.error || "Error al guardar");
+//     }
+
+//     const resultado = await response.json();
+//     console.log("Usuario guardado:", resultado);
+
+//     // Recargar lista
+//     await obtenerUsuarios();
+
+//     // Cerrar modal
+//     cerrarModal();
+
+//     // Mostrar mensaje de éxito
+//     alert(
+//       modoModal.value === "crear"
+//         ? "Usuario creado exitosamente"
+//         : "Usuario actualizado exitosamente"
+//     );
+//   } catch (error) {
+//     console.error("Error al guardar usuario:", error);
+//     alert(`Error: ${error.message}`);
+//   }
+// };
+
+// Función para guardar (crear o editar)
+const guardarUsuario = async (usuarioData) => {
+  console.log("=== GUARDAR USUARIO ===");
+  console.log("Modo:", modoModal.value);
+  console.log("Datos:", usuarioData);
+
+  try {
+    let response;
+
+    if (modoModal.value === "crear") {
+      // CREAR nuevo usuario
+      console.log("Creando nuevo usuario...");
+
+      // Limpiar el _id si viene vacío
+      const datosLimpios = { ...usuarioData };
+      if (!datosLimpios._id) {
+        delete datosLimpios._id;
+      }
+
+      response = await fetch("/api/gaceta/crear?coleccion=autores", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(datosLimpios),
+      });
+    } else {
+      // ACTUALIZAR usuario existente
+      console.log("Actualizando usuario existente...");
+
+      if (!usuarioData._id) {
+        throw new Error("No se puede actualizar: falta el ID del usuario");
+      }
+
+      response = await fetch(
+        `/api/gaceta/actualizar?coleccion=autores&id=${usuarioData._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(usuarioData),
+        }
+      );
+    }
+
+    console.log("Respuesta status:", response.status);
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || "Error al guardar");
+      const errorData = await response.json();
+      console.error("Error en respuesta:", errorData);
+      throw new Error(
+        errorData.error || errorData.mensaje || "Error al guardar"
+      );
     }
 
     const resultado = await response.json();
-    console.log("Usuario guardado:", resultado);
+    console.log("Resultado:", resultado);
 
     // Recargar lista
     await obtenerUsuarios();
@@ -159,9 +236,12 @@ const guardarUsuario = async (usuarioData) => {
         ? "Usuario creado exitosamente"
         : "Usuario actualizado exitosamente"
     );
+
+    console.log("=== USUARIO GUARDADO EXITOSAMENTE ===");
   } catch (error) {
-    console.error("Error al guardar usuario:", error);
-    alert(`Error: ${error.message}`);
+    console.error("❌ Error al guardar usuario:", error);
+    console.error("❌ Mensaje:", error.message);
+    alert(`Error al guardar: ${error.message}`);
   }
 };
 
