@@ -73,17 +73,21 @@
         @guardar="guardarUsuario"
       />
     </dialog>
+    <Alert v-if="alert" :type="alertData.type" :mensaje="alertData.mensaje" />
   </section>
 </template>
 
 <script setup>
 import { onMounted, ref } from "vue";
 import modalUsuarios from "./componentes/modalUsuarios.vue";
+import Alert from "../../../alert/Alert.vue";
 
 const usuarios = ref([]);
 const dataUsuario = ref({});
 const modalRef = ref(null);
 const modoModal = ref("crear"); // 'crear' o 'editar'
+const alert = ref(false);
+const alertData = ref({});
 
 const obtenerUsuarios = async () => {
   try {
@@ -122,50 +126,6 @@ const cerrarModal = () => {
 };
 
 // Función para guardar (crear o editar)
-// En tu función guardarUsuario del componente padre
-// const guardarUsuario = async (usuarioData) => {
-//   try {
-//     const metodo = modoModal.value === "crear" ? "POST" : "PUT";
-//     const url =
-//       modoModal.value === "crear"
-//         ? "/api/gaceta/crear?coleccion=autores"
-//         : `/api/gaceta/actualizar?coleccion=autores&id=${usuarioData._id}`;
-
-//     const response = await fetch(url, {
-//       method: metodo,
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify(usuarioData),
-//     });
-
-//     if (!response.ok) {
-//       const error = await response.json();
-//       throw new Error(error.error || "Error al guardar");
-//     }
-
-//     const resultado = await response.json();
-//     console.log("Usuario guardado:", resultado);
-
-//     // Recargar lista
-//     await obtenerUsuarios();
-
-//     // Cerrar modal
-//     cerrarModal();
-
-//     // Mostrar mensaje de éxito
-//     alert(
-//       modoModal.value === "crear"
-//         ? "Usuario creado exitosamente"
-//         : "Usuario actualizado exitosamente"
-//     );
-//   } catch (error) {
-//     console.error("Error al guardar usuario:", error);
-//     alert(`Error: ${error.message}`);
-//   }
-// };
-
-// Función para guardar (crear o editar)
 const guardarUsuario = async (usuarioData) => {
   console.log("=== GUARDAR USUARIO ===");
   console.log("Modo:", modoModal.value);
@@ -196,6 +156,10 @@ const guardarUsuario = async (usuarioData) => {
       console.log("Actualizando usuario existente...");
 
       if (!usuarioData._id) {
+        alertData.value = {
+          type: "warning",
+          mensaje: "No se puede actualizar: falta el ID del usuario",
+        };
         throw new Error("No se puede actualizar: falta el ID del usuario");
       }
 
@@ -216,6 +180,11 @@ const guardarUsuario = async (usuarioData) => {
     if (!response.ok) {
       const errorData = await response.json();
       console.error("Error en respuesta:", errorData);
+      alertData.value = {
+        type: "error",
+        mensaje:
+          errorData.error || errorData.mensaje || "Error al guardar usuario",
+      };
       throw new Error(
         errorData.error || errorData.mensaje || "Error al guardar"
       );
@@ -231,17 +200,26 @@ const guardarUsuario = async (usuarioData) => {
     cerrarModal();
 
     // Mostrar mensaje de éxito
-    alert(
-      modoModal.value === "crear"
-        ? "Usuario creado exitosamente"
-        : "Usuario actualizado exitosamente"
-    );
+    alertData.value = {
+      type: "success",
+      mensaje:
+        modoModal.value === "crear"
+          ? "Usuario creado exitosamente"
+          : "Usuario actualizado exitosamente",
+    };
 
-    console.log("=== USUARIO GUARDADO EXITOSAMENTE ===");
+    // alert(
+    //   modoModal.value === "crear"
+    //     ? "Usuario creado exitosamente"
+    //     : "Usuario actualizado exitosamente"
+    // );
   } catch (error) {
     console.error("❌ Error al guardar usuario:", error);
     console.error("❌ Mensaje:", error.message);
-    alert(`Error al guardar: ${error.message}`);
+    alertData.value = {
+      type: "error",
+      mensaje: `Error al guardar usuario: ${error.message}`,
+    };
   }
 };
 
