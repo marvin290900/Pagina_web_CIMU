@@ -1,90 +1,114 @@
 <template>
   <section class="w-4/5 mx-auto">
-    <div v-if="cargandoUsuarios" class="w-full flex justify-center h-[100vh]">
+    <div
+      v-if="cargandoPublicaciones"
+      class="w-full flex justify-center h-[100vh]"
+    >
       <span class="loading loading-spinner text-primary"></span>
     </div>
-    <div class="flex justify-between py-4">
+    <div class="grid md:grid-cols-4 py-4 gap-4">
       <h2 class="text-3xl font-bold">
         <a href="/admin/gaceta"
           ><button class="btn mr-3 btn-ghost">
             <span class="mdi mdi-arrow-left"></span>Regresar
           </button></a
-        >Gestion de usuarios
+        >Publicaciones
       </h2>
+
+      <select class="select" v-model="coleccion">
+        <option disabled :value="coleccion">{{ coleccion }}</option>
+        <option v-for="categoria in categoriasOptions" :key="categoria.value">
+          {{ categoria.label }}
+        </option>
+      </select>
+
       <div>
         <label class="input">
           <span class="mdi mdi-magnify text-2xl text-gray-500"></span>
           <input
-            v-model="busquedaUsuario"
+            v-model="busquedaPublicacion"
             type="search"
             class="grow"
-            placeholder="Buscar"
+            placeholder="Buscar publicación por título o usuario"
           />
         </label>
       </div>
       <button class="btn btn-primary" @click="abrirModalNuevo">
         <span class="mdi mdi-plus text-xl"></span>
-        Agregar
+        Publicar
       </button>
     </div>
-
+    <!-- Mensaje cuando no ha datos que mostrar -->
     <div
-      class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100"
+      v-if="!cargandoPublicaciones && publicacionesPaginadas.length === 0"
+      class="text-center py-20 flex flex-col items-center gap-4"
     >
+      <span class="mdi mdi-alert-circle text-5xl text-gray-500"></span>
+      <p class="text-gray-500">No hay publicaciones para mostrar.</p>
+    </div>
+
+    <!-- Tabla de publicaciones -->
+    <div
+      v-if="publicacionesPaginadas.length > 0"
+      class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 my-8"
+    >
+      <div class="flex w-full p-6 text-2xl justify-center">
+        <h2>{{ coleccion }}</h2>
+      </div>
       <table class="table">
-        <!-- head -->
         <thead>
           <tr>
             <th>Estado</th>
-            <th>Foto</th>
-            <th>Nombre</th>
-            <th>Correo</th>
+            <th>Fecha publicación</th>
+            <th>Título</th>
+            <th>Vistas</th>
+            <th>Usuario</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           <!-- Mostrar solo usuarios de la página actual -->
-          <tr v-for="usuario in usuariosPaginados" :key="usuario._id">
+          <tr
+            v-for="publicacion in publicacionesPaginadas"
+            :key="publicacion._id"
+          >
             <td>
               <div
-                v-if="usuario.estado && usuario.estado === 'activo'"
+                v-if="publicacion.estado && publicacion.estado === 'activo'"
                 class="status status-success"
               ></div>
               <div
-                v-else-if="usuario.estado && usuario.estado === 'inactivo'"
+                v-else-if="
+                  publicacion.estado && publicacion.estado === 'inactivo'
+                "
                 class="status status-error"
               ></div>
             </td>
             <td>
-              <img
-                v-if="usuario.foto"
-                class="mask mask-circle w-8 h-8 object-cover"
-                :src="usuario.foto"
-                :alt="`foto de ${usuario.nombre}`"
-              />
-              <div v-else class="avatar avatar-placeholder">
-                <div class="bg-primary text-neutral-content w-8 rounded-full">
-                  <span class="uppercase">{{ usuario.nombre.charAt(0) }}</span>
-                </div>
-              </div>
+              {{ new Date(publicacion.fecha_publicacion).toLocaleDateString() }}
             </td>
-            <td>{{ usuario.nombre }}</td>
-            <td>{{ usuario.correo }}</td>
+            <td>{{ publicacion.titulo }}</td>
+            <td>{{ publicacion.visitas }}</td>
+            <td>{{ publicacion.autor.nombre }}</td>
+
             <td class="flex gap-3">
               <div class="tooltip tooltip-bottom" data-tip="Editar">
                 <button
                   class="btn btn-soft btn-primary btn-sm"
-                  @click="editarUsuario(usuario)"
+                  @click="editarPublicacion(publicacion)"
                 >
                   <span class="mdi mdi-pencil text-lg"></span>
                 </button>
               </div>
-              <div class="tooltip tooltip-bottom" data-tip="Desactivar usuario">
+              <div
+                class="tooltip tooltip-bottom"
+                data-tip="Desactivar publicacion"
+              >
                 <button class="btn btn-soft btn-warning btn-sm">
                   <span class="mdi mdi-account-cancel text-lg"></span>
                 </button>
               </div>
-              <a :href="`/gaceta/perfil/${usuario._id}`" target="_blank">
+              <a :href="`/gaceta/perfil/${publicacion._id}`" target="_blank">
                 <div class="tooltip tooltip-bottom" data-tip="Ver perfil">
                   <button class="btn btn-soft btn-info btn-sm">
                     <span class="mdi mdi-eye-outline text-lg"></span>
@@ -94,7 +118,7 @@
               <div class="tooltip tooltip-bottom" data-tip="Eliminar">
                 <button
                   class="btn btn-soft btn-error btn-sm"
-                  @click="abrirModalEliminar(usuario)"
+                  @click="abrirModalEliminar(publicacion)"
                 >
                   <span class="mdi mdi-delete text-lg"></span>
                 </button>
@@ -106,11 +130,14 @@
     </div>
 
     <!-- Paginación -->
-    <div class="flex items-center justify-between py-4">
+    <div
+      v-if="publicacionesPaginadas.length > 0"
+      class="flex items-center justify-between py-4"
+    >
       <!-- Información de registros -->
       <div class="text-sm text-gray-600">
         Mostrando {{ rangoInicio }} - {{ rangoFin }} de
-        {{ totalUsuarios }} usuarios
+        {{ totalPublicaciones }} publicaciones
       </div>
 
       <!-- Controles de paginación -->
@@ -160,7 +187,7 @@
       <div class="flex items-center gap-2">
         <span class="text-sm text-gray-600">Mostrar:</span>
         <select
-          v-model="usuariosPorPagina"
+          v-model="publicacionesPorPagina"
           class="select select-sm select-bordered"
           @change="paginaActual = 1"
         >
@@ -172,13 +199,13 @@
       </div>
     </div>
 
-    <!-- Modal agregar usuario -->
-    <dialog ref="modalRef" id="modal_libros" class="modal">
+    <!-- Modal agregar publicacion -->
+    <dialog ref="modalRef" id="modal_publicacion" class="modal">
       <modal-usuarios
-        :usuario="dataUsuario"
+        :publicacion="dataPublicacion"
         :modo="modoModal"
         @cerrar="cerrarModal"
-        @guardar="guardarUsuario"
+        @guardar="guardarPublicacion"
       />
     </dialog>
 
@@ -198,8 +225,8 @@
           <span class="mdi mdi-alert-circle text-6xl text-red-500"></span>
         </div>
         <p class="pt-4 pb-8 text-center">
-          ¿Estás seguro de que deseas eliminar al usuario
-          <strong>{{ dataUsuario.nombre }}</strong
+          ¿Estás seguro de que deseas eliminar la publicación
+          <strong>{{ dataPublicacion.titulo }}</strong
           >? Esta acción no se puede deshacer.
         </p>
 
@@ -209,7 +236,7 @@
           </button>
           <button
             class="btn btn-error text-white"
-            @click="eliminarUsuario(dataUsuario._id)"
+            @click="eliminarPublicacion(dataPublicacion)"
           >
             Eliminar
           </button>
@@ -229,59 +256,68 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from "vue";
-import modalUsuarios from "./componentes/modalUsuarios.vue";
+import { onMounted, ref, computed, watch } from "vue";
+import modalUsuarios from "./componentes/ModalPublicacion.vue";
 import Alert from "../../../alert/Alert.vue";
 
-const usuarios = ref([]);
-const dataUsuario = ref({});
+const publicaciones = ref([]);
+const dataPublicacion = ref({});
 const modalRef = ref(null);
 const modalEliminarRef = ref(null);
 const modalGuardandoRef = ref(null);
 const modoModal = ref("crear");
 const alert = ref(false);
 const alertData = ref({});
-const busquedaUsuario = ref("");
-const cargandoUsuarios = ref(true);
+const busquedaPublicacion = ref(""); // Búsqueda por nombre
+const cargandoPublicaciones = ref(true);
 const guardando = ref(false);
+
+const coleccion = ref("Seleccionar Sección");
+const categoriasOptions = [
+  { value: "opinion", label: "Opinion Multidisciplinaria" },
+  { value: "actualidad", label: "Actualidad" },
+  { value: "audiovisuales", label: "Audio visuales" },
+  { value: "vida_universitaria", label: "Vida universitaria" },
+  { value: "memoria", label: "Memoria colectiva" },
+];
 
 // Variables de paginación
 const paginaActual = ref(1);
-const usuariosPorPagina = ref(10);
+const publicacionesPorPagina = ref(10);
 
-// Computed para usuarios paginados
-const usuariosPaginados = computed(() => {
-  if (busquedaUsuario.value) {
-    //filtrar por nombre o correo
-    const filtro = busquedaUsuario.value.toLowerCase();
-    return usuarios.value.filter(
-      (u) =>
-        u.nombre.toLowerCase().includes(filtro) ||
-        u.correo.toLowerCase().includes(filtro)
+// Computed para publicaciones paginadas
+const publicacionesPaginadas = computed(() => {
+  if (busquedaPublicacion.value) {
+    //filtrar por nombre o autor
+    const filtro = busquedaPublicacion.value.toLowerCase();
+    return publicaciones.value.filter(
+      (publicacion) =>
+        publicacion.titulo.toLowerCase().includes(filtro) ||
+        publicacion.autor.nombre.toLowerCase().includes(filtro)
     );
   }
-  const inicio = (paginaActual.value - 1) * usuariosPorPagina.value;
-  const fin = inicio + usuariosPorPagina.value;
-  return usuarios.value.slice(inicio, fin);
+  const inicio = (paginaActual.value - 1) * publicacionesPorPagina.value;
+  const fin = inicio + publicacionesPorPagina.value;
+  return publicaciones.value.slice(inicio, fin);
 });
 
 // Computed para total de páginas
 const totalPaginas = computed(() => {
-  return Math.ceil(usuarios.value.length / usuariosPorPagina.value);
+  return Math.ceil(publicaciones.value.length / publicacionesPorPagina.value);
 });
 
-// Computed para total de usuarios
-const totalUsuarios = computed(() => usuarios.value.length);
+// Computed para total de publicaciones
+const totalPublicaciones = computed(() => publicaciones.value.length);
 
 // Computed para rango de registros mostrados
 const rangoInicio = computed(() => {
-  if (usuarios.value.length === 0) return 0;
-  return (paginaActual.value - 1) * usuariosPorPagina.value + 1;
+  if (publicaciones.value.length === 0) return 0;
+  return (paginaActual.value - 1) * publicacionesPorPagina.value + 1;
 });
 
 const rangoFin = computed(() => {
-  const fin = paginaActual.value * usuariosPorPagina.value;
-  return Math.min(fin, usuarios.value.length);
+  const fin = paginaActual.value * publicacionesPorPagina.value;
+  return Math.min(fin, publicaciones.value.length);
 });
 
 // Computed para páginas visibles (máximo 5 botones)
@@ -316,19 +352,40 @@ const irAPagina = (pagina) => {
   }
 };
 
-const obtenerUsuarios = async () => {
+watch(coleccion, async () => {
+  cargandoPublicaciones.value = true;
+  await obtenerPublicaciones();
+});
+
+const obtenerPublicaciones = async () => {
+  if (coleccion.value === "Seleccionar Sección") {
+    cargandoPublicaciones.value = false;
+    publicaciones.value = [];
+    return;
+  }
+
+  let coleccionBusqueda = categoriasOptions.find(
+    (cat) => cat.label === coleccion.value
+  );
+
+  console.log("Obteniendo publicaciones de la colección:", coleccionBusqueda);
+
   try {
-    const response = await fetch("/api/gaceta/obtener?categoria=autores");
+    const response = await fetch(
+      `/api/gaceta/obtener?categoria=${coleccionBusqueda.value}`
+    );
     if (!response.ok) {
-      throw new Error("Error al obtener los usuarios");
+      throw new Error("Error al obtener la coleccion");
     }
     const data = await response.json();
-    usuarios.value = data.rows.map((row) => row.doc);
+    console.log("Datos obtenidos:", data);
+
+    publicaciones.value = data.rows.map((row) => row.doc);
 
     // Resetear a página 1 cuando se recargan los datos
     paginaActual.value = 1;
-    cargandoUsuarios.value = false;
-    console.log("Usuarios obtenidos:", usuarios.value.length);
+    cargandoPublicaciones.value = false;
+    console.log("Publicaciones obtenidas:", publicaciones.value.length);
   } catch (error) {
     console.error(error);
   }
@@ -336,18 +393,18 @@ const obtenerUsuarios = async () => {
 
 const abrirModalNuevo = () => {
   modoModal.value = "crear";
-  dataUsuario.value = {};
+  dataPublicacion.value = {};
   modalRef.value?.showModal();
 };
 
-const abrirModalEliminar = (usuario) => {
-  dataUsuario.value = { ...usuario };
+const abrirModalEliminar = (publicacion) => {
+  dataPublicacion.value = { ...publicacion };
   modalEliminarRef.value?.showModal();
 };
 
 const cerrarModalEliminar = () => {
   modalEliminarRef.value?.close();
-  dataUsuario.value = {};
+  dataPublicacion.value = {};
 };
 
 const abrirModalGuardando = () => {
@@ -364,62 +421,67 @@ const cerrarModalGuardando = () => {
   }
 };
 
-const editarUsuario = (usuario) => {
-  console.log("Editar usuario:", usuario);
+const editarPublicacion = (publicacion) => {
+  console.log("Editar publicación:", publicacion);
   modoModal.value = "editar";
-  dataUsuario.value = { ...usuario };
+  dataPublicacion.value = { ...publicacion };
   modalRef.value?.showModal();
 };
 
 const cerrarModal = () => {
   modalRef.value?.close();
-  dataUsuario.value = {};
+  dataPublicacion.value = {};
 };
 
-const guardarUsuario = async (usuarioData) => {
-  console.log("=== GUARDAR USUARIO ===");
+const guardarPublicacion = async (publicacionData) => {
+  console.log("=== GUARDAR PUBLICACIÓN ===");
   console.log("Modo:", modoModal.value);
-  console.log("Datos:", usuarioData);
+  console.log("Datos:", publicacionData);
   abrirModalGuardando();
 
   try {
     let response;
 
     if (modoModal.value === "crear") {
-      console.log("Creando nuevo usuario...");
-      const datosLimpios = { ...usuarioData };
+      console.log("Creando nueva publicación...");
+      const datosLimpios = { ...publicacionData };
       if (!datosLimpios._id) {
         delete datosLimpios._id;
       }
 
-      response = await fetch("/api/gaceta/crear?coleccion=autores", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(datosLimpios),
-      });
+      response = await fetch(
+        `/api/gaceta/crear?coleccion=${datosLimpios.tipo}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(datosLimpios),
+        }
+      );
     } else {
-      console.log("Actualizando usuario existente...");
+      console.log("Actualizando publicación existente...");
 
-      if (!usuarioData._id) {
+      if (!publicacionData._id) {
         alertData.value = {
           type: "warning",
-          mensaje: "No se puede actualizar: falta el ID del usuario",
+          mensaje: "No se puede actualizar: falta el ID de la publicación",
         };
         alert.value = true;
         setTimeout(() => (alert.value = false), 5000);
-        throw new Error("No se puede actualizar: falta el ID del usuario");
+        throw new Error(
+          "No se puede actualizar: falta el ID de la publicación"
+        );
       }
 
       response = await fetch(
-        `/api/gaceta/actualizar?coleccion=autores&id=${usuarioData._id}`,
+        `/api/gaceta/actualizar?coleccion=publicaciones&id=${publicacionData._id}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(usuarioData),
+          body: JSON.stringify(publicacionData),
         }
       );
     }
@@ -432,7 +494,9 @@ const guardarUsuario = async (usuarioData) => {
       alertData.value = {
         type: "error",
         mensaje:
-          errorData.error || errorData.mensaje || "Error al guardar usuario",
+          errorData.error ||
+          errorData.mensaje ||
+          "Error al guardar publicación",
       };
       alert.value = true;
       setTimeout(() => (alert.value = false), 5000);
@@ -444,7 +508,7 @@ const guardarUsuario = async (usuarioData) => {
     const resultado = await response.json();
     console.log("Resultado:", resultado);
 
-    await obtenerUsuarios();
+    await obtenerPublicaciones();
     cerrarModal();
     cerrarModalGuardando();
 
@@ -452,26 +516,26 @@ const guardarUsuario = async (usuarioData) => {
       type: "success",
       mensaje:
         modoModal.value === "crear"
-          ? "Usuario creado exitosamente"
-          : "Usuario actualizado exitosamente",
+          ? "Publicación creada exitosamente"
+          : "Publicación actualizada exitosamente",
     };
     alert.value = true;
     setTimeout(() => (alert.value = false), 5000);
 
-    console.log("=== USUARIO GUARDADO EXITOSAMENTE ===");
+    console.log("=== PUBLICACIÓN GUARDADA EXITOSAMENTE ===");
   } catch (error) {
-    console.error("❌ Error al guardar usuario:", error);
+    console.error("❌ Error al guardar publicación:", error);
     console.error("❌ Mensaje:", error.message);
   }
 };
 
-const eliminarUsuario = async (id) => {
+const eliminarPublicacion = async (publicacion) => {
   try {
-    console.log("Eliminando usuario:", id);
+    console.log("Eliminando publicación:", publicacion);
     abrirModalGuardando();
 
     const response = await fetch(
-      `/api/gaceta/eliminar?coleccion=autores&id=${id}`,
+      `/api/gaceta/eliminar?coleccion=${publicacion.tipo}&id=${publicacion._id}`,
       {
         method: "DELETE",
       }
@@ -483,22 +547,22 @@ const eliminarUsuario = async (id) => {
     }
 
     const resultado = await response.json();
-    console.log("Usuario eliminado:", resultado);
+    console.log("Publicación eliminada:", resultado);
 
     // Recargar la lista
-    await obtenerUsuarios();
+    await obtenerPublicaciones();
 
     // Mostrar alerta de éxito
     alertData.value = {
       type: "success",
-      mensaje: "Usuario eliminado exitosamente",
+      mensaje: "Publicación eliminada exitosamente",
     };
     alert.value = true;
     cerrarModalGuardando();
     modalEliminarRef.value?.close();
     setTimeout(() => (alert.value = false), 5000);
   } catch (error) {
-    console.error("Error al eliminar usuario:", error);
+    console.error("Error al eliminar publicación:", error);
     alertData.value = {
       type: "error",
       mensaje: `Error al eliminar: ${error.message}`,
@@ -509,6 +573,6 @@ const eliminarUsuario = async (id) => {
 };
 
 onMounted(() => {
-  obtenerUsuarios();
+  obtenerPublicaciones();
 });
 </script>

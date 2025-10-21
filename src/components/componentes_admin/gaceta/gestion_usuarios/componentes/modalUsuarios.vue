@@ -155,6 +155,12 @@ const cerrar = () => {
   emit("cerrar");
 };
 
+const abrirModalGuardando = () => {
+  if (modalGuardandoRef.value) {
+    modalGuardandoRef.value.showModal();
+  }
+};
+
 // Función para guardar
 const guardar = async () => {
   try {
