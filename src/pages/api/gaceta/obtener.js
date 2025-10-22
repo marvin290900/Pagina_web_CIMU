@@ -10,78 +10,64 @@ export async function GET({ request }) {
     if (!coleccion) {
       return new Response(
         JSON.stringify({ error: "COLECCION no proporcionada" }),
-        {
-          status: 400,
-        }
+        { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
 
     // Obtener documento por ID
     if (id) {
       const response = await couch.get(`/cimu-gaceta-${coleccion}/${id}`);
-
       return new Response(JSON.stringify(response.data), {
         status: 200,
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       });
     }
-    // Filtrar por año usando Mango Query
-    else if (anio) {
-      // Crear rango de fechas para el año
+
+    // Construir selector
+    let selector = {
+      estado: "activo",
+    };
+
+    // Agregar filtro de año si existe
+    if (anio) {
       const fechaInicio = `${anio}-01-01T00:00:00Z`;
       const fechaFin = `${anio}-12-31T23:59:59Z`;
 
-      // Query usando Mango
-      const query = {
-        selector: {
-          fecha_publicacion: {
-            $gte: fechaInicio,
-            $lte: fechaFin,
-          },
-        },
-        limit: 1000, // Ajusta según necesites
+      selector.fecha_publicacion = {
+        $gte: fechaInicio,
+        $lte: fechaFin,
       };
-
-      const response = await couch.post(
-        `/cimu-gaceta-${coleccion}/_find`,
-        query
-      );
-
-      return new Response(
-        JSON.stringify({
-          total_rows: response.data.docs.length,
-          rows: response.data.docs.map((doc) => ({ doc })),
-        }),
-        {
-          status: 200,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
     }
-    // Obtener todos los documentos
-    else {
-      const response = await couch.get(
-        `/cimu-gaceta-${coleccion}/_all_docs?include_docs=true`
-      );
 
-      return new Response(JSON.stringify(response.data), {
+    // Query SOLO con ordenamiento por fecha descendente
+    const query = {
+      selector: selector,
+      sort: [
+        { fecha_publicacion: "desc" }, // Solo una dirección
+      ],
+      limit: 1000,
+    };
+
+    const response = await couch.post(`/cimu-gaceta-${coleccion}/_find`, query);
+
+    return new Response(
+      JSON.stringify({
+        total_rows: response.data.docs.length,
+        rows: response.data.docs.map((doc) => ({ doc })),
+      }),
+      {
         status: 200,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-    }
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   } catch (error) {
     console.error("Error al obtener publicación:", error.message);
     return new Response(
-      JSON.stringify({ error: "Error al obtener publicación" }),
-      {
-        status: 500,
-      }
+      JSON.stringify({
+        error: "Error al obtener publicación",
+        mensaje: error.message,
+      }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
 }

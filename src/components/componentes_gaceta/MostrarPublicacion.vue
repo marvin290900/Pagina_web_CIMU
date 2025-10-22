@@ -76,7 +76,8 @@
       <h1 class="text-2xl md:text-4xl font-black">{{ data.titulo }}</h1>
 
       <!-- Contenido principal en texto -->
-      <p class="whitespace-pre-line">{{ data.contenido }}</p>
+      <!-- <p class="whitespace-pre-line">{{ data.contenido }}</p> -->
+      <MdPreview editorId="preview-only" :modelValue="data.contenido" />
 
       <!-- Galería de imágenes -->
       <div
@@ -124,6 +125,8 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import Galeria from "./components/Galeria.vue";
+import { MdPreview } from "md-editor-v3";
+import "md-editor-v3/lib/style.css";
 
 const data = ref({});
 const autor = ref(null);
@@ -158,8 +161,14 @@ const obtener = async (id, coleccion) => {
 
 onMounted(async () => {
   const coleccion = params.get("categoria"); //obtengo la categoria de la url
-  data.value = await obtener(props.id, coleccion);
-  autor.value = await obtener(data.value.autor.id, "autores");
+  const id = params.get("id"); // obtengo el id de la url
+  if (id) {
+    autor.value = await obtener(id, "autores");
+    data.value = await obtener(id, coleccion);
+  } else {
+    data.value = await obtener(props.id, coleccion);
+    autor.value = await obtener(data.value.autor.id, "autores");
+  }
 
   if (autor.value) {
     cargando.value = false;

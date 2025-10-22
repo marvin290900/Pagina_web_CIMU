@@ -100,15 +100,37 @@
                   <span class="mdi mdi-pencil text-lg"></span>
                 </button>
               </div>
+              <!-- Desactivar publicacion -->
               <div
                 class="tooltip tooltip-bottom"
                 data-tip="Desactivar publicacion"
+                v-if="publicacion.estado === 'activo'"
               >
-                <button class="btn btn-soft btn-warning btn-sm">
-                  <span class="mdi mdi-account-cancel text-lg"></span>
+                <button
+                  v-if="publicacion.estado === 'activo'"
+                  class="btn btn-soft btn-success g btn-sm"
+                  @click="desactivarPublicacion(publicacion, 'inactivo')"
+                >
+                  <span class="mdi mdi-file-document-check text-lg"></span>
                 </button>
               </div>
-              <a :href="`/gaceta/perfil/${publicacion._id}`" target="_blank">
+              <!-- Activar publicacion -->
+              <div
+                v-if="publicacion.estado === 'inactivo'"
+                class="tooltip tooltip-bottom"
+                data-tip="Activar publicacion"
+              >
+                <button
+                  class="btn btn-soft btn-error btn-sm"
+                  @click="desactivarPublicacion(publicacion, 'activo')"
+                >
+                  <span class="mdi mdi-file-document-remove text-lg"></span>
+                </button>
+              </div>
+              <a
+                :href="`/gaceta/${publicacion._id}?categoria=${publicacion.tipo}`"
+                target="_blank"
+              >
                 <div class="tooltip tooltip-bottom" data-tip="Ver perfil">
                   <button class="btn btn-soft btn-info btn-sm">
                     <span class="mdi mdi-eye-outline text-lg"></span>
@@ -259,6 +281,7 @@
 import { onMounted, ref, computed, watch } from "vue";
 import modalUsuarios from "./componentes/ModalPublicacion.vue";
 import Alert from "../../../alert/Alert.vue";
+import mod from "astro/zod";
 
 const publicaciones = ref([]);
 const dataPublicacion = ref({});
@@ -475,7 +498,7 @@ const guardarPublicacion = async (publicacionData) => {
       }
 
       response = await fetch(
-        `/api/gaceta/actualizar?coleccion=publicaciones&id=${publicacionData._id}`,
+        `/api/gaceta/actualizar?coleccion=${publicacionData.tipo}&id=${publicacionData._id}`,
         {
           method: "PUT",
           headers: {
@@ -521,8 +544,6 @@ const guardarPublicacion = async (publicacionData) => {
     };
     alert.value = true;
     setTimeout(() => (alert.value = false), 5000);
-
-    console.log("=== PUBLICACIÓN GUARDADA EXITOSAMENTE ===");
   } catch (error) {
     console.error("❌ Error al guardar publicación:", error);
     console.error("❌ Mensaje:", error.message);
@@ -570,6 +591,62 @@ const eliminarPublicacion = async (publicacion) => {
     alert.value = true;
     setTimeout(() => (alert.value = false), 5000);
   }
+};
+
+const desactivarPublicacion = async (publicacionData, nuevoEstado) => {
+  // Lógica para desactivar la publicación
+  console.log("Desactivando publicación:", publicacionData);
+  abrirModalGuardando();
+  // hacer una llamada a la API para desactivar
+
+  publicacionData.estado = nuevoEstado;
+  const response = await fetch(
+    `/api/gaceta/actualizar?coleccion=${publicacionData.tipo}&id=${publicacionData._id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(publicacionData),
+    }
+  );
+
+  console.log("Respuesta status:", response.status);
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    console.error("Error en respuesta:", errorData);
+    alertData.value = {
+      type: "error",
+      mensaje:
+        errorData.error ||
+        errorData.mensaje ||
+        "Error al desactivar publicación",
+    };
+    alert.value = true;
+    setTimeout(() => (alert.value = false), 5000);
+
+    throw new Error(
+      errorData.error || errorData.mensaje || "Error al desactivar publicación"
+    );
+  }
+
+  const resultado = await response.json();
+  console.log("Resultado:", resultado);
+
+  await obtenerPublicaciones();
+  cerrarModalGuardando();
+  alertData.value = {
+    type: "success",
+    mensaje:
+      nuevoEstado === "inactivo"
+        ? "Publicación desactivada exitosamente"
+        : "Publicación activada exitosamente",
+  };
+  alert.value = true;
+  setTimeout(() => (alert.value = false), 5000);
+
+  console.log("=== PUBLICACIÓN DESACTIVADA EXITOSAMENTE ===");
 };
 
 onMounted(() => {

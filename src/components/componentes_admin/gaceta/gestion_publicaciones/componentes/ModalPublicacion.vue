@@ -60,9 +60,11 @@
             required
           >
             <option disabled value="">Seleccionar categoría</option>
-            <option value="Opinion">Opinión</option>
+            <option value="Opinion Multidisciplinaria">
+              Opinión Multidisciplinaria
+            </option>
             <option value="Actualidad">Actualidad</option>
-            <option value="Audiovisuales">Audiovisuales</option>
+            <option value="Audio Visuales">Audio Visuales</option>
             <option value="Vida Universitaria">Vida Universitaria</option>
             <option value="Memoria colectiva">Memoria colectiva</option>
           </select>
@@ -206,7 +208,7 @@
       <div class="form-control">
         <label class="label">
           <span class="label-text font-semibold">Galería de imágenes</span>
-          <span class="label-text-alt">Máximo 10 imágenes</span>
+          <span class="label-text-alt">Máximo 5 imágenes</span>
         </label>
 
         <div class="border-2 border-dashed border-gray-300 rounded-lg p-4">
@@ -243,7 +245,7 @@
 
           <!-- Input para agregar más imágenes -->
           <input
-            v-if="formData.imagenes.galeria.length < 10"
+            v-if="formData.imagenes.galeria.length < 5"
             ref="galeriaInput"
             type="file"
             @change="handleGaleriaSelect"
@@ -303,16 +305,17 @@
         </button>
       </div>
     </form>
+    <Alert v-if="alert" :type="alertData.type" :mensaje="alertData.mensaje" />
   </div>
 </template>
 
 <script setup>
 import { ref, watch, computed, onMounted } from "vue";
-//import { VMarkdownEditor } from "vue3-markdown";
-//import "vue3-markdown/dist/vue3-markdown.css";
 import { MdEditor, config } from "md-editor-v3";
+import Alert from "../../../../alert/Alert.vue";
 import "md-editor-v3/lib/style.css";
 import ES_ES from "@vavt/cm-extension/dist/locale/es-ES";
+import { set } from "zod/v4";
 
 const props = defineProps({
   publicacion: {
@@ -346,6 +349,8 @@ const subiendoPortada = ref(false);
 const subiendoGaleria = ref(false);
 const imagenesCargadas = ref(0);
 const totalImagenesSubir = ref(0);
+const alert = ref(false);
+const alertData = ref({ type: "", mensaje: "" });
 
 // Datos
 const autores = ref([]);
@@ -517,6 +522,28 @@ const handlePortadaSelect = async (event) => {
   const file = event.target.files?.[0];
   if (!file) return;
 
+  // Límite de 3MB
+  const MAX_SIZE_MB = 3;
+  const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
+
+  if (file.size > MAX_SIZE_BYTES) {
+    alertData.value = {
+      type: "warning",
+      mensaje: `La imagen es demasiado grande (${(
+        file.size /
+        1024 /
+        1024
+      ).toFixed(2)} MB). El límite es ${MAX_SIZE_MB} MB.`,
+    };
+    alert.value = true;
+    setTimeout(() => {
+      alert.value = false;
+    }, 5000);
+
+    event.target.value = ""; // Limpiar el input
+    return; // Detener la ejecución
+  }
+
   try {
     subiendoPortada.value = true;
 
@@ -538,7 +565,14 @@ const handlePortadaSelect = async (event) => {
     console.log("Portada subida:", data.url);
   } catch (error) {
     console.error("Error al subir portada:", error);
-    alert(`Error al subir la imagen: ${error.message}`);
+    alertData.value = {
+      type: "error",
+      mensaje: `Error al subir la imagen de portada: ${error.message}`,
+    };
+    alert.value = true;
+    setTimeout(() => {
+      alert.value = false;
+    }, 5000);
   } finally {
     subiendoPortada.value = false;
   }
@@ -549,16 +583,73 @@ const handleGaleriaSelect = async (event) => {
   const files = Array.from(event.target.files || []);
   if (files.length === 0) return;
 
-  // Validar que no exceda el límite
-  const espacioDisponible = 10 - formData.value.imagenes.galeria.length;
-  const archivosASubir = files.slice(0, espacioDisponible);
+  // Validacion de limite de tamaño por archivo
+  const MAX_SIZE_MB = 3;
+  const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
 
-  if (files.length > espacioDisponible) {
-    alert(
-      `Solo puedes subir ${espacioDisponible} imágenes más. Se subirán las primeras ${espacioDisponible}.`
-    );
+  const archivosValidos = [];
+  const archivosInvalidos = [];
+
+  // Separamos los archivos válidos de los inválidos por tamaño
+  for (const file of files) {
+    if (file.size > MAX_SIZE_BYTES) {
+      archivosInvalidos.push({
+        name: file.name,
+        size: (file.size / 1024 / 1024).toFixed(2),
+      });
+    } else {
+      archivosValidos.push(file);
+    }
   }
 
+  // Notificar al usuario (UNA SOLA VEZ) sobre los archivos omitidos por tamaño
+  if (archivosInvalidos.length > 0) {
+    const nombresInvalidos = archivosInvalidos
+      .map((f) => `${f.name} (${f.size} MB)`)
+      .join("\n- ");
+
+    alertData.value = {
+      type: "warning",
+      mensaje: `Se omitieron ${archivosInvalidos.length} archivos por superar el límite de ${MAX_SIZE_MB} MB:\n\n- ${nombresInvalidos}`,
+    };
+    alert.value = true;
+    setTimeout(() => {
+      alert.value = false;
+    }, 8000);
+  }
+
+  // Si no quedó ningún archivo válido, detenemos
+  if (archivosValidos.length === 0) {
+    console.log("No hay archivos válidos para subir.");
+    if (galeriaInput.value) galeriaInput.value.value = "";
+    return;
+  }
+
+  //VALIDACIÓN DE ESPACIO EN GALERÍA ---
+  const espacioDisponible = 5 - formData.value.imagenes.galeria.length;
+
+  // Aplicamos el límite de espacio solo a los archivos que SÍ son válidos
+  const archivosASubir = archivosValidos.slice(0, espacioDisponible);
+
+  if (archivosValidos.length > espacioDisponible) {
+    alertData.value = {
+      type: "warning",
+      mensaje: `Solo tenías ${espacioDisponible} espacios disponibles en la galería. Se subirán las primeras ${espacioDisponible} imágenes válidas.`,
+    };
+    alert.value = true;
+    setTimeout(() => {
+      alert.value = false;
+    }, 8000);
+  }
+
+  // Si no hay espacio, salimos
+  if (archivosASubir.length === 0) {
+    console.log("No hay espacio disponible en la galería.");
+    if (galeriaInput.value) galeriaInput.value.value = "";
+    return;
+  }
+
+  // --- 3. SUBIDA (SOLO ARCHIVOS VÁLIDOS Y CON ESPACIO) ---
   try {
     subiendoGaleria.value = true;
     imagenesCargadas.value = 0;
@@ -576,7 +667,7 @@ const handleGaleriaSelect = async (event) => {
 
       if (!response.ok) {
         console.error(`Error al subir ${file.name}`);
-        continue;
+        continue; // Saltar al siguiente si uno falla
       }
 
       const data = await response.json();
@@ -590,14 +681,21 @@ const handleGaleriaSelect = async (event) => {
     }
 
     console.log("Imágenes de galería subidas:", imagenesCargadas.value);
-
-    // Limpiar input
-    if (galeriaInput.value) galeriaInput.value.value = "";
   } catch (error) {
     console.error("Error al subir galería:", error);
-    alert(`Error al subir imágenes: ${error.message}`);
+    alertData.value = {
+      type: "error",
+      mensaje: `Error al subir las imágenes de la galería: ${error.message}`,
+    };
+    alert.value = true;
+    setTimeout(() => {
+      alert.value = false;
+    }, 5000);
+    //
   } finally {
     subiendoGaleria.value = false;
+    // Limpiar input independientemente del resultado
+    if (galeriaInput.value) galeriaInput.value.value = "";
   }
 };
 
@@ -647,25 +745,53 @@ const guardar = async () => {
       !formData.value.tipo ||
       !formData.value.categoria
     ) {
-      alert("Por favor completa todos los campos obligatorios");
+      alertData.value = {
+        type: "warning",
+        mensaje: "Por favor completa todos los campos obligatorios",
+      };
+      alert.value = true;
+      setTimeout(() => {
+        alert.value = false;
+      }, 5000);
       guardando.value = false;
       return;
     }
 
     if (!formData.value.contenido) {
-      alert("El contenido de la publicación es obligatorio");
+      alertData.value = {
+        type: "warning",
+        mensaje: "El contenido de la publicación es obligatorio",
+      };
+      alert.value = true;
+      setTimeout(() => {
+        alert.value = false;
+      }, 5000);
       guardando.value = false;
       return;
     }
 
     if (!formData.value.imagenes.portada.url) {
-      alert("La imagen de portada es obligatoria");
+      alertData.value = {
+        type: "warning",
+        mensaje: "La imagen de portada es obligatoria",
+      };
+      alert.value = true;
+      setTimeout(() => {
+        alert.value = false;
+      }, 5000);
       guardando.value = false;
       return;
     }
 
     if (!formData.value.autor.id) {
-      alert("Debes seleccionar un autor");
+      alertData.value = {
+        type: "warning",
+        mensaje: "Debes seleccionar un autor",
+      };
+      alert.value = true;
+      setTimeout(() => {
+        alert.value = false;
+      }, 5000);
       guardando.value = false;
       return;
     }
@@ -676,7 +802,14 @@ const guardar = async () => {
     emit("guardar", { ...formData.value });
   } catch (error) {
     console.error("Error al guardar:", error);
-    alert(`Error al guardar la publicación: ${error.message}`);
+    alertData.value = {
+      type: "error",
+      mensaje: `Error al guardar la publicación: ${error.message}`,
+    };
+    alert.value = true;
+    setTimeout(() => {
+      alert.value = false;
+    }, 5000);
   } finally {
     guardando.value = false;
   }

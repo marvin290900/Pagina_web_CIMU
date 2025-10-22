@@ -1,76 +1,3 @@
-// // src/pages/api/gaceta/crear.js
-// import { couch } from "../../../lib/couchDB";
-
-// export async function POST({ request }) {
-//   try {
-//     const url = new URL(request.url);
-//     const coleccion = url.searchParams.get("coleccion");
-
-//     if (!coleccion) {
-//       return new Response(
-//         JSON.stringify({ error: "Colección no proporcionada" }),
-//         {
-//           status: 400,
-//           headers: { "Content-Type": "application/json" },
-//         }
-//       );
-//     }
-
-//     // Obtener datos del body
-//     const datos = await request.json();
-
-//     if (!datos || Object.keys(datos).length === 0) {
-//       return new Response(
-//         JSON.stringify({ error: "No se proporcionaron datos" }),
-//         {
-//           status: 400,
-//           headers: { "Content-Type": "application/json" },
-//         }
-//       );
-//     }
-
-//     // Crear documento en CouchDB
-//     const response = await couch.post(`/cimu-gaceta-${coleccion}`, datos);
-
-//     if (response.status !== 201 && response.status !== 200) {
-//       return new Response(
-//         JSON.stringify({
-//           error: "Error al crear el documento",
-//           detalles: response.data,
-//         }),
-//         {
-//           status: response.status,
-//           headers: { "Content-Type": "application/json" },
-//         }
-//       );
-//     }
-
-//     return new Response(
-//       JSON.stringify({
-//         mensaje: "Documento creado exitosamente",
-//         id: response.data.id,
-//         rev: response.data.rev,
-//       }),
-//       {
-//         status: 201,
-//         headers: { "Content-Type": "application/json" },
-//       }
-//     );
-//   } catch (error) {
-//     console.error("Error al crear documento:", error.message);
-//     return new Response(
-//       JSON.stringify({
-//         error: "Error al crear documento",
-//         mensaje: error.message,
-//       }),
-//       {
-//         status: 500,
-//         headers: { "Content-Type": "application/json" },
-//       }
-//     );
-//   }
-// }
-
 // src/pages/api/gaceta/crear.js
 import { couch } from "../../../lib/couchDB";
 
@@ -78,9 +5,6 @@ export async function POST({ request }) {
   try {
     const url = new URL(request.url);
     const coleccion = url.searchParams.get("coleccion");
-
-    console.log("=== API CREAR DOCUMENTO ===");
-    console.log("1. Colección:", coleccion);
 
     if (!coleccion) {
       return new Response(
@@ -94,8 +18,6 @@ export async function POST({ request }) {
 
     // Obtener datos del body
     const datos = await request.json();
-    console.log("2. Datos recibidos:", datos);
-
     if (!datos || Object.keys(datos).length === 0) {
       return new Response(
         JSON.stringify({ error: "No se proporcionaron datos" }),
@@ -111,13 +33,8 @@ export async function POST({ request }) {
       delete datos._id;
     }
 
-    console.log("3. Creando documento en:", `/cimu-gaceta-${coleccion}`);
-
     // Crear documento en CouchDB
     const response = await couch.post(`/cimu-gaceta-${coleccion}`, datos);
-
-    console.log("4. Respuesta de CouchDB:", response.status);
-    console.log("5. Data:", response.data);
 
     if (response.status !== 201 && response.status !== 200) {
       console.error("Error en respuesta:", response.data);
@@ -133,8 +50,25 @@ export async function POST({ request }) {
       );
     }
 
-    console.log("6. Documento creado exitosamente");
-    console.log("=== FIN API CREAR ===");
+    // Agregar el id y el nombre del autor a la coleccion de autores si es necesario
+    if (datos.autor && datos.autor.id && datos.autor.nombre) {
+      //Buscar el autor en la coleccion de autores
+      const autorResponse = await couch.get(
+        `/cimu-gaceta-autores/${datos.autor.id}`
+      );
+      if (autorResponse.status === 200) {
+        //El autor ya existe, agregar el _id de la publicacion a su lista de publicaciones
+        let idPublicacion = response.data._id;
+        let tipo = datos.tipo;
+        let publicaciones = autorResponse.data.publicaciones || [];
+        publicaciones.push({ id: idPublicacion, tipo: tipo });
+        //Actualizar el autor
+        await couch.put(`/cimu-gaceta-autores/${datos.autor.id}`, {
+          ...autorResponse.data,
+          publicaciones: publicaciones,
+        });
+      }
+    }
 
     return new Response(
       JSON.stringify({
