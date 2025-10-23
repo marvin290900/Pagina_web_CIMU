@@ -3,7 +3,7 @@
     <div v-if="cargandoUsuarios" class="w-full flex justify-center h-[100vh]">
       <span class="loading loading-spinner text-primary"></span>
     </div>
-    <div class="flex justify-between py-4">
+    <div v-else class="flex justify-between py-4">
       <h2 class="text-3xl font-bold">
         <a href="/admin/gaceta"
           ><button class="btn mr-3 btn-ghost">
@@ -79,9 +79,28 @@
                   <span class="mdi mdi-pencil text-lg"></span>
                 </button>
               </div>
-              <div class="tooltip tooltip-bottom" data-tip="Desactivar usuario">
-                <button class="btn btn-soft btn-warning btn-sm">
+              <div
+                v-if="usuario.estado === 'inactivo'"
+                class="tooltip tooltip-bottom"
+                data-tip="Activar usuario"
+              >
+                <button
+                  class="btn btn-soft btn-error btn-sm"
+                  @click="desactivarUsuario(usuario._id, usuario.estado)"
+                >
                   <span class="mdi mdi-account-cancel text-lg"></span>
+                </button>
+              </div>
+              <div
+                v-if="usuario.estado === 'activo'"
+                class="tooltip tooltip-bottom"
+                data-tip="Desactivar usuario"
+              >
+                <button
+                  class="btn btn-soft btn-success btn-sm"
+                  @click="desactivarUsuario(usuario._id, usuario.estado)"
+                >
+                  <span class="mdi mdi-account-check text-lg"></span>
                 </button>
               </div>
               <a :href="`/gaceta/perfil/${usuario._id}`" target="_blank">
@@ -502,6 +521,54 @@ const eliminarUsuario = async (id) => {
     alertData.value = {
       type: "error",
       mensaje: `Error al eliminar: ${error.message}`,
+    };
+    alert.value = true;
+    setTimeout(() => (alert.value = false), 5000);
+  }
+};
+
+//desactivar usuario (cambiar estado a inactivo o activo)
+const desactivarUsuario = async (id, estado) => {
+  try {
+    console.log("Cambiando estado de usuario:", id, "a", estado);
+    abrirModalGuardando();
+
+    const response = await fetch(
+      `/api/gaceta/desactivar_autor?id=${id}&estado=${estado}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Error al cambiar estado del usuario");
+    }
+
+    const resultado = await response.json();
+    console.log("Estado de usuario cambiado:", resultado);
+
+    // Recargar la lista
+    await obtenerUsuarios();
+
+    // Mostrar alerta de éxito
+    alertData.value = {
+      type: "success",
+      mensaje: `Usuario ${
+        estado === "activo" ? "desactivado" : "activado"
+      } exitosamente`,
+    };
+    alert.value = true;
+    cerrarModalGuardando();
+    setTimeout(() => (alert.value = false), 5000);
+  } catch (error) {
+    console.error("Error al cambiar estado del usuario:", error);
+    alertData.value = {
+      type: "error",
+      mensaje: `Error al cambiar estado: ${error.message}`,
     };
     alert.value = true;
     setTimeout(() => (alert.value = false), 5000);

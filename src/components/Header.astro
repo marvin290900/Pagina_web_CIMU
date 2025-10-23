@@ -1,5 +1,5 @@
 ---
-const { cimuLogo, uesLogoBlanco, uesLogoRojo, decanato, plumaLogo,remiLogo } =
+const { cimuLogo, uesLogoBlanco, uesLogoRojo, decanato, plumaLogo, remiLogo } =
   Astro.props;
 ---
 
@@ -9,7 +9,9 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo, decanato, plumaLogo,remiLogo } =
   class="w-full z-50 transition-colors duration-300 text-[#1D2D50] shadow-none"
 >
   <!-- FILA 1 - LOGOS -->
-  <div class="flex flex-col sm:flex-row items-center py-3 justify-center bg-white">
+  <div
+    class="flex flex-col sm:flex-row items-center py-3 justify-center bg-white"
+  >
     <!-- Logo + Texto -->
     <div class="flex items-center">
       <a href="/">
@@ -19,7 +21,7 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo, decanato, plumaLogo,remiLogo } =
           title="Centro de Investigación Multidisciplinario FMOcc UES"
           class="h-18 sm:h-18 md:h-18 lg:h-24 transition-all duration-300 hover:scale-105 hover:brightness-110"
         />
-      </a> 
+      </a>
     </div>
 
     <!-- Logos con divisor -->
@@ -43,7 +45,7 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo, decanato, plumaLogo,remiLogo } =
           class="h-8 sm:h-8 md:h-8 lg:h-12 transition-all duration-300 hover:scale-105 hover:brightness-110"
         />
       </a>
-      
+
       <a href="/" class="flex items-center h-20">
         <img
           id="decanatoLogo"
@@ -96,10 +98,7 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo, decanato, plumaLogo,remiLogo } =
         </li>
 
         <li>
-          <a
-            href="/gaceta_multidisciplinaria"
-            >Gaceta Multidisciplinaria</a
-          >
+          <a href="/gaceta">Gaceta Multidisciplinaria</a>
         </li>
 
         <li class="group relative">
@@ -129,12 +128,10 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo, decanato, plumaLogo,remiLogo } =
                 >Multidisciplinaria Editorial</a
               >
             </li>
-            
-            
           </ul>
         </li>
         <!-- Nuevo -->
-         <li class="group relative">
+        <li class="group relative">
           <a class="">REMI </a>
           <ul
             class="absolute left-0 top-full bg-white text-black rounded-md opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition duration-300 p-2 shadow-md z-50"
@@ -175,7 +172,7 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo, decanato, plumaLogo,remiLogo } =
                 >Envios</a
               >
             </li>
-           <li>
+            <li>
               <a
                 href="/remi/sistema_de_revision"
                 class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
@@ -191,7 +188,6 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo, decanato, plumaLogo,remiLogo } =
             </li>
           </ul>
         </li>
-         
 
         <li><a href="/contactenos">Contáctenos</a></li>
       </ul>
@@ -209,7 +205,7 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo, decanato, plumaLogo,remiLogo } =
   <!-- Menú desplegable pegado a la izquierda -->
   <div
     id="mobileMenu"
-   class="fixed left-0 right-0 top-16 bg-white text-black rounded-md shadow-lg p-4 z-50 hidden animate-fade-in w-full max-w-md mx-auto
+    class="fixed left-0 right-0 top-16 bg-white text-black rounded-md shadow-lg p-4 z-50 hidden animate-fade-in w-full max-w-md mx-auto
           max-h-[calc(100vh-4rem)] overflow-y-auto"
   >
     <a href="/" class="block py-2 px-3 rounded-md hover:bg-gray-100">Inicio</a>
@@ -297,7 +293,7 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo, decanato, plumaLogo,remiLogo } =
             >Autoridades Universitaria</a
           >
         </li>
-         <li>
+        <li>
           <a
             href="/remi/editorial"
             class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"

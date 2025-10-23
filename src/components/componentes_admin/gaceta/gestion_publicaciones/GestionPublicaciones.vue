@@ -6,7 +6,7 @@
     >
       <span class="loading loading-spinner text-primary"></span>
     </div>
-    <div class="grid md:grid-cols-4 py-4 gap-4">
+    <div v-else class="grid md:grid-cols-4 py-4 gap-4">
       <h2 class="text-3xl font-bold">
         <a href="/admin/gaceta"
           ><button class="btn mr-3 btn-ghost">

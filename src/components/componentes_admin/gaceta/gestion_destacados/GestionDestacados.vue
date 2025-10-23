@@ -4,7 +4,7 @@
       <span class="loading loading-spinner text-primary"></span>
     </div>
     <!-- Publicación destacada -->
-    <div class="pt-8 pb-12">
+    <div v-else class="pt-8 pb-12">
       <div class="flex justify-between">
         <a href="/admin/gaceta">
           <button class="btn mr-3 btn-ghost">

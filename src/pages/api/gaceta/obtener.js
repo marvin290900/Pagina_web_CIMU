@@ -23,6 +23,17 @@ export async function GET({ request }) {
       });
     }
 
+    if (coleccion && coleccion === "autores") {
+      const response = await couch.get(
+        `/cimu-gaceta-${coleccion}/_all_docs?include_docs=true`
+      );
+      console.log("Response data:", response.data);
+      return new Response(JSON.stringify(response.data), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
     // Construir selector
     let selector = {
       estado: "activo",
