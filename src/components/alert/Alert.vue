@@ -1,6 +1,9 @@
 <template>
-  <Transition name="slide-fade">
-    <div v-if="visible" class="fixed top-4 right-4 z-50 max-w-md shadow-lg">
+  <Transition name="slide-fade ">
+    <div
+      v-if="visible"
+      class="fixed top-4 right-4 z-[99999] max-w-md shadow-lg"
+    >
       <div role="alert" :class="`alert alert-${props.type}`">
         <span
           v-if="props.type === 'success'"
