@@ -331,13 +331,13 @@ console.log("Investigador obtenido:", investigador);
         <span class="mdi mdi-book-open-variant mr-2 text-indigo-600"></span>
         Libros
       </button>
-      <button
+      <!-- <button
         class="pub-tab-btn text-sm py-2 px-4 border-b-2 border-transparent hover:border-gray-400"
         data-tab="articulos"
       >
         <span class="mdi mdi-file-document-outline mr-2 text-green-600"></span>
         Artículos
-      </button>
+      </button> -->
       <button
         class="pub-tab-btn text-sm py-2 px-4 border-b-2 border-transparent hover:border-gray-400"
         data-tab="proyectos"
@@ -419,20 +419,39 @@ console.log("Investigador obtenido:", investigador);
     const primerTab = tabs[0]; // Suponiendo que Adscripciones es el primero
     activarTab(primerTab);
 
-    const publicaciones = {
-    libros: investigador.libros?.length
-      ? `<ul class="list-disc list-inside space-y-2">${investigador.libros.map((l) => `<li>${l}</li>`).join("")}</ul>`
-      : "No hay libros registrados.",
+const publicaciones = {
+  libros: investigador.libros?.length
+    ? `
+      <ul class="list-disc list-inside space-y-2">
+        ${investigador.libros
+          .map((l) => `<li>${l.titulo}</li>`)
+          .join("")}
+      </ul>
+    `
+    : "No hay libros registrados.",
 
-    articulos: investigador.articulos?.length
-      ? `<ul class="list-disc list-inside space-y-2">${investigador.articulos.map((a) => `<li>${a}</li>`).join("")}</ul>`
-      : "No hay artículos registrados.",
+  articulos: investigador.revistas?.length
+    ? `
+      <ul class="list-disc list-inside space-y-2">
+        ${investigador.revistas
+          .map((a) => `<li>${a.titulo || a}</li>`)
+          .join("")}
+      </ul>
+    `
+    : "No hay artículos registrados.",
 
-    proyectos: investigador.proyectos?.length
-      ? `<ul class="list-disc list-inside space-y-2">${investigador.proyectos.map((p) => `<li>${p}</li>`).join("")}</ul>`
-      : "No hay proyectos de investigación registrados.",
+  proyectos: investigador.proyectos_investigacion?.length
+    ? `
+      <ul class="list-disc list-inside space-y-2">
+        ${investigador.proyectos_investigacion
+          .map((p) => `<li>${p.titulo || p}</li>`)
+          .join("")}
+      </ul>
+    `
+    : "No hay proyectos de investigación registrados.",
+};
 
-  };
+
 
   function activarPubTab(tab) {
     if (pubTabActivo) {
