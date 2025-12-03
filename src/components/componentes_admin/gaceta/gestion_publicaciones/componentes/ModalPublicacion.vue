@@ -141,7 +141,7 @@
         </label>
         <input
           type="url"
-          v-model="formData.imagenes.link_yt"
+          v-model="formData.link_yt"
           class="input input-bordered w-full"
           placeholder="https://www.youtube.com/watch?v=..."
         />
@@ -208,7 +208,7 @@
       <div class="form-control">
         <label class="label">
           <span class="label-text font-semibold">Galería de imágenes</span>
-          <span class="label-text-alt">Máximo 5 imágenes</span>
+          <span class="label-text-alt">Máximo 10 imágenes</span>
         </label>
 
         <div class="border-2 border-dashed border-gray-300 rounded-lg p-4">
@@ -245,7 +245,7 @@
 
           <!-- Input para agregar más imágenes -->
           <input
-            v-if="formData.imagenes.galeria.length < 5"
+            v-if="formData.imagenes.galeria.length < 11"
             ref="galeriaInput"
             type="file"
             @change="handleGaleriaSelect"
@@ -379,8 +379,8 @@ const formData = ref({
       descripcion: "",
     },
     galeria: [],
-    link_yt: "",
   },
+  link_yt: "",
   estado: "activo",
   visitas: 0,
 });
@@ -457,8 +457,8 @@ const resetearFormulario = () => {
         descripcion: "",
       },
       galeria: [],
-      link_yt: "",
     },
+    link_yt: "",
     estado: "",
     visitas: 0,
   };
@@ -626,7 +626,7 @@ const handleGaleriaSelect = async (event) => {
   }
 
   //VALIDACIÓN DE ESPACIO EN GALERÍA ---
-  const espacioDisponible = 5 - formData.value.imagenes.galeria.length;
+  const espacioDisponible = 10 - formData.value.imagenes.galeria.length;
 
   // Aplicamos el límite de espacio solo a los archivos que SÍ son válidos
   const archivosASubir = archivosValidos.slice(0, espacioDisponible);

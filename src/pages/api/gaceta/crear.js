@@ -58,7 +58,7 @@ export async function POST({ request }) {
       );
       if (autorResponse.status === 200) {
         //El autor ya existe, agregar el _id de la publicacion a su lista de publicaciones
-        let idPublicacion = response.data._id;
+        let idPublicacion = response.data.id;
         let tipo = datos.tipo;
         let publicaciones = autorResponse.data.publicaciones || [];
         publicaciones.push({ id: idPublicacion, tipo: tipo });

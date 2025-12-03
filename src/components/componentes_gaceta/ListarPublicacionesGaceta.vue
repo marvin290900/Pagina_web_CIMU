@@ -85,7 +85,7 @@ const anioSelected = ref(null);
 const dropdownRef = ref(null);
 const cargando = ref(false);
 const paginaActual = ref(1);
-const publicacionesPorPagina = 2; // ajustar las publicaciones por página
+const publicacionesPorPagina = 10; // ajustar las publicaciones por página
 const totalPublicaciones = ref(0);
 const todasLasPublicaciones = ref([]); // Cache de todas las publicaciones filtradas
 
