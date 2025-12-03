@@ -57,8 +57,9 @@
         >
           <div class="w-full aspect-[3/4] rounded-lg overflow-hidden relative">
             <a :href="`/publicaciones/multidisciplinaria/${investigacion._id}`">
+              <!-- Modifica la variable de portada_libro por portada -->
               <img
-                :src="investigacion.portada_libro"
+                :src="investigacion.portada"
                 alt=""
                 class="w-full h-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:brightness-75"
               />
