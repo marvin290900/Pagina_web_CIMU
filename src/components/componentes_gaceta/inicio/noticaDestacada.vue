@@ -27,9 +27,12 @@
           {{ publicaciones[0].titulo || "Título de la noticia" }}
         </h2>
 
-        <button class="btn btn-outline btn-sm md:btn-md my-2 md:my-4">
-          Leer más
-        </button>
+        <a
+          :href="`/gaceta/${publicaciones[0]._id}?categoria=${publicaciones[0].tipo}`"
+          ><button class="btn btn-outline btn-sm md:btn-md my-2 md:my-4">
+            Leer más
+          </button></a
+        >
       </div>
     </div>
   </div>

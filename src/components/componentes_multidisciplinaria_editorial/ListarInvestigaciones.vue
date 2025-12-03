@@ -48,7 +48,7 @@
       </h2>
 
       <div
-        class="grid grid-cols-[repeat(auto-fit,minmax(175px,300px))] gap-16 p-4 cursor-pointer justify-between"
+        class="grid grid-cols-[repeat(auto-fit,minmax(175px,300px))] gap-16 p-4 cursor-pointer justify-start"
       >
         <div
           v-for="(investigacion, index) in libros"
@@ -59,7 +59,7 @@
             <a :href="`/publicaciones/multidisciplinaria/${investigacion._id}`">
               <!-- Modifica la variable de portada_libro por portada -->
               <img
-                :src="investigacion.portada"
+                :src="investigacion.portada_libro"
                 alt=""
                 class="w-full h-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:brightness-75"
               />

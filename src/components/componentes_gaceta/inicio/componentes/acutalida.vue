@@ -10,7 +10,9 @@
 
         <!-- Botones de navegación -->
         <div class="flex items-center gap-4">
-          <button class="btn btn-soft btn-info">Ver más</button>
+          <a href="/gaceta/actualidad"
+            ><button class="btn btn-soft btn-info">Ver más</button></a
+          >
           <div class="flex gap-2">
             <button
               @click="scrollLeft"
