@@ -25,9 +25,9 @@ const swiperOptions = {
 
 const tarjetas = [
   {
-    titulo: 'Título del tema 1',
-    descripcion: 'Esta es una breve descripción del contenido.',
-    imagen: 'https://img.daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.webp',
+    titulo: 'Razón de ser de la síntesis en las bellas artes - Salarrué',
+    descripcion: 'Este libro restituye el manuscrito “Razón de ser de las síntesis en las Bellas Artes” (1965) de Salarrué (1899-1975)',
+    imagen: 'https://repositorio.ues.edu.sv/server/api/core/bitstreams/c565cb62-53d9-464a-95de-e63e1072e0b4/content',
   },
   {
     titulo: 'Título del tema 2',
