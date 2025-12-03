@@ -12,8 +12,8 @@ const ISODateTime = z.string().datetime();
 export const InvestigacionSchemaRaw = z
   .object({
     titulo: z.string().min(1, "titulo es requerido"),
-    resumen: z.string().min(1).max(300, "máx 300 caracteres"),
-    descripcion: z.string().min(1).max(1000, "máx 1000 caracteres"),
+    resumen: z.string().min(1).max(1500, "máx 1500 caracteres"),
+    descripcion: z.string().min(1).max(1500, "máx 1500   caracteres"),
     programa: z.string().min(1, "programa es requerido"),
     investigadores: z.array(z.object({
       id: z.string().min(1, "ID del investigador requerido"),

@@ -57,16 +57,15 @@
           <input v-model="investigacionEditando.titulo" type="text" placeholder="Título*"
             class="input input-bordered w-full" required />
 
-          <textarea v-model="investigacionEditando.resumen" maxlength="1000"
+          <textarea v-model="investigacionEditando.resumen" maxlength="1500"
             class="textarea textarea-bordered w-full min-h-[120px]"
             placeholder="Escribe un resumen breve de la investigación..." required></textarea>
-          <p class="text-sm text-gray-500">{{ investigacionEditando.resumen.length }}/1000 caracteres</p>
+          <p class="text-sm text-gray-500">{{ investigacionEditando.resumen.length }}/1500 caracteres</p>
 
-          <textarea v-model="investigacionEditando.descripcion" maxlength="500"
+          <textarea v-model="investigacionEditando.descripcion" maxlength="1500"
             class="textarea textarea-bordered w-full min-h-[120px]"
             placeholder="Escribe aquí la descripción completa de la investigación..." required></textarea>
-          <p class="text-sm text-gray-500">{{ investigacionEditando.descripcion.length }}/500 caracteres</p>
-
+          <p class="text-sm text-gray-500">{{ investigacionEditando.descripcion.length }}/1500 caracteres</p>
 
           <div ref="dropdownRef">
             <!-- Input de búsqueda -->
