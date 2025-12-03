@@ -439,12 +439,13 @@ watch(etiquetasTexto, (newVal) => {
 
 // Resetear formulario
 const resetearFormulario = () => {
+  const fechaActual = new Date().toISOString();
   formData.value = {
     _id: "",
     titulo: "",
     tipo: "",
     contenido: "",
-    fecha_publicacion: "",
+    fecha_publicacion: fechaActual,
     categoria: "",
     autor: {
       id: "",
@@ -459,12 +460,12 @@ const resetearFormulario = () => {
       galeria: [],
     },
     link_yt: "",
-    estado: "",
+    estado: "activo",
     visitas: 0,
   };
   autorSeleccionado.value = null;
   etiquetasTexto.value = "";
-  fechaLocal.value = "";
+  fechaLocal.value = isoToLocal(fechaActual); // Inicializar con fecha actual
 
   if (portadaInput.value) portadaInput.value.value = "";
   if (galeriaInput.value) galeriaInput.value.value = "";
@@ -796,6 +797,15 @@ const guardar = async () => {
       return;
     }
 
+    // Asegurar que siempre haya una fecha de publicación válida
+    if (!formData.value.fecha_publicacion) {
+      formData.value.fecha_publicacion = new Date().toISOString();
+      // Sincronizar fechaLocal si está vacío
+      if (!fechaLocal.value) {
+        fechaLocal.value = isoToLocal(formData.value.fecha_publicacion);
+      }
+    }
+
     console.log("Guardando publicación:", formData.value);
 
     // Emitir evento con los datos
@@ -818,6 +828,10 @@ const guardar = async () => {
 // Lifecycle
 onMounted(() => {
   cargarAutores();
+  // Inicializar fechaLocal si está vacío (modo crear)
+  if (!fechaLocal.value && formData.value.fecha_publicacion) {
+    fechaLocal.value = isoToLocal(formData.value.fecha_publicacion);
+  }
 });
 </script>
 

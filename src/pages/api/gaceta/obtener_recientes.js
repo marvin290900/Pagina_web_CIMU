@@ -20,53 +20,116 @@ export async function GET({ request }) {
     const fechaActual = new Date();
     const hace7Dias = new Date(fechaActual);
     hace7Dias.setDate(hace7Dias.getDate() - 7);
-
-    // Formatear fechas en ISO format
     const fechaInicio = hace7Dias.toISOString();
 
-    // Query para documentos de los últimos 7 días usando Mango Query
-    const query = {
-      selector: {
-        fecha_publicacion: {
-          $gte: fechaInicio,
-        },
-      },
-      sort: [{ fecha_publicacion: "desc" }],
-      limit: 30, // Ajusta según necesites
-    };
-    console.log("Query Mango:", JSON.stringify(query)); // Debug
-    let response = await couch.post(`/cimu-gaceta-${coleccion}/_find`, query);
+    let response;
+    let docs = [];
 
-    // console.log("Respuesta de la API:", response.data); // Debug
-
-    // Si no hay resultados en los últimos 7 días, obtener los más recientes
-    if (!response.data.docs || response.data.docs.length === 0) {
-      console.log(
-        "No hay documentos en los últimos 7 días, obteniendo los más recientes"
-      );
-
-      // Query para obtener los documentos más recientes (sin filtro de fecha)
+    // Estrategia 1: Obtener documentos activos y ordenar/filtrar en memoria
+    // Esto evita problemas con índices en CouchDB
+    try {
       const queryRecientes = {
         selector: {
-          fecha_publicacion: {
-            $exists: true,
-          },
+          estado: "activo", // Solo publicaciones activas
         },
-        sort: [{ fecha_publicacion: "desc" }],
-        limit: 10, // Obtener los 10 más recientes
+        limit: 50, // Obtener más documentos para filtrar después
       };
 
+      console.log("Query Mango (recientes):", JSON.stringify(queryRecientes));
       response = await couch.post(
         `/cimu-gaceta-${coleccion}/_find`,
         queryRecientes
       );
+
+      docs = response.data?.docs || response.docs || [];
+
+      // Filtrar y ordenar en memoria
+      if (docs.length > 0) {
+        // Filtrar documentos con fecha_publicacion válida
+        docs = docs.filter((doc) => doc.fecha_publicacion);
+
+        // Ordenar por fecha descendente
+        docs.sort((a, b) => {
+          const fechaA = new Date(a.fecha_publicacion);
+          const fechaB = new Date(b.fecha_publicacion);
+          return fechaB - fechaA; // Orden descendente
+        });
+
+        // Filtrar los de los últimos 7 días
+        const docsRecientes = docs.filter((doc) => {
+          const fechaDoc = new Date(doc.fecha_publicacion);
+          return fechaDoc >= hace7Dias;
+        });
+
+        // Si hay documentos de los últimos 7 días, usarlos
+        if (docsRecientes.length > 0) {
+          docs = docsRecientes.slice(0, 30);
+          console.log(
+            `Encontrados ${docs.length} documentos de los últimos 7 días`
+          );
+        } else {
+          // Si no hay de los últimos 7 días, usar los más recientes disponibles
+          docs = docs.slice(0, 10);
+          console.log(
+            "No hay documentos de los últimos 7 días, usando los más recientes disponibles"
+          );
+        }
+      }
+    } catch (error) {
+      console.error("Error en query inicial:", error.message);
+      
+      // Estrategia 2: Si falla, intentar con query más simple (solo estado)
+      try {
+        const querySimple = {
+          selector: {
+            estado: "activo",
+          },
+          limit: 50,
+        };
+
+        response = await couch.post(
+          `/cimu-gaceta-${coleccion}/_find`,
+          querySimple
+        );
+
+        docs = response.data?.docs || response.docs || [];
+
+        // Filtrar y ordenar en memoria
+        docs = docs
+          .filter((doc) => doc.fecha_publicacion)
+          .sort((a, b) => {
+            const fechaA = new Date(a.fecha_publicacion);
+            const fechaB = new Date(b.fecha_publicacion);
+            return fechaB - fechaA; // Orden descendente
+          })
+          .filter((doc) => {
+            const fechaDoc = new Date(doc.fecha_publicacion);
+            return fechaDoc >= hace7Dias;
+          })
+          .slice(0, 30);
+
+        // Si no hay de los últimos 7 días, tomar los más recientes
+        if (docs.length === 0) {
+          docs = (response.data?.docs || response.docs || [])
+            .filter((doc) => doc.fecha_publicacion)
+            .sort((a, b) => {
+              const fechaA = new Date(a.fecha_publicacion);
+              const fechaB = new Date(b.fecha_publicacion);
+              return fechaB - fechaA;
+            })
+            .slice(0, 10);
+        }
+      } catch (error2) {
+        console.error("Error en query alternativa:", error2.message);
+        throw error2;
+      }
     }
 
     // Formatear respuesta similar a _all_docs
     return new Response(
       JSON.stringify({
-        total_rows: response.data.docs.length,
-        rows: response.data.docs.map((doc) => ({ doc })),
+        total_rows: docs.length,
+        rows: docs.map((doc) => ({ doc })),
       }),
       {
         status: 200,

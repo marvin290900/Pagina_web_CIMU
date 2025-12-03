@@ -170,7 +170,7 @@ const todasLasPublicaciones = ref([]);
 const cargandoAutor = ref(true);
 const cargandoPublicaciones = ref(false);
 const paginaActual = ref(1);
-const publicacionesPorPagina = 1; // Ajusta la cantidad de publicaciones por página
+const publicacionesPorPagina = 6; // Ajusta la cantidad de publicaciones por página
 
 // Computed
 const totalPublicaciones = computed(() => todasLasPublicaciones.value.length);
