@@ -86,9 +86,6 @@ const tarjetas = [
             <p class="text-sm text-gray-600 mt-2 flex-1 line-clamp-5">
               {{ card.descripcion }}
             </p>
-            <button class="mt-4 bg-[#283886] text-white text-sm px-4 py-1 rounded hover:bg-[#1f2d6b] w-fit">
-              Leer más
-            </button>
           </div>
         </div>
       </swiper-slide>
