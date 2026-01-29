@@ -7,6 +7,8 @@ if (locals.user) {
 }
 
 const redirectTo = url.searchParams.get('redirect') || '/admin';
+
+const currentYear = new Date().getFullYear();
 ---
 
 <Layout title="Iniciar sesión">
@@ -56,7 +58,7 @@ const redirectTo = url.searchParams.get('redirect') || '/admin';
         </div>
       </form>
       <div class="text-center text-sm text-gray-500">
-        © 2025 CIMU — Todos los derechos reservados
+        © {currentYear} CIMU — Todos los derechos reservados
       </div>
     </div>
   </div>
