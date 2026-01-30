@@ -30,11 +30,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
   
   // Guardar en locals
 
-  console.log("MIDDLEWARE USER:", user);
+  //console.log("MIDDLEWARE USER:", user);
   locals.session = session;
   locals.user = user;
 
-  console.log("MIDDLEWARE USER:", locals.user);
+  //console.log("MIDDLEWARE USER:", locals.user);
   
   // Verificar rutas protegidas
   const isProtectedRoute = protectedRoutes.some(route => 
