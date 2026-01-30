@@ -5,6 +5,40 @@ const {
   InvestigadoresExternos,
   imagenDefault,
 } = Astro.props;
+
+// Diccionario para convertir meses de texto a número
+const meses = {
+  "enero": 0, "febrero": 1, "marzo": 2, "abril": 3, "mayo": 4, "junio": 5,
+  "julio": 6, "agosto": 7, "septiembre": 8, "octubre": 9, "noviembre": 10, "diciembre": 11
+};
+
+const parsearFechaEspañol = (fechaStr) => {
+  try {
+    // Limpia la cadena"
+    const partes = fechaStr.toLowerCase().replace(",", "").split(" ");
+    const dia = parseInt(partes[0]);
+    const mes = meses[partes[2]];
+    const año = parseInt(partes[4]);
+    const horaPartes = partes[5].split(":");
+    
+    return new Date(año, mes, dia, parseInt(horaPartes[0]), parseInt(horaPartes[1]), parseInt(horaPartes[2]));
+  } catch (e) {
+    return new Date(0); // Fecha por defecto si falla
+  }
+};
+
+// Ordenar: del más antiguo al más nuevo
+const investigadoresDirectivosOrdenados = InvestigadoresDirectivos.sort((a, b) => {
+  return parsearFechaEspañol(a.creado_en) - parsearFechaEspañol(b.creado_en);
+});
+
+const investigadoresPasantesOrdenados = InvestigadoresPasantes.sort((a, b) => {
+  return parsearFechaEspañol(a.creado_en) - parsearFechaEspañol(b.creado_en);
+});
+
+const investigadoresExternosOrdenados = InvestigadoresExternos.sort((a, b) => {
+  return parsearFechaEspañol(a.creado_en) - parsearFechaEspañol(b.creado_en);
+});
 ---
 
 <section id="seccionInvestigadores" class="bg-white text-center mt-5 mb-20">
@@ -27,12 +61,12 @@ const {
       >
         <!-- Directivos -->
         {
-          InvestigadoresDirectivos.length > 0 && (
+          investigadoresDirectivosOrdenados.length > 0 && (
             <>
               <h3 class="text-lg font-semibold text-gray-800 col-span-full">
                 Equipo Directivo del Centro de Investigación
               </h3>
-              {InvestigadoresDirectivos.map((inv) => (
+              {investigadoresDirectivosOrdenados.map((inv) => (
                 <div
                   class="border rounded-2xl border-gray-300 hover:shadow-xl w-full"
                   key={inv._id}
@@ -68,12 +102,12 @@ const {
 
         <!-- Pasantes -->
         {
-          InvestigadoresPasantes.length > 0 && (
+          investigadoresPasantesOrdenados.length > 0 && (
             <>
               <h3 class="text-lg font-semibold text-gray-800 col-span-full">
                 Equipo Investigador y de Apoyo del CIMU
               </h3>
-              {InvestigadoresPasantes.map((inv) => (
+              {investigadoresPasantesOrdenados.map((inv) => (
                 <div
                   class="border rounded-2xl border-gray-300 hover:shadow-xl w-full"
                   key={inv._id}
@@ -109,12 +143,12 @@ const {
 
         <!-- Externos -->
         {
-          InvestigadoresExternos.length > 0 && (
+          investigadoresExternosOrdenados.length > 0 && (
             <>
               <h3 class="text-lg font-semibold text-gray-800 col-span-full">
                 Equipo Externo del CIMU
               </h3>
-              {InvestigadoresExternos.map((inv) => (
+              {investigadoresExternosOrdenados.map((inv) => (
                 <div
                   class="border rounded-2xl border-gray-300 hover:shadow-xl w-full"
                   key={inv._id}
