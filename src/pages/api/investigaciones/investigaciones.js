@@ -78,7 +78,14 @@ export async function POST({ request, cookies }) {
     }
     
     await Promise.all(parsed.data.investigadores.map(inv => {
-      return couch.post(`/investigadores/_design/investigadores/_update/agregarProyecto/${inv.id}`, body);
+      return couch.post(
+  `/investigadores/_design/investigadores/_update/agregarProyecto/${inv.id}`,
+  JSON.stringify(body),
+  {
+    headers: { 'Content-Type': 'application/json' }
+  }
+);
+
     }));
 
     return new Response(JSON.stringify({ ok: true, data: respuesta.data }), {
