@@ -1,9 +1,8 @@
 <script setup>
-import { ref } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { EffectCoverflow, Navigation } from 'swiper/modules';
 
-// Importar imágenes
+// Importar imágenes locales
 import img1 from '../../assets/temp/1.png';
 import img2 from '../../assets/temp/2.png';
 import img3 from '../../assets/temp/3.png';
@@ -13,6 +12,7 @@ import img6 from '../../assets/temp/6.jpg';
 import img7 from '../../assets/temp/7.png';
 import img8 from '../../assets/temp/8.png';
 
+// Array de imágenes
 const images = [img1, img2, img3, img4, img5, img6, img7, img8];
 
 const modules = [EffectCoverflow, Navigation];
@@ -38,9 +38,8 @@ const props = defineProps({
     required: true,
     default: () => []
   }
-});
+  });
 
-const imagenRespaldo = 'https://via.placeholder.com/250x350?text=Sin+Portada';
 </script>
 
 <template>
@@ -57,21 +56,15 @@ const imagenRespaldo = 'https://via.placeholder.com/250x350?text=Sin+Portada';
       :navigation="true"
       class="mySwiper"
     >
-      <swiper-slide v-for="(libro, index) in props.libros" :key="libro._id || index">
-        <a href="#">
-          <img 
-            :src="libro.portada && libro.portada.trim() !== '' ? libro.portada : imagenRespaldo" 
-            :alt="libro.titulo || `Libro ${index + 1}`" 
-            class="portada-img"
-          />
-        </a>
+      <swiper-slide v-for="(img, index) in props.libros" :key="index">
+        <img :src="img" :alt="`Libro ${index + 1}`" class="portada-img" />
       </swiper-slide>
     </swiper>
   </div>
 
   <p class="text-center mt-3 text-gray-400 text-xs font-light">
-  <span class="animate-pulse">⟵ Desliza ⟶</span>
-</p>
+    <span class="animate-pulse">⟵ Desliza ⟶</span>
+  </p>
 </template>
 
 <style scoped>
@@ -87,18 +80,24 @@ const imagenRespaldo = 'https://via.placeholder.com/250x350?text=Sin+Portada';
 }
 
 .swiper-slide {
-  background-position: center;
-  background-size: cover;
   width: 250px;
+  height: 350px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
   margin: 0 20px;
 }
 
-.swiper-slide img {
-  display: block;
+.portada-img {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  background-color: #f0f0f0;
 }
 
-/* Botones */
 .swiper-button-next,
 .swiper-button-prev {
   color: white !important;
@@ -114,19 +113,16 @@ const imagenRespaldo = 'https://via.placeholder.com/250x350?text=Sin+Portada';
   background: rgba(0, 0, 0, 0.7);
 }
 
-/* Flechas blancas */
 :deep(.swiper-button-next::after),
 :deep(.swiper-button-prev::after) {
   color: #ffffff !important;
   font-size: 20px !important;
 }
 
-/* Fondo de los botones */
 .swiper-button-next,
 .swiper-button-prev {
   background: rgba(255, 255, 255, 0.2) !important;
   backdrop-filter: blur(4px);
   border-radius: 50%;
 }
-
 </style>
