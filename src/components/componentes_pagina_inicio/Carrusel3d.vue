@@ -3,17 +3,10 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import { EffectCoverflow, Navigation } from 'swiper/modules';
 
 // Importar imágenes locales
-import img1 from '../../assets/temp/1.png';
-import img2 from '../../assets/temp/2.png';
-import img3 from '../../assets/temp/3.png';
-import img4 from '../../assets/temp/4.jpg';
-import img5 from '../../assets/temp/5.png';
-import img6 from '../../assets/temp/6.jpg';
-import img7 from '../../assets/temp/7.png';
-import img8 from '../../assets/temp/8.png';
+import img1 from '../../assets/temp/respaldo.png';
 
 // Array de imágenes
-const images = [img1, img2, img3, img4, img5, img6, img7, img8];
+const imagesBackup = [img1, img1, img1, img1, img1, img1, img1, img1];
 
 const modules = [EffectCoverflow, Navigation];
 
@@ -40,17 +33,47 @@ const props = defineProps({
   }
 });
 
+import { computed } from 'vue';
+
+const librosConRespaldo = computed(() => {
+  const reales = props.libros.map(libro => ({
+    src: libro.portada || libro.portada_libro || null,
+    titulo: libro.titulo || 'Libro'
+  }));
+
+  const realesConPortada = reales.map(libro => ({
+    src: libro.src || imagesBackup[0], // si no tiene portada, usar la primera de respaldo
+    titulo: libro.titulo
+  }));
+
+  const faltantes = 8 - realesConPortada.length;
+
+  if (faltantes > 0) {
+    const complementos = imagesBackup.slice(0, faltantes).map((img, index) => ({
+      src: img,
+      titulo: `Libro de respaldo ${index + 1}`
+    }));
+
+    return [...realesConPortada, ...complementos];
+  }
+
+  return realesConPortada;
+});
+
+
+
+
+
 </script>
 
 <template>
   <div class="container">
-    <swiper v-if="props.libros.length > 0" :modules="modules" :effect="swiperOptions.effect"
+    <swiper v-if="librosConRespaldo.length > 0" :modules="modules" :effect="swiperOptions.effect"
       :grab-cursor="swiperOptions.grabCursor" :centered-slides="swiperOptions.centeredSlides"
       :slides-per-view="swiperOptions.slidesPerView" :coverflow-effect="swiperOptions.coverflowEffect"
       :loop="swiperOptions.loop" :navigation="true" class="mySwiper">
-      <swiper-slide v-for="(libro, index) in props.libros" :key="libro._id || index">
-        <img :src="libro.portada || libro.portada_libro" :alt="libro.titulo || `Libro ${index + 1}`"
-          class="portada-img" />
+      <swiper-slide v-for="(libro, index) in librosConRespaldo" :key="index">
+        <img :src="libro.src" :alt="libro.titulo" class="portada-img" />
       </swiper-slide>
     </swiper>
   </div>
