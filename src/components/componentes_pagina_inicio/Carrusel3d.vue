@@ -56,8 +56,12 @@ const props = defineProps({
       :navigation="true"
       class="mySwiper"
     >
-      <swiper-slide v-for="(img, index) in props.libros" :key="index">
-        <img :src="img" :alt="`Libro ${index + 1}`" class="portada-img" />
+      <swiper-slide v-for="(libro, index) in props.libros" :key="libro._id || index">
+        <img 
+          :src="libro.portada || libro.portada_libro" 
+          :alt="libro.titulo || `Libro ${index + 1}`" 
+          class="portada-img" 
+        />
       </swiper-slide>
     </swiper>
   </div>
