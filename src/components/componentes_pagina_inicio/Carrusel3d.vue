@@ -1,12 +1,11 @@
 <script setup>
+import { computed } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { EffectCoverflow, Navigation } from 'swiper/modules';
 
 // Importar imágenes locales
-import img1 from '../../assets/temp/respaldo.png';
-
-// Array de imágenes
-const imagesBackup = [img1, img1, img1, img1, img1, img1, img1, img1];
+import imgRespaldo from '../../assets/temp/respaldo.png';
+console.log('Ruta resuelta:', imgRespaldo);
 
 const modules = [EffectCoverflow, Navigation];
 
@@ -33,33 +32,29 @@ const props = defineProps({
   }
 });
 
-import { computed } from 'vue';
+
 
 const librosConRespaldo = computed(() => {
+  // Extraemos la URL real del objeto importado
+  const urlRespaldo = imgRespaldo.src || imgRespaldo; 
+
   const reales = props.libros.map(libro => ({
-    src: libro.portada || libro.portada_libro || null,
+    // Si la portada es nula, usamos urlRespaldo
+    src: libro.portada || libro.portada_libro || urlRespaldo,
     titulo: libro.titulo || 'Libro'
   }));
 
-  const realesConPortada = reales.map(libro => ({
-    src: libro.src || imagesBackup[0], // si no tiene portada, usar la primera de respaldo
-    titulo: libro.titulo
-  }));
+  const resultado = [...reales];
 
-  const faltantes = 8 - realesConPortada.length;
-
-  if (faltantes > 0) {
-    const complementos = imagesBackup.slice(0, faltantes).map((img, index) => ({
-      src: img,
-      titulo: `Libro de respaldo ${index + 1}`
-    }));
-
-    return [...realesConPortada, ...complementos];
+  while (resultado.length < 8) {
+    resultado.push({
+      src: urlRespaldo, // Usamos la URL extraída
+      titulo: `Libro de respaldo ${resultado.length + 1}`
+    });
   }
 
-  return realesConPortada;
+  return resultado;
 });
-
 
 
 
