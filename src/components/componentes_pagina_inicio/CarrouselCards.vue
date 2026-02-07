@@ -20,41 +20,24 @@ const swiperOptions = {
     modifier: 2,
     slideShadows: true,
   },
+  
   loop: true,
 };
 
-const tarjetas = [
-  {
-    titulo: 'Razón de ser de la síntesis en las bellas artes - Salarrué',
-    descripcion: 'Este libro restituye el manuscrito “Razón de ser de las síntesis en las Bellas Artes” (1965) de Salarrué (1899-1975)',
-    imagen: 'https://repositorio.ues.edu.sv/server/api/core/bitstreams/c565cb62-53d9-464a-95de-e63e1072e0b4/content',
-  },
-  {
-    titulo: 'Título del tema 2',
-    descripcion: 'Otro contenido relevante para mostrar.',
-    imagen: 'https://img.daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.webp',
-  },
-  {
-    titulo: 'Título del tema 3',
-    descripcion: 'Descripción corta para probar el diseño responsivo.',
-    imagen: 'https://img.daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.webp',
-  },
-  {
-    titulo: 'Título del tema 4',
-    descripcion: 'Más contenido para hacer pruebas.',
-    imagen: 'https://img.daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.webp',
-  },
-  {
-    titulo: 'Título del tema 5',
-    descripcion: 'Último contenido para hacer bucle.',
-    imagen: 'https://img.daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.webp',
-  },
-];
+const props = defineProps({
+  investigaciones: {
+    type: Array,
+    required: true,
+    default: () => []
+  }
+});
+
 </script>
 
 <template>
   <div class="max-w-7xl mx-auto py-10">
     <swiper
+    v-if="props.investigaciones.length > 0"
       :modules="modules"
       :effect="swiperOptions.effect"
       :grab-cursor="swiperOptions.grabCursor"
@@ -66,25 +49,25 @@ const tarjetas = [
       class="mySwiper"
     >
       <swiper-slide
-        v-for="(card, index) in tarjetas"
+        v-for="(card, index) in props.investigaciones"
         :key="index"
         class="w-full max-w-md flex justify-center items-center rounded-xl overflow-hidden"
       >
         <div class="w-full h-[248px] rounded-lg overflow-hidden bg-white shadow-lg flex">
           <div class="w-1/2 bg-[#CCCCCC] flex items-center justify-center">
             <img
-              :src="card.imagen"
+              :src="card.imagenURL"
               alt="Imagen"
               class="max-h-[200px] object-cover"
             />
           </div>
 
           <div class="w-1/2 p-6 flex flex-col justify-between">
-            <h2 class="text-md lg:text-2xl font-bold text-gray-800">
+            <h2 class="text-md lg:text-2xl font-bold text-gray-800 line-clamp-4">
               {{ card.titulo }}
             </h2>
-            <p class="text-sm text-gray-600 mt-2 flex-1 line-clamp-5">
-              {{ card.descripcion }}
+            <p class="text-sm text-gray-600 mt-2 flex-1 line-clamp-4">
+              {{ card.resumen }}
             </p>
           </div>
         </div>

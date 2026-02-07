@@ -31,11 +31,22 @@ const swiperOptions = {
   },
   loop: true,
 };
+
+const props = defineProps({
+  libros: {
+    type: Array,
+    required: true,
+    default: () => []
+  }
+});
+
+const imagenRespaldo = 'https://via.placeholder.com/250x350?text=Sin+Portada';
 </script>
 
 <template>
   <div class="container">
     <swiper
+    v-if="props.libros.length > 0"
       :modules="modules"
       :effect="swiperOptions.effect"
       :grab-cursor="swiperOptions.grabCursor"
@@ -46,8 +57,14 @@ const swiperOptions = {
       :navigation="true"
       class="mySwiper"
     >
-      <swiper-slide v-for="(image, index) in images" :key="index">
-        <a href="#"><img :src="image.src" :alt="`Slide ${index + 1}`" /></a>
+      <swiper-slide v-for="(libro, index) in props.libros" :key="libro._id || index">
+        <a href="#">
+          <img 
+            :src="libro.portada && libro.portada.trim() !== '' ? libro.portada : imagenRespaldo" 
+            :alt="libro.titulo || `Libro ${index + 1}`" 
+            class="portada-img"
+          />
+        </a>
       </swiper-slide>
     </swiper>
   </div>

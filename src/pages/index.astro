@@ -21,8 +21,12 @@ import remi from "../assets/remi/remi.png";
 //importo las funciones de las bases de datos
 import { getInvestigadoresDirectivos } from "../lib/investigadores.js"
 import { getTodasLasImagenes } from "../lib/imagenesCarrusel.js"
+import { getTodasLasInvestigaciones } from "../lib/investigaciones.js"
+import { getTodosLosLibros} from "../lib/libros.js"
 const InvestigadoresDirectivos = await getInvestigadoresDirectivos(); //obtengo todos los investigadores
 const TodasLasImagenes = await getTodasLasImagenes(); //obtengo todas las imágenes
+const TodasLasInvestigaciones = await getTodasLasInvestigaciones(); //obtengo todas las investigaciones
+const TodosLosLibros = await getTodosLosLibros();
 ---
 
 <Layout>
@@ -39,8 +43,8 @@ const TodasLasImagenes = await getTodasLasImagenes(); //obtengo todas las imáge
       programaMedioAmbiente={programaMedioAmbiente}
       programaInclusion={programaInclusion}
     />
-    <SeccionInvestigacionesDestacadas />
-    <SeccionEditorial />
+    <SeccionInvestigacionesDestacadas TodasLasInvestigaciones={TodasLasInvestigaciones} />
+    <SeccionEditorial TodosLosLibros={TodosLosLibros} />
     <SeccionRemi plumaEditorial={plumaEditorial} remi={remi} />
   </main>
 </Layout>
