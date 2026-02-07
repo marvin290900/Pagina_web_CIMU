@@ -1,10 +1,13 @@
 <script setup>
+import { computed } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { EffectCoverflow, Navigation } from 'swiper/modules';
 
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/navigation';
+
+import imgRespaldo from '../../assets/temp/respaldo2.png?url';
 
 const modules = [EffectCoverflow, Navigation];
 
@@ -32,12 +35,37 @@ const props = defineProps({
   }
 });
 
+// Lógica para completar 5 elementos
+const investigacionesCompletas = computed(() => {
+  const minElementos = 5;
+  
+  // 1. Mapeamos las reales asegurando que tengan imagen
+  const reales = props.investigaciones.map(item => ({
+    titulo: item.titulo,
+    resumen: item.resumen,
+    imagenURL: item.imagenURL || imgRespaldo
+  }));
+
+  const resultado = [...reales];
+
+  // 2. Rellenamos hasta llegar a 5
+  while (resultado.length < minElementos) {
+    resultado.push({
+      titulo: "Próximamente",
+      resumen: "Estamos trabajando en nuevas investigaciones para compartir contigo.",
+      imagenURL: imgRespaldo
+    });
+  }
+
+  return resultado;
+});
+
 </script>
 
 <template>
   <div class="max-w-7xl mx-auto py-10">
     <swiper
-    v-if="props.investigaciones.length > 0"
+    v-if="investigacionesCompletas.length > 0"
       :modules="modules"
       :effect="swiperOptions.effect"
       :grab-cursor="swiperOptions.grabCursor"
@@ -49,7 +77,7 @@ const props = defineProps({
       class="mySwiper"
     >
       <swiper-slide
-        v-for="(card, index) in props.investigaciones"
+        v-for="(card, index) in investigacionesCompletas"
         :key="index"
         class="w-full max-w-md flex justify-center items-center rounded-xl overflow-hidden"
       >

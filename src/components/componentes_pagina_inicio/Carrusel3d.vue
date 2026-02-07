@@ -5,7 +5,6 @@ import { EffectCoverflow, Navigation } from 'swiper/modules';
 
 // Importar imágenes locales
 import imgRespaldo from '../../assets/temp/respaldo.png';
-console.log('Ruta resuelta:', imgRespaldo);
 
 const modules = [EffectCoverflow, Navigation];
 
