@@ -38,30 +38,19 @@ const props = defineProps({
     required: true,
     default: () => []
   }
-  });
+});
 
 </script>
 
 <template>
   <div class="container">
-    <swiper
-    v-if="props.libros.length > 0"
-      :modules="modules"
-      :effect="swiperOptions.effect"
-      :grab-cursor="swiperOptions.grabCursor"
-      :centered-slides="swiperOptions.centeredSlides"
-      :slides-per-view="swiperOptions.slidesPerView"
-      :coverflow-effect="swiperOptions.coverflowEffect"
-      :loop="swiperOptions.loop"
-      :navigation="true"
-      class="mySwiper"
-    >
+    <swiper v-if="props.libros.length > 0" :modules="modules" :effect="swiperOptions.effect"
+      :grab-cursor="swiperOptions.grabCursor" :centered-slides="swiperOptions.centeredSlides"
+      :slides-per-view="swiperOptions.slidesPerView" :coverflow-effect="swiperOptions.coverflowEffect"
+      :loop="swiperOptions.loop" :navigation="true" class="mySwiper">
       <swiper-slide v-for="(libro, index) in props.libros" :key="libro._id || index">
-        <img 
-          :src="libro.portada || libro.portada_libro" 
-          :alt="libro.titulo || `Libro ${index + 1}`" 
-          class="portada-img" 
-        />
+        <img :src="libro.portada || libro.portada_libro" :alt="libro.titulo || `Libro ${index + 1}`"
+          class="portada-img" />
       </swiper-slide>
     </swiper>
   </div>
@@ -71,62 +60,59 @@ const props = defineProps({
   </p>
 </template>
 
-<style scoped>
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
+<style
+  scoped>
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
 
-.swiper {
-  width: 100%;
-  padding-top: 50px;
-  padding-bottom: 50px;
-}
+  .swiper {
+    width: 100%;
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
 
-.swiper-slide {
-  width: 250px;
-  height: 350px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  margin: 0 20px;
-}
+  .swiper-slide {
+    background-position: center;
+    background-size: cover;
+    width: 250px;
+    margin: 0 20px;
+  }
 
-.portada-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  background-color: #f0f0f0;
-}
+  .swiper-slide img {
+    display: block;
+    width: 100%;
+  }
 
-.swiper-button-next,
-.swiper-button-prev {
-  color: white !important;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 25px;
-  border-radius: 50%;
-  backdrop-filter: blur(4px);
-  transition: 0.3s;
-}
+  /* Botones */
+  .swiper-button-next,
+  .swiper-button-prev {
+    color: white !important;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 25px;
+    border-radius: 50%;
+    backdrop-filter: blur(4px);
+    transition: 0.3s;
+  }
 
-.swiper-button-next:hover,
-.swiper-button-prev:hover {
-  background: rgba(0, 0, 0, 0.7);
-}
+  .swiper-button-next:hover,
+  .swiper-button-prev:hover {
+    background: rgba(0, 0, 0, 0.7);
+  }
 
-:deep(.swiper-button-next::after),
-:deep(.swiper-button-prev::after) {
-  color: #ffffff !important;
-  font-size: 20px !important;
-}
+  /* Flechas blancas */
+  :deep(.swiper-button-next::after),
+  :deep(.swiper-button-prev::after) {
+    color: #ffffff !important;
+    font-size: 20px !important;
+  }
 
-.swiper-button-next,
-.swiper-button-prev {
-  background: rgba(255, 255, 255, 0.2) !important;
-  backdrop-filter: blur(4px);
-  border-radius: 50%;
-}
+  /* Fondo de los botones */
+  .swiper-button-next,
+  .swiper-button-prev {
+    background: rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(4px);
+    border-radius: 50%;
+  }
 </style>
