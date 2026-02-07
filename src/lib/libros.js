@@ -4,16 +4,16 @@ const DB_NAME = "cimu-libros";
 
 export async function getTodosLosLibros() {
   try {
-    const response = await couch.get(`/${DB_NAME}/_all_docs`, {
-      params: {
-        include_docs: true,
-        conflicts: false
+    const response = await couch.post(`/${DB_NAME}/_find`, {
+      selector: {
+        titulo: { $exists: true, $ne: "" } 
       }
     });
-    return response.data.rows.map(row => row.doc);
-    
+
+    return response.data.docs;
+
   } catch (error) {
-    console.error("Error al obtener todos los documentos:", error);
+    console.error("Error al obtener los libros:", error);
     return [];
   }
 }
