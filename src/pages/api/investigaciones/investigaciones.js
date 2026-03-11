@@ -106,9 +106,10 @@ export async function POST({ request, cookies }) {
   }
 }
 
-export async function PUT({ request }) {
+export async function PUT({ request, cookies }) {
   try {
-    const auth = await requireAuth(request, cookies);
+   const auth = await requireAuth(request, cookies);
+
     if (!auth.authorized) return auth.response;
     let body = await request.json();
 
