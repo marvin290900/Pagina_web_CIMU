@@ -303,7 +303,7 @@ function humanFileSize(bytes) {
 }
 
 async function uploadPdfAndGetUrls() {
-  if (!pdfSeleccionado) return { pdfURL: null, imagenURL: null }
+  if (!pdfSeleccionado) return { pdfURL: null, imagenURL: null } 
   const fd = new FormData()
   fd.append('pdf', pdfSeleccionado)
   fd.append('carpeta', 'investigaciones')
@@ -353,18 +353,18 @@ async function uploadPdfAndGetUrls() {
 async function guardarInvestigacion() {
   // validaciones básicas en cliente
   if (!investigacionEditando.value.titulo || !investigacionEditando.value.fecha || selected.value.length === 0) {
-    alert('Completa los campos obligatorios: título, investigadores  y fecha')
+    mostrarToast('Completa los campos obligatorios: título, investigadores y fecha', 'warning')
     return
   }
 
   saving.value = true
   try {
     // preparar autores
-    investigacionEditando.value.investigadores = autoresInput.value.split(',').map(a => a.trim()).filter(Boolean)
+    investigacionEditando.value.investigadores = autoresInput.value.split(',').map(a => a.trim()).filter(Boolean) 
     console.log("Autores:", investigacionEditando.value.investigadores)
 
     // 1) subir PDF y obtener URLs (si hay pdf seleccionado)
-    const { pdfURL, imagenURL } = await uploadPdfAndGetUrls().catch(err => { throw err })
+    const { pdfURL, imagenURL } = await uploadPdfAndGetUrls().catch(err => { throw err }) 
 
     if (pdfURL) investigacionEditando.value.pdfURL = pdfURL
     if (imagenURL) {
@@ -430,7 +430,7 @@ async function guardarInvestigacion() {
     cerrarModal()
   } catch (err) {
     console.error('Error:', err)
-    alert('Error: ' + err.message)
+    mostrarToast('Error: ' + err.message, 'error')  
   } finally {
     saving.value = false
     uploading.value = false

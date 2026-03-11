@@ -33,17 +33,21 @@ export async function findUserByEmail(email) {
       selector: { email },
       limit: 1
     });
+    
     return response.data.docs[0] || null;
-  } catch {
+  } catch (error) {
+    console.error('Error buscando usuario:', error);
     return null;
   }
 }
 
 // Autenticar usuario
 export async function authenticateUser(email, password) {
+ 
   const user = await findUserByEmail(email);
+   console.log('Autenticando usuario:', email, user);
   if (!user) return null;
-
+  console.log('Usuario encontrado para autenticación y contraseñas', user.email);
   const isValid = await bcrypt.compare(password, user.passwordHash);
   if (!isValid) return null;
 

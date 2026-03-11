@@ -70,21 +70,26 @@ export async function POST({ request, cookies }) {
     }
 
     const respuesta = await couch.post("investigaciones", parsed.data);
-    console.log("Respuesta de CouchDB:", respuesta.data._id);
+    console.log("Respuesta de CouchDB:", respuesta.data.id);
     // Actualizar cada investigador
     body = {
-      id: respuesta.data._id,
+      id: respuesta.data.id,
       nombre: parsed.data.titulo,
     }
     
     await Promise.all(parsed.data.investigadores.map(inv => {
-      return couch.post(
+      const datos  = couch.post(
   `/investigadores/_design/investigadores/_update/agregarProyecto/${inv.id}`,
   JSON.stringify(body),
   {
     headers: { 'Content-Type': 'application/json' }
   }
-);
+).catch(error => {  
+  console.error(`Error actualizando investigador ${inv.id}:`, error);
+  throw error; // Re-lanzar para que Promise.all falle
+});
+      console.log(`Actualizando investigador ${inv.id} con proyecto ${datos}`);
+      return datos;
 
     }));
 
@@ -148,7 +153,7 @@ export async function PUT({ request }) {
 
     //Actualizar investigadores
     body = {
-      id: respuesta.data._id,
+      id: respuesta.data.id,
       nombre: parsed.data.titulo,
     }
     
@@ -203,7 +208,23 @@ export async function DELETE({ request }) {
       );
     }
 
+    
     const getResponse = await couch.get(`investigaciones/${id}`);
+    await Promise.all(getResponse.data.investigadores.map(inv => {
+      const datos  = couch.post(
+  `/investigadores/_design/investigadores/_update/eliminarProyecto/${inv.id}`,
+  JSON.stringify({id}),
+  {
+    headers: { 'Content-Type': 'application/json' }
+  }
+).catch(error => {  
+  console.error(`Error actualizando investigador ${inv.id}:`, error);
+  throw error; // Re-lanzar para que Promise.all falle
+});
+      console.log(`Actualizando investigador ${inv.id} con proyecto ${datos}`);
+      return datos;
+
+    }));
     if (!getResponse.data) {
       return new Response(
         JSON.stringify({ ok: false, error: "Investigación no encontrada" }),
