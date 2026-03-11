@@ -64,7 +64,7 @@ export async function DELETE({ request }) {
     console.log("2. Libro encontrado:", libro.titulo);
     console.log(
       "3. Autores del libro:",
-      autores.map((a) => a.nombre)
+      autores.map((a) => a.nombre),
     );
     console.log("4. Archivos a eliminar:");
     console.log("   - Portada:", libro.portada);
@@ -145,7 +145,7 @@ export async function DELETE({ request }) {
     // Eliminar el libro de la base de datos
     console.log("7. Eliminando libro de investigadores...");
     const responseEliminar = await couch.delete(
-      `/investigadores/${id}?rev=${rev}`
+      `/cimu-libros/${id}?rev=${rev}`,
     );
 
     if (responseEliminar.status !== 200 && responseEliminar.status !== 201) {
@@ -157,7 +157,7 @@ export async function DELETE({ request }) {
         {
           status: responseEliminar.status,
           headers: { "Content-Type": "application/json" },
-        }
+        },
       );
     }
 
@@ -175,14 +175,14 @@ export async function DELETE({ request }) {
         archivos_eliminados: archivosEliminados.length,
         detalles_archivos: archivosEliminados,
         investigadores_actualizados: resultadosInvestigadores.filter(
-          (r) => r.eliminado
+          (r) => r.eliminado,
         ).length,
         detalles_investigadores: resultadosInvestigadores,
       }),
       {
         status: 200,
         headers: { "Content-Type": "application/json" },
-      }
+      },
     );
   } catch (error) {
     console.error("❌ Error al eliminar libro:", error);
@@ -196,7 +196,7 @@ export async function DELETE({ request }) {
       {
         status: 500,
         headers: { "Content-Type": "application/json" },
-      }
+      },
     );
   }
 }

@@ -141,12 +141,12 @@
       <!-- Descripción -->
       <div class="form-control">
         <label class="label">
-          <span class="label-text font-semibold">Descripción</span>
+          <span class="label-text font-semibold">Resumen</span>
         </label>
         <textarea
-          v-model="formData.descripcion"
+          v-model="formData.resumen"
           class="textarea textarea-bordered w-full"
-          placeholder="Descripción del libro"
+          placeholder="Resumen del libro"
           rows="4"
         ></textarea>
       </div>
@@ -366,10 +366,10 @@
             subiendoPortada || subiendoPDF
               ? "Subiendo archivos..."
               : guardando
-              ? "Guardando..."
-              : modo === "crear"
-              ? "Crear libro"
-              : "Guardar cambios"
+                ? "Guardando..."
+                : modo === "crear"
+                  ? "Crear libro"
+                  : "Guardar cambios"
           }}
         </button>
       </div>
@@ -433,7 +433,7 @@ const formData = ref({
   paginas: null,
   isbn: "",
   uri: "",
-  descripcion: "",
+  resumen: "",
   portada: "",
   pdf_url: "",
   pdf_thumbnail: "",
@@ -453,7 +453,7 @@ const mostrarAlerta = (tipo, mensaje) => {
 const cargarInvestigadores = async () => {
   try {
     const response = await fetch(
-      "/api/libros/obtener?coleccion=investigadores"
+      "/api/libros/obtener?coleccion=investigadores",
     );
     if (!response.ok) throw new Error("Error al cargar investigadores");
 
@@ -492,7 +492,7 @@ const resetearFormulario = () => {
     paginas: null,
     isbn: "",
     uri: "",
-    descripcion: "",
+    resumen: "",
     portada: "",
     pdf_url: "",
     pdf_thumbnail: "",
@@ -522,7 +522,7 @@ watch(
         paginas: nuevoLibro.paginas || null,
         isbn: nuevoLibro.isbn || "",
         uri: nuevoLibro.uri || "",
-        descripcion: nuevoLibro.descripcion || "",
+        resumen: nuevoLibro.resumen || "",
         portada: nuevoLibro.portada || "",
         pdf_url: nuevoLibro.pdf_url || "",
         pdf_thumbnail: nuevoLibro.pdf_thumbnail || "",
@@ -534,7 +534,7 @@ watch(
       resetearFormulario();
     }
   },
-  { immediate: true, deep: true }
+  { immediate: true, deep: true },
 );
 
 // Subir portada
@@ -665,7 +665,7 @@ const agregarPalabraClave = () => {
 
 const eliminarPalabra = (palabra) => {
   formData.value.palabras_clave = formData.value.palabras_clave.filter(
-    (p) => p !== palabra
+    (p) => p !== palabra,
   );
 };
 
@@ -673,7 +673,7 @@ const eliminarPalabra = (palabra) => {
 const agregarAutor = () => {
   if (autorSeleccionado.value) {
     const existe = formData.value.autores.some(
-      (a) => a.id === autorSeleccionado.value._id
+      (a) => a.id === autorSeleccionado.value._id,
     );
 
     if (!existe) {
