@@ -106,6 +106,14 @@ export async function POST({ request, cookies }) {
   }
 }
 
+function difference(setA, setB) {
+  let _difference = new Set(setA);
+  for (let elem of setB) {
+    _difference.delete(elem);
+  }
+  return _difference;
+}
+
 export async function PUT({ request, cookies }) {
   try {
    const auth = await requireAuth(request, cookies);
@@ -139,7 +147,34 @@ export async function PUT({ request, cookies }) {
 
     // 1. Obtener doc actual
     const current = await couch.get(`investigaciones/${id}`);
-    console.log("DOC ACTUAL:", current.data);
+    const currentInvestigadores = new Set(current.data.investigadores.map(inv => inv.id));
+    const newInvestigadores = new Set(parsed.data.investigadores.map(inv => inv.id));
+    
+    const deleteInvestigadores = difference(currentInvestigadores, newInvestigadores);
+    const addInvestigadores = difference(newInvestigadores, currentInvestigadores);
+
+    console.log("Investigadores a agregar:", addInvestigadores);
+    console.log("Investigadores a eliminar:", deleteInvestigadores);
+
+    await Promise.all([...addInvestigadores].map(invId => {
+      const datos = couch.post(`/investigadores/_design/investigadores/_update/agregarProyecto/${invId}`, JSON.stringify({id, nombre: parsed.data.titulo}), {
+        headers: { 'Content-Type': 'application/json' }
+      }).catch(error => {
+        console.error(`Error agregando proyecto al investigador ${invId}:`, error);
+        throw error;
+      });
+    }));
+
+
+    await Promise.all([...deleteInvestigadores].map(invId => {
+      const datos = couch.post(`/investigadores/_design/investigadores/_update/eliminarProyecto/${invId}`, JSON.stringify({id}), {
+        headers: { 'Content-Type': 'application/json' }
+      }).catch(error => {
+        console.error(`Error eliminando proyecto del investigador ${invId}:`, error);
+        throw error;
+      });
+    }));
+
     // 2. Construir nuevo doc con _id y _rev
     const updatedDoc = {
       ...current.data, // mantenemos lo que ya tenía
@@ -148,19 +183,9 @@ export async function PUT({ request, cookies }) {
       _rev: current.data._rev,
     };
 
-    // 3. Guardar en CouchDB
-    console.log("DOC ACTUALIZADO:", updatedDoc);
+
     const respuesta = await couch.put(`investigaciones/${id}`, updatedDoc);
 
-    //Actualizar investigadores
-    body = {
-      id: respuesta.data.id,
-      nombre: parsed.data.titulo,
-    }
-    
-    await Promise.all(parsed.data.investigadores.map(inv => {
-      return couch.post(`/investigadores/_design/investigadores/_update/agregarProyecto/${inv.id}`, body);
-    }));
 
     return new Response(JSON.stringify({ ok: true, data: respuesta.data }), {
       status: 200,

@@ -141,7 +141,6 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 
 const investigaciones = ref([])
 const investigacionEditando = ref({ titulo: '', descripcion: '', resumen: '', investigadores: [], programa: '', fecha: '', pdfURL: '', imagenURL: '', index: null, URI: '', 'palabras clave': '' })
-const autoresInput = ref('')
 const keywordsInput = ref('')
 const previewImage = ref(null)
 const modal = ref(null)
@@ -166,7 +165,6 @@ const investigacionSeleccionada = ref(null)
 function abrirModalNueva() {
   investigacionEditando.value = { titulo: '', descripcion: '', resumen: '', investigadores: [], programa: '', fecha: '', pdfURL: '', imagenURL: '', index: null, URI: '', 'palabras clave': '' }
   selected.value = []
-  autoresInput.value = ''
   keywordsInput.value = ''
   previewImage.value = null
   pdfSeleccionado = null
@@ -189,6 +187,17 @@ async function getInvestigacion() {
   if (listRes.ok && listJson.ok) {
     investigaciones.value = listJson.data.rows; // conserva estructura esperada por el template
   }
+}
+
+function tipoClaseDaisy(tipo) {
+  const mapeo = {
+    'success': 'alert-success',
+    'error':   'alert-error',
+    'warning': 'alert-warning',
+    'info':    'alert-info',
+    'neutral': '' // Clase base de DaisyUI
+  };
+  return mapeo[tipo] || '';
 }
 
 function mostrarToast(texto, tipo = 'neutral', duracion = 3000) {
@@ -227,8 +236,6 @@ async function confirmar() {
     body: JSON.stringify(body)
   })
   if (res.ok) {
-    console.log('¡Confirmado!', res);
-   
     getInvestigacion();
   } else {
     console.error('Error al eliminar:', res);
@@ -241,7 +248,7 @@ const filteredOptions = computed(() => {
   return options.value.filter(
     (opt) =>
       opt.nombre.toLowerCase().includes(search.value.toLowerCase()) &&
-      !selected.value.includes(opt)
+      !selected.value.some((seleccionado) => seleccionado.id === opt.id)
   )
 })
 
@@ -257,11 +264,13 @@ const removeOption = (index) => {
   selected.value.splice(index, 1)
 }
 
+
 function editarInvestigacion(inv, index) {
   investigacionEditando.value = { ...inv.doc, index }
   investigacionEditando.value.fecha = inv.doc.fecha_publicacion || '' // YYYY-MM-DD
+  // Mapear investigadores a formato { id, nombre } para el dropdown
+  selected.value = inv.doc.investigadores ? [...JSON.parse(JSON.stringify(inv.doc.investigadores))] : [] 
 
-  selected.value = inv.doc.investigadores ? [...inv.doc.investigadores] : []
 
   pdfSeleccionado = null
   keywordsInput.value = inv.doc.palabras_clave || ''
@@ -269,7 +278,7 @@ function editarInvestigacion(inv, index) {
   console.log("No hay palabras clave", pk)
   if (pk.length > 0) {
     keywordsInput.value = pk.join(", ");
-    console.log("KEYWORDS INPUT", keywordsInput.value)
+   
   } else {
 
     keywordsInput.value = pk[0] || "";
@@ -359,11 +368,6 @@ async function guardarInvestigacion() {
 
   saving.value = true
   try {
-    // preparar autores
-    investigacionEditando.value.investigadores = autoresInput.value.split(',').map(a => a.trim()).filter(Boolean) 
-    console.log("Autores:", investigacionEditando.value.investigadores)
-
-    // 1) subir PDF y obtener URLs (si hay pdf seleccionado)
     const { pdfURL, imagenURL } = await uploadPdfAndGetUrls().catch(err => { throw err }) 
 
     if (pdfURL) investigacionEditando.value.pdfURL = pdfURL
@@ -398,6 +402,7 @@ async function guardarInvestigacion() {
     console.log(body)
     let res = null;
     if (editando.value && investigacionEditando.value._id) {
+      body.oldSelected
       // Editando, obtener _id y _rev del doc actual
       body.id = investigacionEditando.value._id
       res = await fetch('/api/investigaciones/investigaciones', {
@@ -418,11 +423,11 @@ async function guardarInvestigacion() {
 
     const data = await res.json()
     if (!res.ok || !data.ok) {
-      console.error('Error del servidor:', data)
-      alert('Error guardando investigación: ' + (data.error ? JSON.stringify(data.error) : res.statusText))
+      
+      mostrarToast('Error guardando investigación: ' + (data.error ? JSON.stringify(data.error) : res.statusText), 'error')
       return
     } else {
-      console.log('Investigación guardada:', data)
+      mostrarToast('Investigación guardada exitosamente', 'success')
     }
 
 
@@ -467,7 +472,7 @@ onMounted(() => {
     .then(data => {
       if (data.ok) {
         // Mapear para obtener solo nombres e ids, y filtrar valores inválidos
-        options.value = data.docs.map(doc => { return { nombre: doc.nombre, id: doc._id } }).filter(Boolean);
+        options.value = data.docs.map(doc => { return { id: doc._id, nombre: doc.nombre } }).filter(Boolean);
         console.log("Opciones de investigadores:", options.value);
        
       } else {
