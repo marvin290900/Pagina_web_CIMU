@@ -444,7 +444,7 @@ const publicaciones = {
     ? `
       <ul class="list-disc list-inside space-y-2">
         ${investigador.proyectos_investigacion
-          .map((p) => `<li>${p.titulo || p}</li>`)
+          .map((p) => `<li>${p.nombre}</li>`)
           .join("")}
       </ul>
     `
