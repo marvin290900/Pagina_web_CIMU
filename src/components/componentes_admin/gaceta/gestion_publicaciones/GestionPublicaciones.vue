@@ -131,7 +131,7 @@
                 :href="`/gaceta/${publicacion._id}?categoria=${publicacion.tipo}`"
                 target="_blank"
               >
-                <div class="tooltip tooltip-bottom" data-tip="Ver perfil">
+                <div class="tooltip tooltip-bottom" data-tip="Ver publicación">
                   <button class="btn btn-soft btn-info btn-sm">
                     <span class="mdi mdi-eye-outline text-lg"></span>
                   </button>

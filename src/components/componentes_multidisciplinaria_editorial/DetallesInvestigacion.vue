@@ -9,14 +9,15 @@
         Cargando
       </div>
     </div>
-    <div v-else class="grid gap-3 md:grid-cols-2">
+    <div v-else class="grid gap-8 md:grid-cols-2 mt-8">
+      <!-- PORTADA DEL LIBRO -->
       <div
-        class="w-full aspect-[3/4] rounded-lg overflow-hidden relative md:w-3/4"
+        class="w-full aspect-[3/4] rounded-lg overflow-hidden relative md:w-3/4 shadow-xl"
       >
         <img
           :src="data.portada_libro"
-          alt=""
-          class="w-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:brightness-75"
+          alt="Portada del libro"
+          class="w-full h-full object-fill"
         />
       </div>
 
@@ -58,10 +59,22 @@
             <h3 class="text-gray-500">Coleccion</h3>
             <h4 class="font-semibold">{{ data.coleccion }}</h4>
           </div>
+          <div class="bg-white p-2 rounded-md shadow flex flex-col gap-2">
+            <h3 class="text-gray-500">Descargas</h3>
+            <h4 class="font-semibold">{{ data.descargas }}</h4>
+          </div>
+          <div class="bg-white p-2 rounded-md shadow flex flex-col gap-2">
+            <h3 class="text-gray-500">Vistas</h3>
+            <h4 class="font-semibold">{{ data.vistas }}</h4>
+          </div>
         </div>
 
         <div class="grid gap-3 md:grid-cols-2 md:w-3/4">
-          <a :href="data.archivo_pdf_url" class="w-full">
+          <a
+            :href="data.archivo_pdf_url"
+            class="w-full"
+            @click="actualizarEstadistica('descargas')"
+          >
             <button class="btn btn-primary w-full">
               <span
                 class="mdi mdi-tray-arrow-down text-xl flex items-center"
@@ -70,7 +83,7 @@
             </button>
           </a>
 
-          <button class="btn btn-outline btn-primary">
+          <button class="btn btn-outline btn-primary" @click="compartir">
             <span
               class="mdi mdi-share-variant text-xl flex items-center"
             ></span>
@@ -112,14 +125,18 @@
         </div>
       </div>
     </div>
+    <Alert v-if="mostrarAlerta" type="success" :mensaje="mensajeAlerta" />
   </section>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
+import Alert from "../alert/Alert.vue";
 
 const data = ref([]);
 const cargando = ref(true);
+const mostrarAlerta = ref(false);
+const mensajeAlerta = ref("");
 
 const fechaPublicacion = ref(null);
 
@@ -131,6 +148,41 @@ const props = defineProps({
   },
 });
 
+const compartir = async () => {
+  try {
+    if (navigator.share) {
+      await navigator.share({
+        title: data.value.titulo,
+        text: data.value.resumen?.substring(0, 100) + "...",
+        url: window.location.href,
+      });
+    } else {
+      await navigator.clipboard.writeText(window.location.href);
+      activarAlerta("¡Enlace copiado al portapapeles!");
+    }
+  } catch (error) {
+    if (error.name !== "AbortError") {
+      console.error("Error al compartir:", error);
+    }
+  }
+};
+
+const activarAlerta = (mensaje) => {
+  mensajeAlerta.value = mensaje;
+  mostrarAlerta.value = true;
+  setTimeout(() => (mostrarAlerta.value = false), 3000);
+};
+
+const actualizarEstadistica = async (tipo) => {
+  try {
+    await fetch(`/api/libros/actualizar-vistas?id=${props.id}&tipo=${tipo}`);
+  } catch (error) {
+    console.error(`Error al actualizar ${tipo}:`, error);
+  }
+};
+
+
+
 onMounted(() => {
   fetch(`/api/libros/buscar?id=${props.id}`)
     .then((response) => response.json()) // <-- importante
@@ -141,6 +193,9 @@ onMounted(() => {
       fechaPublicacion.value =
         fechaPublicacion.value.toLocaleDateString("es-ES");
       cargando.value = false;
+
+      // Actualizar vistas automáticamente al cargar los datos
+      actualizarEstadistica("vistas");
     })
     .catch((error) => {
       console.error("Error al obtener la publicación:", error);

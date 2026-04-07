@@ -25,7 +25,7 @@
       </details>
 
       <div>
-        <p>{{ libros.length }} investigaciones</p>
+        <p class="text-gray-500 text-xs">{{ libros.length }} investigaciones</p>
       </div>
     </div>
 
@@ -82,6 +82,9 @@
 
     <!-- Sin resultados -->
     <div v-else class="w-11/12 py-6 mx-auto text-center">
+      <div class="flex justify-center">
+        <span class="mdi mdi-book-alert-outline text-5xl text-gray-500"></span>
+      </div>
       <p class="text-gray-500">
         No se encontraron libros para el año {{ anioSelected }}
       </p>
