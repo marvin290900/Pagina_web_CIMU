@@ -22,3 +22,9 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# public uploads
+public/uploads
+
+# public pdf
+public/pdf
