@@ -10,10 +10,10 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo, decanato, plumaLogo, remiLogo } =
 >
   <!-- FILA 1 - LOGOS -->
   <div
-    class="flex flex-col sm:flex-row items-center py-3 justify-center bg-white"
+    class="flex-col sm:flex-row items-center py-3 justify-center bg-white hidden sm:flex"
   >
     <!-- Logo + Texto -->
-    <div class="flex items-center">
+    <div class="items-center flex">
       <a href="/">
         <img
           src={cimuLogo.src}
@@ -25,7 +25,9 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo, decanato, plumaLogo, remiLogo } =
     </div>
 
     <!-- Logos con divisor -->
-    <div class="ml-1 sm:ml-1 md:ml-18 lg:ml-50 flex items-center gap-6">
+    <div
+      class="ml-1 sm:ml-1 md:ml-18 lg:ml-50 items-center gap-6 hidden sm:flex"
+    >
       <a href="/" class="flex flex-row sm:flex-row items-center h-20">
         <img
           id="plumaLogo"
@@ -194,139 +196,179 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo, decanato, plumaLogo, remiLogo } =
     </div>
 
     <!-- Menú para móvil -->
-    <div class="flex-none sm:hidden relative">
+    <div class="flex sm:hidden relative justify-between items-center w-[90%]">
+      <a href="/">
+        <img
+          src={cimuLogo.src}
+          alt="cimuLogo"
+          title="Centro de Investigación Multidisciplinario FMOcc UES"
+          class="w-[80%] h-18 sm:h-18 md:h-18 lg:h-24 transition-all duration-300 hover:scale-105 hover:brightness-110"
+        />
+      </a>
+
       <!-- Botón hamburguesa -->
-      <button id="toggleMenu" class="btn btn-square btn-ghost">
+      <button id="mobile-menu-button" class="btn btn-square btn-ghost">
         <span class="mdi mdi-menu text-2xl"></span>
       </button>
     </div>
   </div>
 
-  <!-- Menú desplegable pegado a la izquierda -->
+  <!-- Menú desplegable a pantalla completa con navegación completa -->
   <div
-    id="mobileMenu"
-    class="fixed left-0 right-0 top-16 bg-white text-black rounded-md shadow-lg p-4 z-50 hidden animate-fade-in w-full max-w-md mx-auto
-          max-h-[calc(100vh-4rem)] overflow-y-auto"
+    id="mobile-menu"
+    class="fixed inset-0 bg-white z-[100] hidden overflow-y-auto animate-fade-in transition-all duration-300"
   >
-    <a href="/" class="block py-2 px-3 rounded-md hover:bg-gray-100">Inicio</a>
-    <details>
-      <summary class="cursor-pointer py-2 px-3 hover:bg-gray-100 rounded-md"
-        >Nosotros</summary
-      >
-      <ul class="pl-4 mt-2">
-        <li>
-          <a
-            href="/nosotros/acerca_de_cimu"
-            class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
-            >Acerca de CIMU</a
-          >
-        </li>
-        <li>
-          <a
-            href="/nosotros/investigadores"
-            class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
-            >Investigadores/as</a
-          >
-        </li>
-      </ul>
-    </details>
+    <div class="flex flex-col h-full min-h-screen p-8">
+      <!-- Header del menú -->
+      <div class="flex justify-between items-center mb-10">
+        <div
+          class="text-2xl font-black tracking-tighter text-[#1D2D50] uppercase"
+        >
+          CIMU
+        </div>
+        <button
+          id="close-menu-button"
+          class="text-[#1D2D50] hover:rotate-90 transition-transform duration-300"
+        >
+          <span class="mdi mdi-close text-4xl"></span>
+        </button>
+      </div>
 
-    <a
-      href="/gaceta_multidisciplinaria"
-      class="block py-2 px-3 rounded-md hover:bg-gray-100"
-      >Gaceta Multidisciplinaria</a
-    >
+      <!-- Links del menú -->
+      <nav class="flex flex-col space-y-6 pb-20">
+        <!-- Inicio -->
+        <a
+          class="mobile-nav-link text-xl font-black tracking-tighter text-[#1D2D50] border-b border-gray-100 pb-2"
+          href="/">Inicio</a
+        >
 
-    <details>
-      <summary class="cursor-pointer py-2 px-3 hover:bg-gray-100 rounded-md"
-        >Investigaciones</summary
-      >
-      <ul class="pl-4 mt-2">
-        <li>
-          <a
-            href="/investigaciones/programa_de_investigaciones"
-            class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
-            >Programas de Investigación</a
+        <!-- Nosotros -->
+        <details class="group">
+          <summary
+            class="flex justify-between items-center cursor-pointer text-xl font-black tracking-tighter text-[#1D2D50] list-none border-b border-gray-100 pb-2 focus:outline-none"
           >
-        </li>
-      </ul>
-    </details>
+            Nosotros
+            <span
+              class="mdi mdi-chevron-down transition-transform duration-300 group-open:rotate-180"
+            ></span>
+          </summary>
+          <div
+            class="flex flex-col gap-4 pl-6 mt-4 border-l-4 border-[#1D2D50]"
+          >
+            <a
+              class="mobile-nav-link text-xl font-bold text-[#1D2D50]/80"
+              href="/nosotros/acerca_de_cimu">Acerca de CIMU</a
+            >
+            <a
+              class="mobile-nav-link text-xl font-bold text-[#1D2D50]/80"
+              href="/nosotros/investigadores">Investigadores/as</a
+            >
+          </div>
+        </details>
 
-    <details>
-      <summary class="cursor-pointer py-2 px-3 hover:bg-gray-100 rounded-md"
-        >Publicaciones</summary
-      >
-      <ul class="pl-4 mt-2">
-        <li>
-          <a
-            href="/publicaciones/multidisciplinaria/multidisciplinaria_editorial"
-            class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
-            >Multidisciplinaria Editorial</a
-          >
-        </li>
-      </ul>
-    </details>
+        <!-- Gaceta -->
+        <a
+          class="mobile-nav-link text-xl font-black tracking-tighter text-[#1D2D50] border-b border-gray-100 pb-2"
+          href="/gaceta">Gaceta</a
+        >
 
-    <details>
-      <summary class="cursor-pointer py-2 px-3 hover:bg-gray-100 rounded-md"
-        >REMI</summary
-      >
-      <ul class="pl-4 mt-2">
-        <li>
-          <a
-            href="/remi/remi"
-            class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
-            >REMI</a
+        <!-- Investigaciones -->
+        <details class="group">
+          <summary
+            class="flex justify-between items-center cursor-pointer text-xl font-black tracking-tighter text-[#1D2D50] list-none border-b border-gray-100 pb-2 focus:outline-none"
           >
-        </li>
-        <li>
-          <a
-            href="/remi/sobre_la_revista"
-            class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
-            >Sobre la Revista</a
+            Investigaciones
+            <span
+              class="mdi mdi-chevron-down transition-transform duration-300 group-open:rotate-180"
+            ></span>
+          </summary>
+          <div
+            class="flex flex-col gap-4 pl-6 mt-4 border-l-4 border-[#1D2D50]"
           >
-        </li>
-        <li>
-          <a
-            href="/remi/autoridades"
-            class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
-            >Autoridades Universitaria</a
-          >
-        </li>
-        <li>
-          <a
-            href="/remi/editorial"
-            class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
-            >Equipo Editorial</a
-          >
-        </li>
-        <li>
-          <a
-            href="/remi/envios"
-            class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
-            >Envios</a
-          >
-        </li>
-        <li>
-          <a
-            href="/remi/sistema_de_revision"
-            class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
-            >Sistema de Revision</a
-          >
-        </li>
-        <li>
-          <a
-            href="/remi/contacto"
-            class="block px-4 py-2 rounded-md hover:bg-gray-200 hover:text-black transition duration-200"
-            >Contacto</a
-          >
-        </li>
-      </ul>
-    </details>
+            <a
+              class="mobile-nav-link text-xl font-bold text-[#1D2D50]/80"
+              href="/investigaciones/programa_de_investigaciones"
+              >Programas de Investigación</a
+            >
+          </div>
+        </details>
 
-    <a href="/contactenos" class="block py-2 px-3 rounded-md hover:bg-gray-100"
-      >Contáctenos</a
-    >
+        <!-- Publicaciones -->
+        <details class="group">
+          <summary
+            class="flex justify-between items-center cursor-pointer text-xl font-black tracking-tighter text-[#1D2D50] list-none border-b border-gray-100 pb-2 focus:outline-none"
+          >
+            Publicaciones
+            <span
+              class="mdi mdi-chevron-down transition-transform duration-300 group-open:rotate-180"
+            ></span>
+          </summary>
+          <div
+            class="flex flex-col gap-4 pl-6 mt-4 border-l-4 border-[#1D2D50]"
+          >
+            <a
+              class="mobile-nav-link text-xl font-bold text-[#1D2D50]/80"
+              href="/publicaciones/multidisciplinaria/multidisciplinaria_editorial"
+              >Multidisciplinaria Editorial</a
+            >
+          </div>
+        </details>
+
+        <!-- REMI -->
+        <details class="group">
+          <summary
+            class="flex justify-between items-center cursor-pointer text-xl font-black tracking-tighter text-[#1D2D50] list-none border-b border-gray-100 pb-2 focus:outline-none"
+          >
+            REMI
+            <span
+              class="mdi mdi-chevron-down transition-transform duration-300 group-open:rotate-180"
+            ></span>
+          </summary>
+          <div
+            class="flex flex-col gap-4 pl-6 mt-4 border-l-4 border-[#1D2D50]"
+          >
+            <a
+              class="mobile-nav-link text-xl font-bold text-[#1D2D50]/80"
+              href="/remi/remi">REMI</a
+            >
+            <a
+              class="mobile-nav-link text-xl font-bold text-[#1D2D50]/80"
+              href="/remi/sobre_la_revista">Sobre la revista</a
+            >
+            <a
+              class="mobile-nav-link text-xl font-bold text-[#1D2D50]/80"
+              href="/remi/autoridades">Autoridades Universitarias</a
+            >
+            <a
+              class="mobile-nav-link text-xl font-bold text-[#1D2D50]/80"
+              href="/remi/editorial">Equipo Editorial</a
+            >
+            <a
+              class="mobile-nav-link text-xl font-bold text-[#1D2D50]/80"
+              href="/remi/envios">Envíos</a
+            >
+            <a
+              class="mobile-nav-link text-xl font-bold text-[#1D2D50]/80"
+              href="/remi/sistema_de_revision">Sistema de Revisión</a
+            >
+            <a
+              class="mobile-nav-link text-xl font-bold text-[#1D2D50]/80"
+              href="/remi/contacto">Contacto</a
+            >
+          </div>
+        </details>
+
+        <!-- Contáctenos -->
+        <div class="pt-10">
+          <a
+            href="/contactenos"
+            class="mobile-nav-link block w-full bg-[#1D2D50] text-white px-8 py-5 rounded-2xl font-black text-xl text-center shadow-2xl transform active:scale-95 transition-transform duration-150"
+          >
+            Contáctenos
+          </a>
+        </div>
+      </nav>
+    </div>
   </div>
 </header>
 
@@ -349,27 +391,23 @@ const { cimuLogo, uesLogoBlanco, uesLogoRojo, decanato, plumaLogo, remiLogo } =
     });
   });
 
-  const toggleBtn = document.getElementById("toggleMenu");
-  const mobileMenu = document.getElementById("mobileMenu");
+  const mobileMenuButton = document.getElementById("mobile-menu-button");
+  const closeMenuButton = document.getElementById("close-menu-button");
+  const mobileMenu = document.getElementById("mobile-menu");
+  const mobileNavLinks = document.querySelectorAll(".mobile-nav-link");
 
-  toggleBtn.addEventListener("click", () => {
-    mobileMenu.classList.toggle("hidden");
-  });
+  function toggleMenu() {
+    mobileMenu?.classList.toggle("hidden");
+    document.body.classList.toggle("overflow-hidden");
+  }
 
-  // Cerrar al hacer clic fuera del menú
-  document.addEventListener("click", (event) => {
-    const isClickInsideMenu = mobileMenu.contains(event.target);
-    const isClickOnButton = toggleBtn.contains(event.target);
+  mobileMenuButton?.addEventListener("click", toggleMenu);
+  closeMenuButton?.addEventListener("click", toggleMenu);
 
-    if (!isClickInsideMenu && !isClickOnButton) {
-      mobileMenu.classList.add("hidden");
-    }
-  });
-
-  // Cierra al hacer clic en cualquier enlace del menú móvil
-  mobileMenu.querySelectorAll("a").forEach((link) => {
+  mobileNavLinks.forEach((link) => {
     link.addEventListener("click", () => {
-      mobileMenu.classList.add("hidden");
+      mobileMenu?.classList.add("hidden");
+      document.body.classList.remove("overflow-hidden");
     });
   });
 </script>

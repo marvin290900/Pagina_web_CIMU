@@ -31,143 +31,160 @@ import gaceta from "../assets/logos/gaceta.png";
       <div class="w-full justify-center py-3 hidden lg:flex">
         <img src={gaceta.src} alt="Logo de gaceta" class="w-1/4" />
       </div>
-      <div class="drawer z-50">
-        <input id="my-drawer" type="checkbox" class="drawer-toggle" />
 
-        <!-- Contenido principal -->
-        <div class="drawer-content bg">
-          <div class="navbar bg-principal shadow-sm text-white">
-            <div
-              class="flex justify-between items-center w-full md:w-[80%] mx-auto"
-            >
-              <!-- Logo -->
-              <div class="flex lg:hidden">
-                <a href="#seccionImagenesInicio">
-                  <img
-                    src={gaceta.src}
-                    alt="logo de la empresa"
-                    class="w-36 md:"
-                  />
-                </a>
-              </div>
+      <!-- Barra de navegación -->
+      <nav class="navbar bg-principal shadow-sm text-white">
+        <div
+          class="flex justify-between items-center w-full md:w-[80%] mx-auto px-4 md:px-0"
+        >
+          <!-- Logo móvil -->
+          <div class="flex lg:hidden">
+            <a href="/gaceta">
+              <img src={gaceta.src} alt="logo gaceta" class="w-36" />
+            </a>
+          </div>
 
-              <!-- Botón hamburguesa en móvil -->
-              <div class="lg:hidden">
-                <label for="my-drawer" class="btn btn-ghost-black">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M4 6h16M4 12h16M4 18h16"></path>
-                  </svg>
-                </label>
-              </div>
+          <!-- Botón hamburguesa Premium -->
+          <div class="lg:hidden">
+            <button id="mobile-menu-button" class="btn btn-ghost text-black">
+              <span class="mdi mdi-menu text-2xl"></span>
+            </button>
+          </div>
 
-              <!-- Menú horizontal en escritorio -->
-              <div class="hidden lg:flex mx-auto">
-                <ul
-                  class="container mx-auto px-4 flex w-full justify-center text-black"
+          <!-- Menú horizontal escritorio -->
+          <div class="hidden lg:flex mx-auto">
+            <ul class="flex w-full justify-center text-black gap-2">
+              <li>
+                <a href="/gaceta" class="nav-link px-4 py-2 rounded-md"
+                  >Inicio</a
                 >
-                  <li>
-                    <a
-                      href="/gaceta"
-                      class="nav-link px-4 py-2 rounded-md"
-                      data-category="all">Inicio</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="/gaceta/opinion"
-                      class="nav-link px-4 py-2 rounded-md"
-                      data-category="politica">Opinión Multidisciplinaria</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="/gaceta/actualidad"
-                      class="nav-link px-4 py-2 rounded-md"
-                      data-category="economia">Actualidad</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="/gaceta/audiovisuales"
-                      class="nav-link px-4 py-2 rounded-md"
-                      data-category="deportes">Audio visuales</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="/gaceta/vida_universitaria"
-                      class="nav-link px-4 py-2 rounded-md"
-                      data-category="cultura">Vida universitaria</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="/gaceta/memoria"
-                      class="nav-link px-4 py-2 rounded-md"
-                      data-category="tecnologia">Memoria colectiva</a
-                    >
-                  </li>
-                </ul>
-              </div>
-            </div>
+              </li>
+              <li>
+                <a href="/gaceta/opinion" class="nav-link px-4 py-2 rounded-md"
+                  >Opinión Multidisciplinaria</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/gaceta/actualidad"
+                  class="nav-link px-4 py-2 rounded-md">Actualidad</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/gaceta/audiovisuales"
+                  class="nav-link px-4 py-2 rounded-md">Audio visuales</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/gaceta/vida_universitaria"
+                  class="nav-link px-4 py-2 rounded-md">Vida universitaria</a
+                >
+              </li>
+              <li>
+                <a href="/gaceta/memoria" class="nav-link px-4 py-2 rounded-md"
+                  >Memoria colectiva</a
+                >
+              </li>
+            </ul>
           </div>
         </div>
+      </nav>
 
-        <!-- Menú lateral (drawer) para móvil -->
-        <div class="drawer-side">
-          <label for="my-drawer" class="drawer-overlay"></label>
-          <ul class="menu p-4 w-64 min-h-full bg-base-200 text-base-content">
-            <li>
-              <a href="/gaceta" data-category="all">Inicio</a>
-            </li>
-            <li>
-              <a href="/gaceta/opinion" data-category="politica"
-                >Opinión Multidisciplinaria</a
+      <!-- Nuevo Menú Móvil (Full Screen) -->
+      <div
+        id="mobile-menu"
+        class="fixed inset-0 bg-white z-[100] hidden overflow-y-auto animate-fade-in transition-all duration-300"
+      >
+        <div class="flex flex-col h-full min-h-screen p-8">
+          <!-- Header del menú -->
+          <div class="flex justify-between items-center mb-10">
+            <div
+              class="text-2xl font-black tracking-tighter text-red-950 uppercase"
+            >
+              GACETA MULTIDISCIPLINARIA
+            </div>
+            <button
+              id="close-menu-button"
+              class="text-red-950 hover:rotate-90 transition-transform duration-300"
+            >
+              <span class="mdi mdi-close text-4xl"></span>
+            </button>
+          </div>
+
+          <!-- Links de Gaceta -->
+          <nav class="flex flex-col space-y-6 pb-20">
+            <a
+              class="mobile-nav-link text-xl font-black tracking-tighter text-red-950 border-b border-gray-100 pb-2"
+              href="/gaceta">Inicio</a
+            >
+            <a
+              class="mobile-nav-link text-xl font-black tracking-tighter text-red-950 border-b border-gray-100 pb-2"
+              href="/gaceta/opinion">Opinión Multidisciplinaria</a
+            >
+            <a
+              class="mobile-nav-link text-xl font-black tracking-tighter text-red-950 border-b border-gray-100 pb-2"
+              href="/gaceta/actualidad">Actualidad</a
+            >
+            <a
+              class="mobile-nav-link text-xl font-black tracking-tighter text-red-950 border-b border-gray-100 pb-2"
+              href="/gaceta/audiovisuales">Audio visuales</a
+            >
+            <a
+              class="mobile-nav-link text-xl font-black tracking-tighter text-red-950 border-b border-gray-100 pb-2"
+              href="/gaceta/vida_universitaria">Vida universitaria</a
+            >
+            <a
+              class="mobile-nav-link text-xl font-black tracking-tighter text-red-950 border-b border-gray-100 pb-2"
+              href="/gaceta/memoria">Memoria colectiva</a
+            >
+
+            <!-- <div class="pt-10">
+              <a
+                href="/gaceta"
+                class="mobile-nav-link block w-full bg-[#1D2D50] text-white px-8 py-5 rounded-2xl font-black text-xl text-center shadow-2xl transform active:scale-95 transition-transform duration-150"
               >
-            </li>
-            <li>
-              <a href="/gaceta/actualidad" data-category="economia"
-                >Actualidad</a
-              >
-            </li>
-            <li>
-              <a href="/gaceta/audiovisuales" data-category="deportes"
-                >Audio visuales</a
-              >
-            </li>
-            <li>
-              <a href="/gaceta/vida_universitaria" data-category="cultura"
-                >Vida universitaria</a
-              >
-            </li>
-            <li>
-              <a href="/gaceta/memoria" data-category="tecnologia"
-                >Memoria colectiva</a
-              >
-            </li>
-          </ul>
+                Gaceta Digital
+              </a>
+            </div> -->
+          </nav>
         </div>
       </div>
     </header>
+
     <main class="zoom-fade-in-up">
       <slot />
     </main>
+
     <Footer
       cimuLogo={cimuLogo}
       uesLogoBlanco={uesLogoBlanco}
       plumaLogo={plumaLogo}
       submarcaCIMU={submarcaCIMU}
     />
+
+    <script is:inline>
+      const mobileMenuButton = document.getElementById("mobile-menu-button");
+      const closeMenuButton = document.getElementById("close-menu-button");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const mobileNavLinks = document.querySelectorAll(".mobile-nav-link");
+
+      function toggleMenu() {
+        mobileMenu?.classList.toggle("hidden");
+        document.body.classList.toggle("overflow-hidden");
+      }
+
+      mobileMenuButton?.addEventListener("click", toggleMenu);
+      closeMenuButton?.addEventListener("click", toggleMenu);
+
+      mobileNavLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          mobileMenu?.classList.add("hidden");
+          document.body.classList.remove("overflow-hidden");
+        });
+      });
+    </script>
   </body>
 </html>
 
@@ -211,5 +228,20 @@ import gaceta from "../assets/logos/gaceta.png";
   .nav-link:hover::after,
   .nav-link.active::after {
     width: 100%;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 </style>

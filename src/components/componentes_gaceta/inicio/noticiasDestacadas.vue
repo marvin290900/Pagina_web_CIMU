@@ -36,10 +36,11 @@
         class="flex overflow-x-auto gap-4 pb-4 scrollbar-hide snap-x snap-mandatory scroll-smooth"
       >
         <card-publicacion
-          v-for="publicacion in publicaciones"
+          v-for="(publicacion, index) in publicaciones"
           :key="publicacion._id"
           :publicacion="publicacion"
-          class="flex-shrink-0 w-72 md:w-100 snap-start"
+          :index="index + 1"
+          class="flex-shrink-0 w-85 md:w-100 snap-start"
         />
       </div>
     </div>

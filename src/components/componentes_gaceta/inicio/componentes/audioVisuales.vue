@@ -11,7 +11,7 @@
         <!-- Botones de navegación -->
         <div class="flex items-center gap-4">
           <a href="/gaceta/audiovisuales"
-            ><button class="btn btn-soft btn-info">Ver más</button></a
+            ><button class="btn btn-ghost">Ver más</button></a
           >
           <div class="flex gap-2">
             <button
