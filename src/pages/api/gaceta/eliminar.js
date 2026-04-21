@@ -35,6 +35,7 @@ export async function DELETE({ request }) {
         if (!rutaRelativa || rutaRelativa.startsWith("http")) return;
         const rutaAbsoluta = path.resolve(
           process.cwd(),
+          "public",
           rutaRelativa.replace(/^\/+/, "")
         );
         await fs.promises.access(rutaAbsoluta, fs.constants.F_OK);

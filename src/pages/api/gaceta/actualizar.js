@@ -1,4 +1,5 @@
-// src/pages/api/gaceta/actualizar.js
+import fs from "fs";
+import path from "path";
 import { couch } from "../../../lib/couchDB";
 
 export async function PUT({ request }) {
@@ -50,6 +51,46 @@ export async function PUT({ request }) {
         }
       );
     }
+
+    // --- Función auxiliar para eliminar archivos locales ---
+    const eliminarArchivo = async (rutaRelativa) => {
+      try {
+        if (!rutaRelativa || rutaRelativa.startsWith("http")) return;
+        const rutaAbsoluta = path.resolve(
+          process.cwd(),
+          "public",
+          rutaRelativa.replace(/^\/+/, "")
+        );
+        await fs.promises.access(rutaAbsoluta, fs.constants.F_OK);
+        await fs.promises.unlink(rutaAbsoluta);
+      } catch (error) {
+        if (error.code !== "ENOENT") {
+          console.error("Error eliminando archivo:", rutaRelativa, error);
+        }
+      }
+    };
+
+    // Detectar imágenes eliminadas
+    const imgViejas = documentoActual.data.imagenes || {};
+    const imgNuevas = datos.imagenes || {};
+    const urlsAEliminar = [];
+
+    // Portada
+    if (imgViejas.portada?.url && imgViejas.portada.url !== imgNuevas.portada?.url) {
+      urlsAEliminar.push(imgViejas.portada.url);
+    }
+    // Galeria
+    const galeriasNuevas = (imgNuevas.galeria || []).map(g => g.url);
+    if (Array.isArray(imgViejas.galeria)) {
+      for (const img of imgViejas.galeria) {
+        if (img?.url && !galeriasNuevas.includes(img.url)) {
+          urlsAEliminar.push(img.url);
+        }
+      }
+    }
+
+    // Eliminar los archivos huérfanos
+    await Promise.all(urlsAEliminar.map(eliminarArchivo));
 
     // Combinar datos actuales con los nuevos (manteniendo _id y _rev)
     const documentoActualizado = {

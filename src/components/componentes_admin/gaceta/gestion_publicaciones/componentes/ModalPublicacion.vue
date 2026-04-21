@@ -546,36 +546,19 @@ const handlePortadaSelect = async (event) => {
   }
 
   try {
-    subiendoPortada.value = true;
-
-    const formDataImagen = new FormData();
-    formDataImagen.append("foto", file);
-    formDataImagen.append("carpeta", "publicaciones/portadas");
-
-    const response = await fetch("/api/subir_imagen", {
-      method: "POST",
-      body: formDataImagen,
-    });
-
-    if (!response.ok) throw new Error("Error al subir la imagen");
-
-    const data = await response.json();
-    if (!data.ok) throw new Error(data.error || "Error en subida");
-
-    formData.value.imagenes.portada.url = data.url;
-    console.log("Portada subida:", data.url);
+    formData.value.imagenes.portada.file = file;
+    formData.value.imagenes.portada.url = URL.createObjectURL(file);
+    console.log("Portada seleccionada (pendiente de subir):", file.name);
   } catch (error) {
-    console.error("Error al subir portada:", error);
+    console.error("Error al procesar portada:", error);
     alertData.value = {
       type: "error",
-      mensaje: `Error al subir la imagen de portada: ${error.message}`,
+      mensaje: `Error al procesar la imagen de portada: ${error.message}`,
     };
     alert.value = true;
     setTimeout(() => {
       alert.value = false;
     }, 5000);
-  } finally {
-    subiendoPortada.value = false;
   }
 };
 
@@ -650,51 +633,28 @@ const handleGaleriaSelect = async (event) => {
     return;
   }
 
-  // --- 3. SUBIDA (SOLO ARCHIVOS VÁLIDOS Y CON ESPACIO) ---
+  // --- 3. SELECCIÓN (SOLO ARCHIVOS VÁLIDOS Y CON ESPACIO) ---
   try {
-    subiendoGaleria.value = true;
-    imagenesCargadas.value = 0;
-    totalImagenesSubir.value = archivosASubir.length;
-
     for (const file of archivosASubir) {
-      const formDataImagen = new FormData();
-      formDataImagen.append("foto", file);
-      formDataImagen.append("carpeta", "publicaciones/galeria");
-
-      const response = await fetch("/api/subir_imagen", {
-        method: "POST",
-        body: formDataImagen,
+      formData.value.imagenes.galeria.push({
+        file: file,
+        url: URL.createObjectURL(file), // Mostrar previsualización
+        descripcion: "",
       });
-
-      if (!response.ok) {
-        console.error(`Error al subir ${file.name}`);
-        continue; // Saltar al siguiente si uno falla
-      }
-
-      const data = await response.json();
-      if (data.ok) {
-        formData.value.imagenes.galeria.push({
-          url: data.url,
-          descripcion: "",
-        });
-        imagenesCargadas.value++;
-      }
     }
 
-    console.log("Imágenes de galería subidas:", imagenesCargadas.value);
+    console.log("Imágenes de galería seleccionadas (pendientes):", archivosASubir.length);
   } catch (error) {
-    console.error("Error al subir galería:", error);
+    console.error("Error al procesar galería:", error);
     alertData.value = {
       type: "error",
-      mensaje: `Error al subir las imágenes de la galería: ${error.message}`,
+      mensaje: `Error al procesar las imágenes de la galería: ${error.message}`,
     };
     alert.value = true;
     setTimeout(() => {
       alert.value = false;
     }, 5000);
-    //
   } finally {
-    subiendoGaleria.value = false;
     // Limpiar input independientemente del resultado
     if (galeriaInput.value) galeriaInput.value.value = "";
   }
@@ -805,6 +765,52 @@ const guardar = async () => {
         fechaLocal.value = isoToLocal(formData.value.fecha_publicacion);
       }
     }
+
+    // SUBIR IMÁGENES PENDIENTES
+    if (formData.value.imagenes.portada.file) {
+      subiendoPortada.value = true;
+      const formDataImagen = new FormData();
+      formDataImagen.append("foto", formData.value.imagenes.portada.file);
+      formDataImagen.append("carpeta", "publicaciones/portadas");
+
+      const response = await fetch("/api/subir_imagen", {
+        method: "POST",
+        body: formDataImagen,
+      });
+
+      if (!response.ok) throw new Error("Error al subir la portada");
+
+      const data = await response.json();
+      if (!data.ok) throw new Error(data.error || "Error al subir portada");
+
+      formData.value.imagenes.portada.url = data.url;
+      delete formData.value.imagenes.portada.file; // Remover el archivo de los datos
+      subiendoPortada.value = false;
+    }
+
+    subiendoGaleria.value = true;
+    for (let i = 0; i < formData.value.imagenes.galeria.length; i++) {
+        let imagen = formData.value.imagenes.galeria[i];
+        if (imagen.file) {
+          const formDataImagen = new FormData();
+          formDataImagen.append("foto", imagen.file);
+          formDataImagen.append("carpeta", "publicaciones/galeria");
+
+          const response = await fetch("/api/subir_imagen", {
+            method: "POST",
+            body: formDataImagen,
+          });
+
+          if (!response.ok) throw new Error("Error al subir imagen de galería");
+
+          const data = await response.json();
+          if (!data.ok) throw new Error(data.error || "Error al subir la imagen");
+
+          formData.value.imagenes.galeria[i].url = data.url;
+          delete formData.value.imagenes.galeria[i].file;
+        }
+    }
+    subiendoGaleria.value = false;
 
     console.log("Guardando publicación:", formData.value);
 
