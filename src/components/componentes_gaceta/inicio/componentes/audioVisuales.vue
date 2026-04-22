@@ -1,7 +1,15 @@
 <template>
   <div class="w-full mx-auto">
-    <div v-if="cargando" class="flex justify-center">
-      <span class="loading loading-spinner loading-lg"></span>
+     <div v-if="cargando" >
+      <div ref="scrollContainer"
+        @scroll="checkScrollPosition"
+        class="flex overflow-x-auto gap-4 pb-4 scrollbar-hide snap-x snap-mandatory scroll-smooth">
+        <CardPublicacionSkeleton 
+          v-for="i in 4" 
+          :key="'skeleton-' + i"
+          class="flex-shrink-0 w-72 md:w-80 snap-start" 
+        />
+      </div>
     </div>
 
     <div v-else class="mx-auto w-full">
@@ -54,6 +62,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import CardPublicacion from "../../components/CardPublicacion.vue";
+import CardPublicacionSkeleton from "../../components/CardPublicacionSkeleton.vue";
 
 const publicaciones = ref([]);
 const cargando = ref(true);

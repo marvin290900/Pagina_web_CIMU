@@ -1,7 +1,42 @@
 <template>
   <div class="w-11/12 mx-auto">
-    <div v-if="cargando" class="flex justify-center">
-      <span class="loading loading-spinner loading-lg"></span>
+    <div v-if="cargando" class="lg:w-9/12 mx-auto w-full">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-bold">Publicaciones destacadas</h2>
+
+        <!-- Botones de navegación skeleton -->
+        <div class="flex gap-2">
+          <div class="skeleton w-8 h-8 rounded-full"></div>
+          <div class="skeleton w-8 h-8 rounded-full"></div>
+        </div>
+      </div>
+
+      <!-- Tarjetas skeleton -->
+      <div class="flex overflow-hidden gap-4 pb-4">
+        <article
+          v-for="i in 3"
+          :key="i"
+          class="bg-white rounded-2xl shadow-sm border border-gray-100 flex-shrink-0 w-85 md:w-100 min-h-[140px] flex"
+        >
+          <div class="flex w-full items-center p-6 gap-6">
+            <!-- Skeleton para el número -->
+            <div class="flex-shrink-0 w-14 flex justify-center items-center">
+              <div class="skeleton w-10 h-14 rounded-lg"></div>
+            </div>
+
+            <!-- Skeleton para el contenido -->
+            <div class="flex-grow">
+              <div class="skeleton h-5 md:h-6 w-full mb-3"></div>
+              <div class="skeleton h-5 md:h-6 w-4/5 mb-4"></div>
+              
+              <div class="flex items-center gap-4">
+                <div class="skeleton h-4 w-20"></div>
+                <div class="skeleton h-4 w-24"></div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
     </div>
 
     <div v-else class="lg:w-9/12 mx-auto w-full">
