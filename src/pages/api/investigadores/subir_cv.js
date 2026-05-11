@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const BASE_PATH = '/var/www/cimu/public/uploads';
+const BASE_PATH = path.join(process.cwd(), "public/uploads");
 
 export async function POST({ request }) {
   try {

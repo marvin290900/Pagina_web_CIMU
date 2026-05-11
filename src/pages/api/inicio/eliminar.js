@@ -2,7 +2,7 @@ import { getImagenPorId, eliminarImagen } from '../../../lib/imagenesCarrusel.js
 import fs from 'fs/promises';
 import path from 'path';
 
-const BASE_PATH = '/var/www/cimu/public';
+const BASE_PATH = path.join(process.cwd(), "public");
 
 async function eliminarArchivoImagen(fotoUrl) {
   try {

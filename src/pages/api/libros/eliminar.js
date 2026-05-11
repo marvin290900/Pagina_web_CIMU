@@ -3,7 +3,7 @@ import { couch } from "../../../lib/couchDB";
 import fs from "fs";
 import path from "path";
 
-const BASE_PATH = "/var/www/cimu/public";
+const BASE_PATH = path.join(process.cwd(), "public");
 
 // Función helper para eliminar archivo
 const eliminarArchivo = (url) => {
