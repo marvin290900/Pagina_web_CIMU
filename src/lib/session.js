@@ -122,7 +122,7 @@ export function createSessionCookie(token, expiresAt) {
     attributes: {
       path: '/',
       httpOnly: true,
-      secure: import.meta.env.PROD, // ✅ Así de simple
+      secure: import.meta.env.isSSL || import.meta.env.PROD, // Si es por docker, no se activa ssl, y si no es por docker, se activa si esta en produccion o en desarrollo
       sameSite: 'lax',
       expires: expiresAt
     }
@@ -136,7 +136,7 @@ export function createBlankSessionCookie() {
     attributes: {
       path: '/',
       httpOnly: true,
-      secure: import.meta.env.PROD, // ✅ Así de simple
+      secure: import.meta.env.isSSL || import.meta.env.PROD,
       sameSite: 'lax',
       maxAge: 0
     }
