@@ -5,55 +5,60 @@ const BASE_PATH = path.join(process.cwd(), "public/uploads");
 
 export async function POST({ request }) {
   try {
-    // Obtenemos los datos del formulario (la imagen)
     const formData = await request.formData();
-
-    // El input file debe llamarse "foto" (debe coincidir con el name del input)
     const file = formData.get("foto");
+
+    // 1. Sanitizar el nombre de la carpeta para evitar Path Traversal
+    const carpetaRaw = formData.get("carpeta")?.toString().trim() || "uploads";
+    const carpeta = path.basename(carpetaRaw);
 
     if (!file) {
       return new Response(
         JSON.stringify({ ok: false, error: "No se envió ninguna imagen" }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json" },
-        }
+        { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
 
-    // Obtener el nombre de la carpeta (por ejemplo: 'investigadores', 'libros', etc.)
-    // Si no viene, usar 'uploads' por defecto
-    const carpeta = formData.get("carpeta")?.toString().trim() || "uploads";
-    //console.log("Carpeta recibida:", carpeta);
+    // 2. Limitar tamaño del archivo (10MB)
+    const MAX_SIZE = 10 * 1024 * 1024;
+    if (file.size > MAX_SIZE) {
+      return new Response(
+        JSON.stringify({ ok: false, error: "La imagen es demasiado grande (máx 10MB)" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
 
-    // Convertimos la imagen a un buffer para guardarla
+    // 3. Validar tipo y extensión
+    const ext = path.extname(file.name || "").toLowerCase();
+    const allowedExtensions = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"];
+    const isImage = file.type.startsWith("image/") && allowedExtensions.includes(ext);
+
+    if (!isImage) {
+      return new Response(
+        JSON.stringify({ ok: false, error: "Archivo no permitido. Debe ser una imagen válida." }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // 4. Preparar guardado
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
-
-    // Ruta donde guardaremos las imágenes (carpeta public/uploads)
     const uploadsDir = path.join(BASE_PATH, carpeta);
 
-    // Crear la carpeta si no existe
     if (!fs.existsSync(uploadsDir)) {
       fs.mkdirSync(uploadsDir, { recursive: true });
     }
 
-    // Crear un nombre único para la imagen para evitar sobreescrituras
     const timestamp = Date.now();
-    // Extraemos extensión original del archivo o usamos .bin si no tiene
-    const ext = path.extname(file.name) || ".bin";
-    const fileName = `${timestamp}${ext}`;
-
-    // Ruta final del archivo
+    const fileName = `${timestamp}${ext || ".bin"}`;
     const filePath = path.join(uploadsDir, fileName);
 
-    // Guardar el archivo
+    // 5. Guardar archivo
     await fs.promises.writeFile(filePath, buffer);
 
-    // URL pública para acceder desde el frontend
+    // URL pública
     const publicUrl = `/uploads/${carpeta}/${fileName}`;
 
-    // Devolvemos el resultado con el link
     return new Response(JSON.stringify({ ok: true, url: publicUrl }), {
       status: 200,
       headers: { "Content-Type": "application/json" },

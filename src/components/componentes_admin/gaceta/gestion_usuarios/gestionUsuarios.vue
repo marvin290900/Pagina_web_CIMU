@@ -39,6 +39,7 @@
             <th>Foto</th>
             <th>Nombre</th>
             <th>Correo</th>
+            <th>Publicaciones</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -70,6 +71,7 @@
             </td>
             <td>{{ usuario.nombre }}</td>
             <td>{{ usuario.correo }}</td>
+            <td>{{ usuario.publicaciones?.length || 0 }}</td>
             <td class="flex gap-3">
               <div class="tooltip tooltip-bottom" data-tip="Editar">
                 <button
@@ -347,7 +349,7 @@ const obtenerUsuarios = async () => {
     // Resetear a página 1 cuando se recargan los datos
     paginaActual.value = 1;
     cargandoUsuarios.value = false;
-    console.log("Usuarios obtenidos:", usuarios.value.length);
+    console.log("Usuarios obtenidos:", usuarios.value[1].publicaciones.length);
   } catch (error) {
     console.error(error);
   }

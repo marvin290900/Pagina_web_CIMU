@@ -13,7 +13,7 @@ export async function createUser(email, password, isAdmin = false) {
 
   const passwordHash = await bcrypt.hash(password, 10);
   const userId = uuidv4();
-  
+
   const user = {
     _id: userId,
     email,
@@ -33,7 +33,7 @@ export async function findUserByEmail(email) {
       selector: { email },
       limit: 1
     });
-    
+
     return response.data.docs[0] || null;
   } catch (error) {
     console.error('Error buscando usuario:', error);
@@ -43,11 +43,10 @@ export async function findUserByEmail(email) {
 
 // Autenticar usuario
 export async function authenticateUser(email, password) {
- 
+
   const user = await findUserByEmail(email);
-   console.log('Autenticando usuario:', email, user);
   if (!user) return null;
-  console.log('Usuario encontrado para autenticación y contraseñas', user.email);
+
   const isValid = await bcrypt.compare(password, user.passwordHash);
   if (!isValid) return null;
 

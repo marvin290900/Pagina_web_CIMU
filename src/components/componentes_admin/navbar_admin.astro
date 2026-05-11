@@ -104,38 +104,56 @@
 </header>
 
 <!-- Scripts -->
-<script is:inline>
+<script>
+  // Función para inicializar los eventos
+  const setupNavbar = () => {
+    const sidebar = document.getElementById("sidebar");
+    const toggleSidebar = document.getElementById("toggleSidebar");
+    const closeSidebar = document.getElementById("closeSidebar");
+    const overlay = document.getElementById("sidebarOverlay");
+    const logoutBtn = document.getElementById("logoutBtn");
 
-  const sidebar = document.getElementById("sidebar");
-  const toggleSidebar = document.getElementById("toggleSidebar");
-  const closeSidebar = document.getElementById("closeSidebar");
-  const overlay = document.getElementById("sidebarOverlay");
+    const openSidebar = () => {
+      sidebar?.classList.remove("-translate-x-full");
+      sidebar?.classList.add("translate-x-0");
+      overlay?.classList.remove("hidden");
+    };
 
-  function openSidebar() {
-    sidebar.classList.remove("-translate-x-full");
-    sidebar.classList.add("translate-x-0");
-    overlay.classList.remove("hidden");
-  }
+    const hideSidebar = () => {
+      sidebar?.classList.add("-translate-x-full");
+      sidebar?.classList.remove("translate-x-0");
+      overlay?.classList.add("hidden");
+    };
 
-  document.getElementById("logoutBtn").addEventListener("click", async () => {
-    await fetch("/api/logout", { method: "POST" });
-    window.location.href = "/login";
-  });
+    // Evento Logout
+    if (logoutBtn) {
+      logoutBtn.onclick = async (e) => {
+        e.preventDefault();
+        console.log("Se clickeó cerrar sesión - Enviando petición...");
 
-  function hideSidebar() {
-    sidebar.classList.add("-translate-x-full");
-    sidebar.classList.remove("translate-x-0");
-    overlay.classList.add("hidden");
-  }
+        try {
+          const response = await fetch("/api/logout", { method: "POST" });
+          if (response.ok) {
+            console.log("Sesión cerrada en el servidor");
+            window.location.href = "/login";
+          } else {
+            console.error("Error al cerrar sesión:", response.statusText);
+          }
+        } catch (err) {
+          console.error("Error de red:", err);
+        }
+      };
+    }
 
-  toggleSidebar.addEventListener("click", openSidebar);
-  closeSidebar.addEventListener("click", hideSidebar);
-  overlay.addEventListener("click", hideSidebar);
+    // Eventos de UI
+    toggleSidebar?.addEventListener("click", openSidebar);
+    closeSidebar?.addEventListener("click", hideSidebar);
+    overlay?.addEventListener("click", hideSidebar);
+  };
 
-  // Cierra al hacer clic en cualquier enlace del sidebar
-  document.querySelectorAll(".sidebar-link").forEach((link) => {
-    link.addEventListener("click", () => {
-      hideSidebar();
-    });
-  });
+  // Ejecutar al cargar la página
+  setupNavbar();
+
+  // Si usas ViewTransitions de Astro, descomenta la siguiente línea:
+  // document.addEventListener('astro:after-swap', setupNavbar);
 </script>

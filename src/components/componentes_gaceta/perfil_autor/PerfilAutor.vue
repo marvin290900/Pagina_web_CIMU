@@ -72,19 +72,41 @@
               </div>
 
               <div class="flex space-x-4">
+                <!-- Facebook -->
                 <a
-                  href="https://twitter.com/luis_dev"
+                v-if="autor.redes_sociales.facebook"
+                  :href="autor.redes_sociales.facebook"
+                  target="_blank"
+                  class="text-blue-400 hover:text-blue-600 transition-colors text-3xl"
+                >
+                  <span class="mdi mdi-facebook"></span>
+                </a>
+                <!-- Twitter -->
+                <a
+                v-if="autor.redes_sociales.twitter"
+                  :href="autor.redes_sociales.twitter"
                   target="_blank"
                   class="text-blue-400 hover:text-blue-600 transition-colors text-3xl"
                 >
                   <span class="mdi mdi-twitter"></span>
                 </a>
+                <!-- Linkedin -->
                 <a
-                  href="https://linkedin.com/in/luisalfaro"
+                v-if="autor.redes_sociales.linkedin"
+                  :href="autor.redes_sociales.linkedin"
                   target="_blank"
                   class="text-blue-700 hover:text-blue-900 transition-colors text-3xl"
                 >
                   <span class="mdi mdi-linkedin"></span>
+                </a>
+                <!-- Youtube -->
+                <a
+                v-if="autor.redes_sociales.youtube"
+                  :href="autor.redes_sociales.youtube"
+                  target="_blank"
+                  class="text-red-600 hover:text-red-800 transition-colors text-3xl"
+                >
+                  <span class="mdi mdi-youtube"></span>
                 </a>
               </div>
             </div>

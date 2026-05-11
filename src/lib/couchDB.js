@@ -1,14 +1,16 @@
 import axios from 'axios';
-import dotenv from 'dotenv';
+//import dotenv from 'dotenv';
 
-dotenv.config();
-console.log(process.env.COUCHDB_URL)
+const URL = process.env.COUCHDB_URL || import.meta.env.COUCHDB_URL;
+const USER = process.env.COUCHDB_USER || import.meta.env.COUCHDB_USER;
+const PASS = process.env.COUCHDB_PASSWORD || import.meta.env.COUCHDB_PASSWORD;
+
 
 export const couch = axios.create({
-  baseURL: process.env.COUCHDB_URL, 
+  baseURL: URL,
   auth: {
-    username: process.env.COUCHDB_USER,
-    password: process.env.COUCHDB_PASSWORD,
+    username: USER,
+    password: PASS,
   },
   headers: {
     'Content-Type': 'application/json',

@@ -36,7 +36,8 @@ export async function GET({ request }) {
 
     // Construir selector
     let selector = {
-      estado: "activo",
+      estado: { $in: ["activo", "inactivo"] },
+      fecha_publicacion: { $gt: null } 
     };
 
     // Agregar filtro de año si existe
@@ -50,21 +51,25 @@ export async function GET({ request }) {
       };
     }
 
-    // Query SOLO con ordenamiento por fecha descendente
+    // Query SIN sort en la DB para evitar problemas de índices
     const query = {
       selector: selector,
-      sort: [
-        { fecha_publicacion: "desc" }, // Solo una dirección
-      ],
       limit: 1000,
     };
 
     const response = await couch.post(`/cimu-gaceta-${coleccion}/_find`, query);
+    
+    // ORDENAR EN MEMORIA (JavaScript) para evitar errores de CouchDB
+    const docs = response.data.docs.sort((a, b) => {
+      const fechaA = new Date(a.fecha_publicacion || 0);
+      const fechaB = new Date(b.fecha_publicacion || 0);
+      return fechaB - fechaA; // Orden descendente (más recientes primero)
+    });
 
     return new Response(
       JSON.stringify({
-        total_rows: response.data.docs.length,
-        rows: response.data.docs.map((doc) => ({ doc })),
+        total_rows: docs.length,
+        rows: docs.map((doc) => ({ doc })),
       }),
       {
         status: 200,

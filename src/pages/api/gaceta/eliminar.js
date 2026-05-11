@@ -17,7 +17,7 @@ export async function DELETE({ request }) {
       );
     }
 
-    // 1️⃣ Obtener el documento actual
+    // Obtener el documento actual
     const documentoActual = await couch.get(`/cimu-gaceta-${coleccion}/${id}`);
     if (documentoActual.status !== 200) {
       return new Response(
@@ -35,6 +35,7 @@ export async function DELETE({ request }) {
         if (!rutaRelativa || rutaRelativa.startsWith("http")) return;
         const rutaAbsoluta = path.resolve(
           process.cwd(),
+          "public",
           rutaRelativa.replace(/^\/+/, "")
         );
         await fs.promises.access(rutaAbsoluta, fs.constants.F_OK);
@@ -61,7 +62,7 @@ export async function DELETE({ request }) {
       await Promise.all(urlsAEliminar.map(eliminarArchivo));
     };
 
-    // 2️⃣ Si se elimina un AUTOR → eliminar también sus publicaciones
+    // Si se elimina un AUTOR → eliminar también sus publicaciones
     if (coleccion === "autores") {
       const publicaciones = data.publicaciones || [];
 
@@ -89,7 +90,7 @@ export async function DELETE({ request }) {
         })
       );
     } else {
-      // 3️⃣ Si se elimina una publicación → quitarla del autor
+      // Si se elimina una publicación → quitarla del autor
       if (data.autor && data.autor.id) {
         try {
           const autorDoc = await couch.get(
@@ -97,8 +98,9 @@ export async function DELETE({ request }) {
           );
           if (autorDoc.status === 200) {
             const publicaciones = autorDoc.data.publicaciones || [];
+            // Filtro robusto: elimina la publicación actual y limpia objetos sin ID
             autorDoc.data.publicaciones = publicaciones.filter(
-              (pub) => pub.id !== id
+              (pub) => pub.id && pub.id !== id
             );
             await couch.put(
               `/cimu-gaceta-autores/${data.autor.id}`,

@@ -12,7 +12,7 @@ function generateSessionToken() {
 export async function createSession(userId) {
   const token = generateSessionToken();
   const sessionId = uuidv4();
-  
+
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + SESSION_EXPIRES_IN_DAYS);
 
@@ -25,7 +25,7 @@ export async function createSession(userId) {
   };
 
   await couch.put(`/sessions/${sessionId}`, session);
-  
+
   return { token, expiresAt };
 }
 
@@ -43,7 +43,7 @@ export async function validateSession(token) {
 
     const now = new Date();
     const expiresAt = new Date(session.expiresAt);
-    
+
     if (now >= expiresAt) {
       await deleteSession(session._id, session._rev);
       return { session: null, user: null };
@@ -122,7 +122,7 @@ export function createSessionCookie(token, expiresAt) {
     attributes: {
       path: '/',
       httpOnly: true,
-      secure: false, // ✅ Así de simple
+      secure: import.meta.env.isSSL || import.meta.env.PROD, // Si es por docker, no se activa ssl, y si no es por docker, se activa si esta en produccion o en desarrollo
       sameSite: 'lax',
       expires: expiresAt
     }
@@ -136,7 +136,7 @@ export function createBlankSessionCookie() {
     attributes: {
       path: '/',
       httpOnly: true,
-      secure: import.meta.env.PROD, // ✅ Así de simple
+      secure: import.meta.env.isSSL || import.meta.env.PROD,
       sameSite: 'lax',
       maxAge: 0
     }

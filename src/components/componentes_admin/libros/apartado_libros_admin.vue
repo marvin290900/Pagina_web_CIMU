@@ -538,6 +538,7 @@ const guardarColecciones = async () => {
 
     cerrarModalColecciones();
     mostrarAlerta("success", "Colecciones guardadas exitosamente");
+    window.location.reload();
   } catch (error) {
     console.error(error);
     mostrarAlerta("error", "Error al guardar las colecciones");
