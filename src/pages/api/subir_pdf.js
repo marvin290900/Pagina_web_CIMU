@@ -8,7 +8,7 @@ import { promisify } from "util";
 const execFileAsync = promisify(execFile);
 
 // Ruta absoluta a la carpeta public uploads en tu servidor
-const BASE_PATH = "/var/www/cimu/public/uploads";
+const BASE_PATH = path.join(process.cwd(), "public/uploads");
 
 export async function POST({ request }) {
   try {
