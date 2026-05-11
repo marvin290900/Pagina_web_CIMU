@@ -1,7 +1,11 @@
 <template>
   <div class="w-11/12 pt-6 mx-auto">
     <div v-if="cargando" class="flex justify-center">
-      <span class="loading loading-spinner loading-lg"></span>
+      <div class="relative rounded-xl overflow-hidden shadow-lg mb-10 text-white lg:w-9/12 mx-auto w-full">
+
+        <div class="skeleton w-full h-64 md:h-150 ">
+        </div>
+      </div>
     </div>
 
     <div

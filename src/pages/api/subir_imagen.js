@@ -1,7 +1,8 @@
 import fs from "fs";
 import path from "path";
 
-const BASE_PATH = path.join(process.cwd(), "public/uploads");// Cambia esto a la ruta absoluta de tu carpeta public
+
+const BASE_PATH = path.join(process.cwd(), "public/uploads");
 
 export async function POST({ request }) {
   try {

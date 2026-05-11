@@ -3,7 +3,7 @@
     <h1 class="text-3xl font-extrabold text-center mb-4">
       Publicaciones Recientes
     </h1>
-    <div class="lg:w-9/12 grid grid-cols-1 mx-auto">
+    <div class="lg:w-9/12 grid grid-cols-1 mx-auto gap-8">
       <Actualidad />
       <Audiovisuales />
       <Memoria />
