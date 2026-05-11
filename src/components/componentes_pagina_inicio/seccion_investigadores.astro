@@ -1,0 +1,153 @@
+---
+const { InvestigadoresDirectivos, imagenDefault } = Astro.props;
+
+// Diccionario para convertir meses de texto a número
+const meses = {
+  "enero": 0, "febrero": 1, "marzo": 2, "abril": 3, "mayo": 4, "junio": 5,
+  "julio": 6, "agosto": 7, "septiembre": 8, "octubre": 9, "noviembre": 10, "diciembre": 11
+};
+
+const parsearFechaEspañol = (fechaStr) => {
+  try {
+    // Limpia la cadena"
+    const partes = fechaStr.toLowerCase().replace(",", "").split(" ");
+    const dia = parseInt(partes[0]);
+    const mes = meses[partes[2]];
+    const año = parseInt(partes[4]);
+    const horaPartes = partes[5].split(":");
+    
+    return new Date(año, mes, dia, parseInt(horaPartes[0]), parseInt(horaPartes[1]), parseInt(horaPartes[2]));
+  } catch (e) {
+    return new Date(0); // Fecha por defecto si falla
+  }
+};
+
+// Ordenar: del más antiguo al más nuevo
+const investigadoresOrdenados = InvestigadoresDirectivos.sort((a, b) => {
+  return parsearFechaEspañol(a.creado_en) - parsearFechaEspañol(b.creado_en);
+});
+---
+
+<section id="seccionInvestigadores" class="bg-white text-center">
+  <div class="container mx-auto">
+    <div
+      id="cuarto_texto_centro_investigacion"
+      class="p-6 flex flex-col justify-center items-center text-center rounded-lg shadow-none transition-all duration-1000 opacity-0 translate-y-8"
+    >
+      <p class="text-2xl sm:text-xl md:text-2xl lg:text-4xl font-bold text-gray-800 mt-10">
+        Equipo de Investigación del CIMU - FMOcc - UES
+      </p>
+
+      <p class="text-sm md:text-lg lg:text-2xl text-gray-800 text-center mt-5">
+        El quipo de investigación del <span class="text-[#283886] font-bold">CIMU - FMOcc UES</span>
+        está compuesto por profesionales dedicados que, con su experiencia y pasión,
+        abordan los desafíos más relevantes a través de la investigación multidisciplinaria,
+        generando soluciones innovadoras con un impacto real en la sociedad.
+      </p>
+    </div>
+    <div
+      id="quinto_texto_centro_investigacion"
+      class="flex flex-wrap justify-center gap-8 px-4 py-5 transition-all duration-1000 opacity-0 translate-y-8"
+    >
+      {
+        investigadoresOrdenados.map((inv) => (
+          <a
+            href={`/investigadores/${encodeURIComponent(inv._id)}`}
+            class="flex flex-col items-center w-full max-w-xs border-2 border-transparent rounded-xl transition-transform duration-300 hover:scale-105 hover:shadow-2xl hover:border-[#28388659] cursor-pointer"
+          >
+            <div class="relative w-30 h-30 flex items-center justify-center mb-2 ">
+              <div class="absolute inset-0 rounded-full border-1 border-[#28388659] " />
+              <div class="w-28 h-28 rounded-full overflow-hidden bg-white z-10">
+                <img
+                  src={
+                    inv.foto && inv.foto.trim() !== ""
+                      ? inv.foto
+                      : imagenDefault.src
+                  }
+                  class="w-full h-full object-cover"
+                  alt={`Foto de ${inv.nombre}`}
+                />
+              </div>
+            </div>
+            <div class="text-center text-gray-800">
+              <p class="text-lg font-semibold">{inv.nombre}</p>
+              <p class="text-sm">{inv.cargo}</p>
+              <p class="text-sm text-gray-500">{inv.email}</p>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  const targets = document.querySelectorAll(
+    " #cuarto_texto_centro_investigacion, #quinto_texto_centro_investigacion"
+  );
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.remove("opacity-0", "translate-y-8");
+          entry.target.classList.add("opacity-100", "translate-y-0");
+        }
+      });
+    },
+    {
+      threshold: 0.1,
+    }
+  );
+
+  targets.forEach((target) => observer.observe(target));
+</script>
+
+<style>
+  @keyframes girarBorde {
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 360% 50%;
+    }
+  }
+
+  .borde-giratorio {
+    position: relative;
+    border-radius: 1rem; /* mismo que rounded-2xl */
+    padding: 2px; /* espacio para el borde animado */
+    background: linear-gradient(270deg, #ffffff, #283886, #ffffff, #283886);
+    background-size: 400% 400%;
+    animation: girarBorde 8s linear infinite;
+  }
+
+  .borde-giratorio > .contenido {
+    background: white; /* o transparente si quieres */
+    border-radius: 1rem;
+    height: 100%;
+    width: 100%;
+  }
+
+  @keyframes spin-gradient {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-spin-gradient {
+    background: conic-gradient(
+      from 0deg,
+      #283886,
+      #ffffff,
+      #283886,
+      #ffffff,
+      #283886
+    );
+    animation: spin-gradient 5s linear infinite;
+    transition: all 0.3s ease-in-out;
+  }
+</style>

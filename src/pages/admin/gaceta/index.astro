@@ -1,0 +1,71 @@
+---
+import LayoutAdmin from "../../../layouts/Layout_admin.astro";
+---
+
+<LayoutAdmin>
+  <div
+    class="w-2/3 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+  >
+    <div
+      class="flex flex-col items-center gap-2 bg-white shadow-lg rounded-lg pb-4"
+    >
+      <div class="w-full bg-blue-500 h-2 rounded-t-2xl"></div>
+      <span
+        class="mdi mdi-account-multiple-outline text-6xl bg-gradient-to-r from-blue-500 to-blue-400 text-white p-2 rounded-xl mt-4"
+      ></span>
+
+      <h2 class="text-2xl font-bold">Gestionar usuarios</h2>
+      <p class="text-sm text-gray-500">Gestiona los usuarios de la gaceta</p>
+      <a href="/admin/gaceta/gestion_usuarios">
+        <button
+          class="btn bg-blue-500 text-white flex items-center hover:bg-blue-600 transition"
+        >
+          Gestionar
+          <span class="mdi mdi-chevron-right"></span>
+        </button></a
+      >
+    </div>
+    <div
+      class="flex flex-col items-center gap-2 bg-white shadow-lg rounded-lg pb-4"
+    >
+      <div class="w-full bg-amber-500 h-2 rounded-t-2xl"></div>
+      <span
+        class="mdi mdi-file-document-edit-outline text-6xl bg-gradient-to-r from-amber-500 to-amber-400 text-white p-2 rounded-xl mt-4"
+      ></span>
+
+      <h2 class="text-2xl font-bold">Gestionar publicaciones</h2>
+      <p class="text-sm text-gray-500">
+        Gestiona las publicaciones de la gaceta
+      </p>
+      <a href="/admin/gaceta/gestion_publicaciones">
+        <button
+          class="btn bg-amber-500 text-white flex items-center hover:bg-amber-600 transition"
+        >
+          Gestionar
+          <span class="mdi mdi-chevron-right"></span>
+        </button>
+      </a>
+    </div>
+    <div
+      class="flex flex-col items-center gap-2 bg-white shadow-lg rounded-lg pb-4"
+    >
+      <div class="w-full bg-purple-500 h-2 rounded-t-2xl"></div>
+      <span
+        class="mdi mdi-file-star-four-points-outline text-6xl bg-gradient-to-r from-purple-500 to-purple-400 text-white p-2 rounded-xl mt-4"
+      ></span>
+
+      <h2 class="text-2xl font-bold">Gestionar publicaciones destacadas</h2>
+      <p class="text-sm text-gray-500">
+        Gestiona las publicaciones destacadas de la gaceta
+      </p>
+      <a href="/admin/gaceta/gestion_destacados">
+        <button
+          class="btn bg-purple-500 text-white flex items-center hover:bg-purple-600 transition"
+        >
+          Gestionar
+          <span class="mdi mdi-chevron-right"></span>
+        </button>
+      </a>
+    </div>
+  </div>
+</LayoutAdmin>

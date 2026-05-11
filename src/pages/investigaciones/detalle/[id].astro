@@ -1,0 +1,412 @@
+---
+// src/pages/investigacion/detalle/[id].astro
+import Layout from '../../../layouts/Layout.astro';
+
+const { id } = Astro.params;
+
+// Inicializar con valores por defecto
+let investigacion = {
+  titulo: '',
+  resumen: '',
+  descripcion: '',
+  investigadores: [],
+  fecha_publicacion: '',
+  palabras_clave: [],
+  programa: '',
+  imagenURL: '',
+  pdfURL: ''
+};
+
+let error = false;
+
+try {
+  const res = await fetch(`http://localhost:4321/api/investigaciones/${id}`);
+  const response = await res.json();
+  
+  if (response.ok && response.data) {
+    investigacion = response.data;
+  } else {
+    error = true;
+  }
+} catch (err) {
+  console.error("Error al cargar investigación:", err);
+  error = true;
+}
+
+// Si hay error, redirigir a 404
+if (error) {
+  return Astro.redirect('/404');
+}
+
+const pageTitle = `${investigacion.titulo} | CIMU`;
+---
+
+<Layout title={pageTitle}>
+    <!-- Hero -->
+    <section class="hero-investigacion">
+        <div class="hero-content">
+            <h1>{investigacion.titulo}</h1>
+            
+            <div class="meta-info">
+                <span>📅 {new Date(investigacion.fecha_publicacion).toLocaleDateString('es-ES', { 
+                    year: 'numeric', 
+                    month: 'long'
+                })}</span>
+                <span>•</span>
+                <span>🏢 {investigacion.programa}</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="layout-detail">
+            <!-- Sidebar -->
+            <aside class="sidebar-detail">
+                <!-- Card de Investigadores -->
+                {investigacion.investigadores && investigacion.investigadores.length > 0 && (
+                    <div class="info-card">
+                        <h3>{investigacion.investigadores.length === 1 ? 'Investigador' : 'Investigadores'}</h3>
+                        <ul class="investigadores-list">
+                            {investigacion.investigadores.map((inv) => (
+                                <li>
+                                    <div class="investigador-avatar">👤</div>
+                                    <p class="nombre">{inv.nombre}</p>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+
+                <!-- Palabras Clave -->
+                {investigacion.palabras_clave && investigacion.palabras_clave.length > 0 && (
+                    <div class="info-card">
+                        <h3>Palabras Clave</h3>
+                        <div class="keywords">
+                            {investigacion.palabras_clave.map((palabra) => (
+                                <span class="keyword">#{palabra}</span>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                <!-- Imagen -->
+                {investigacion.imagenURL && (
+                    <div class="info-card">
+                        <h3>Portada</h3>
+                        <img src={investigacion.imagenURL} alt={investigacion.titulo} class="portada-img" />
+                    </div>
+                )}
+
+                <!-- PDF -->
+                {investigacion.pdfURL && (
+                    <div class="info-card">
+                        <h3>Documento</h3>
+                        <a href={investigacion.pdfURL} class="btn-download" target="_blank" rel="noopener noreferrer">
+                            📄 Descargar PDF
+                        </a>
+                    </div>
+                )}
+
+                <!-- Botón de Contacto -->
+                <div class="info-card cta-card">
+                    <h4>¿Interesado en colaborar?</h4>
+                    <p>Contáctanos para conocer más sobre esta investigación</p>
+                    <a href="/contacto" class="btn-secondary">Contactar</a>
+                </div>
+            </aside>
+
+            <!-- Contenido Principal -->
+            <div class="main-content-detail">
+                <!-- Resumen -->
+                <section class="content-section">
+                    <h2>Resumen</h2>
+                    <p class="lead">{investigacion.resumen}</p>
+                </section>
+
+                <!-- Descripción Completa -->
+                {investigacion.descripcion && (
+                    <section class="content-section">
+                        <h2>Descripción</h2>
+                        {investigacion.descripcion.split('\n').map((parrafo) => (
+                            parrafo.trim() && <p>{parrafo.trim()}</p>
+                        ))}
+                    </section>
+                )}
+            </div>
+        </div>
+
+        <!-- Navegación -->
+        <section class="related-section">
+            <h2>Otras investigaciones</h2>
+            <p>
+                <a href="/investigaciones/programa_de_investigaciones" class="btn-primary">
+                    Ver todos los programas de investigación
+                </a>
+            </p>
+        </section>
+    </main>
+</Layout>
+
+<style>
+    /* Hero */
+    .hero-investigacion {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        padding: 3rem 5%;
+    }
+    
+    .hero-content {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .hero-investigacion h1 {
+        font-size: 2.2rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+    
+    .meta-info {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+        font-size: 0.95rem;
+        opacity: 0.95;
+    }
+    
+    /* Container */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 3rem 5%;
+    }
+    
+    /* Layout */
+    .layout-detail {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 3rem;
+        align-items: start;
+    }
+    
+    /* Sidebar */
+    .sidebar-detail {
+        position: sticky;
+        top: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .info-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .info-card h3,
+    .info-card h4 {
+        color: #1e3c72;
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .investigadores-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .investigadores-list li {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.8rem 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .investigadores-list li:last-child {
+        border-bottom: none;
+    }
+    
+    .investigador-avatar {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+    
+    .nombre {
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .keywords {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .keyword {
+        font-size: 0.8rem;
+        color: #2a5298;
+        background: #e3f2fd;
+        padding: 0.3rem 0.7rem;
+        border-radius: 12px;
+    }
+    
+    .portada-img {
+        width: 100%;
+        border-radius: 8px;
+        display: block;
+    }
+    
+    .btn-download {
+        display: block;
+        background: #2a5298;
+        color: white;
+        padding: 0.8rem 1rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        text-align: center;
+        transition: background 0.3s ease;
+    }
+    
+    .btn-download:hover {
+        background: #1e3c72;
+    }
+    
+    .cta-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-align: center;
+    }
+    
+    .cta-card h4 {
+        color: white;
+    }
+    
+    .cta-card p {
+        margin-bottom: 1rem;
+        opacity: 0.95;
+    }
+    
+    .btn-secondary {
+        display: inline-block;
+        background: transparent;
+        color: white;
+        padding: 0.7rem 1.5rem;
+        border: 2px solid white;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .btn-secondary:hover {
+        background: white;
+        color: #764ba2;
+    }
+    
+    /* Main Content */
+    .content-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .content-section h2 {
+        color: #1e3c72;
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 3px solid #2a5298;
+    }
+    
+    .content-section p {
+        color: #555;
+        line-height: 1.8;
+        margin-bottom: 1rem;
+    }
+    
+    .lead {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: #444;
+        line-height: 1.7;
+    }
+    
+    /* Related Section */
+    .related-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .related-section h2 {
+        color: #1e3c72;
+        margin-bottom: 1rem;
+    }
+    
+    .btn-primary {
+        display: inline-block;
+        background: #2a5298;
+        color: white;
+        padding: 0.8rem 2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        background: #1e3c72;
+    }
+    
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .layout-detail {
+            grid-template-columns: 1fr;
+        }
+        
+        .sidebar-detail {
+            position: static;
+            order: 2;
+        }
+        
+        .main-content-detail {
+            order: 1;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .hero-investigacion h1 {
+            font-size: 1.6rem;
+        }
+        
+        .meta-info {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+        
+        .container {
+            padding: 2rem 1rem;
+        }
+    }
+</style>

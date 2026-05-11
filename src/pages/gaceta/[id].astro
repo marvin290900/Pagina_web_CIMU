@@ -1,0 +1,13 @@
+---
+import LayoutGaceta from "../../layouts/Layout_gaceta.astro";
+import MostrarPublicacion from "../../components/componentes_gaceta/MostrarPublicacion.vue";
+const { id } = Astro.params;
+
+if (!id) {
+  return Astro.redirect("/404");
+}
+---
+
+<LayoutGaceta>
+  <MostrarPublicacion id={id} client:only />
+</LayoutGaceta>

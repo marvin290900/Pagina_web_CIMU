@@ -1,0 +1,10 @@
+---
+import LayoutGaceta from "../../layouts/Layout_gaceta.astro";
+import ListarPublicaciones from "../../components/componentes_gaceta/ListarPublicacionesGaceta.vue";
+
+const coleccion = "audiovisuales"; //nombre de la coleccion
+---
+
+<LayoutGaceta>
+  <ListarPublicaciones coleccion={coleccion} client:load />
+</LayoutGaceta>

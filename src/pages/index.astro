@@ -1,39 +1,41 @@
 ---
+//importo las secciones
 import Layout from "../layouts/Layout.astro";
 import SeccionImagenesInicio from "../components/componentes_pagina_inicio/seccion_imagenes_inicio.astro";
 import SeccionCentroInvestigacion from "../components/componentes_pagina_inicio/seccion_centro_investigacion.astro";
+import SeccionInvestigadores from "../components/componentes_pagina_inicio/seccion_investigadores.astro";
 import SeccionProgramasInvestigacion from "../components/componentes_pagina_inicio/seccion_programas_investigacion.astro";
 import SeccionInvestigacionesDestacadas from "../components/componentes_pagina_inicio/seccion_investigaciones_destacadas.astro";
 import SeccionEditorial from "../components/componentes_pagina_inicio/seccion_editorial.astro";
 import SeccionRemi from "../components/componentes_pagina_inicio/seccion_remi.astro";
-
-import imagen1 from "../assets/imagen_inicio_1.jpg";
-import imagen2 from "../assets/imagen_inicio_2.jpg";
-import imagen3 from "../assets/imagen_inicio_3.jpg";
-import centroInvestigacion from "../assets/imagen_inicio_1.jpg";
-import investigador1 from "../assets/imagen_inicio_1.jpg";
-import programaSociologicos from "../assets/imagen_inicio_1.jpg";
-import laboratorioPublica from "../assets/logo_opinion_publica.png";
-import programaJuridicos from "../assets/imagen_inicio_1.jpg";
-import programaMedioAmbiente from "../assets/imagen_inicio_1.jpg";
-import programaInclusion from "../assets/imagen_inicio_1.jpg";
-import plumaEditorial from "../assets/pluma-editorial.png";
-import remi from "../assets/remi.png";
+//import las imagenes
+import centroInvestigacion from "../assets/inicio/imagen_inicio_1.jpg";
+import imagenDefault from "../assets/default_investigador/imagen_default_2.png"
+import programaSociologicos from "../assets/programas/programa_sociologicos.jpg";
+import laboratorioPublica from "../assets/programas/logo_opinion_publica.png";
+import programaJuridicos from "../assets/programas/programa_juridico.jpg";
+import programaMedioAmbiente from "../assets/programas/programa_medioAmbiente.jpg";
+import programaInclusion from "../assets/programas/programa_inclusion.jpg";
+import plumaEditorial from "../assets/logos/pluma-editorial.png";
+import remi from "../assets/remi/remi.png";
+//importo las funciones de las bases de datos
+import { getInvestigadoresDirectivos } from "../lib/investigadores.js"
+import { getTodasLasImagenes } from "../lib/imagenesCarrusel.js"
+import { getTodasLasInvestigaciones } from "../lib/investigaciones.js"
+import { getTodosLosLibros} from "../lib/libros.js"
+const InvestigadoresDirectivos = await getInvestigadoresDirectivos(); //obtengo todos los investigadores
+const TodasLasImagenes = await getTodasLasImagenes(); //obtengo todas las imágenes
+const TodasLasInvestigaciones = await getTodasLasInvestigaciones(); //obtengo todas las investigaciones
+const TodosLosLibros = await getTodosLosLibros();
 ---
 
 <Layout>
   <main>
     <SeccionImagenesInicio
-      titulo="Centro de Investigación"
-      subtitulo="Multidisciplinario FMOcc UES"
-      imagen1={imagen1}
-      imagen2={imagen2}
-      imagen3={imagen3}
+      TodasLasImagenes={TodasLasImagenes}
     />
-    <SeccionCentroInvestigacion
-      centroInvestigacion={centroInvestigacion}
-      investigador1={investigador1}
-    />
+    <SeccionCentroInvestigacion centroInvestigacion={centroInvestigacion} />
+    <SeccionInvestigadores InvestigadoresDirectivos={InvestigadoresDirectivos} imagenDefault={imagenDefault}/>
     <SeccionProgramasInvestigacion
       programaSociologicos={programaSociologicos}
       laboratorioPublica={laboratorioPublica}
@@ -41,8 +43,8 @@ import remi from "../assets/remi.png";
       programaMedioAmbiente={programaMedioAmbiente}
       programaInclusion={programaInclusion}
     />
-    <SeccionInvestigacionesDestacadas />
-    <SeccionEditorial />
+    <SeccionInvestigacionesDestacadas TodasLasInvestigaciones={TodasLasInvestigaciones} />
+    <SeccionEditorial TodosLosLibros={TodosLosLibros} />
     <SeccionRemi plumaEditorial={plumaEditorial} remi={remi} />
   </main>
 </Layout>

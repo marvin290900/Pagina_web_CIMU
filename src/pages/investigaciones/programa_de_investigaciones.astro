@@ -1,0 +1,13 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import InvestigacionesComponent from "../../components/componentes_programa_investigacion/programa_de_investigacion.astro";
+
+const filtro = Astro.url.searchParams.get("programa") ?? "";
+const modo = Astro.url.searchParams.get("modo") ?? "todo";
+---
+
+<Layout>
+  <main>
+    <InvestigacionesComponent />
+  </main>
+</Layout>

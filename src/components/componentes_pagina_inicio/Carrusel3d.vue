@@ -1,24 +1,13 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { computed } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { EffectCoverflow, Navigation, Pagination } from 'swiper/modules';
+import { EffectCoverflow, Navigation } from 'swiper/modules';
 
-// Importa tus imágenes
-import img1 from '../../assets/temp/1.jpg';
-import img2 from '../../assets/temp/2.jpg';
-import img3 from '../../assets/temp/3.jpg';
-import img4 from '../../assets/temp/4.jpg';
-import img5 from '../../assets/temp/5.jpg';
-import img6 from '../../assets/temp/6.jpg';
-import img7 from '../../assets/temp/7.jpg';
-import img8 from '../../assets/temp/8.jpg';
+// Importar imágenes locales
+import imgRespaldo from '../../assets/temp/respaldo.png';
 
-// ... importa todas las imágenes necesarias
+const modules = [EffectCoverflow, Navigation];
 
-const images = [img1, img2, img3,img4,img5,img6,img7,img8];
-
-// Configuración de Swiper
-const modules = [EffectCoverflow];
 const swiperOptions = {
   effect: 'coverflow',
   grabCursor: true,
@@ -32,58 +21,115 @@ const swiperOptions = {
     slideShadows: true,
   },
   loop: true,
-  
 };
+
+const props = defineProps({
+  libros: {
+    type: Array,
+    required: true,
+    default: () => []
+  }
+});
+
+
+
+const librosConRespaldo = computed(() => {
+  // Extraemos la URL real del objeto importado
+  const urlRespaldo = imgRespaldo.src || imgRespaldo; 
+
+  const reales = props.libros.map(libro => ({
+    // Si la portada es nula, usamos urlRespaldo
+    src: libro.portada || libro.portada_libro || urlRespaldo,
+    titulo: libro.titulo || 'Libro'
+  }));
+
+  const resultado = [...reales];
+
+  while (resultado.length < 8) {
+    resultado.push({
+      src: urlRespaldo, // Usamos la URL extraída
+      titulo: `Libro de respaldo ${resultado.length + 1}`
+    });
+  }
+
+  return resultado;
+});
+
+
+
+
 </script>
 
 <template>
   <div class="container">
-    <swiper
-      :modules="modules"
-      :effect="swiperOptions.effect"
-      :grab-cursor="swiperOptions.grabCursor"
-      :centered-slides="swiperOptions.centeredSlides"
-      :slides-per-view="swiperOptions.slidesPerView"
-      :cover-flow-effect="swiperOptions.coverFlowEffect"
-      :loop="swiperOptions.loop"
-      class="mySwiper"
-    >
-      <swiper-slide v-for="(image, index) in images" :key="index">
-        <a href="#"><img :src="image.src" :alt="`Slide ${index + 1}`" /></a>
+    <swiper v-if="librosConRespaldo.length > 0" :modules="modules" :effect="swiperOptions.effect"
+      :grab-cursor="swiperOptions.grabCursor" :centered-slides="swiperOptions.centeredSlides"
+      :slides-per-view="swiperOptions.slidesPerView" :coverflow-effect="swiperOptions.coverflowEffect"
+      :loop="swiperOptions.loop" :navigation="true" class="mySwiper">
+      <swiper-slide v-for="(libro, index) in librosConRespaldo" :key="index">
+        <img :src="libro.src" :alt="libro.titulo" class="portada-img" />
       </swiper-slide>
     </swiper>
   </div>
+
+  <p class="text-center mt-3 text-gray-400 text-xs font-light">
+    <span class="animate-pulse">⟵ Desliza ⟶</span>
+  </p>
 </template>
 
-<style scoped>
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
+<style
+  scoped>
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
 
-.swiper {
-  width: 100%;
-  padding-top: 50px;
-  padding-bottom: 50px;
-}
-.swiper-slide {
-  background-position: center;
-  background-size: cover;
-  width: 250px;
+  .swiper {
+    width: 100%;
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
 
-}
-.swiper-slide img {
-  display: block;
-  width: 100%;
-  
-}
+  .swiper-slide {
+    background-position: center;
+    background-size: cover;
+    width: 250px;
+    margin: 0 20px;
+  }
 
-/* Estilos globales para los controles de Swiper */
-.swiper-button-next,
-.swiper-button-prev {
-  color: white;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 30px;
-  border-radius: 50%;
-}
+  .swiper-slide img {
+    display: block;
+    width: 100%;
+  }
+
+  /* Botones */
+  .swiper-button-next,
+  .swiper-button-prev {
+    color: white !important;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 25px;
+    border-radius: 50%;
+    backdrop-filter: blur(4px);
+    transition: 0.3s;
+  }
+
+  .swiper-button-next:hover,
+  .swiper-button-prev:hover {
+    background: rgba(0, 0, 0, 0.7);
+  }
+
+  /* Flechas blancas */
+  :deep(.swiper-button-next::after),
+  :deep(.swiper-button-prev::after) {
+    color: #ffffff !important;
+    font-size: 20px !important;
+  }
+
+  /* Fondo de los botones */
+  .swiper-button-next,
+  .swiper-button-prev {
+    background: rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(4px);
+    border-radius: 50%;
+  }
 </style>

@@ -1,4 +1,4 @@
-<section id="seccion_contactenos" class="py-12 bg-white text-center">
+<section id="seccion_contactenos" class="py-8 mt-5 bg-white text-center">
   <!-- Título -->
   <div
     id="titulo_contactenos"
@@ -19,7 +19,7 @@
     <!-- Formulario -->
     <form
       id="contactForm"
-      action="https://formsubmit.co/cuellarmarvin14@gmail.com"
+      action="https://formsubmit.co/walter.fagoaga@ues.edu.sv"
       method="POST"
       class="bg-gray-50 shadow-md rounded-xl p-6 text-left space-y-4 transition-all duration-1000 opacity-0 translate-y-8"
     >
@@ -100,24 +100,30 @@
     </div>
   </div>
 
-  <!-- Info de contacto -->
+  <!-- Info de contacto revista.fmocc@ues.edu.sv -->
   <div
     id="info_contact"
     class="mt-16 px-6 max-w-4xl mx-auto text-left space-y-3 text-gray-800 transition-all duration-1000 opacity-0 translate-y-8"
   >
     <h3 class="text-2xl font-bold text-center mb-4">Información de contacto</h3>
     <p>
-      <strong>📍 Dirección:</strong> Facultad Multidisciplinaria de Occidente, Universidad de El
-      Salvador.
+      <strong>📍 Dirección:</strong> Facultad Multidisciplinaria de Occidente, Universidad
+      de El Salvador.
     </p>
     <p>
-      <strong>📧 Correo electrónico:</strong>
+      <strong>📧 Correos electrónicos:</strong>
       <a
-        href="mailto:centroinvestigacion@ues.edu.sv"
+        href="mailto:editorial.occidente@ues.edu.sv"
         class="text-blue-600 hover:underline">editorial.occidente@ues.edu.sv</a
       >
+      ,&nbsp;
+      <a
+        href="mailto:revista.fmocc@ues.edu.sv"
+        class="text-blue-600 hover:underline"
+      >
+        revista.fmocc@ues.edu.sv
+      </a>
     </p>
-    <p><strong>📞 Teléfono:</strong> +503 1234-5678</p>
     <p>
       <strong>🕒 Horario de atención:</strong> Lunes a viernes, de 8:00 a.m. a 4:00
       p.m.
@@ -130,35 +136,19 @@
     class="mt-10 flex justify-center space-x-6 transition-all duration-1000 opacity-0 translate-y-8"
   >
     <a
-      href="https://www.facebook.com/tu-centro"
+      href="https://www.facebook.com/cimefmoccues"
       target="_blank"
       aria-label="Facebook"
       class="text-blue-700 text-3xl hover:scale-110 transition"
     >
       <i class="mdi mdi-facebook"></i>
     </a>
-    <a
-      href="https://www.instagram.com/tu-centro"
-      target="_blank"
-      aria-label="Instagram"
-      class="text-pink-500 text-3xl hover:scale-110 transition"
-    >
-      <i class="mdi mdi-twitter"></i>
-    </a>
-    <a
-      href="https://www.linkedin.com/in/tu-centro"
-      target="_blank"
-      aria-label="LinkedIn"
-      class="text-blue-600 text-3xl hover:scale-110 transition"
-    >
-      <i class="mdi mdi-instagram"></i>
-    </a>
   </div>
 </section>
 
 <script>
   const targets = document.querySelectorAll(
-    "#titulo_contactenos, #contactForm, #mapa, #info_contact, #redes_sociales"
+    "#titulo_contactenos, #contactForm, #mapa, #info_contact, #redes_sociales",
   );
 
   const observer = new IntersectionObserver(
@@ -172,7 +162,7 @@
     },
     {
       threshold: 0.1,
-    }
+    },
   );
 
   targets.forEach((target) => observer.observe(target));
@@ -219,7 +209,7 @@
       if (nombre.length < 3) {
         showMessage(
           "Por favor, ingresa un nombre válido de al menos 3 caracteres.",
-          true
+          true,
         );
         form.nombre.focus();
         return;
@@ -232,7 +222,7 @@
       if (asunto.length < 4) {
         showMessage(
           "Por favor, ingresa un asunto válido de al menos 4 caracteres.",
-          true
+          true,
         );
         form.asunto.focus();
         return;
@@ -240,7 +230,7 @@
       if (mensaje.length < 10) {
         showMessage(
           "Por favor, ingresa un mensaje válido de al menos 10 caracteres.",
-          true
+          true,
         );
         form.mensaje.focus();
         return;
@@ -248,10 +238,10 @@
 
       const spinner = document.getElementById("spinner") as HTMLSpanElement;
       const submitText = document.getElementById(
-        "submitText"
+        "submitText",
       ) as HTMLSpanElement;
       const submitButton = document.getElementById(
-        "submitButton"
+        "submitButton",
       ) as HTMLButtonElement;
 
       spinner.classList.remove("hidden");

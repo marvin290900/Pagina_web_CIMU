@@ -1,0 +1,862 @@
+---
+// src/pages/investigacion/programas/[slug].astro
+import Layout from '../../../layouts/Layout.astro';
+
+// Array con todos los programas
+const programas = [
+  {
+    slug: 'estudios-sociologicos',
+    nombre: 'Programa de Estudios Sociológicos',
+    descripcionCorta: 'Estudia estructuras, relaciones e instituciones sociales, abarcando fenómenos como violencia, equidad, salud, participación, etc.',
+    descripcionExtendida: 'Este programa se dedica al estudio riguroso de las estructuras sociales, las dinámicas de interacción entre individuos y grupos, y el funcionamiento de las instituciones que configuran nuestra sociedad. A través de investigaciones fundamentadas en teorías sociológicas contemporáneas, abordamos problemáticas complejas que afectan directamente a la población salvadoreña.\n\nNuestro trabajo se centra en comprender la violencia en sus múltiples manifestaciones, desde la violencia estructural hasta la comunitaria; analizar las brechas de equidad social que perpetúan la desigualdad; estudiar los sistemas de salud comunitaria y su accesibilidad; y examinar los mecanismos de participación ciudadana que fortalecen o debilitan la democracia.\n\nBuscamos generar conocimiento científico que no solo contribuya al ámbito académico, sino que también pueda traducirse en recomendaciones prácticas para la formulación de políticas públicas más justas y efectivas.',
+    icono: '🔬',
+    lineasInvestigacion: [
+      'Violencia y Seguridad Ciudadana',
+      'Equidad y Justicia Social',
+      'Salud Pública y Comunitaria',
+      'Participación Ciudadana y Democracia',
+      'Instituciones y Cambio Social',
+      'Migración y Movilidad Social'
+    ],
+    metodologias: 'Empleamos metodologías mixtas que combinan técnicas cualitativas (entrevistas en profundidad, grupos focales, etnografía, análisis de contenido) con métodos cuantitativos (encuestas, análisis estadístico, modelación). Nuestro enfoque es interdisciplinario y participativo, involucrando a las comunidades en el proceso de investigación para asegurar que los hallazgos sean relevantes y aplicables a sus realidades.',
+    tags: ['Violencia', 'Equidad', 'Salud', 'Participación', 'Democracia']
+  },
+  {
+    slug: 'opinion-publica',
+    nombre: 'Laboratorio de Opinión Pública',
+    descripcionCorta: 'Se centra en medir percepciones ciudadanas sobre política, seguridad, educación, equidad y otros temas sociales relevantes.',
+    descripcionExtendida: 'El Laboratorio de Opinión Pública es un espacio especializado en la medición sistemática y científica de las percepciones, actitudes y opiniones de la ciudadanía salvadoreña sobre temas de relevancia nacional y regional. Utilizamos métodos rigurosos de recolección y análisis de datos para capturar la voz de diversos sectores de la población.\n\nNuestro trabajo proporciona información valiosa sobre cómo la ciudadanía percibe aspectos cruciales como la gestión política, las condiciones de seguridad, la calidad de los servicios educativos, las brechas de equidad, y otros temas que afectan directamente su vida cotidiana. Estos datos son fundamentales para entender las dinámicas sociales y políticas del país.\n\nLos resultados de nuestras investigaciones contribuyen al debate público informado, apoyan la toma de decisiones basada en evidencia, y fortalecen la rendición de cuentas democrática al documentar las expectativas y evaluaciones ciudadanas sobre las instituciones y políticas públicas.',
+    icono: '📊',
+    lineasInvestigacion: [
+      'Percepción Política y Gobernanza',
+      'Opinión sobre Seguridad Ciudadana',
+      'Evaluación de Servicios Educativos',
+      'Percepción de Equidad y Justicia',
+      'Confianza Institucional',
+      'Participación Electoral y Cívica'
+    ],
+    metodologias: 'Utilizamos principalmente metodologías cuantitativas basadas en encuestas representativas a nivel nacional y regional. Aplicamos técnicas de muestreo probabilístico, diseño de cuestionarios validados, y análisis estadístico avanzado. Complementamos con grupos focales y entrevistas cualitativas para profundizar en las percepciones identificadas. Todos nuestros estudios siguen estándares internacionales de rigor metodológico y ética en la investigación.',
+    tags: ['Política', 'Seguridad', 'Educación', 'Encuestas', 'Percepción']
+  },
+  {
+    slug: 'juridicos-politicos',
+    nombre: 'Programa de Estudios Jurídicos y Políticos',
+    descripcionCorta: 'Analiza las normas, instituciones y prácticas jurídicas y políticas, con enfoque en equidad, democracia, derechos y gobernabilidad.',
+    descripcionExtendida: 'Este programa desarrolla investigación crítica sobre el funcionamiento del sistema jurídico-político salvadoreño, examinando tanto el marco normativo como las prácticas institucionales y políticas que dan forma a la vida democrática del país. Nuestro enfoque integra perspectivas del derecho, la ciencia política y la sociología jurídica.\n\nEstudiamos cómo las normas jurídicas se diseñan, implementan y aplican en la práctica; analizamos el funcionamiento de las instituciones democráticas y sus mecanismos de rendición de cuentas; investigamos la protección y ejercicio efectivo de los derechos humanos; y evaluamos los procesos de gobernabilidad a nivel local, regional y nacional.\n\nUn eje transversal de nuestro trabajo es el análisis de las brechas entre el derecho formal y la justicia material, buscando identificar obstáculos estructurales que limitan el acceso a la justicia y el ejercicio pleno de derechos, especialmente para poblaciones en situación de vulnerabilidad. Nuestras investigaciones buscan aportar al fortalecimiento del Estado de derecho y la profundización democrática.',
+    icono: '⚖️',
+    lineasInvestigacion: [
+      'Acceso a la Justicia y Derechos Humanos',
+      'Institucionalidad Democrática',
+      'Derecho Constitucional y Garantías',
+      'Gobernabilidad Local y Regional',
+      'Política Pública y Marco Normativo',
+      'Justicia Transicional y Memoria Histórica'
+    ],
+    metodologias: 'Empleamos análisis documental y jurisprudencial, estudio de casos, entrevistas con actores clave del sistema de justicia y político, y análisis comparativo. Combinamos metodologías cualitativas para comprender procesos políticos y jurídicos complejos, con análisis cuantitativo de datos institucionales. Incorporamos perspectivas interdisciplinarias que enriquecen la comprensión de fenómenos jurídico-políticos.',
+    tags: ['Democracia', 'Derechos', 'Gobernabilidad', 'Justicia', 'Política']
+  },
+  {
+    slug: 'tierra-medio-ambiente',
+    nombre: 'Programa de Estudios de la Tierra y Medio Ambiente',
+    descripcionCorta: 'Estudia el entorno natural y su interacción con las comunidades humanas, desde una perspectiva sustentable e interdisciplinaria.',
+    descripcionExtendida: 'Este programa aborda la relación compleja entre las sociedades humanas y su entorno natural, con especial énfasis en los desafíos ambientales que enfrenta El Salvador y la región centroamericana. Reconocemos que los problemas ambientales son también problemas sociales, económicos y políticos que requieren soluciones integrales.\n\nInvestigamos temas como el cambio climático y sus impactos en comunidades vulnerables, la gestión sostenible de recursos naturales (agua, suelo, bosques), la degradación ambiental y sus consecuencias en la salud pública, los riesgos ambientales y la resiliencia comunitaria, y los conflictos socioambientales que emergen del uso y acceso a recursos.\n\nNuestro enfoque es interdisciplinario, combinando ciencias naturales con ciencias sociales para comprender tanto los procesos biofísicos como las dimensiones humanas del cambio ambiental. Trabajamos estrechamente con comunidades locales, reconociendo sus conocimientos y prácticas tradicionales como valiosos para construir alternativas sustentables. Buscamos generar conocimiento que contribuya a la construcción de un desarrollo más equitativo y ambientalmente responsable.',
+    icono: '🌍',
+    lineasInvestigacion: [
+      'Cambio Climático y Adaptación',
+      'Gestión de Recursos Hídricos',
+      'Riesgos Ambientales y Resiliencia',
+      'Conflictos Socioambientales',
+      'Desarrollo Sustentable',
+      'Conservación y Biodiversidad'
+    ],
+    metodologias: 'Utilizamos metodologías mixtas que integran: monitoreo y análisis ambiental, sistemas de información geográfica (SIG), análisis de vulnerabilidad y riesgo, investigación participativa con comunidades, evaluación de impacto ambiental y social, y modelación de escenarios. Nuestro trabajo de campo incluye diagnósticos comunitarios, mapeos participativos y colaboración con actores locales para co-construir conocimiento aplicable.',
+    tags: ['Sustentabilidad', 'Ecosistemas', 'Cambio Climático', 'Recursos Naturales']
+  },
+  {
+    slug: 'genero-inclusion',
+    nombre: 'Programa de Estudios de Género e Inclusión',
+    descripcionCorta: 'Aborda desigualdades de género y busca promover inclusión en todos los ámbitos sociales, educativos y de salud.',
+    descripcionExtendida: 'Este programa se centra en el análisis crítico de las desigualdades de género y otras formas de exclusión social, con el objetivo de contribuir a la construcción de una sociedad más justa e inclusiva. Utilizamos perspectivas feministas e interseccionales para comprender cómo el género se entrelaza con otras categorías como clase, etnia, edad, orientación sexual y discapacidad.\n\nInvestigamos las múltiples formas de discriminación y violencia basadas en género, las brechas en el acceso a oportunidades educativas y laborales, las barreras en la atención de salud (especialmente salud sexual y reproductiva), y los obstáculos para la participación política y social de mujeres y grupos históricamente excluidos.\n\nNuestro trabajo busca no solo documentar y explicar estas desigualdades, sino también identificar experiencias exitosas de resistencia, organización y transformación social. Colaboramos con movimientos sociales, organizaciones de mujeres y colectivos diversos para generar conocimiento comprometido con la justicia social. Entendemos la investigación como una herramienta para el cambio, que debe contribuir al empoderamiento de las personas y comunidades en situación de vulnerabilidad.',
+    icono: '🤝',
+    lineasInvestigacion: [
+      'Violencias de Género',
+      'Brechas en Educación y Empleo',
+      'Salud Sexual y Reproductiva',
+      'Participación Política de Mujeres',
+      'Masculinidades y Género',
+      'Diversidad Sexual e Identidades de Género',
+      'Interseccionalidad y Exclusión Múltiple'
+    ],
+    metodologias: 'Empleamos metodologías feministas que priorizan las voces y experiencias de las personas afectadas por las desigualdades. Utilizamos entrevistas en profundidad, historias de vida, grupos focales, etnografía feminista, y análisis de discurso. Complementamos con análisis cuantitativo de datos desagregados por sexo y otras variables. Nuestro enfoque es participativo, buscando que las personas investigadas sean co-creadoras de conocimiento, y reflexivo sobre las relaciones de poder en la investigación.',
+    tags: ['Género', 'Inclusión', 'Equidad', 'Derechos', 'Diversidad']
+  }
+];
+
+// Para generación estática
+
+
+const { id } = Astro.params;
+const programa  = programas.find(p => p.slug === id);
+
+// Si no se encuentra el programa
+if (!programa) {
+  return Astro.redirect('/404');
+}
+
+// Investigaciones del programa (las traerás de tu API/DB)
+let investigaciones = [];
+
+try {
+  const res = await fetch(`http://localhost:4321/api/investigaciones-programa/${id}`);
+  const data = await res.json();
+  if (data.ok) {
+    investigaciones = data.data.map((inv) => ({
+      id: inv._id,
+      titulo: inv.titulo,
+      resumen: inv.resumen,
+      investigadorPrincipal: inv.investigadores[0] || "Sin autor",
+      coinvestigadores: inv.investigadores,
+      año: inv.fecha_publicacion.split("-")[0],
+      tipo: inv.tipo || "Cualitativa", // ajusta según tu DB
+      estado: inv.estado || "activa",   // ajusta según tu DB
+      palabrasClave: inv.palabras_clave || [],
+    }));
+    console.log(investigaciones);
+  }
+} catch (error) {
+  console.error("Error al cargar investigaciones:", error);
+}
+
+// Estados disponibles para filtros
+const estadosDisponibles = ['todas', 'activa', 'finalizada', 'pausa'];
+const tiposDisponibles = ['todos', 'Cualitativa', 'Cuantitativa', 'Mixta', 'Revisión'];
+
+const pageTitle = `${programa.nombre} | CIMU - FMOcc UES`;
+---
+
+<Layout title={pageTitle}>
+   
+
+    <!-- Hero del Programa -->
+    <section class="hero-programa">
+        <div class="hero-content">
+            <div class="program-icon-large">{programa.icono}</div>
+            <h1>{programa.nombre}</h1>
+            <p class="descripcion-corta">{programa.descripcionCorta}</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="layout-two-columns">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <nav class="sidebar-nav">
+                    <h3>Sobre este Programa</h3>
+                    <ul>
+                        <li><a href="#enfoque">Enfoque</a></li>
+                        <li><a href="#lineas">Líneas de Investigación</a></li>
+                      
+                        
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- Content Principal -->
+            <div class="main-content">
+                <!-- Sección: Enfoque -->
+                <section id="enfoque" class="content-section">
+                    <h2>Enfoque</h2>
+                    <p>{programa.descripcionExtendida}</p>
+                </section>
+
+                <!-- Sección: Líneas de Investigación -->
+                <section id="lineas" class="content-section">
+                    <h2>Líneas de Investigación</h2>
+                    {programa.lineasInvestigacion.length > 0 ? (
+                        <ul class="lineas-list">
+                            {programa.lineasInvestigacion.map((linea) => (
+                                <li>{linea}</li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p class="empty-state">Próximamente: líneas de investigación detalladas</p>
+                    )}
+                </section>
+
+                                <!-- Sección: Metodologías -->
+                
+                
+            </div>
+        </div>
+
+        <!-- Sección Principal: Investigaciones -->
+        <section class="investigaciones-section">
+            <div class="section-header">
+                <h2>Investigaciones del Programa</h2>
+                <p>Explora las investigaciones activas y finalizadas de este programa</p>
+            </div>
+
+            <!-- Filtros y Búsqueda -->
+            <div class="filters-container">
+                <div class="search-box">
+                    <input 
+                        type="text" 
+                        id="searchInput"
+                        placeholder="Buscar por título o palabra clave..." 
+                        class="search-input"
+                    />
+                    <span class="search-icon">🔍</span>
+                </div>
+
+            </div>
+
+            <!-- Grid de Investigaciones -->
+            <div class="investigaciones-grid" id="investigacionesGrid">
+                {investigaciones.map((inv) => (
+                    <article class="investigacion-card" 
+                             data-estado={inv.estado}
+                             data-tipo={inv.tipo}
+                             data-keywords={inv.palabrasClave.join(' ').toLowerCase()}
+                             data-title={inv.titulo.toLowerCase()}>
+                        <div class="card-header">
+                            
+                            
+                        </div>
+
+                        <h3>{inv.titulo}</h3>
+
+                        <div class="investigacion-meta">
+                            <span>📅 {inv.año}</span>
+                            <span>👤 {inv.coinvestigadores.map(i => i.nombre).join(', ')}</span>
+                        </div>
+
+                       
+
+                        <p class="resumen">{inv.resumen}</p>
+
+                        <div class="keywords">
+                            {inv.palabrasClave.map((palabra) => (
+                                <span class="keyword">#{palabra}</span>
+                            ))}
+                        </div>
+
+                        <a href={`/investigaciones/detalle/${inv.id}`} class="btn-ver-detalle">
+                            Ver detalles →
+                        </a>
+                    </article>
+                ))}
+            </div>
+
+            <!-- Estado vacío -->
+            <div id="emptyState" class="empty-results" style="display: none;">
+                <p>No se encontraron investigaciones con los filtros seleccionados</p>
+                <button onclick="document.getElementById('resetFilters').click()" class="btn-secondary">
+                    Limpiar filtros
+                </button>
+            </div>
+        </section>
+
+        <!-- CTA de Contacto -->
+        <section class="cta-section">
+            <h3>¿Interesado en colaborar con este programa?</h3>
+            <p>Si eres investigador, estudiante o institución interesada en trabajar con nosotros, nos encantaría conocer tu propuesta.</p>
+            <a href="/contactenos" class="btn-primary">Contáctanos</a>
+        </section>
+    </main>
+</Layout>
+
+<script>
+    // Funcionalidad de filtrado y búsqueda
+    const searchInput = document.getElementById('searchInput');
+    const estadoFilter = document.getElementById('estadoFilter');
+    const tipoFilter = document.getElementById('tipoFilter');
+    const resetButton = document.getElementById('resetFilters');
+    const grid = document.getElementById('investigacionesGrid');
+    const emptyState = document.getElementById('emptyState');
+    const cards = grid.querySelectorAll('.investigacion-card');
+    
+    function filterInvestigaciones() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const estadoValue = estadoFilter.value;
+        const tipoValue = tipoFilter.value;
+        
+        let visibleCount = 0;
+        
+        cards.forEach(card => {
+            const estado = card.dataset.estado;
+            const tipo = card.dataset.tipo;
+            const keywords = card.dataset.keywords;
+            const title = card.dataset.title;
+            
+            const matchSearch = searchTerm === '' || 
+                                title.includes(searchTerm) || 
+                                keywords.includes(searchTerm);
+            const matchEstado = estadoValue === 'todas' || estado === estadoValue;
+            const matchTipo = tipoValue === 'todos' || tipo === tipoValue;
+            
+            if (matchSearch && matchEstado && matchTipo) {
+                card.style.display = 'flex';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        
+        // Mostrar/ocultar empty state
+        if (visibleCount === 0) {
+            emptyState.style.display = 'block';
+            grid.style.display = 'none';
+        } else {
+            emptyState.style.display = 'none';
+            grid.style.display = 'grid';
+        }
+    }
+    
+    // Event listeners
+    searchInput.addEventListener('input', filterInvestigaciones);
+    estadoFilter.addEventListener('change', filterInvestigaciones);
+    tipoFilter.addEventListener('change', filterInvestigaciones);
+    
+    resetButton.addEventListener('click', () => {
+        searchInput.value = '';
+        estadoFilter.value = 'todas';
+        tipoFilter.value = 'todos';
+        filterInvestigaciones();
+    });
+</script>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #f5f5f5;
+    }
+    
+    /* Breadcrumb */
+    .breadcrumb {
+        background: #fff;
+        padding: 1rem 5%;
+        font-size: 0.9rem;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .breadcrumb a {
+        color: #0066cc;
+        text-decoration: none;
+    }
+    
+    .breadcrumb a:hover {
+        text-decoration: underline;
+    }
+    
+    .breadcrumb span {
+        color: #666;
+        margin: 0 0.5rem;
+    }
+    
+    /* Hero del Programa */
+    .hero-programa {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        padding: 3rem 5%;
+        text-align: center;
+    }
+    
+    .hero-content {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    
+    .program-icon-large {
+        width: 80px;
+        height: 80px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .hero-programa h1 {
+        font-size: 2.2rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    
+    .descripcion-corta {
+        font-size: 1.1rem;
+        opacity: 0.95;
+        line-height: 1.7;
+    }
+    
+    /* Container */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 3rem 5%;
+    }
+    
+    /* Layout de dos columnas */
+    .layout-two-columns {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: 3rem;
+        margin-bottom: 3rem;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+        position: sticky;
+        top: 2rem;
+        height: fit-content;
+    }
+    
+    .sidebar-nav {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .sidebar-nav h3 {
+        font-size: 1rem;
+        color: #1e3c72;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+    
+    .sidebar-nav ul {
+        list-style: none;
+    }
+    
+    .sidebar-nav li {
+        margin-bottom: 0.5rem;
+    }
+    
+    .sidebar-nav a {
+        color: #666;
+        text-decoration: none;
+        display: block;
+        padding: 0.5rem 0.8rem;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+    
+    .sidebar-nav a:hover {
+        background: #f0f0f0;
+        color: #2a5298;
+        padding-left: 1.2rem;
+    }
+    
+    /* Content Sections */
+    .content-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .content-section h2 {
+        color: #1e3c72;
+        font-size: 1.6rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 3px solid #2a5298;
+        display: inline-block;
+    }
+    
+    .content-section p {
+        color: #555;
+        line-height: 1.8;
+        margin-bottom: 1rem;
+    }
+    
+    .lineas-list,
+    .alianzas-list {
+        list-style: none;
+        padding-left: 0;
+    }
+    
+    .lineas-list li,
+    .alianzas-list li {
+        padding: 0.8rem 0;
+        padding-left: 1.5rem;
+        position: relative;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .lineas-list li:before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: #2a5298;
+        font-weight: bold;
+    }
+    
+    .empty-state {
+        color: #999;
+        font-style: italic;
+        padding: 1rem;
+        background: #f9f9f9;
+        border-radius: 8px;
+        text-align: center;
+    }
+    
+    .empty-state a {
+        color: #2a5298;
+        font-weight: 600;
+    }
+    
+    .equipo-info p {
+        margin-bottom: 0.5rem;
+    }
+    
+    .equipo-info a {
+        color: #2a5298;
+        text-decoration: none;
+    }
+    
+    .equipo-info a:hover {
+        text-decoration: underline;
+    }
+    
+    /* Sección de Investigaciones */
+    .investigaciones-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .section-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .section-header h2 {
+        color: #1e3c72;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .section-header p {
+        color: #666;
+    }
+    
+    /* Filtros */
+    .filters-container {
+        margin-bottom: 2rem;
+    }
+    
+    .search-box {
+        position: relative;
+        margin-bottom: 1rem;
+    }
+    
+    .search-input {
+        width: 100%;
+        padding: 0.8rem 2.5rem 0.8rem 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+    }
+    
+    .search-input:focus {
+        outline: none;
+        border-color: #2a5298;
+    }
+    
+    .search-icon {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+    
+    .filters {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .filter-select {
+        padding: 0.6rem 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        background: white;
+        cursor: pointer;
+        transition: border-color 0.3s ease;
+    }
+    
+    .filter-select:focus {
+        outline: none;
+        border-color: #2a5298;
+    }
+    
+    .btn-reset {
+        padding: 0.6rem 1.2rem;
+        background: #f5f5f5;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-reset:hover {
+        background: #e0e0e0;
+    }
+    
+    /* Grid de Investigaciones */
+    .investigaciones-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+    }
+    
+    .investigacion-card {
+        background: #f9f9f9;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 2px solid #e0e0e0;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .investigacion-card:hover {
+        border-color: #2a5298;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    
+    .badge {
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    
+    .badge-activa {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+    
+    .badge-finalizada {
+        background: #e3f2fd;
+        color: #1976d2;
+    }
+    
+    .badge-pausa {
+        background: #fff3e0;
+        color: #f57c00;
+    }
+    
+    .tipo-badge {
+        font-size: 0.8rem;
+        color: #666;
+        background: white;
+        padding: 0.2rem 0.6rem;
+        border-radius: 4px;
+    }
+    
+    .investigacion-card h3 {
+        color: #1e3c72;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        line-height: 1.4;
+    }
+    
+    .investigacion-meta {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 0.5rem;
+    }
+    
+    .coinvestigadores {
+        font-size: 0.85rem;
+        color: #888;
+        margin-bottom: 1rem;
+    }
+    
+    .resumen {
+        color: #555;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+        flex-grow: 1;
+    }
+    
+    .keywords {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .keyword {
+        font-size: 0.8rem;
+        color: #2a5298;
+        background: #e3f2fd;
+        padding: 0.2rem 0.6rem;
+        border-radius: 4px;
+    }
+    
+    .btn-ver-detalle {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #2a5298;
+        color: white;
+        padding: 0.7rem 1.2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        align-self: flex-start;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-ver-detalle:hover {
+        background: #1e3c72;
+        gap: 0.8rem;
+    }
+    
+    /* Empty State */
+    .empty-results {
+        text-align: center;
+        padding: 3rem;
+        color: #999;
+    }
+    
+    .empty-results p {
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+    }
+    
+    /* CTA Section */
+    .cta-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        border: 2px dashed #ccc;
+    }
+    
+    .cta-section h3 {
+        color: #1e3c72;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+    }
+    
+    .cta-section p {
+        color: #666;
+        margin-bottom: 1.5rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .btn-primary {
+        display: inline-block;
+        background: #2a5298;
+        color: white;
+        padding: 0.8rem 2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        background: #1e3c72;
+    }
+    
+    .btn-secondary {
+        display: inline-block;
+        background: transparent;
+        color: #2a5298;
+        padding: 0.8rem 1.5rem;
+        border: 2px solid #2a5298;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .btn-secondary:hover {
+        background: #2a5298;
+        color: white;
+    }
+    
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .layout-two-columns {
+            grid-template-columns: 1fr;
+        }
+        
+        .sidebar {
+            position: static;
+        }
+        
+        .sidebar-nav {
+            margin-bottom: 2rem;
+        }
+        
+        .sidebar-nav ul {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .sidebar-nav a {
+            padding: 0.5rem 1rem;
+            background: #f5f5f5;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .hero-programa h1 {
+            font-size: 1.8rem;
+        }
+        
+        .investigaciones-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .filters {
+            flex-direction: column;
+        }
+        
+        .filter-select {
+            width: 100%;
+        }
+    }
+</style>

@@ -1,0 +1,14 @@
+---
+import LayoutGaceta from "../../../layouts/Layout_gaceta.astro";
+import PerfilAutor from "../../../components/componentes_gaceta/perfil_autor/PerfilAutor.vue";
+
+const { id } = Astro.params;
+
+if (!id) {
+  return Astro.redirect("/404");
+}
+---
+
+<LayoutGaceta>
+  <PerfilAutor client:load autorId={id} />
+</LayoutGaceta>

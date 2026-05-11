@@ -1,6 +1,7 @@
 ---
-import plumaEditorial from "../../assets/pluma-editorial.png";
+import plumaEditorial from "../../assets/logos/pluma-editorial.png";
 import Carrusel3D from "./Carrusel3d.vue";
+const { TodosLosLibros } = Astro.props;
 ---
 
 <section id="seccionEditorial" class="py-8 bg-white text-center">
@@ -45,7 +46,7 @@ import Carrusel3D from "./Carrusel3d.vue";
     id="libros"
     class="relative bg-gradient-to-b from-[#283886] h-[500px] overflow-hidden transition-all duration-1000 opacity-0 translate-y-8"
   >
-    <Carrusel3D client:load />
+    <Carrusel3D  client:load libros = { TodosLosLibros } />
   </div>
 </section>
 
