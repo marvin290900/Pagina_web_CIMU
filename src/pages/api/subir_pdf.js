@@ -14,24 +14,34 @@ export async function POST({ request }) {
   try {
     const formData = await request.formData();
     const file = formData.get("pdf");
-    const carpeta = (formData.get("carpeta")?.toString().trim() || "investigaciones");
+    // Sanitizar el nombre de la carpeta para evitar Path Traversal
+    const carpetaRaw = formData.get("carpeta")?.toString().trim() || "investigaciones";
+    const carpeta = path.basename(carpetaRaw); 
 
     if (!file) {
-      console.error("No se recibió archivo 'pdf' en formData");
       return new Response(JSON.stringify({ ok: false, error: "No se envió ningún PDF" }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
       });
     }
 
-    // Nombre original y extensión (fallback por extensión si mime vacío)
-    const origName = String(file.name || `upload-${Date.now()}`);
-    const ext = path.extname(origName).toLowerCase() || ".pdf";
+    // Limitar tamaño del archivo (ej. 50MB) para evitar DoS
+    const MAX_SIZE = 50 * 1024 * 1024; 
+    if (file.size > MAX_SIZE) {
+      return new Response(JSON.stringify({ ok: false, error: "El archivo es demasiado grande (máx 50MB)" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
 
-    const isPdf = (file.type === "application/pdf") || ext === ".pdf";
+    // Nombre original y extensión
+    const origName = String(file.name || `upload-${Date.now()}`);
+    const ext = path.extname(origName).toLowerCase();
+
+    // Validación doble: MIME type y Extensión
+    const isPdf = file.type === "application/pdf" || ext === ".pdf";
     if (!isPdf) {
-      console.error("Archivo no identificado como PDF. type:", file.type, "ext:", ext);
-      return new Response(JSON.stringify({ ok: false, error: "El archivo no parece ser un PDF" }), {
+      return new Response(JSON.stringify({ ok: false, error: "El archivo no es un PDF válido" }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
       });
