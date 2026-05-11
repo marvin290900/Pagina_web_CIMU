@@ -130,7 +130,7 @@
           />
 
           <p class="text-xs text-gray-500">
-            Nota: debes proporcionar una URL o subir un PDF. Si subes un PDF se almacenará como attachment en CouchDB.
+            Nota: debes proporcionar una URL o subir un PDF. Si subes un PDF se almacenará de forma segura en el servidor.
           </p>
         </div>
 
@@ -218,20 +218,14 @@ const toastVariant = (type) => {
   return "alert-info";
 };
 
-/* ---------- CouchDB config ---------- */
-const DB_BASE = "https://couchdb.am19139.me";
-const DB_NAME = "articulos";
-const COUCH_URL = `${DB_BASE}/${DB_NAME}`;
-const auth = {
-  username: "admin",
-  password: "paginawebcimu",
-};
+/* ---------- API config ---------- */
+const API_URL = "/api/articulos";
 
 /* ---------- cargar artículos ---------- */
 const cargarArticulos = async () => {
   try {
-    const { data } = await axios.get(`${COUCH_URL}/_all_docs?include_docs=true`, { auth });
-    articulos.value = data.rows.map((r) => r.doc || {});
+    const { data } = await axios.get(API_URL);
+    articulos.value = data;
   } catch (err) {
     console.error("Error cargando artículos:", err);
     showToast("Error cargando artículos. Revisa la consola.", "error", "Carga fallida", 6000);
@@ -351,42 +345,45 @@ const guardarArticulo = async () => {
     if (articuloEdit.value._id) {
       // EDITAR
       const id = articuloEdit.value._id;
-      const putResp = await axios.put(`${COUCH_URL}/${encodeURIComponent(id)}`, articuloEdit.value, { auth });
+      const putResp = await axios.put(`${API_URL}?id=${encodeURIComponent(id)}`, articuloEdit.value);
       let currentRev = putResp.data.rev;
 
       if (fileSelected.value) {
         const filename = fileSelected.value.name;
-        const attachUrl = `${COUCH_URL}/${encodeURIComponent(id)}/${encodeURIComponent(filename)}?rev=${currentRev}`;
+        const attachUrl = `${API_URL}?id=${encodeURIComponent(id)}&filename=${encodeURIComponent(filename)}&rev=${currentRev}`;
         const attachResp = await axios.put(attachUrl, fileSelected.value, {
-          auth,
           headers: { "Content-Type": "application/pdf" },
         });
         currentRev = attachResp.data.rev;
 
-        articuloEdit.value.pdf_url = `${COUCH_URL}/${encodeURIComponent(id)}/${encodeURIComponent(filename)}`;
-        const putResp2 = await axios.put(`${COUCH_URL}/${encodeURIComponent(id)}`, articuloEdit.value, { auth });
-        currentRev = putResp2.data.rev;
+        // Actualizar URL del PDF en el documento para que use el proxy
+        articuloEdit.value.pdf_url = `${API_URL}?id=${encodeURIComponent(id)}&filename=${encodeURIComponent(filename)}`;
+        articuloEdit.value._rev = currentRev; // Actualizar rev para el siguiente put
+        await axios.put(`${API_URL}?id=${encodeURIComponent(id)}`, articuloEdit.value);
       }
 
       showToast("Artículo actualizado correctamente", "success");
     } else {
       // CREAR
-      const postResp = await axios.post(COUCH_URL, articuloEdit.value, { auth });
+      const postResp = await axios.post(API_URL, articuloEdit.value);
       const id = postResp.data.id;
       let currentRev = postResp.data.rev;
 
       if (fileSelected.value) {
         const filename = fileSelected.value.name;
-        const attachUrl = `${COUCH_URL}/${encodeURIComponent(id)}/${encodeURIComponent(filename)}?rev=${currentRev}`;
+        const attachUrl = `${API_URL}?id=${encodeURIComponent(id)}&filename=${encodeURIComponent(filename)}&rev=${currentRev}`;
         const attachResp = await axios.put(attachUrl, fileSelected.value, {
-          auth,
           headers: { "Content-Type": "application/pdf" },
         });
         currentRev = attachResp.data.rev;
 
-        const updatedDoc = { ...(articuloEdit.value), _id: id, _rev: currentRev, pdf_url: `${COUCH_URL}/${encodeURIComponent(id)}/${encodeURIComponent(filename)}` };
-        const putResp2 = await axios.put(`${COUCH_URL}/${encodeURIComponent(id)}`, updatedDoc, { auth });
-        currentRev = putResp2.data.rev;
+        const updatedDoc = { 
+          ...(articuloEdit.value), 
+          _id: id, 
+          _rev: currentRev, 
+          pdf_url: `${API_URL}?id=${encodeURIComponent(id)}&filename=${encodeURIComponent(filename)}` 
+        };
+        await axios.put(`${API_URL}?id=${encodeURIComponent(id)}`, updatedDoc);
       }
 
       showToast("Artículo creado correctamente", "success");
@@ -429,7 +426,7 @@ const eliminarArticuloConfirmed = async () => {
     return;
   }
   try {
-    await axios.delete(`${COUCH_URL}/${encodeURIComponent(id)}?rev=${rev}`, { auth });
+    await axios.delete(`${API_URL}?id=${encodeURIComponent(id)}&rev=${rev}`);
     await cargarArticulos();
     showToast("Artículo eliminado", "success");
   } catch (err) {
