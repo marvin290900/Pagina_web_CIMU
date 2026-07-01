@@ -4,7 +4,7 @@ import { couch } from "../../../lib/couchDB";
 export async function POST({ request }) {
   try {
     const libroData = await request.json();
-    console.log("1. Datos del libro recibidos:", libroData);
+    // console.log("1. Datos del libro recibidos:", libroData);
 
     // Validar campos requeridos
     if (
@@ -33,13 +33,13 @@ export async function POST({ request }) {
     libroData.fecha_creacion = new Date().toISOString();
     libroData.fecha_actualizacion = new Date().toISOString();
 
-    console.log("2. Creando libro en cimu-libros...");
+    // console.log("2. Creando libro en cimu-libros...");
 
     // Crear el libro en la colección cimu-libros
     const responseLibro = await couch.post("/cimu-libros", libroData);
 
     if (responseLibro.status !== 201 && responseLibro.status !== 200) {
-      console.error("Error al crear libro:", responseLibro.data);
+      // console.error("Error al crear libro:", responseLibro.data);
       return new Response(
         JSON.stringify({
           ok: false,
@@ -54,7 +54,7 @@ export async function POST({ request }) {
     }
 
     const libroId = responseLibro.data.id;
-    console.log("3. Libro creado con ID:", libroId);
+    // console.log("3. Libro creado con ID:", libroId);
 
     // Preparar objeto del libro para agregar a los investigadores
     const libroReferencia = {
@@ -64,12 +64,12 @@ export async function POST({ request }) {
     };
 
     // Actualizar cada investigador/autor
-    console.log("4. Actualizando investigadores...");
+    // console.log("4. Actualizando investigadores...");
     const resultadosActualizacion = [];
 
     for (const autor of libroData.autores) {
       try {
-        console.log(`   - Procesando autor: ${autor.nombre} (${autor.id})`);
+        // console.log(`Procesando autor: ${autor.nombre} (${autor.id})`);
 
         // Obtener el investigador actual
         const responseInvestigador = await couch.get(
@@ -77,7 +77,7 @@ export async function POST({ request }) {
         );
 
         if (responseInvestigador.status !== 200) {
-          console.error(`     ✗ Investigador ${autor.id} no encontrado`);
+          // console.error(`Investigador ${autor.id} no encontrado`);
           resultadosActualizacion.push({
             id: autor.id,
             nombre: autor.nombre,
@@ -113,14 +113,14 @@ export async function POST({ request }) {
             responseActualizar.status === 200 ||
             responseActualizar.status === 201
           ) {
-            console.log(`     ✓ Investigador ${autor.nombre} actualizado`);
+            // console.log(`Investigador ${autor.nombre} actualizado`);
             resultadosActualizacion.push({
               id: autor.id,
               nombre: autor.nombre,
               actualizado: true,
             });
           } else {
-            console.error(`     ✗ Error al actualizar ${autor.nombre}`);
+            // console.error(`Error al actualizar ${autor.nombre}`);
             resultadosActualizacion.push({
               id: autor.id,
               nombre: autor.nombre,
@@ -129,7 +129,7 @@ export async function POST({ request }) {
             });
           }
         } else {
-          console.log(`     ⚠ Libro ya existe en ${autor.nombre}`);
+          // console.log(`Libro ya existe en ${autor.nombre}`);
           resultadosActualizacion.push({
             id: autor.id,
             nombre: autor.nombre,
@@ -138,10 +138,10 @@ export async function POST({ request }) {
           });
         }
       } catch (error) {
-        console.error(
-          `     ✗ Error con investigador ${autor.nombre}:`,
-          error.message
-        );
+        // console.error(
+        //   `Error con investigador ${autor.nombre}:`,
+        //   error.message
+        // );
         resultadosActualizacion.push({
           id: autor.id,
           nombre: autor.nombre,
@@ -151,8 +151,8 @@ export async function POST({ request }) {
       }
     }
 
-    console.log("5. Proceso completado");
-    console.log("=== FIN API CREAR LIBRO ===");
+    // console.log("5. Proceso completado");
+    // console.log("=== FIN API CREAR LIBRO ===");
 
     return new Response(
       JSON.stringify({
@@ -174,8 +174,8 @@ export async function POST({ request }) {
       }
     );
   } catch (error) {
-    console.error("❌ Error al crear libro:", error);
-    console.error("Stack:", error.stack);
+    // console.error("Error al crear libro:", error);
+    // console.error("Stack:", error.stack);
     return new Response(
       JSON.stringify({
         ok: false,

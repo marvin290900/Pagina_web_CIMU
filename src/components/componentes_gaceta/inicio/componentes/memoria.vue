@@ -72,11 +72,11 @@ const obtenerPublicaciones = async () => {
     }
 
     const json = await res.json();
-    console.log("Respuesta de la API:", json); // Debug
+    // console.log("Respuesta de la API:", json); // Debug
 
     publicaciones.value = json.rows?.map((row) => row.doc) || [];
 
-    console.log("Publicaciones cargadas:", publicaciones.value.length); // Debug
+    // console.log("Publicaciones cargadas:", publicaciones.value.length); // Debug
 
     setTimeout(checkScrollPosition, 100);
   } catch (error) {
@@ -127,7 +127,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Ocultar scrollbar para un diseño más limpio */
+/* Ocultar scrollbar para un diseño mas limpio */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }

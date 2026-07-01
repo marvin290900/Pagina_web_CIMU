@@ -154,7 +154,7 @@ const obtener = async (id, coleccion) => {
 
     return dataResponse;
   } catch (error) {
-    console.error("Error al obtener la publicación:", error);
+    // console.error("Error al obtener la publicación:", error);
     return null;
   }
 };

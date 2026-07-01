@@ -142,7 +142,7 @@ const obtenerPublicaciones = async (resetear = true) => {
     // Cargar primera página
     cargarPagina();
   } catch (error) {
-    console.error("Error al obtener datos:", error);
+    // console.error("Error al obtener datos:", error);
     publicaciones.value = [];
     totalPublicaciones.value = 0;
   } finally {

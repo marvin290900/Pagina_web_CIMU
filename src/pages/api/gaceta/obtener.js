@@ -27,7 +27,7 @@ export async function GET({ request }) {
       const response = await couch.get(
         `/cimu-gaceta-${coleccion}/_all_docs?include_docs=true`
       );
-      console.log("Response data:", response.data);
+      // console.log("Response data:", response.data);
       return new Response(JSON.stringify(response.data), {
         status: 200,
         headers: { "Content-Type": "application/json" },
@@ -37,7 +37,7 @@ export async function GET({ request }) {
     // Construir selector
     let selector = {
       estado: { $in: ["activo", "inactivo"] },
-      fecha_publicacion: { $gt: null } 
+      fecha_publicacion: { $gt: null }
     };
 
     // Agregar filtro de año si existe
@@ -58,7 +58,7 @@ export async function GET({ request }) {
     };
 
     const response = await couch.post(`/cimu-gaceta-${coleccion}/_find`, query);
-    
+
     // ORDENAR EN MEMORIA (JavaScript) para evitar errores de CouchDB
     const docs = response.data.docs.sort((a, b) => {
       const fechaA = new Date(a.fecha_publicacion || 0);
@@ -77,7 +77,7 @@ export async function GET({ request }) {
       }
     );
   } catch (error) {
-    console.error("Error al obtener publicación:", error.message);
+    // console.error("Error al obtener publicación:", error.message);
     return new Response(
       JSON.stringify({
         error: "Error al obtener publicación",

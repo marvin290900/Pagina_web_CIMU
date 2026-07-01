@@ -16,18 +16,18 @@ const eliminarArchivo = (url) => {
 
     if (fs.existsSync(fullPath)) {
       fs.unlinkSync(fullPath);
-      console.log("      ✓ Archivo eliminado:", relativePath);
+      // console.log("Archivo eliminado:", relativePath);
       return true;
     }
     return false;
   } catch (error) {
-    console.error("      ✗ Error al eliminar archivo:", error.message);
+    // console.error("Error al eliminar archivo:", error.message);
     return false;
   }
 };
 
 export async function PUT({ request }) {
-  console.log("=== API ACTUALIZAR LIBRO ===");
+  // console.log("=== API ACTUALIZAR LIBRO ===");
 
   try {
     const url = new URL(request.url);
@@ -64,7 +64,7 @@ export async function PUT({ request }) {
         _rev: coleccionesDoc.data._rev,
       };
 
-      console.log("2. Actualizando documento de colecciones...");
+      // console.log("2. Actualizando documento de colecciones...");
       const responseColecciones = await couch.put(
         `/cimu-libros/${id}`,
         coleccionesActualizado
@@ -85,7 +85,7 @@ export async function PUT({ request }) {
         );
       }
 
-      console.log("3. Documento de colecciones actualizado");
+      // console.log("3. Documento de colecciones actualizado");
 
       return new Response(
         JSON.stringify({
@@ -104,7 +104,7 @@ export async function PUT({ request }) {
     }
 
     const libroData = await request.json();
-    console.log("1. ID:", id);
+    // console.log("1. ID:", id);
 
     // Obtener el libro actual
     const libroActual = await couch.get(`/cimu-libros/${id}`);
@@ -119,7 +119,7 @@ export async function PUT({ request }) {
     const datosAnteriores = libroActual.data;
 
     // DETECTAR CAMBIOS DE ARCHIVOS Y ELIMINAR LOS VIEJOS
-    console.log("2. Verificando cambios de archivos...");
+    // console.log("2. Verificando cambios de archivos...");
     const archivosEliminados = [];
 
     // Si cambió la portada, eliminar la anterior
@@ -128,7 +128,7 @@ export async function PUT({ request }) {
       libroData.portada &&
       datosAnteriores.portada !== libroData.portada
     ) {
-      console.log("   - Portada cambió, eliminando anterior...");
+      // console.log("   - Portada cambió, eliminando anterior...");
       if (eliminarArchivo(datosAnteriores.portada)) {
         archivosEliminados.push({
           tipo: "portada",
@@ -143,7 +143,7 @@ export async function PUT({ request }) {
       libroData.pdf_url &&
       datosAnteriores.pdf_url !== libroData.pdf_url
     ) {
-      console.log("   - PDF cambió, eliminando anterior...");
+      // console.log("   - PDF cambió, eliminando anterior...");
       if (eliminarArchivo(datosAnteriores.pdf_url)) {
         archivosEliminados.push({ tipo: "pdf", url: datosAnteriores.pdf_url });
       }
@@ -157,22 +157,22 @@ export async function PUT({ request }) {
       }
     }
 
-    console.log(
-      `   Total archivos antiguos eliminados: ${archivosEliminados.length}`
-    );
+    // console.log(
+    //   `   Total archivos antiguos eliminados: ${archivosEliminados.length}`
+    // );
 
     // Obtener autores anteriores y nuevos
     const autoresAnteriores = datosAnteriores.autores || [];
     const autoresNuevos = libroData.autores || [];
 
-    console.log(
-      "3. Autores anteriores:",
-      autoresAnteriores.map((a) => a.nombre)
-    );
-    console.log(
-      "4. Autores nuevos:",
-      autoresNuevos.map((a) => a.nombre)
-    );
+    // console.log(
+    //   "3. Autores anteriores:",
+    //   autoresAnteriores.map((a) => a.nombre)
+    // );
+    // console.log(
+    //   "4. Autores nuevos:",
+    //   autoresNuevos.map((a) => a.nombre)
+    // );
 
     // Actualizar libro
     libroData.fecha_actualizacion = new Date().toISOString();
@@ -183,7 +183,7 @@ export async function PUT({ request }) {
       _rev: datosAnteriores._rev,
     };
 
-    console.log("5. Actualizando libro...");
+    // console.log("5. Actualizando libro...");
     const responseLibro = await couch.put(
       `/cimu-libros/${id}`,
       libroActualizado
@@ -199,7 +199,7 @@ export async function PUT({ request }) {
       );
     }
 
-    console.log("6. Libro actualizado");
+    // console.log("6. Libro actualizado");
 
     // Preparar referencia actualizada del libro
     const libroReferencia = {
@@ -221,18 +221,18 @@ export async function PUT({ request }) {
       autoresAnteriores.some((anterior) => anterior.id === nuevo.id)
     );
 
-    console.log(
-      "7. Autores a agregar:",
-      autoresAgregar.map((a) => a.nombre)
-    );
-    console.log(
-      "8. Autores a eliminar:",
-      autoresEliminar.map((a) => a.nombre)
-    );
-    console.log(
-      "9. Autores a actualizar:",
-      autoresActualizar.map((a) => a.nombre)
-    );
+    // console.log(
+    //   "7. Autores a agregar:",
+    //   autoresAgregar.map((a) => a.nombre)
+    // );
+    // console.log(
+    //   "8. Autores a eliminar:",
+    //   autoresEliminar.map((a) => a.nombre)
+    // );
+    // console.log(
+    //   "9. Autores a actualizar:",
+    //   autoresActualizar.map((a) => a.nombre)
+    // );
 
     const resultados = [];
 
@@ -248,11 +248,11 @@ export async function PUT({ request }) {
           inv.libros.push(libroReferencia);
 
           await couch.put(`/investigadores/${autor.id}`, inv);
-          console.log(`   ✓ Agregado a ${autor.nombre}`);
+          // console.log(`Agregado a ${autor.nombre}`);
           resultados.push({ accion: "agregar", autor: autor.nombre, ok: true });
         }
       } catch (error) {
-        console.error(`   ✗ Error agregando a ${autor.nombre}:`, error.message);
+        // console.error(`Error agregando a ${autor.nombre}:`, error.message);
         resultados.push({
           accion: "agregar",
           autor: autor.nombre,
@@ -273,7 +273,7 @@ export async function PUT({ request }) {
             inv.libros = inv.libros.filter((libro) => libro.id !== id);
 
             await couch.put(`/investigadores/${autor.id}`, inv);
-            console.log(`   ✓ Eliminado de ${autor.nombre}`);
+            // console.log(`Eliminado de ${autor.nombre}`);
             resultados.push({
               accion: "eliminar",
               autor: autor.nombre,
@@ -282,10 +282,10 @@ export async function PUT({ request }) {
           }
         }
       } catch (error) {
-        console.error(
-          `   ✗ Error eliminando de ${autor.nombre}:`,
-          error.message
-        );
+        // console.error(
+        //   `Error eliminando de ${autor.nombre}:`,
+        //   error.message
+        // );
         resultados.push({
           accion: "eliminar",
           autor: autor.nombre,
@@ -308,7 +308,7 @@ export async function PUT({ request }) {
               inv.libros[index] = libroReferencia;
 
               await couch.put(`/investigadores/${autor.id}`, inv);
-              console.log(`   ✓ Actualizado en ${autor.nombre}`);
+              // console.log(`Actualizado en ${autor.nombre}`);
               resultados.push({
                 accion: "actualizar",
                 autor: autor.nombre,
@@ -318,10 +318,10 @@ export async function PUT({ request }) {
           }
         }
       } catch (error) {
-        console.error(
-          `   ✗ Error actualizando en ${autor.nombre}:`,
-          error.message
-        );
+        // console.error(
+        //   `Error actualizando en ${autor.nombre}:`,
+        //   error.message
+        // );
         resultados.push({
           accion: "actualizar",
           autor: autor.nombre,
@@ -331,8 +331,8 @@ export async function PUT({ request }) {
       }
     }
 
-    console.log("10. Proceso completado");
-    console.log("=== FIN API ACTUALIZAR LIBRO ===");
+    // console.log("Proceso completado");
+    // console.log("=== FIN API ACTUALIZAR LIBRO ===");
 
     return new Response(
       JSON.stringify({
@@ -352,8 +352,8 @@ export async function PUT({ request }) {
       }
     );
   } catch (error) {
-    console.error("❌ Error al actualizar libro:", error);
-    console.error("Stack:", error.stack);
+    // console.error("Error al actualizar libro:", error);
+    // console.error("Stack:", error.stack);
     return new Response(
       JSON.stringify({
         ok: false,

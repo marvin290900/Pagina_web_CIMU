@@ -37,7 +37,7 @@ export async function POST({ request }) {
     const response = await couch.post(`/cimu-gaceta-${coleccion}`, datos);
 
     if (response.status !== 201 && response.status !== 200) {
-      console.error("Error en respuesta:", response.data);
+      // console.error("Error en respuesta:", response.data);
       return new Response(
         JSON.stringify({
           error: "Error al crear el documento",
@@ -83,8 +83,8 @@ export async function POST({ request }) {
       }
     );
   } catch (error) {
-    console.error("❌ Error al crear documento:", error);
-    console.error("❌ Stack:", error.stack);
+    // console.error("Error al crear documento:", error);
+    // console.error("Stack:", error.stack);
     return new Response(
       JSON.stringify({
         error: "Error al crear documento",

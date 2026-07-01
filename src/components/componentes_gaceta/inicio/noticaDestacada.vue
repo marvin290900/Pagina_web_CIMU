@@ -60,7 +60,7 @@ const obtenerPublicaciones = async () => {
     const json = await res.json();
     publicaciones.value = json;
     cargando.value = false;
-    console.log("Datos obtenidos destacada:", json);
+    // console.log("Datos obtenidos destacada:", json);
   } catch (error) {
     console.error("Error al obtener datos:", error);
   }

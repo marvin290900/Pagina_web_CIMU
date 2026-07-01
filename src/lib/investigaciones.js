@@ -11,9 +11,9 @@ export async function getTodasLasInvestigaciones() {
       }
     });
     return response.data.rows.map(row => row.doc);
-    
+
   } catch (error) {
-    console.error("Error al obtener todos los documentos:", error);
+    // console.error("Error al obtener todos los documentos:", error);
     return [];
   }
 }

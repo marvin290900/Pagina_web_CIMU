@@ -9,7 +9,7 @@ export async function getInvestigadoresDirectivos() {
     });
     return response.data.docs;
   } catch (error) {
-    console.error("Error al obtener investigadores:", error);
+    // console.error("Error al obtener investigadores:", error);
     return [];
   }
 }
@@ -21,7 +21,7 @@ export async function getInvestigadoresPasantes() {
     });
     return response.data.docs;
   } catch (error) {
-    console.error("Error al obtener investigadores:", error);
+    // console.error("Error al obtener investigadores:", error);
     return [];
   }
 }
@@ -33,7 +33,7 @@ export async function getInvestigadoresExternos() {
     });
     return response.data.docs;
   } catch (error) {
-    console.error("Error al obtener investigadores:", error);
+    // console.error("Error al obtener investigadores:", error);
     return [];
   }
 }
@@ -44,7 +44,7 @@ export async function getInvestigadorPorId(id) {
     const response = await couch.get(`/${DB_NAME}/${id}`);
     return response.data;
   } catch (error) {
-    console.error("Error al obtener investigador:", error);
+    // console.error("Error al obtener investigador:", error);
     return null;
   }
 }
@@ -56,7 +56,7 @@ export async function getTodosLosInvestigadores() {
     });
     return response.data.docs;
   } catch (error) {
-    console.error("Error al obtener todos los investigadores:", error);
+    // console.error("Error al obtener todos los investigadores:", error);
     return [];
   }
 }
@@ -77,7 +77,7 @@ export async function actualizarInvestigador(id, datosActualizados) {
     const response = await couch.put(`/${DB_NAME}/${id}`, docActualizado);
     return { ok: true, data: response.data };
   } catch (error) {
-    console.error("Error al actualizar investigador:", error);
+    // console.error("Error al actualizar investigador:", error);
     return { ok: false, error };
   }
 }
@@ -89,7 +89,7 @@ export async function eliminarInvestigador(id, rev) {
     });
     return { ok: true, data: response.data };
   } catch (error) {
-    console.error("Error al eliminar el investigador:", error);
+    // console.error("Error al eliminar el investigador:", error);
     return { ok: false, error };
   }
 }

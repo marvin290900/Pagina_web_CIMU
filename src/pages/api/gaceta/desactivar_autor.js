@@ -33,7 +33,7 @@ export async function GET({ request }) {
               pub
             );
           } catch (err) {
-            console.warn(`⚠️ No se encontró publicación ${publicacion.id}`);
+            // console.warn(`No se encontró publicación ${publicacion.id}`);
           }
         })
       );
@@ -49,7 +49,7 @@ export async function GET({ request }) {
       { status: 200, headers: { "Content-Type": "application/json" } }
     );
   } catch (error) {
-    console.error("Error al actualizar autor:", error.message);
+    // console.error("Error al actualizar autor:", error.message);
     return new Response(
       JSON.stringify({
         error: "Error al actualizar autor",

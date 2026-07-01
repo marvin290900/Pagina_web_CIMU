@@ -374,9 +374,9 @@ const obtenerLibros = async () => {
     const data = await response.json();
 
     libros.value = data || [];
-    console.log("Libros obtenidos:", libros.value.length);
+    // console.log("Libros obtenidos:", libros.value.length);
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     mostrarAlerta("error", "Error al cargar los libros");
   } finally {
     cargando.value = false;
@@ -390,7 +390,7 @@ const abrirModalNuevo = () => {
 };
 
 const editarLibro = (libro) => {
-  console.log("Editar libro:", libro);
+  // console.log("Editar libro:", libro);
   modoModal.value = "editar";
   dataLibro.value = { ...libro };
   modalLibrosRef.value?.showModal();
@@ -402,9 +402,9 @@ const cerrarModalLibros = () => {
 };
 
 const guardarLibro = async (libroData) => {
-  console.log("=== GUARDAR LIBRO ===");
-  console.log("Modo:", modoModal.value);
-  console.log("Datos:", libroData);
+  // console.log("=== GUARDAR LIBRO ===");
+  // console.log("Modo:", modoModal.value);
+  // console.log("Datos:", libroData);
 
   try {
     let response;
@@ -425,7 +425,7 @@ const guardarLibro = async (libroData) => {
       });
     }
 
-    console.log("Respuesta status:", response.status);
+    // console.log("Respuesta status:", response.status);
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -440,7 +440,7 @@ const guardarLibro = async (libroData) => {
     }
 
     const resultado = await response.json();
-    console.log("Resultado:", resultado);
+    // console.log("Resultado:", resultado);
 
     await obtenerLibros();
     cerrarModalLibros();
@@ -452,9 +452,7 @@ const guardarLibro = async (libroData) => {
         : "Libro actualizado exitosamente"
     );
 
-    console.log("=== LIBRO GUARDADO EXITOSAMENTE ===");
   } catch (error) {
-    console.error("❌ Error al guardar libro:", error);
     mostrarAlerta("error", `Error al guardar: ${error.message}`);
   }
 };
@@ -462,7 +460,7 @@ const guardarLibro = async (libroData) => {
 const eliminarLibro = async (id) => {
   if (confirm("¿Estás seguro de eliminar este libro?")) {
     try {
-      console.log("Eliminando libro:", id);
+      // console.log("Eliminando libro:", id);
       const response = await fetch(`/api/libros/eliminar?id=${id}`, {
         method: "DELETE",
       });
@@ -477,13 +475,12 @@ const eliminarLibro = async (id) => {
       }
 
       const resultado = await response.json();
-      console.log("Libro eliminado:", resultado);
+      // console.log("Libro eliminado:", resultado);
 
       await obtenerLibros();
 
       mostrarAlerta("success", "Libro eliminado exitosamente");
     } catch (error) {
-      console.error("Error al eliminar libro:", error);
       mostrarAlerta("error", `Error al eliminar: ${error.message}`);
     }
   }
@@ -534,13 +531,12 @@ const guardarColecciones = async () => {
     }
 
     const data = await response.json();
-    console.log("Colecciones guardadas:", data);
 
     cerrarModalColecciones();
     mostrarAlerta("success", "Colecciones guardadas exitosamente");
     window.location.reload();
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     mostrarAlerta("error", "Error al guardar las colecciones");
   }
 };
@@ -553,7 +549,7 @@ const obtenerColecciones = async () => {
     }
     const data = await response.json();
     coleccionesOptions.value = data.colecciones || [];
-    console.log("Colecciones obtenidas:", coleccionesOptions.value.length);
+    // console.log("Colecciones obtenidas:", coleccionesOptions.value.length);
   } catch (error) {
     console.error(error);
   }

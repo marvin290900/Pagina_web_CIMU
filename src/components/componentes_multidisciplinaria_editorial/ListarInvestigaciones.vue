@@ -180,26 +180,22 @@ const obtenerLibros = async (resetear) => {
     }
 
     const response = await fetch(
-      // Asumo que tu API se llama 'obtener-filtrados'
       "/api/libros/obtener-filtrados?anio=" + anioSelected.value
     );
     if (!response.ok) {
       throw new Error("Error al obtener los libros");
     }
     const dataLibros = await response.json();
-    console.log("Datos recibidos:", dataLibros);
+    // console.log("Datos recibidos:", dataLibros);
 
-    // --- ESTA ES LA CORRECCIÓN ---
-    // Tu API _find ya devuelve el array de documentos, no necesitas .map
     todosLosLibros.value = dataLibros;
-    // ----------------------------
 
     totallibros.value = todosLosLibros.value.length;
 
     // Cargar primera página
     cargarPagina();
-    console.log("Libros obtenidos:", libros.value.length);
-    console.log("Contenido de libros:", libros.value); // Revisa qué hay aquí
+    // console.log("Libros obtenidos:", libros.value.length);
+    // console.log("Contenido de libros:", libros.value);
   } catch (error) {
     console.error(error);
   } finally {

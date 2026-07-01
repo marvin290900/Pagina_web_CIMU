@@ -5,7 +5,7 @@ export async function GET({ request }) {
     const url = new URL(request.url);
     const id = url.searchParams.get("id");
     const coleccion = url.searchParams.get("coleccion");
-    console.log(id);
+    // console.log(id);
     if (!id) {
       return new Response(JSON.stringify({ error: "ID no proporcionado" }), {
         status: 400,
@@ -13,7 +13,7 @@ export async function GET({ request }) {
     }
 
     if (coleccion == "autores") {
-      console.log("AUTOR");
+      // console.log("AUTOR");
       const res = await couch.get(`cimu-gaceta-${coleccion}/${id}`);
 
       return new Response(JSON.stringify(res.data), {
@@ -24,7 +24,7 @@ export async function GET({ request }) {
         },
       });
     } else {
-      console.log("publicacion");
+      // console.log("publicacion");
       //Recibir el documento
       const { data: doc } = await couch.get(`cimu-gaceta-${coleccion}/${id}`);
 
@@ -56,7 +56,7 @@ export async function GET({ request }) {
       });
     }
   } catch (error) {
-    console.error("Error al obtener publicación por ID:", error.message);
+    // console.error("Error al obtener publicación por ID:", error.message);
     return new Response(
       JSON.stringify({ error: "Error al obtener publicación" }),
       {

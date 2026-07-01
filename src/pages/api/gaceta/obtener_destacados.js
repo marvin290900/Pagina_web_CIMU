@@ -47,14 +47,14 @@ export async function GET({ request }) {
         if (publicacionDb.status === 200) {
           return publicacionDb.data;
         } else {
-          console.error(
-            `Error al obtener publicación ${publicacionId.id}:`,
-            publicacionDb.statusText
-          );
+          // console.error(
+          //   `Error al obtener publicación ${publicacionId.id}:`,
+          //   publicacionDb.statusText
+          // );
           return null;
         }
       } catch (error) {
-        console.error(`Error en petición para ${publicacionId.id}:`, error);
+        // console.error(`Error en petición para ${publicacionId.id}:`, error);
         return null;
       }
     });
@@ -73,7 +73,7 @@ export async function GET({ request }) {
       },
     });
   } catch (error) {
-    console.error("Error al obtener publicación por ID:", error.message);
+    // console.error("Error al obtener publicación por ID:", error.message);
     return new Response(
       JSON.stringify({
         error: "Error al obtener publicación destacadas",

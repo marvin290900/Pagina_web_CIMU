@@ -35,7 +35,7 @@ export async function GET({ request }) {
         limit: 50, // Obtener más documentos para filtrar después
       };
 
-      console.log("Query Mango (recientes):", JSON.stringify(queryRecientes));
+      // console.log("Query Mango (recientes):", JSON.stringify(queryRecientes));
       response = await couch.post(
         `/cimu-gaceta-${coleccion}/_find`,
         queryRecientes
@@ -64,20 +64,20 @@ export async function GET({ request }) {
         // Si hay documentos de los últimos 7 días, usarlos
         if (docsRecientes.length > 0) {
           docs = docsRecientes.slice(0, 30);
-          console.log(
-            `Encontrados ${docs.length} documentos de los últimos 7 días`
-          );
+          // console.log(
+          //   `Encontrados ${docs.length} documentos de los últimos 7 días`
+          // );
         } else {
           // Si no hay de los últimos 7 días, usar los más recientes disponibles
           docs = docs.slice(0, 10);
-          console.log(
-            "No hay documentos de los últimos 7 días, usando los más recientes disponibles"
-          );
+          // console.log(
+          //   "No hay documentos de los últimos 7 días, usando los más recientes disponibles"
+          // );
         }
       }
     } catch (error) {
-      console.error("Error en query inicial:", error.message);
-      
+      // console.error("Error en query inicial:", error.message);
+
       // Estrategia 2: Si falla, intentar con query más simple (solo estado)
       try {
         const querySimple = {
@@ -120,7 +120,7 @@ export async function GET({ request }) {
             .slice(0, 10);
         }
       } catch (error2) {
-        console.error("Error en query alternativa:", error2.message);
+        // console.error("Error en query alternativa:", error2.message);
         throw error2;
       }
     }
@@ -139,7 +139,7 @@ export async function GET({ request }) {
       }
     );
   } catch (error) {
-    console.error("Error al obtener publicaciones recientes:", error.message);
+    // console.error("Error al obtener publicaciones recientes:", error.message);
     return new Response(
       JSON.stringify({ error: "Error al obtener publicaciones recientes" }),
       {
