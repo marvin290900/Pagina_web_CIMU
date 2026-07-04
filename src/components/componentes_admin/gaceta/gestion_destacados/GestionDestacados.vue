@@ -375,8 +375,8 @@ const cerrarModalAgregar = () => {
 };
 
 const eliminarDestacados = (publicacion, coleccion) => {
-  console.log("mod", coleccion);
-  console.log("Publicación a eliminar de destacados:", publicacion);
+  //console.log("mod", coleccion);
+  //console.log("Publicación a eliminar de destacados:", publicacion);
 
   if (coleccion === "destacada") {
     const dataAgregar = {
@@ -399,8 +399,8 @@ const eliminarDestacados = (publicacion, coleccion) => {
 };
 
 const agregarAdestacados = (publicacion, coleccion) => {
-  console.log("mod", coleccion);
-  console.log("Publicación a agregar como destacada:", publicacion);
+  //console.log("mod", coleccion);
+  //console.log("Publicación a agregar como destacada:", publicacion);
   // Lógica para agregar la publicación como destacada
 
   if (coleccion === "destacada") {
@@ -463,7 +463,7 @@ const actualizarDocumento = async (id, datosActualizados) => {
     const json = await response.json();
     obtenerPublicacionDestacada();
     obtenerPublicaciones();
-    console.log("Documento actualizado:", json);
+    //console.log("Documento actualizado:", json);
     alertData.value = {
       type: "success",
       mensaje: "Publicacion agregada a destacados.",
@@ -513,7 +513,7 @@ const eliminarDestacada = async (id, datosActualizados) => {
     const json = await response.json();
     obtenerPublicacionDestacada();
     obtenerPublicaciones();
-    console.log("Documento actualizado:", json);
+    //console.log("Documento actualizado:", json);
     alertData.value = {
       type: "success",
       mensaje: "Publicacion eliminada de destacados.",
@@ -548,7 +548,7 @@ const obtenerPublicacionDestacada = async () => {
     const json = await res.json();
     publicacionDestacada.value = json;
 
-    console.log("Datos obtenidos destacada:", json);
+    //console.log("Datos obtenidos destacada:", json);
   } catch (error) {
     console.error("Error al obtener datos:", error);
   }

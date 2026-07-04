@@ -82,7 +82,7 @@ async function cargar() {
 
     const data = await res.json()
 
-    console.log('Datos obtenidos:', data)
+    //console.log('Datos obtenidos:', data)
     if (!data.ok) {
       console.error('Error al obtener datos:', data.error)
       investigaciones.value = []

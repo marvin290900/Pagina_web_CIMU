@@ -275,7 +275,7 @@ function editarInvestigacion(inv, index) {
   pdfSeleccionado = null
   keywordsInput.value = inv.doc.palabras_clave || ''
   const pk = inv.doc.palabras_clave;
-  console.log("No hay palabras clave", pk)
+  //console.log("No hay palabras clave", pk)
   if (pk.length > 0) {
     keywordsInput.value = pk.join(", ");
    
@@ -302,7 +302,7 @@ function handleFileUpload(event) {
   }
   pdfSeleccionado = file
   previewImage.value = null // will be set after upload (thumbnail)
-  console.log("pdfSeleccionado:", pdfSeleccionado)
+  //console.log("pdfSeleccionado:", pdfSeleccionado)
   uploadStatus.value = 'Listo para subir'
 }
 
@@ -375,8 +375,8 @@ async function guardarInvestigacion() {
       investigacionEditando.value.imagenURL = imagenURL
       previewImage.value = imagenURL
     }
-    console.log("Imagen URL:", imagenURL)
-    console.log("autores", selected.value)
+    //console.log("Imagen URL:", imagenURL)
+    //console.log("autores", selected.value)
 
 
 
@@ -434,7 +434,7 @@ async function guardarInvestigacion() {
     getInvestigacion()
     cerrarModal()
   } catch (err) {
-    console.error('Error:', err)
+    //console.error('Error:', err)
     mostrarToast('Error: ' + err.message, 'error')  
   } finally {
     saving.value = false
@@ -473,7 +473,7 @@ onMounted(() => {
       if (data.ok) {
         // Mapear para obtener solo nombres e ids, y filtrar valores inválidos
         options.value = data.docs.map(doc => { return { id: doc._id, nombre: doc.nombre } }).filter(Boolean);
-        console.log("Opciones de investigadores:", options.value);
+        //console.log("Opciones de investigadores:", options.value);
        
       } else {
         console.error('Error al obtener investigadores:', data.error);

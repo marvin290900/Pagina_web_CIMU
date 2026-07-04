@@ -459,7 +459,7 @@ const cargarInvestigadores = async () => {
 
     const data = await response.json();
     investigadores.value = data.rows.map((row) => row.doc);
-    console.log("Investigadores cargados:", investigadores.value);
+    //console.log("Investigadores cargados:", investigadores.value);
   } catch (error) {
     console.error("Error al cargar investigadores:", error);
   }
@@ -473,9 +473,9 @@ const cargarColecciones = async () => {
 
     const data = await response.json();
     coleccionesOptions.value = data.colecciones || [];
-    console.log("Colecciones cargadas:", coleccionesOptions.value);
+    //console.log("Colecciones cargadas:", coleccionesOptions.value);
   } catch (error) {
-    console.error("Error al cargar colecciones:", error);
+    //console.error("Error al cargar colecciones:", error);
     mostrarAlerta("error", `Error al cargar colecciones: ${error.message}`);
   }
 };
@@ -529,7 +529,7 @@ watch(
         palabras_clave: nuevoLibro.palabras_clave || [],
         autores: nuevoLibro.autores || [],
       };
-      console.log("Datos cargados para editar:", formData.value);
+      //console.log("Datos cargados para editar:", formData.value);
     } else {
       resetearFormulario();
     }
@@ -571,10 +571,10 @@ const handlePortadaSelect = async (event) => {
     }
 
     formData.value.portada = data.url;
-    console.log("Portada subida:", data.url);
+    //console.log("Portada subida:", data.url);
     mostrarAlerta("success", "Portada subida con éxito");
   } catch (error) {
-    console.error("Error al subir portada:", error);
+    //console.error("Error al subir portada:", error);
     mostrarAlerta("error", `Error al subir la portada: ${error.message}`);
   } finally {
     subiendoPortada.value = false;
@@ -619,10 +619,10 @@ const handlePDFSelect = async (event) => {
 
     formData.value.pdf_url = data.pdfUrl;
     formData.value.pdf_thumbnail = data.thumbnailUrl || "";
-    console.log("PDF subido:", data.pdfUrl);
-    console.log("Thumbnail:", data.thumbnailUrl);
+    //console.log("PDF subido:", data.pdfUrl);
+    //console.log("Thumbnail:", data.thumbnailUrl);
   } catch (error) {
-    console.error("Error al subir PDF:", error);
+    //console.error("Error al subir PDF:", error);
     mostrarAlerta("error", `Error al subir el PDF: ${error.message}`);
   } finally {
     subiendoPDF.value = false;
@@ -753,7 +753,7 @@ const guardar = async () => {
       return;
     }
 
-    console.log("Guardando libro:", formData.value);
+    //console.log("Guardando libro:", formData.value);
 
     // // Si estamos editando, eliminar archivos antiguos
     // if (props.props.modo === "editar") {
@@ -763,7 +763,7 @@ const guardar = async () => {
     // Emitir evento
     emit("guardar", { ...formData.value });
   } catch (error) {
-    console.error("Error al guardar:", error);
+    //console.error("Error al guardar:", error);
     mostrarAlerta("error", `Error: ${error.message}`);
   } finally {
     guardando.value = false;

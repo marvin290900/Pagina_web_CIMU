@@ -82,7 +82,7 @@ watch(
       };
       previewImagen.value = null;
       archivoSeleccionado.value = null;
-      console.log("Datos cargados para editar:", formData.value);
+      //console.log("Datos cargados para editar:", formData.value);
     } else {
       resetearFormulario();
     }
@@ -105,20 +105,20 @@ const handleFileSelect = (event) => {
   };
   reader.readAsDataURL(file);
 
-  console.log("Archivo seleccionado:", file.name);
+  //console.log("Archivo seleccionado:", file.name);
 };
 
 // Función para subir la imagen (se llama al guardar)
 const subirImagen = async () => {
   if (!archivoSeleccionado.value) {
-    console.log("No hay archivo para subir");
+    //console.log("No hay archivo para subir");
     return null;
   }
 
   try {
-    console.log("Iniciando subida de imagen:", archivoSeleccionado.value);
+    //console.log("Iniciando subida de imagen:", archivoSeleccionado.value);
     subiendoImagen.value = true;
-    console.log("Subiendo imagen...");
+    //console.log("Subiendo imagen...");
 
     const formDataImagen = new FormData();
     formDataImagen.append("foto", archivoSeleccionado.value);
@@ -139,10 +139,10 @@ const subirImagen = async () => {
       throw new Error(dataImagen.error || "Error en subida de imagen");
     }
 
-    console.log("Imagen subida correctamente:", dataImagen.url);
+    //console.log("Imagen subida correctamente:", dataImagen.url);
     return dataImagen.url;
   } catch (error) {
-    console.error("Error al subir imagen:", error);
+    //console.error("Error al subir imagen:", error);
     throw error;
   } finally {
     subiendoImagen.value = false;
@@ -179,21 +179,21 @@ const guardar = async () => {
 
     // Si hay un archivo seleccionado, subirlo primero
     if (archivoSeleccionado.value) {
-      console.log("Subiendo imagen antes de guardar...");
+      //console.log("Subiendo imagen antes de guardar...");
       const fotoUrl = await subirImagen();
 
       if (fotoUrl) {
         formData.value.foto = fotoUrl;
-        console.log("URL de foto guardada:", fotoUrl);
+        //console.log("URL de foto guardada:", fotoUrl);
       }
     }
 
-    console.log("Guardando usuario con datos:", formData.value);
+    //console.log("Guardando usuario con datos:", formData.value);
 
     // Emitir evento con los datos
     emit("guardar", { ...formData.value });
   } catch (error) {
-    console.error("Error al guardar:", error);
+    //console.error("Error al guardar:", error);
     alert(`Error al guardar el usuario: ${error.message}`);
   } finally {
     guardando.value = false;

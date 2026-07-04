@@ -435,11 +435,11 @@
         limpiarFormularioAgregar();
         await cargarImagenes();
       } else {
-        showMessage("❌ Error al agregar : " + result.error, "error");
+        showMessage("Error al agregar : " + result.error, "error");
       }
     } catch (err) {
-      console.error("Error al enviar:", err);
-      showMessage("❌ Error al agregar", "error");
+      //console.error("Error al enviar:", err);
+      showMessage("Error al agregar", "error");
     } finally {
       ocultarSpinnerEnBoton(boton);
     }
@@ -631,7 +631,7 @@
 
       const result = await res.json();
       if (result.ok) {
-        // ✅ Si hubo reemplazo, borrar del servidor la foto anterior
+        // Si hubo reemplazo, borrar del servidor la foto anterior
         if (
           reemplazo &&
           imagenEnEdicion.foto &&
@@ -644,16 +644,16 @@
           });
         }
 
-        showMessage("✅ Imagen actualizada correctamente", "success");
+        showMessage(" Imagen actualizada correctamente", "success");
         modalEditar.close();
         modalConfirmarEditar.close();
         await cargarImagenes();
       } else {
-        showMessage("❌ Error al actualizar: " + result.error, "error");
+        showMessage("Error al actualizar: " + result.error, "error");
       }
     } catch (err) {
-      console.error("Error al editar:", err);
-      showMessage("❌ Error al editar imagen", "error");
+      //console.error("Error al editar:", err);
+      showMessage("Error al editar imagen", "error");
     } finally {
       ocultarSpinnerEnBoton(boton);
     }
@@ -682,12 +682,12 @@
     mostrarSpinnerEnBoton(boton);
 
     if (!idImagenAEliminar) {
-      showMessage("❌ ID inválido para eliminar", "error");
+      showMessage("ID inválido para eliminar", "error");
       ocultarSpinnerEnBoton(boton);
       return;
     }
 
-    // 🔥 Llamada a API para eliminar imagen
+    // Llamada a API para eliminar imagen
     await eliminarImagenCarrusel(idImagenAEliminar);
 
     // Limpiamos el id
@@ -714,16 +714,16 @@
       const resultado = await respuesta.json();
 
       if (resultado.ok) {
-        showMessage("✅ Imagen eliminada correctamente", "success");
+        showMessage("Imagen eliminada correctamente", "success");
       } else {
         showMessage(
-          "❌ Error al eliminar: " + (resultado.error || "Desconocido"),
+          "Error al eliminar: " + (resultado.error || "Desconocido"),
           "error",
         );
       }
     } catch (err) {
-      console.error("❌ Error en eliminarImagenCarrusel:", err);
-      showMessage("❌ Error al conectar con el servidor", "error");
+      //console.error( "Error en eliminarImagenCarrusel:", err);
+      showMessage("Error al conectar con el servidor", "error");
     }
   }
 

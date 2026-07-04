@@ -70,7 +70,7 @@ export async function POST({ request, cookies }) {
     }
 
     const respuesta = await couch.post("investigaciones", parsed.data);
-    console.log("Respuesta de CouchDB:", respuesta.data.id);
+    //console.log("Respuesta de CouchDB:", respuesta.data.id);
     // Actualizar cada investigador
     body = {
       id: respuesta.data.id,
@@ -88,7 +88,7 @@ export async function POST({ request, cookies }) {
   console.error(`Error actualizando investigador ${inv.id}:`, error);
   throw error; // Re-lanzar para que Promise.all falle
 });
-      console.log(`Actualizando investigador ${inv.id} con proyecto ${datos}`);
+      //console.log(`Actualizando investigador ${inv.id} con proyecto ${datos}`);
       return datos;
 
     }));
@@ -121,10 +121,10 @@ export async function PUT({ request, cookies }) {
     if (!auth.authorized) return auth.response;
     let body = await request.json();
 
-    // ⚠️ Ahora sacamos el id directamente del body
+    //  Ahora sacamos el id directamente del body
     const { id, ...rest } = body;
 
-    console.log("BODY RECIBIDO PARA UPDATE:", body);
+    //console.log("BODY RECIBIDO PARA UPDATE:", body);
 
     if (!id) {
       return new Response(
@@ -137,7 +137,7 @@ export async function PUT({ request, cookies }) {
     }
 
     const parsed = InvestigacionSchema.safeParse(rest);
-    console.log("PARSED:", parsed);
+    //console.log("PARSED:", parsed);
     if (!parsed.success) {
       return new Response(
         JSON.stringify({ ok: false, error: parsed.error.flatten() }),
@@ -153,8 +153,8 @@ export async function PUT({ request, cookies }) {
     const deleteInvestigadores = difference(currentInvestigadores, newInvestigadores);
     const addInvestigadores = difference(newInvestigadores, currentInvestigadores);
 
-    console.log("Investigadores a agregar:", addInvestigadores);
-    console.log("Investigadores a eliminar:", deleteInvestigadores);
+    //console.log("Investigadores a agregar:", addInvestigadores);
+    //console.log("Investigadores a eliminar:", deleteInvestigadores);
 
     await Promise.all([...addInvestigadores].map(invId => {
       const datos = couch.post(`/investigadores/_design/investigadores/_update/agregarProyecto/${invId}`, JSON.stringify({id, nombre: parsed.data.titulo}), {
@@ -247,7 +247,7 @@ export async function DELETE({ request }) {
   console.error(`Error actualizando investigador ${inv.id}:`, error);
   throw error; // Re-lanzar para que Promise.all falle
 });
-      console.log(`Actualizando investigador ${inv.id} con proyecto ${datos}`);
+      //console.log(`Actualizando investigador ${inv.id} con proyecto ${datos}`);
       return datos;
 
     }));

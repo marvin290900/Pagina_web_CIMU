@@ -349,7 +349,7 @@ const obtenerUsuarios = async () => {
     // Resetear a página 1 cuando se recargan los datos
     paginaActual.value = 1;
     cargandoUsuarios.value = false;
-    console.log("Usuarios obtenidos:", usuarios.value[1].publicaciones.length);
+    //console.log("Usuarios obtenidos:", usuarios.value[1].publicaciones.length);
   } catch (error) {
     console.error(error);
   }
@@ -386,7 +386,7 @@ const cerrarModalGuardando = () => {
 };
 
 const editarUsuario = (usuario) => {
-  console.log("Editar usuario:", usuario);
+  //console.log("Editar usuario:", usuario);
   modoModal.value = "editar";
   dataUsuario.value = { ...usuario };
   modalRef.value?.showModal();
@@ -398,16 +398,16 @@ const cerrarModal = () => {
 };
 
 const guardarUsuario = async (usuarioData) => {
-  console.log("=== GUARDAR USUARIO ===");
-  console.log("Modo:", modoModal.value);
-  console.log("Datos:", usuarioData);
+  //console.log("=== GUARDAR USUARIO ===");
+  //console.log("Modo:", modoModal.value);
+  //console.log("Datos:", usuarioData);
   abrirModalGuardando();
 
   try {
     let response;
 
     if (modoModal.value === "crear") {
-      console.log("Creando nuevo usuario...");
+      //console.log("Creando nuevo usuario...");
       const datosLimpios = { ...usuarioData };
       if (!datosLimpios._id) {
         delete datosLimpios._id;
@@ -421,7 +421,7 @@ const guardarUsuario = async (usuarioData) => {
         body: JSON.stringify(datosLimpios),
       });
     } else {
-      console.log("Actualizando usuario existente...");
+      //console.log("Actualizando usuario existente...");
 
       if (!usuarioData._id) {
         alertData.value = {
@@ -445,11 +445,11 @@ const guardarUsuario = async (usuarioData) => {
       );
     }
 
-    console.log("Respuesta status:", response.status);
+    //console.log("Respuesta status:", response.status);
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error("Error en respuesta:", errorData);
+      //console.error("Error en respuesta:", errorData);
       alertData.value = {
         type: "error",
         mensaje:
@@ -463,7 +463,7 @@ const guardarUsuario = async (usuarioData) => {
     }
 
     const resultado = await response.json();
-    console.log("Resultado:", resultado);
+    //console.log("Resultado:", resultado);
 
     await obtenerUsuarios();
     cerrarModal();
@@ -479,16 +479,16 @@ const guardarUsuario = async (usuarioData) => {
     alert.value = true;
     setTimeout(() => (alert.value = false), 5000);
 
-    console.log("=== USUARIO GUARDADO EXITOSAMENTE ===");
+    //console.log("=== USUARIO GUARDADO EXITOSAMENTE ===");
   } catch (error) {
-    console.error("❌ Error al guardar usuario:", error);
-    console.error("❌ Mensaje:", error.message);
+    //console.error("❌ Error al guardar usuario:", error);
+    console.error(error.message);
   }
 };
 
 const eliminarUsuario = async (id) => {
   try {
-    console.log("Eliminando usuario:", id);
+    //console.log("Eliminando usuario:", id);
     abrirModalGuardando();
 
     const response = await fetch(
@@ -504,7 +504,7 @@ const eliminarUsuario = async (id) => {
     }
 
     const resultado = await response.json();
-    console.log("Usuario eliminado:", resultado);
+    //console.log("Usuario eliminado:", resultado);
 
     // Recargar la lista
     await obtenerUsuarios();
@@ -519,7 +519,7 @@ const eliminarUsuario = async (id) => {
     modalEliminarRef.value?.close();
     setTimeout(() => (alert.value = false), 5000);
   } catch (error) {
-    console.error("Error al eliminar usuario:", error);
+    //console.error("Error al eliminar usuario:", error);
     alertData.value = {
       type: "error",
       mensaje: `Error al eliminar: ${error.message}`,
@@ -532,7 +532,7 @@ const eliminarUsuario = async (id) => {
 //desactivar usuario (cambiar estado a inactivo o activo)
 const desactivarUsuario = async (id, estado) => {
   try {
-    console.log("Cambiando estado de usuario:", id, "a", estado);
+    //console.log("Cambiando estado de usuario:", id, "a", estado);
     abrirModalGuardando();
 
     const response = await fetch(
@@ -551,7 +551,7 @@ const desactivarUsuario = async (id, estado) => {
     }
 
     const resultado = await response.json();
-    console.log("Estado de usuario cambiado:", resultado);
+    //console.log("Estado de usuario cambiado:", resultado);
 
     // Recargar la lista
     await obtenerUsuarios();
@@ -567,7 +567,7 @@ const desactivarUsuario = async (id, estado) => {
     cerrarModalGuardando();
     setTimeout(() => (alert.value = false), 5000);
   } catch (error) {
-    console.error("Error al cambiar estado del usuario:", error);
+    //console.error("Error al cambiar estado del usuario:", error);
     alertData.value = {
       type: "error",
       mensaje: `Error al cambiar estado: ${error.message}`,
