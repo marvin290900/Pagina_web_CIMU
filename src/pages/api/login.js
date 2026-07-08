@@ -50,8 +50,8 @@ export const POST = async ({ request, cookies }) => {
     });
     
   } catch (error) {
-    console.error('ERROR EN LOGIN:', error);
-    console.error('Stack:', error.stack);
+    //console.error('ERROR EN LOGIN:', error);
+    //console.error('Stack:', error.stack);
     return new Response(JSON.stringify({ 
       error: 'Error en el servidor',
       details: error.message 

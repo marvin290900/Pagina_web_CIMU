@@ -22,7 +22,7 @@ export async function POST({ request }) {
     try {
       await fs.access(fullPath);
       await fs.unlink(fullPath);
-      console.log('Archivo eliminado:', fullPath);
+      //console.log('Archivo eliminado:', fullPath);
     } catch {
       console.warn('Archivo no encontrado o ya eliminado:', fullPath);
     }

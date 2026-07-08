@@ -1,6 +1,6 @@
 import { couch } from './couchDB.js';
 
-const DB_NAME = 'carrousel_imagenes';   
+const DB_NAME = 'carrousel_imagenes';
 
 
 export async function getTodasLasImagenes() {
@@ -10,7 +10,7 @@ export async function getTodasLasImagenes() {
     });
     return response.data.docs;
   } catch (error) {
-    console.error('Error al obtener todos las imágenes:', error);
+    // console.error('Error al obtener todos las imágenes:', error);
     return [];
   }
 }
@@ -31,7 +31,7 @@ export async function actualizarImagen(id, datosActualizados) {
     const response = await couch.put(`/${DB_NAME}/${id}`, docActualizado);
     return { ok: true, data: response.data };
   } catch (error) {
-    console.error('Error al actualizar la imagen:', error);
+    // console.error('Error al actualizar la imagen:', error);
     return { ok: false, error };
   }
 }
@@ -43,7 +43,7 @@ export async function eliminarImagen(id, rev) {
     });
     return { ok: true, data: response.data };
   } catch (error) {
-    console.error('Error al eliminar la imagen:', error);
+    // console.error('Error al eliminar la imagen:', error);
     return { ok: false, error };
   }
 }
@@ -53,7 +53,7 @@ export async function getImagenPorId(id) {
     const response = await couch.get(`/${DB_NAME}/${id}`);
     return response.data;
   } catch (error) {
-    console.error('Error al obtener la imagen:', error);
+    // console.error('Error al obtener la imagen:', error);
     return null;
   }
 }

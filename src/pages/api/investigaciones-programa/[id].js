@@ -19,7 +19,7 @@ export async function GET({ params }) {
 
     const respuesta = await couch.post("investigaciones/_find", body);
 
-    console.log("Respuesta de CouchDB:", respuesta.data);
+    //console.log("Respuesta de CouchDB:", respuesta.data);
 
     return new Response(JSON.stringify({ ok: true, data: respuesta.data.docs }), {
       status: 200,

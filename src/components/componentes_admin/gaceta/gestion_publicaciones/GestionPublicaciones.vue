@@ -391,7 +391,7 @@ const obtenerPublicaciones = async () => {
     (cat) => cat.label === coleccion.value
   );
 
-  console.log("Obteniendo publicaciones de la colección:", coleccionBusqueda);
+  //console.log("Obteniendo publicaciones de la colección:", coleccionBusqueda);
 
   try {
     const response = await fetch(
@@ -401,14 +401,14 @@ const obtenerPublicaciones = async () => {
       throw new Error("Error al obtener la coleccion");
     }
     const data = await response.json();
-    console.log("Datos obtenidos:", data);
+    //console.log("Datos obtenidos:", data);
 
     publicaciones.value = data.rows.map((row) => row.doc);
 
     // Resetear a página 1 cuando se recargan los datos
     paginaActual.value = 1;
     cargandoPublicaciones.value = false;
-    console.log("Publicaciones obtenidas:", publicaciones.value.length);
+    //console.log("Publicaciones obtenidas:", publicaciones.value.length);
   } catch (error) {
     console.error(error);
   }
@@ -445,7 +445,7 @@ const cerrarModalGuardando = () => {
 };
 
 const editarPublicacion = (publicacion) => {
-  console.log("Editar publicación:", publicacion);
+  //console.log("Editar publicación:", publicacion);
   modoModal.value = "editar";
   dataPublicacion.value = { ...publicacion };
   modalRef.value?.showModal();
@@ -457,16 +457,16 @@ const cerrarModal = () => {
 };
 
 const guardarPublicacion = async (publicacionData) => {
-  console.log("=== GUARDAR PUBLICACIÓN ===");
-  console.log("Modo:", modoModal.value);
-  console.log("Datos:", publicacionData);
+  //console.log("=== GUARDAR PUBLICACIÓN ===");
+  //console.log("Modo:", modoModal.value);
+  //console.log("Datos:", publicacionData);
   abrirModalGuardando();
 
   try {
     let response;
 
     if (modoModal.value === "crear") {
-      console.log("Creando nueva publicación...");
+      //console.log("Creando nueva publicación...");
       const datosLimpios = { ...publicacionData };
       if (!datosLimpios._id) {
         delete datosLimpios._id;
@@ -483,7 +483,7 @@ const guardarPublicacion = async (publicacionData) => {
         }
       );
     } else {
-      console.log("Actualizando publicación existente...");
+      //console.log("Actualizando publicación existente...");
 
       if (!publicacionData._id) {
         alertData.value = {
@@ -509,11 +509,11 @@ const guardarPublicacion = async (publicacionData) => {
       );
     }
 
-    console.log("Respuesta status:", response.status);
+    //console.log("Respuesta status:", response.status);
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error("Error en respuesta:", errorData);
+      //console.error("Error en respuesta:", errorData);
       alertData.value = {
         type: "error",
         mensaje:
@@ -529,7 +529,7 @@ const guardarPublicacion = async (publicacionData) => {
     }
 
     const resultado = await response.json();
-    console.log("Resultado:", resultado);
+    //console.log("Resultado:", resultado);
 
     await obtenerPublicaciones();
     cerrarModal();
@@ -545,14 +545,14 @@ const guardarPublicacion = async (publicacionData) => {
     alert.value = true;
     setTimeout(() => (alert.value = false), 5000);
   } catch (error) {
-    console.error("❌ Error al guardar publicación:", error);
-    console.error("❌ Mensaje:", error.message);
+    //console.error("❌ Error al guardar publicación:", error);
+    console.error(error.message);
   }
 };
 
 const eliminarPublicacion = async (publicacion) => {
   try {
-    console.log("Eliminando publicación:", publicacion);
+    //console.log("Eliminando publicación:", publicacion);
     abrirModalGuardando();
 
     const response = await fetch(
@@ -568,7 +568,7 @@ const eliminarPublicacion = async (publicacion) => {
     }
 
     const resultado = await response.json();
-    console.log("Publicación eliminada:", resultado);
+    //console.log("Publicación eliminada:", resultado);
 
     // Recargar la lista
     await obtenerPublicaciones();
@@ -583,7 +583,7 @@ const eliminarPublicacion = async (publicacion) => {
     modalEliminarRef.value?.close();
     setTimeout(() => (alert.value = false), 5000);
   } catch (error) {
-    console.error("Error al eliminar publicación:", error);
+    //console.error("Error al eliminar publicación:", error);
     alertData.value = {
       type: "error",
       mensaje: `Error al eliminar: ${error.message}`,
@@ -595,7 +595,7 @@ const eliminarPublicacion = async (publicacion) => {
 
 const desactivarPublicacion = async (publicacionData, nuevoEstado) => {
   // Lógica para desactivar la publicación
-  console.log("Desactivando publicación:", publicacionData);
+  //console.log("Desactivando publicación:", publicacionData);
   abrirModalGuardando();
   // hacer una llamada a la API para desactivar
 
@@ -611,11 +611,11 @@ const desactivarPublicacion = async (publicacionData, nuevoEstado) => {
     }
   );
 
-  console.log("Respuesta status:", response.status);
+  //console.log("Respuesta status:", response.status);
 
   if (!response.ok) {
     const errorData = await response.json();
-    console.error("Error en respuesta:", errorData);
+    //console.error("Error en respuesta:", errorData);
     alertData.value = {
       type: "error",
       mensaje:
@@ -632,7 +632,7 @@ const desactivarPublicacion = async (publicacionData, nuevoEstado) => {
   }
 
   const resultado = await response.json();
-  console.log("Resultado:", resultado);
+  //console.log("Resultado:", resultado);
 
   await obtenerPublicaciones();
   cerrarModalGuardando();
@@ -646,7 +646,7 @@ const desactivarPublicacion = async (publicacionData, nuevoEstado) => {
   alert.value = true;
   setTimeout(() => (alert.value = false), 5000);
 
-  console.log("=== PUBLICACIÓN DESACTIVADA EXITOSAMENTE ===");
+  //console.log("=== PUBLICACIÓN DESACTIVADA EXITOSAMENTE ===");
 };
 
 onMounted(() => {

@@ -125,7 +125,7 @@ const formatDate = (fecha) => {
 const obtenerInvestigacion = async () => {
   try {
     const res = await fetch(`/api/investigaciones/${props.id}`)
-    console.log('Respuesta del servidor:', res)
+    //console.log('Respuesta del servidor:', res)
     if (!res.ok) {
       if (res.status === 404) {
         error.value = 'Investigación no encontrada.'

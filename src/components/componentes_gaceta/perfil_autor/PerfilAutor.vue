@@ -224,7 +224,7 @@ const obtenerAutor = async () => {
     // Después de obtener el autor, cargar sus publicaciones
     await obtenerPublicaciones();
   } catch (error) {
-    console.error("Error al obtener autor:", error);
+    // console.error("Error al obtener autor:", error);
     autor.value = null;
   } finally {
     cargandoAutor.value = false;
@@ -249,13 +249,13 @@ const obtenerPublicaciones = async () => {
         );
 
         if (!response.ok) {
-          console.error(`Error al obtener publicación ${publicacion.id}`);
+          // console.error(`Error al obtener publicación ${publicacion.id}`);
           return null;
         }
 
         return await response.json();
       } catch (error) {
-        console.error(`Error al obtener publicación ${publicacion.id}:`, error);
+        // console.error(`Error al obtener publicación ${publicacion.id}:`, error);
         return null;
       }
     });
@@ -265,7 +265,7 @@ const obtenerPublicaciones = async () => {
     // Filtrar publicaciones nulas (las que no se pudieron obtener)
     todasLasPublicaciones.value = resultados.filter((pub) => pub !== null);
   } catch (error) {
-    console.error("Error al obtener publicaciones:", error);
+    // console.error("Error al obtener publicaciones:", error);
     todasLasPublicaciones.value = [];
   } finally {
     cargandoPublicaciones.value = false;
@@ -277,12 +277,10 @@ const cargarMas = () => {
   paginaActual.value++;
 };
 
-// Lifecycle
 onMounted(() => {
   obtenerAutor();
 });
 </script>
 
 <style scoped>
-/* Agrega estilos personalizados si es necesario */
 </style>

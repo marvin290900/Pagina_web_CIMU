@@ -36,7 +36,7 @@ export async function findUserByEmail(email) {
 
     return response.data.docs[0] || null;
   } catch (error) {
-    console.error('Error buscando usuario:', error);
+    // console.error('Error buscando usuario:', error);
     return null;
   }
 }
@@ -58,14 +58,14 @@ export async function initDatabases() {
   try {
     try {
       await couch.put('/users');
-      console.log('DB "users" creada');
+      // console.log('DB "users" creada');
     } catch (e) {
       if (e.response?.status !== 412) throw e;
     }
 
     try {
       await couch.put('/sessions');
-      console.log('DB "sessions" creada');
+      // console.log('DB "sessions" creada');
     } catch (e) {
       if (e.response?.status !== 412) throw e;
     }
@@ -80,7 +80,7 @@ export async function initDatabases() {
       name: 'token-index'
     });
 
-    console.log('✅ Bases de datos inicializadas');
+    // console.log('Bases de datos inicializadas');
   } catch (error) {
     console.error('Error:', error);
   }

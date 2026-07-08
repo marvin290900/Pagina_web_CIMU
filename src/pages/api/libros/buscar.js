@@ -21,7 +21,7 @@ export async function GET({ request }) {
       },
     });
   } catch (error) {
-    console.error("Error al obtener publicación por ID:", error.message);
+    // console.error("Error al obtener publicación por ID:", error.message);
     return new Response(
       JSON.stringify({ error: "Error al obtener publicación" }),
       {

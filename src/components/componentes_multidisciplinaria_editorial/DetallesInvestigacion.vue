@@ -90,7 +90,7 @@
             Compartir
           </button>
         </div>
-        <!-- name of each tab group should be unique -->
+       
         <div class="tabs tabs-border">
           <input
             type="radio"
@@ -177,7 +177,7 @@ const actualizarEstadistica = async (tipo) => {
   try {
     await fetch(`/api/libros/actualizar-vistas?id=${props.id}&tipo=${tipo}`);
   } catch (error) {
-    console.error(`Error al actualizar ${tipo}:`, error);
+    console.error("Error al actualizar", error);
   }
 };
 
@@ -185,9 +185,9 @@ const actualizarEstadistica = async (tipo) => {
 
 onMounted(() => {
   fetch(`/api/libros/buscar?id=${props.id}`)
-    .then((response) => response.json()) // <-- importante
+    .then((response) => response.json()) // 
     .then((dataResponse) => {
-      console.log(dataResponse); // ahora sí: la data ya parseada
+      // console.log(dataResponse); 
       data.value = dataResponse;
       fechaPublicacion.value = new Date(data.value.fecha_publicacion);
       fechaPublicacion.value =

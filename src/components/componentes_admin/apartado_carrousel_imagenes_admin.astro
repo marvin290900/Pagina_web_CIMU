@@ -237,15 +237,15 @@
   const btnMostrarModal = document.getElementById("btnMostrarModalAgregar");
   const modalAgregar = document.getElementById("modalAgregarImagen");
   const modalConfirmarAgregar = document.getElementById(
-    "modalConfirmarAgregar"
+    "modalConfirmarAgregar",
   );
   const btnCerrarModal = document.getElementById("btnCerrarModalAgregar");
   const btnCancelarAgregar = document.getElementById("btnCancelarAgregar");
   const btnAbrirConfirmarGuardar = document.getElementById(
-    "btnAbrirConfirmarGuardar"
+    "btnAbrirConfirmarGuardar",
   );
   const btnCancelarConfirmarAgregar = document.getElementById(
-    "btnCancelarConfirmarAgregar"
+    "btnCancelarConfirmarAgregar",
   );
   const btnConfirmarAgregar = document.getElementById("btnConfirmarAgregar");
 
@@ -300,7 +300,7 @@
     // Validar extensión
     const fileName = file.name.toLowerCase();
     const hasValidExtension = validExtensions.some((ext) =>
-      fileName.endsWith(ext)
+      fileName.endsWith(ext),
     );
     if (!hasValidExtension) {
       alert("La imagen debe tener extensión .png o .jpg");
@@ -334,7 +334,7 @@
   // Validación antes de mostrar modal de confirmación
   btnAbrirConfirmarGuardar.addEventListener("click", () => {
     const form = document.getElementById(
-      "formAgregarImagen"
+      "formAgregarImagen",
     ) as HTMLFormElement;
     if (!form.checkValidity()) {
       form.reportValidity(); // muestra mensajes nativos de error
@@ -347,7 +347,7 @@
 
   // Botón cancelar en modal de confirmación
   btnCancelarConfirmarAgregar.addEventListener("click", () =>
-    modalConfirmarAgregar.close()
+    modalConfirmarAgregar.close(),
   );
 
   function generarIdAleatorio(longitud = 10) {
@@ -435,11 +435,11 @@
         limpiarFormularioAgregar();
         await cargarImagenes();
       } else {
-        showMessage("❌ Error al agregar : " + result.error, "error");
+        showMessage("Error al agregar : " + result.error, "error");
       }
     } catch (err) {
-      console.error("Error al enviar:", err);
-      showMessage("❌ Error al agregar", "error");
+      //console.error("Error al enviar:", err);
+      showMessage("Error al agregar", "error");
     } finally {
       ocultarSpinnerEnBoton(boton);
     }
@@ -448,7 +448,7 @@
   function limpiarFormularioAgregar() {
     // --- limpiar formulario e imagen ---
     const form = document.getElementById(
-      "formAgregarImagen"
+      "formAgregarImagen",
     ) as HTMLFormElement;
     form.reset(); // limpia el input file
     previewImagen.src = ""; // limpia la preview
@@ -467,10 +467,10 @@
   const btnCerrarModalEditar = document.getElementById("btnCerrarModalEditar");
   const btnCancelarEditar = document.getElementById("btnCancelarEditar");
   const btnAbrirConfirmarEditar = document.getElementById(
-    "btnAbrirConfirmarEditar"
+    "btnAbrirConfirmarEditar",
   );
   const btnCancelarConfirmarEditar = document.getElementById(
-    "btnCancelarConfirmarEditar"
+    "btnCancelarConfirmarEditar",
   );
   const btnConfirmarEditar = document.getElementById("btnConfirmarEditar");
 
@@ -479,11 +479,11 @@
   const inputNuevaImagen = document.getElementById("fotoEditar");
 
   const contenedorImagenActual = document.getElementById(
-    "contenedorImagenActual"
+    "contenedorImagenActual",
   );
   const contenedorSubirNueva = document.getElementById("contenedorSubirNueva");
   const btnEliminarImagenActual = document.getElementById(
-    "btnEliminarImagenActual"
+    "btnEliminarImagenActual",
   );
 
   let imagenEnEdicion: any = null;
@@ -550,7 +550,7 @@
     // Validar extensión
     const fileName = file.name.toLowerCase();
     const hasValidExtension = validExtensions.some((ext) =>
-      fileName.endsWith(ext)
+      fileName.endsWith(ext),
     );
     if (!hasValidExtension) {
       alert("La imagen debe tener extensión .png o .jpg");
@@ -570,7 +570,7 @@
     // si no hay imagen actual y tampoco nueva, no dejar
     if (marcarEliminarImagenActual && !inputNuevaImagen.files?.length) {
       const form = document.getElementById(
-        "formEditarImagen"
+        "formEditarImagen",
       ) as HTMLFormElement;
       if (!form.checkValidity()) {
         form.reportValidity(); // muestra mensajes nativos de error
@@ -582,7 +582,7 @@
 
   // Cancelar confirmación
   btnCancelarConfirmarEditar.addEventListener("click", () =>
-    modalConfirmarEditar.close()
+    modalConfirmarEditar.close(),
   );
 
   btnConfirmarEditar.addEventListener("click", async () => {
@@ -631,7 +631,7 @@
 
       const result = await res.json();
       if (result.ok) {
-        // ✅ Si hubo reemplazo, borrar del servidor la foto anterior
+        // Si hubo reemplazo, borrar del servidor la foto anterior
         if (
           reemplazo &&
           imagenEnEdicion.foto &&
@@ -644,16 +644,16 @@
           });
         }
 
-        showMessage("✅ Imagen actualizada correctamente", "success");
+        showMessage(" Imagen actualizada correctamente", "success");
         modalEditar.close();
         modalConfirmarEditar.close();
         await cargarImagenes();
       } else {
-        showMessage("❌ Error al actualizar: " + result.error, "error");
+        showMessage("Error al actualizar: " + result.error, "error");
       }
     } catch (err) {
-      console.error("Error al editar:", err);
-      showMessage("❌ Error al editar imagen", "error");
+      //console.error("Error al editar:", err);
+      showMessage("Error al editar imagen", "error");
     } finally {
       ocultarSpinnerEnBoton(boton);
     }
@@ -682,12 +682,12 @@
     mostrarSpinnerEnBoton(boton);
 
     if (!idImagenAEliminar) {
-      showMessage("❌ ID inválido para eliminar", "error");
+      showMessage("ID inválido para eliminar", "error");
       ocultarSpinnerEnBoton(boton);
       return;
     }
 
-    // 🔥 Llamada a API para eliminar imagen
+    // Llamada a API para eliminar imagen
     await eliminarImagenCarrusel(idImagenAEliminar);
 
     // Limpiamos el id
@@ -714,16 +714,16 @@
       const resultado = await respuesta.json();
 
       if (resultado.ok) {
-        showMessage("✅ Imagen eliminada correctamente", "success");
+        showMessage("Imagen eliminada correctamente", "success");
       } else {
         showMessage(
-          "❌ Error al eliminar: " + (resultado.error || "Desconocido"),
-          "error"
+          "Error al eliminar: " + (resultado.error || "Desconocido"),
+          "error",
         );
       }
     } catch (err) {
-      console.error("❌ Error en eliminarImagenCarrusel:", err);
-      showMessage("❌ Error al conectar con el servidor", "error");
+      //console.error( "Error en eliminarImagenCarrusel:", err);
+      showMessage("Error al conectar con el servidor", "error");
     }
   }
 
@@ -770,7 +770,7 @@
       btnEliminar.className =
         "px-3 mdi mdi-delete-outline text-red-500 text-3xl transition-transform duration-200 hover:scale-125 hover:text-red-600";
       btnEliminar.addEventListener("click", () =>
-        prepararEliminarImagen(img._id)
+        prepararEliminarImagen(img._id),
       );
 
       botones.appendChild(btnEditar);

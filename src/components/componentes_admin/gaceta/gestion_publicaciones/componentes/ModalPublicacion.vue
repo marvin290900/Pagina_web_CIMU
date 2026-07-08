@@ -393,7 +393,7 @@ const cargarAutores = async () => {
 
     const data = await response.json();
     autores.value = data.rows.map((row) => row.doc);
-    console.log("Autores cargados:", autores.value.length);
+    //console.log("Autores cargados:", autores.value.length);
   } catch (error) {
     console.error("Error al cargar autores:", error);
   }
@@ -510,7 +510,7 @@ watch(
       // Establecer etiquetas como texto
       etiquetasTexto.value = nuevaPublicacion.etiquetas?.join(", ") || "";
 
-      console.log("Datos cargados para editar:", formData.value);
+      //console.log("Datos cargados para editar:", formData.value);
     } else {
       resetearFormulario();
     }
@@ -548,9 +548,9 @@ const handlePortadaSelect = async (event) => {
   try {
     formData.value.imagenes.portada.file = file;
     formData.value.imagenes.portada.url = URL.createObjectURL(file);
-    console.log("Portada seleccionada (pendiente de subir):", file.name);
+    //console.log("Portada seleccionada (pendiente de subir):", file.name);
   } catch (error) {
-    console.error("Error al procesar portada:", error);
+    //console.error("Error al procesar portada:", error);
     alertData.value = {
       type: "error",
       mensaje: `Error al procesar la imagen de portada: ${error.message}`,
@@ -604,7 +604,7 @@ const handleGaleriaSelect = async (event) => {
 
   // Si no quedó ningún archivo válido, detenemos
   if (archivosValidos.length === 0) {
-    console.log("No hay archivos válidos para subir.");
+    //console.log("No hay archivos válidos para subir.");
     if (galeriaInput.value) galeriaInput.value.value = "";
     return;
   }
@@ -628,7 +628,7 @@ const handleGaleriaSelect = async (event) => {
 
   // Si no hay espacio, salimos
   if (archivosASubir.length === 0) {
-    console.log("No hay espacio disponible en la galería.");
+    //console.log("No hay espacio disponible en la galería.");
     if (galeriaInput.value) galeriaInput.value.value = "";
     return;
   }
@@ -643,9 +643,9 @@ const handleGaleriaSelect = async (event) => {
       });
     }
 
-    console.log("Imágenes de galería seleccionadas (pendientes):", archivosASubir.length);
+    //console.log("Imágenes de galería seleccionadas (pendientes):", archivosASubir.length);
   } catch (error) {
-    console.error("Error al procesar galería:", error);
+    //console.error("Error al procesar galería:", error);
     alertData.value = {
       type: "error",
       mensaje: `Error al procesar las imágenes de la galería: ${error.message}`,
@@ -812,12 +812,12 @@ const guardar = async () => {
     }
     subiendoGaleria.value = false;
 
-    console.log("Guardando publicación:", formData.value);
+    //console.log("Guardando publicación:", formData.value);
 
     // Emitir evento con los datos
     emit("guardar", { ...formData.value });
   } catch (error) {
-    console.error("Error al guardar:", error);
+    //console.error("Error al guardar:", error);
     alertData.value = {
       type: "error",
       mensaje: `Error al guardar la publicación: ${error.message}`,

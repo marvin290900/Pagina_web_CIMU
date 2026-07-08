@@ -42,7 +42,7 @@ export async function DELETE({ request }) {
         await fs.promises.unlink(rutaAbsoluta);
       } catch (error) {
         if (error.code !== "ENOENT") {
-          console.error("Error eliminando archivo:", rutaRelativa, error);
+          // console.error("Error eliminando archivo:", rutaRelativa, error);
         }
       }
     };
@@ -82,10 +82,10 @@ export async function DELETE({ request }) {
               );
             }
           } catch (err) {
-            console.warn(
-              `⚠️ No se pudo eliminar publicación ${pub.id}:`,
-              err.message
-            );
+            // console.warn(
+            //   `No se pudo eliminar publicación ${pub.id}:`,
+            //   err.message
+            // );
           }
         })
       );
@@ -108,15 +108,15 @@ export async function DELETE({ request }) {
             );
           }
         } catch (err) {
-          console.warn("⚠️ No se pudo actualizar autor:", err.message);
+          // console.warn("No se pudo actualizar autor:", err.message);
         }
       }
     }
 
-    // 4️⃣ Eliminar imágenes del documento actual
+    // Eliminar imágenes del documento actual
     await eliminarImagenesDeDocumento(data);
 
-    // 5️⃣ Eliminar el documento principal
+    // Eliminar el documento principal
     const response = await couch.delete(
       `/cimu-gaceta-${coleccion}/${id}?rev=${rev}`
     );
@@ -137,7 +137,7 @@ export async function DELETE({ request }) {
       { status: 200, headers: { "Content-Type": "application/json" } }
     );
   } catch (error) {
-    console.error("❌ Error al eliminar documento:", error);
+    // console.error("Error al eliminar documento:", error);
     return new Response(
       JSON.stringify({
         error: "Error al eliminar documento",

@@ -16,7 +16,7 @@ export async function POST({ request }) {
     }
 
     const carpeta = formData.get('carpeta')?.toString().trim() || 'uploads';
-    console.log('Carpeta recibida:', carpeta);
+    //console.log('Carpeta recibida:', carpeta);
 
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);

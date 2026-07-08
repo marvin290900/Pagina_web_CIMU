@@ -15,30 +15,30 @@ const eliminarArchivo = (url) => {
     const relativePath = urlObj.pathname;
     const fullPath = path.join(BASE_PATH, relativePath);
 
-    console.log("      Intentando eliminar archivo:", fullPath);
+    // console.log("Intentando eliminar archivo:", fullPath);
 
     if (fs.existsSync(fullPath)) {
       fs.unlinkSync(fullPath);
-      console.log("      ✓ Archivo eliminado:", relativePath);
+      // console.log("Archivo eliminado:", relativePath);
       return true;
     } else {
-      console.log("      ⚠ Archivo no existe:", fullPath);
+      // console.log("Archivo no existe:", fullPath);
       return false;
     }
   } catch (error) {
-    console.error("      ✗ Error al eliminar archivo:", url, error.message);
+    // console.error("Error al eliminar archivo:", url, error.message);
     return false;
   }
 };
 
 export async function DELETE({ request }) {
-  console.log("=== API ELIMINAR LIBRO ===");
+  // console.log("=== API ELIMINAR LIBRO ===");
 
   try {
     const url = new URL(request.url);
     const id = url.searchParams.get("id");
 
-    console.log("1. ID del libro:", id);
+    // console.log("ID del libro:", id);
 
     if (!id) {
       return new Response(JSON.stringify({ error: "ID no proporcionado" }), {
@@ -61,18 +61,18 @@ export async function DELETE({ request }) {
     const autores = libro.autores || [];
     const rev = libro._rev;
 
-    console.log("2. Libro encontrado:", libro.titulo);
-    console.log(
-      "3. Autores del libro:",
-      autores.map((a) => a.nombre),
-    );
-    console.log("4. Archivos a eliminar:");
-    console.log("   - Portada:", libro.portada);
-    console.log("   - PDF:", libro.pdf_url);
-    console.log("   - Thumbnail:", libro.pdf_thumbnail);
+    // console.log("Libro encontrado:", libro.titulo);
+    // console.log(
+    //   "Autores del libro:",
+    //   autores.map((a) => a.nombre),
+    // );
+    // console.log("Archivos a eliminar:");
+    // console.log("Portada:", libro.portada);
+    // console.log("PDF:", libro.pdf_url);
+    // console.log("Thumbnail:", libro.pdf_thumbnail);
 
     // ELIMINAR ARCHIVOS DEL SERVIDOR
-    console.log("5. Eliminando archivos del servidor...");
+    // console.log("Eliminando archivos del servidor...");
     const archivosEliminados = [];
 
     if (libro.portada) {
@@ -96,10 +96,10 @@ export async function DELETE({ request }) {
       }
     }
 
-    console.log(`   Total archivos eliminados: ${archivosEliminados.length}`);
+    // console.log(`Total archivos eliminados: ${archivosEliminados.length}`);
 
     // Eliminar el libro de cada investigador
-    console.log("6. Eliminando libro de los investigadores...");
+    // console.log("Eliminando libro de los investigadores...");
     const resultadosInvestigadores = [];
 
     for (const autor of autores) {
@@ -117,13 +117,13 @@ export async function DELETE({ request }) {
 
             if (librosOriginales !== librosNuevos) {
               await couch.put(`/investigadores/${autor.id}`, inv);
-              console.log(`   ✓ Eliminado de ${autor.nombre}`);
+              // console.log(`Eliminado de ${autor.nombre}`);
               resultadosInvestigadores.push({
                 autor: autor.nombre,
                 eliminado: true,
               });
             } else {
-              console.log(`   ⚠ No se encontró en ${autor.nombre}`);
+              // console.log(`No se encontró en ${autor.nombre}`);
               resultadosInvestigadores.push({
                 autor: autor.nombre,
                 eliminado: false,
@@ -143,7 +143,7 @@ export async function DELETE({ request }) {
     }
 
     // Eliminar el libro de la base de datos
-    console.log("7. Eliminando libro de investigadores...");
+    // console.log("Eliminando libro de investigadores...");
     const responseEliminar = await couch.delete(
       `/cimu-libros/${id}?rev=${rev}`,
     );
@@ -161,8 +161,8 @@ export async function DELETE({ request }) {
       );
     }
 
-    console.log("8. Libro eliminado exitosamente");
-    console.log("=== FIN API ELIMINAR LIBRO ===");
+    // console.log("Libro eliminado exitosamente");
+    // console.log("=== FIN API ELIMINAR LIBRO ===");
 
     return new Response(
       JSON.stringify({
@@ -185,8 +185,8 @@ export async function DELETE({ request }) {
       },
     );
   } catch (error) {
-    console.error("❌ Error al eliminar libro:", error);
-    console.error("Stack:", error.stack);
+    // console.error("Error al eliminar libro:", error);
+    // console.error("Stack:", error.stack);
     return new Response(
       JSON.stringify({
         ok: false,

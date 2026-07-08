@@ -28,7 +28,7 @@ export async function PUT({ request }) {
 
     // Obtener los datos del body
     const datos = await request.json();
-    console.log("Datos recibidos:", datos);
+    // console.log("Datos recibidos:", datos);
 
     if (!datos || Object.keys(datos).length === 0) {
       return new Response(
@@ -99,7 +99,7 @@ export async function PUT({ request }) {
         coleccion: datos.coleccion,
       });
 
-      console.log("Publicación agregada");
+      //   console.log("Publicación agregada");
     }
 
     // ELIMINAR publicación
@@ -134,7 +134,7 @@ export async function PUT({ request }) {
         );
       }
 
-      console.log("Publicación eliminada");
+      //   console.log("Publicación eliminada");
     }
 
     // Actualizar en CouchDB
@@ -156,18 +156,17 @@ export async function PUT({ request }) {
       );
     }
 
-    console.log("Documento actualizado exitosamente");
-    console.log(
-      "Total publicaciones:",
-      documentoActualizado.publicaciones.length
-    );
+    // console.log("Documento actualizado exitosamente");
+    // console.log(
+    //   "Total publicaciones:",
+    //   documentoActualizado.publicaciones.length
+    // );
 
     return new Response(
       JSON.stringify({
         ok: true,
-        mensaje: `Publicación ${
-          accion === "agregar" ? "agregada" : "eliminada"
-        } exitosamente`,
+        mensaje: `Publicación ${accion === "agregar" ? "agregada" : "eliminada"
+          } exitosamente`,
         total_publicaciones: documentoActualizado.publicaciones.length,
         data: {
           id: response.data.id,

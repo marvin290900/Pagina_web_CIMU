@@ -154,7 +154,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Ocultar scrollbar para un diseño más limpio */
+/* Ocultar scrollbar para un diseño mas limpio */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }

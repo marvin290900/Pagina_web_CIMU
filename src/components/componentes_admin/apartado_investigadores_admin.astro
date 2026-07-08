@@ -787,84 +787,84 @@
 
   <script>
     const modalConfirmarAgregar = document.getElementById(
-      "modalConfirmarAgregar"
+      "modalConfirmarAgregar",
     ) as HTMLDialogElement;
     const btnAbrirConfirmarGuardarAgregar = document.getElementById(
-      "btnAbrirConfirmarGuardarAgregar"
+      "btnAbrirConfirmarGuardarAgregar",
     ) as HTMLButtonElement;
     const btnCancelarConfirmarAgregar = document.getElementById(
-      "btnCancelarConfirmarAgregar"
+      "btnCancelarConfirmarAgregar",
     ) as HTMLButtonElement;
     const btnConfirmarAgregar = document.getElementById(
-      "btnConfirmarAgregar"
+      "btnConfirmarAgregar",
     ) as HTMLButtonElement;
     const btnCancelarAgregar = document.getElementById(
-      "btnCancelarAgregar"
+      "btnCancelarAgregar",
     ) as HTMLButtonElement;
     const modalAgregar = document.getElementById(
-      "modalAgregarInvestigador"
+      "modalAgregarInvestigador",
     ) as HTMLDialogElement;
     const btnMostrarModalAgregar = document.getElementById(
-      "btnMostrarModalAgregar"
+      "btnMostrarModalAgregar",
     ) as HTMLButtonElement;
     const btnCerrarModalAgregar = document.getElementById(
-      "btnCerrarModalAgregar"
+      "btnCerrarModalAgregar",
     ) as HTMLButtonElement;
     const modalEditar = document.getElementById(
-      "modalEditarInvestigador"
+      "modalEditarInvestigador",
     ) as HTMLDialogElement;
     const form = document.getElementById(
-      "formAgregarInvestigador"
+      "formAgregarInvestigador",
     ) as HTMLFormElement;
     const formEditar = document.getElementById(
-      "formEditarInvestigador"
+      "formEditarInvestigador",
     ) as HTMLFormElement;
     const btnCerrarModalEditar = document.getElementById(
-      "btnCerrarModalEditar"
+      "btnCerrarModalEditar",
     ) as HTMLButtonElement;
     const btnCancelarEdicion = document.getElementById(
-      "btnCancelarEdicion"
+      "btnCancelarEdicion",
     ) as HTMLButtonElement;
     const btnAbrirConfirmarGuardar = document.getElementById(
-      "btnAbrirConfirmarGuardar"
+      "btnAbrirConfirmarGuardar",
     ) as HTMLButtonElement;
 
     const modalConfirmarGuardar = document.getElementById(
-      "modalConfirmarGuardar"
+      "modalConfirmarGuardar",
     ) as HTMLDialogElement;
     const btnCancelarGuardar = document.getElementById(
-      "btnCancelarGuardar"
+      "btnCancelarGuardar",
     ) as HTMLButtonElement;
     const btnConfirmarGuardar = document.getElementById(
-      "btnConfirmarGuardar"
+      "btnConfirmarGuardar",
     ) as HTMLButtonElement;
 
     const modalConfirmarEliminar = document.getElementById(
-      "modalConfirmarEliminar"
+      "modalConfirmarEliminar",
     ) as HTMLDialogElement;
     const btnCancelarEliminar = document.getElementById(
-      "btnCancelarEliminar"
+      "btnCancelarEliminar",
     ) as HTMLButtonElement;
     const btnConfirmarEliminar = document.getElementById(
-      "btnConfirmarEliminar"
+      "btnConfirmarEliminar",
     ) as HTMLButtonElement;
 
     const listaInvestigadores = document.getElementById(
-      "listaInvestigadores"
+      "listaInvestigadores",
     ) as HTMLDivElement;
     const filtroCategoria = document.getElementById(
-      "filtroCategoria"
+      "filtroCategoria",
     ) as HTMLSelectElement;
     const filtroNombre = document.getElementById(
-      "filtroNombre"
+      "filtroNombre",
     ) as HTMLInputElement;
     const btnLimpiarFiltroNombre = document.getElementById(
-      "btnLimpiarFiltroNombre"
+      "btnLimpiarFiltroNombre",
     ) as HTMLButtonElement;
 
     const inputFoto = document.getElementById("foto") as HTMLInputElement;
     const previewFoto = document.getElementById(
-      "previewFoto"
+      "previewFoto",
     ) as HTMLImageElement;
 
     const inputCV = document.getElementById("cv") as HTMLInputElement;
@@ -923,43 +923,43 @@
         "btnAgregarAdquisicion",
         "adquisicionesContainer",
         "adquisiciones",
-        "Ingrese adscripción"
+        "Ingrese adscripción",
       );
       manejarAgregar(
         "btnAgregarReconocimiento",
         "reconocimientosContainer",
         "reconocimientos",
-        "Ingrese reconocimiento"
+        "Ingrese reconocimiento",
       );
       manejarAgregar(
         "btnAgregarEducacion",
         "educacionContainer",
         "educacion",
-        "Ingrese formación académica"
+        "Ingrese formación académica",
       );
       manejarAgregar(
         "btnAgregarRed",
         "redesContainer",
         "redes",
-        "Ingrese red de trabajo"
+        "Ingrese red de trabajo",
       );
       manejarAgregar(
         "btnAgregarTelefono",
         "telefonosContainer",
         "telefonos",
-        "Ingrese teléfono"
+        "Ingrese teléfono",
       );
       manejarAgregar(
         "btnAgregarOtroCorreo",
         "otrosCorreosContainer",
         "otrosCorreos",
-        "Ingrese otro correo"
+        "Ingrese otro correo",
       );
       manejarAgregar(
         "btnAgregarEspecialidad",
         "especialidadContainer",
         "especialidad",
-        "Ingrese especialidad"
+        "Ingrese especialidad",
       );
     });
 
@@ -1000,7 +1000,7 @@
 
     btnAbrirConfirmarGuardarAgregar.addEventListener("click", () => {
       const form = document.getElementById(
-        "formAgregarInvestigador"
+        "formAgregarInvestigador",
       ) as HTMLFormElement;
       if (!form.checkValidity()) {
         form.reportValidity(); // muestra mensajes nativos de error
@@ -1056,7 +1056,7 @@
       const fileName = file.name.toLowerCase();
       const validExtensions = [".png", ".jpg", ".jpeg"];
       const hasValidExtension = validExtensions.some((ext) =>
-        fileName.endsWith(ext)
+        fileName.endsWith(ext),
       );
 
       if (!hasValidExtension) {
@@ -1134,7 +1134,7 @@
           inputEmail.classList.add(
             "border",
             "border-red-500",
-            "focus:border-red-500"
+            "focus:border-red-500",
           );
           mensajeCorreo.classList.remove("hidden");
 
@@ -1147,7 +1147,7 @@
           inputEmail.classList.remove(
             "border",
             "border-red-500",
-            "focus:border-red-500"
+            "focus:border-red-500",
           );
           mensajeCorreo.classList.add("hidden");
         }
@@ -1156,7 +1156,7 @@
           inputEmail.classList.remove(
             "border",
             "border-red-500",
-            "focus:border-red-500"
+            "focus:border-red-500",
           );
           mensajeCorreo.classList.add("hidden");
         });
@@ -1284,7 +1284,7 @@
           showMessage("Error al agregar: " + result.error, "error");
         }
       } catch (err) {
-        console.error("Error al enviar:", err);
+        //console.error("Error al enviar:", err);
         showMessage("Error al agregar", "error");
       } finally {
         ocultarSpinnerEnBoton(boton);
@@ -1293,13 +1293,13 @@
 
     function limpiarFormularioAgregar() {
       const form = document.getElementById(
-        "formAgregarInvestigador"
+        "formAgregarInvestigador",
       ) as HTMLFormElement;
       form.reset(); // Limpia los campos automáticamente
 
       // Ocultar la imagen de previsualización
       const previewFoto = document.getElementById(
-        "previewFoto"
+        "previewFoto",
       ) as HTMLImageElement;
       previewFoto.src = "";
       previewFoto.classList.add("hidden");
@@ -1377,7 +1377,7 @@
         "btnAgregarTelefonoEditar",
         "telefonosEditarContainer",
         "telefonosEditar",
-        "Ingrese teléfono"
+        "Ingrese teléfono",
       );
 
       // Otros correos
@@ -1385,7 +1385,7 @@
         "btnAgregarOtroCorreoEditar",
         "otrosCorreosEditarContainer",
         "otrosCorreosEditar",
-        "Ingrese otro correo"
+        "Ingrese otro correo",
       );
 
       // Adscripciones
@@ -1393,7 +1393,7 @@
         "btnAgregarAdquisicionEditar",
         "adquisicionesEditarContainer",
         "adquisicionesEditar",
-        "Ingrese adscripción"
+        "Ingrese adscripción",
       );
 
       // Especialidades
@@ -1401,7 +1401,7 @@
         "btnAgregarEspecialidadEditar",
         "especialidadEditarContainer",
         "especialidadEditar",
-        "Ingrese especialidad"
+        "Ingrese especialidad",
       );
 
       // Reconocimientos
@@ -1409,7 +1409,7 @@
         "btnAgregarReconocimientoEditar",
         "reconocimientosEditarContainer",
         "reconocimientosEditar",
-        "Ingrese reconocimiento"
+        "Ingrese reconocimiento",
       );
 
       // Educación
@@ -1417,7 +1417,7 @@
         "btnAgregarEducacionEditar",
         "educacionEditarContainer",
         "educacionEditar",
-        "Ingrese formación académica"
+        "Ingrese formación académica",
       );
 
       // Redes de trabajo
@@ -1425,15 +1425,15 @@
         "btnAgregarRedEditar",
         "redesEditarContainer",
         "redesEditar",
-        "Ingrese red de trabajo"
+        "Ingrese red de trabajo",
       );
 
       // Redes sociales (nombre + URL)
       const btnAgregarRedSocial = document.getElementById(
-        "btnAgregarRedSocialEditar"
+        "btnAgregarRedSocialEditar",
       );
       const containerRedes = document.getElementById(
-        "redesSocialesEditarContainer"
+        "redesSocialesEditarContainer",
       );
 
       btnAgregarRedSocial.addEventListener("click", () => {
@@ -1463,7 +1463,7 @@
 
     btnAbrirConfirmarGuardar.addEventListener("click", () => {
       const form = document.getElementById(
-        "formEditarInvestigador"
+        "formEditarInvestigador",
       ) as HTMLFormElement;
       if (!form.checkValidity()) {
         form.reportValidity(); // muestra mensajes nativos de error
@@ -1496,7 +1496,7 @@
     document.getElementById("edit_foto").addEventListener("change", (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       const preview = document.getElementById(
-        "previewFotoCambiar"
+        "previewFotoCambiar",
       ) as HTMLImageElement;
 
       if (!file) {
@@ -1529,7 +1529,7 @@
       const fileName = file.name.toLowerCase();
       const validExtensions = [".png", ".jpg", ".jpeg"];
       const hasValidExtension = validExtensions.some((ext) =>
-        fileName.endsWith(ext)
+        fileName.endsWith(ext),
       );
 
       if (!hasValidExtension) {
@@ -1549,7 +1549,7 @@
     document.getElementById("edit_cv").addEventListener("change", (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       const preview = document.getElementById(
-        "previewCVCambiar"
+        "previewCVCambiar",
       ) as HTMLIFrameElement;
 
       if (!file) {
@@ -1648,7 +1648,7 @@
 
       // Redes sociales (nombre + url)
       const redesContainer = document.getElementById(
-        "redesSocialesEditarContainer"
+        "redesSocialesEditarContainer",
       );
       redesContainer.innerHTML = "";
 
@@ -1747,25 +1747,25 @@
 
       // Campos dinámicos
       actualizado.telefonos = obtenerValoresDinamicos(
-        "telefonosEditarContainer"
+        "telefonosEditarContainer",
       );
       actualizado.otrosCorreos = obtenerValoresDinamicos(
-        "otrosCorreosEditarContainer"
+        "otrosCorreosEditarContainer",
       );
       actualizado.adscripciones = obtenerValoresDinamicos(
-        "adquisicionesEditarContainer"
+        "adquisicionesEditarContainer",
       );
       actualizado.especialidad = obtenerValoresDinamicos(
-        "especialidadEditarContainer"
+        "especialidadEditarContainer",
       );
       actualizado.reconocimientos = obtenerValoresDinamicos(
-        "reconocimientosEditarContainer"
+        "reconocimientosEditarContainer",
       );
       actualizado.educacion = obtenerValoresDinamicos(
-        "educacionEditarContainer"
+        "educacionEditarContainer",
       );
       actualizado.redesTrabajo = obtenerValoresDinamicos(
-        "redesEditarContainer"
+        "redesEditarContainer",
       );
 
       // Redes sociales (nombre + url)
@@ -1844,7 +1844,7 @@
 
         const result = await res.json();
         if (result.ok) {
-          // ✅ Aquí puedes eliminar archivos antiguos si fueron reemplazados
+          // Aquí puedes eliminar archivos antiguos si fueron reemplazados
           if (
             (eliminarFoto || nuevaFoto) &&
             investigador.foto &&
@@ -1857,7 +1857,7 @@
             });
           }
 
-          // ✅ Eliminar CV anterior si fue reemplazado
+          // Eliminar CV anterior si fue reemplazado
           if (
             (eliminarCV || nuevoCV) &&
             investigador.cv &&
@@ -1878,7 +1878,7 @@
           showMessage("Error al guardar", "error");
         }
       } catch (err) {
-        console.error("Error al guardar:", err);
+        //console.error("Error al guardar:", err);
         showMessage("Error al guardar", "error");
       } finally {
         ocultarSpinnerEnBoton(boton);
@@ -1956,7 +1956,7 @@
 
     function mostrarModalInvestigador(inv) {
       const modal = document.getElementById(
-        "modalInvestigador"
+        "modalInvestigador",
       ) as HTMLDialogElement;
       document.getElementById("modalNombre")!.textContent = inv.nombre;
       document.getElementById("modalCorreo")!.textContent = inv.email;
@@ -2028,8 +2028,7 @@
           ) {
             iconClass = "mdi mdi-twitter";
             color = "text-sky-500";
-          } else if (
-            hostname.includes("orcid.org")) {
+          } else if (hostname.includes("orcid.org")) {
             iconClass = "mdi mdi-account-circle";
             color = "text-[#A6CE39]";
           } else if (hostname.includes("linkedin.com")) {
@@ -2194,7 +2193,7 @@
         botones.className = "flex flex-col sm:flex-row gap-2 ";
 
         const btnEditar = document.createElement("button");
-        btnEditar.textContent = '';
+        btnEditar.textContent = "";
         btnEditar.className =
           "px-3 mdi mdi-square-edit-outline text-gray-800 text-3xl transition-transform duration-200 hover:scale-125 hover:text-gray-600";
         btnEditar.addEventListener("click", () => editarInvestigador(inv._id));
@@ -2204,7 +2203,7 @@
         btnEliminar.className =
           "px-3 mdi mdi-delete-outline text-red-500 text-3xl transition-transform duration-200 hover:scale-125 hover:text-red-600";
         btnEliminar.addEventListener("click", () =>
-          prepararEliminarInvestigador(inv._id)
+          prepararEliminarInvestigador(inv._id),
         );
 
         botones.appendChild(btnEditar);

@@ -54,7 +54,7 @@ export async function GET({ request }) {
       }
     );
   } catch (error) {
-    console.error("Error al actualizar estadísticas del libro:", error.message);
+    // console.error("Error al actualizar estadísticas del libro:", error.message);
     return new Response(
       JSON.stringify({
         error: "Error interno al actualizar estadísticas",
