@@ -1,61 +1,17 @@
-import { couch } from "../../../lib/couchDB";
-
-export async function GET({ request }) {
+import { z } from 'zod';
+import { couch } from '../../../lib/couchDB.js';
+import { can } from '../../../lib/security/roles.js';
+import { audit } from '../../../lib/security/audit.js';
+import { json, errorResponse, HttpError } from '../../../lib/security/http.js';
+export async function PATCH({ request, locals }) {
   try {
-    const url = new URL(request.url);
-    const id = url.searchParams.get("id");
-    const estado = url.searchParams.get("estado");
-
-    if (!id) {
-      return new Response(JSON.stringify({ error: "ID no proporcionada" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
-    // Obtener el autor
-    const { data: autor } = await couch.get(`/cimu-gaceta-autores/${id}`);
-
-    // Cambiar el estado
-    autor.estado = estado === "activo" ? "inactivo" : "activo";
-
-    // Procesar publicaciones del autor
-    if (Array.isArray(autor.publicaciones)) {
-      await Promise.all(
-        autor.publicaciones.map(async (publicacion) => {
-          try {
-            const { data: pub } = await couch.get(
-              `/cimu-gaceta-${publicacion.tipo}/${publicacion.id}`
-            );
-            pub.estado = autor.estado; // sincroniza estado con el autor
-            await couch.put(
-              `/cimu-gaceta-${publicacion.tipo}/${publicacion.id}`,
-              pub
-            );
-          } catch (err) {
-            // console.warn(`No se encontró publicación ${publicacion.id}`);
-          }
-        })
-      );
-    }
-
-    // Guardar autor actualizado
-    await couch.put(`/cimu-gaceta-autores/${id}`, autor);
-
-    return new Response(
-      JSON.stringify({
-        message: "Autor y publicaciones actualizados correctamente",
-      }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
-    );
-  } catch (error) {
-    // console.error("Error al actualizar autor:", error.message);
-    return new Response(
-      JSON.stringify({
-        error: "Error al actualizar autor",
-        mensaje: error.message,
-      }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
-  }
+    if (!can(locals.user, 'autores.manage')) throw new HttpError(403, 'Acceso denegado');
+    const input = z.object({ id: z.string().min(1), rev: z.string().min(1), estado: z.enum(['activo', 'inactivo']) }).strict().parse(await request.json());
+    const path = `/cimu-gaceta-autores/${encodeURIComponent(input.id)}`;
+    const { data: doc } = await couch.get(path);
+    if (doc._rev !== input.rev) throw new HttpError(409, 'El autor cambió. Recarga la lista');
+    await couch.put(path, { ...doc, estado: input.estado });
+    await audit(locals.user.id, 'authors.status', input.id, { estado: input.estado });
+    return json({ success: true }); // Publicaciones keep their own editorial state.
+  } catch (error) { return errorResponse(error); }
 }

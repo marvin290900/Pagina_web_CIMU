@@ -1,6 +1,8 @@
 ---
 // src/pages/investigacion/detalle/[id].astro
 import Layout from '../../../layouts/Layout.astro';
+import { getCatalog,publicCatalog } from '../../../lib/security/catalog.js';
+import { isPublished } from '../../../lib/security/editorial.js';
 
 const { id } = Astro.params;
 
@@ -20,14 +22,9 @@ let investigacion = {
 let error = false;
 
 try {
-  const res = await fetch(`http://localhost:4321/api/investigaciones/${id}`);
-  const response = await res.json();
-  
-  if (response.ok && response.data) {
-    investigacion = response.data;
-  } else {
-    error = true;
-  }
+  const doc = await getCatalog('investigaciones',id);
+  if (isPublished(doc)) investigacion = publicCatalog(doc,'investigaciones');
+  else error = true;
 } catch (err) {
   console.error("Error al cargar investigación:", err);
   error = true;

@@ -1,3 +1,4 @@
+import { researcherPublications } from './security/catalog.js';
 import { couch } from "./couchDB.js";
 
 const DB_NAME = "investigadores";
@@ -7,7 +8,7 @@ export async function getInvestigadoresDirectivos() {
     const response = await couch.post(`/${DB_NAME}/_find`, {
       selector: { type: "investigador", categoria: "Directivo" },
     });
-    return response.data.docs;
+    return await researcherPublications(response.data.docs);
   } catch (error) {
     // console.error("Error al obtener investigadores:", error);
     return [];
@@ -19,7 +20,7 @@ export async function getInvestigadoresPasantes() {
     const response = await couch.post(`/${DB_NAME}/_find`, {
       selector: { type: "investigador", categoria: "Investigador_Pasante" },
     });
-    return response.data.docs;
+    return await researcherPublications(response.data.docs);
   } catch (error) {
     // console.error("Error al obtener investigadores:", error);
     return [];
@@ -31,7 +32,7 @@ export async function getInvestigadoresExternos() {
     const response = await couch.post(`/${DB_NAME}/_find`, {
       selector: { type: "investigador", categoria: "Investigador_Externo" },
     });
-    return response.data.docs;
+    return await researcherPublications(response.data.docs);
   } catch (error) {
     // console.error("Error al obtener investigadores:", error);
     return [];
@@ -42,7 +43,7 @@ export async function getInvestigadoresExternos() {
 export async function getInvestigadorPorId(id) {
   try {
     const response = await couch.get(`/${DB_NAME}/${id}`);
-    return response.data;
+    return (await researcherPublications([response.data]))[0];
   } catch (error) {
     // console.error("Error al obtener investigador:", error);
     return null;
@@ -54,7 +55,7 @@ export async function getTodosLosInvestigadores() {
     const response = await couch.post(`/${DB_NAME}/_find`, {
       selector: { type: "investigador" },
     });
-    return response.data.docs;
+    return await researcherPublications(response.data.docs);
   } catch (error) {
     // console.error("Error al obtener todos los investigadores:", error);
     return [];

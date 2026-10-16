@@ -5,13 +5,13 @@
       <div class="flex gap-3">
         <button
           class="btn btn-ghost text-primary"
-          @click="abrirModalColecciones"
+          v-if="can(currentUser, 'libros.manage')" @click="abrirModalColecciones"
         >
           <span class="mdi mdi-text-box-edit text-xl"></span>
           Editar Colecciones
         </button>
 
-        <button class="btn btn-primary" @click="abrirModalNuevo">
+        <button class="btn btn-primary" v-if="can(currentUser, 'libros.create')" @click="abrirModalNuevo">
           <span class="mdi mdi-plus text-xl"></span>
           Agregar Libro
         </button>
@@ -38,7 +38,7 @@
             <th>Colección</th>
             <th>Páginas</th>
             <th>Autores</th>
-            <th>Acciones</th>
+            <th>Acciones y estado</th>
           </tr>
         </thead>
         <tbody>
@@ -107,7 +107,7 @@
                 </div>
               </div>
             </td>
-            <td class="flex gap-2">
+            <td class="flex gap-2"><EstadoEditorial :user="currentUser" :doc="libro" module="libros" @changed="obtenerLibros" />
               <a
                 v-if="libro.pdf_url"
                 :href="libro.pdf_url"
@@ -119,13 +119,13 @@
               </a>
               <button
                 class="btn btn-soft btn-primary btn-sm"
-                @click="editarLibro(libro)"
+                v-if="libro.editorialStatus === 'borrador' && canEditContent(currentUser, 'libros', libro)" @click="editarLibro(libro)"
               >
                 <span class="mdi mdi-pencil"></span>
               </button>
               <button
                 class="btn btn-soft btn-error btn-sm"
-                @click="eliminarLibro(libro._id)"
+                v-if="false" @click="eliminarLibro(libro._id)"
               >
                 <span class="mdi mdi-delete"></span>
               </button>
@@ -290,10 +290,14 @@
 </template>
 
 <script setup>
+import EstadoEditorial from '../EstadoEditorial.vue';
+import { can,canEditContent } from '../../../lib/security/roles.js';
+
 import { onMounted, ref, computed } from "vue";
 import ModalLibros from "./componentes_libros/ModalLibros.vue";
 import Alert from "../../alert/Alert.vue";
 
+const currentUser = ref(null);
 const libros = ref([]);
 const dataLibro = ref({});
 const modalLibrosRef = ref(null);
@@ -367,7 +371,7 @@ const irAPagina = (pagina) => {
 const obtenerLibros = async () => {
   try {
     cargando.value = true;
-    const response = await fetch("/api/libros/obtener-filtrados");
+    const response = await fetch("/api/libros/obtener-filtrados?admin=1");
     if (!response.ok) {
       throw new Error("Error al obtener los libros");
     }
@@ -414,14 +418,14 @@ const guardarLibro = async (libroData) => {
       response = await fetch("/api/libros/crear", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(libroData),
+        body: JSON.stringify({ ...libroData, _rev: dataLibro.value._rev }),
       });
     } else {
       // Usar API específica de actualización de libros
       response = await fetch(`/api/libros/actualizar?id=${libroData._id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(libroData),
+        body: JSON.stringify({ ...libroData, _rev: dataLibro.value._rev }),
       });
     }
 
@@ -565,7 +569,8 @@ const mostrarAlerta = (tipo, mensaje) => {
 };
 
 // Lifecycle
-onMounted(() => {
+onMounted(async () => {
+  try { const res = await fetch('/api/cuenta/me');currentUser.value = (await res.json()).user; } catch { mostrarAlerta('error','No se pudo cargar la cuenta'); }
   obtenerLibros();
   obtenerColecciones();
 });

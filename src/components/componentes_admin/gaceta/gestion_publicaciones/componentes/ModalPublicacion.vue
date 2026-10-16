@@ -36,18 +36,7 @@
           <label class="label">
             <span class="label-text font-semibold">Tipo *</span>
           </label>
-          <select
-            v-model="formData.tipo"
-            class="select select-bordered w-full"
-            required
-          >
-            <option disabled value="">Seleccionar tipo</option>
-            <option value="opinion">Opinión</option>
-            <option value="actualidad">Actualidad</option>
-            <option value="audiovisuales">Audiovisuales</option>
-            <option value="vida_universitaria">Vida Universitaria</option>
-            <option value="memoria">Memoria colectiva</option>
-          </select>
+          <input class="input w-full" :value="props.section" readonly aria-label="Sección" />
         </div>
 
         <div class="form-control">
@@ -85,20 +74,7 @@
           />
         </div>
 
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text font-semibold">Estado *</span>
-          </label>
-          <select
-            v-model="formData.estado"
-            class="select select-bordered w-full"
-            required
-          >
-            <option disabled value="">Estado</option>
-            <option value="activo">Activo</option>
-            <option value="inactivo">Inactivo</option>
-          </select>
-        </div>
+        <p class="text-sm">Se guardará como borrador. La fecha pública se establece al publicar.</p>
       </div>
 
       <!-- Autor -->
@@ -161,7 +137,7 @@
             :upload-action="handleUploadMarkdown"
             height="400px"
           /> -->
-          <MdEditor v-model="formData.contenido" language="es-ES" />
+          <MdEditor :sanitize="sanitizeHtml" v-model="formData.contenido" language="es-ES" />
         </div>
       </div>
 
@@ -310,6 +286,7 @@
 </template>
 
 <script setup>
+import { sanitizeHtml } from "../../../../../lib/security/sanitize.js";
 import { ref, watch, computed, onMounted } from "vue";
 import { MdEditor, config } from "md-editor-v3";
 import Alert from "../../../../alert/Alert.vue";
@@ -318,6 +295,7 @@ import ES_ES from "@vavt/cm-extension/dist/locale/es-ES";
 import { set } from "zod/v4";
 
 const props = defineProps({
+  section: { type: String, required: true },
   publicacion: {
     type: Object,
     default: () => ({}),
@@ -364,7 +342,7 @@ const fechaLocal = ref("");
 const formData = ref({
   _id: "",
   titulo: "",
-  tipo: "",
+  tipo: props.section,
   contenido: "",
   fecha_publicacion: new Date().toISOString(),
   categoria: "",
@@ -443,7 +421,7 @@ const resetearFormulario = () => {
   formData.value = {
     _id: "",
     titulo: "",
-    tipo: "",
+    tipo: props.section,
     contenido: "",
     fecha_publicacion: fechaActual,
     categoria: "",
@@ -478,6 +456,7 @@ watch(
     if (nuevaPublicacion && Object.keys(nuevaPublicacion).length > 0) {
       formData.value = {
         _id: nuevaPublicacion._id || "",
+        _rev: nuevaPublicacion._rev,
         titulo: nuevaPublicacion.titulo || "",
         tipo: nuevaPublicacion.tipo || "",
         contenido: nuevaPublicacion.contenido || "",
@@ -670,6 +649,8 @@ const handleUploadMarkdown = async (file) => {
   try {
     const formDataImagen = new FormData();
     formDataImagen.append("foto", file);
+    formDataImagen.append("module", "gaceta");
+    formDataImagen.append("section", props.section);
     formDataImagen.append("carpeta", "publicaciones/contenido");
 
     const response = await fetch("/api/subir_imagen", {
@@ -744,6 +725,7 @@ const guardar = async () => {
       return;
     }
 
+    formData.value.tipo = props.section;
     if (!formData.value.autor.id) {
       alertData.value = {
         type: "warning",
@@ -771,6 +753,8 @@ const guardar = async () => {
       subiendoPortada.value = true;
       const formDataImagen = new FormData();
       formDataImagen.append("foto", formData.value.imagenes.portada.file);
+      formDataImagen.append("module", "gaceta");
+      formDataImagen.append("section", props.section);
       formDataImagen.append("carpeta", "publicaciones/portadas");
 
       const response = await fetch("/api/subir_imagen", {
@@ -794,6 +778,8 @@ const guardar = async () => {
         if (imagen.file) {
           const formDataImagen = new FormData();
           formDataImagen.append("foto", imagen.file);
+          formDataImagen.append("module", "gaceta");
+          formDataImagen.append("section", props.section);
           formDataImagen.append("carpeta", "publicaciones/galeria");
 
           const response = await fetch("/api/subir_imagen", {

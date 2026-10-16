@@ -1,6 +1,6 @@
 import { couch } from "../../../lib/couchDB";
 
-export async function GET({ request }) {
+export async function POST({ request }) {
   try {
     const url = new URL(request.url);
     const id = url.searchParams.get("id");
@@ -15,6 +15,7 @@ export async function GET({ request }) {
 
     // Obtener el documento actual para obtener el _rev y el valor actual
     const res = await couch.get(`cimu-libros/${id}`);
+    if (res.data.editorialStatus !== 'publicado') return new Response(JSON.stringify({error:'Libro no encontrado'}),{status:404});
     if (res.status !== 200) {
       return new Response(JSON.stringify({ error: "Documento no encontrado" }), {
         status: 404,

@@ -1,32 +1,7 @@
-import { couch } from "../../../lib/couchDB";
-
+import { getCatalog,publicCatalog } from '../../../lib/security/catalog.js';
+import { isPublished } from '../../../lib/security/editorial.js';
+import { json,errorResponse,HttpError } from '../../../lib/security/http.js';
 export async function GET({ request }) {
-  try {
-    const url = new URL(request.url);
-    const id = url.searchParams.get("id");
-
-    if (!id) {
-      return new Response(JSON.stringify({ error: "ID no proporcionado" }), {
-        status: 400,
-      });
-    }
-
-    const res = await couch.get(`cimu-libros/${id}`);
-
-    return new Response(JSON.stringify(res.data), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-    });
-  } catch (error) {
-    // console.error("Error al obtener publicación por ID:", error.message);
-    return new Response(
-      JSON.stringify({ error: "Error al obtener publicación" }),
-      {
-        status: 500,
-      }
-    );
-  }
+  try { const doc = await getCatalog('libros',new URL(request.url).searchParams.get('id'));if (!isPublished(doc)) throw new HttpError(404,'Libro no encontrado');return json(publicCatalog(doc,'libros')); }
+  catch (error) { return errorResponse(error); }
 }

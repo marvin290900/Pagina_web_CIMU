@@ -1,71 +1,13 @@
-// src/lib/apiAuth.js
-import { validateSession } from './session';
-
-// Verificar si el usuario está autenticado
+import { validateSession } from './session.js';
+import { can } from './security/roles.js';
+import { json } from './security/http.js';
 export async function requireAuth(request, cookies) {
-  const token = cookies.get('session')?.value;
-  const { user } = await validateSession(token);
-
-  if (!user) {
-    return {
-      authorized: false,
-      response: new Response(JSON.stringify({
-        error: 'No autorizado'
-      }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' }
-      })
-    };
-  }
-
-  return { authorized: true, user };
+  const { user } = await validateSession(cookies.get('session')?.value);
+  return user ? { authorized: true, user } : { authorized: false, response: json({ error: 'Inicia sesión para continuar' }, 401) };
 }
-
-// Verificar si el usuario es admin
-export async function requireAdmin(request, cookies) {
-  const token = cookies.get('session')?.value;
-  const { user } = await validateSession(token);
-
-  if (!user) {
-    return {
-      authorized: false,
-      response: new Response(JSON.stringify({
-        error: 'No autorizado'
-      }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' }
-      })
-    };
-  }
-
-  if (!user.isAdmin) {
-    return {
-      authorized: false,
-      response: new Response(JSON.stringify({
-        error: 'Acceso denegado. Se requieren permisos de administrador.'
-      }), {
-        status: 403,
-        headers: { 'Content-Type': 'application/json' }
-      })
-    };
-  }
-
-  return { authorized: true, user };
+export async function requirePermission(request, cookies, permission, scope = {}) {
+  const auth = await requireAuth(request, cookies);
+  if (!auth.authorized) return auth;
+  return can(auth.user, permission, scope) ? auth : { authorized: false, response: json({ error: 'No tienes permiso para esta acción' }, 403) };
 }
-
-// Verificar permisos personalizados
-export async function requirePermission(request, cookies, permission) {
-  const token = cookies.get('session')?.value;
-  const { user } = await validateSession(token);
-
-  if (!user) {
-    return {
-      authorized: false,
-      response: new Response(JSON.stringify({
-        error: 'No autorizado'
-      }), { status: 401 })
-    };
-  }
-
-  return { authorized: true, user };
-}
+export function requireAdmin(request, cookies) { return requirePermission(request, cookies, 'users.update'); }

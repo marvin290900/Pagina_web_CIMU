@@ -1,0 +1,9 @@
+---
+import Layout from '../../layouts/Layout_admin.astro';
+import { couch } from '../../lib/couchDB.js';
+let events = [], failed = false;
+try { events = (await couch.post('/audit_events/_find', { selector: { createdAt: { $gt: '' } }, sort: [{ createdAt: 'desc' }], limit: 100 })).data.docs; } catch { failed = true; }
+---
+<Layout><section class="max-w-6xl mx-auto px-4"><h1 class="text-3xl font-bold mb-5">Actividad reciente</h1>
+{failed ? <p role="alert">No se pudo consultar la auditoría.</p> : <div class="overflow-x-auto"><table class="table"><thead><tr><th>Fecha</th><th>Actor</th><th>Acción</th><th>Recurso</th></tr></thead><tbody>{events.map(event => <tr><td>{event.createdAt}</td><td>{event.actorId}</td><td>{event.action}</td><td>{event.resourceId}</td></tr>)}</tbody></table></div>}
+</section></Layout>

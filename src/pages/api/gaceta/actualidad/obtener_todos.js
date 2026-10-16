@@ -1,18 +1,3 @@
-import { couch } from "../../../../lib/couchDB";
-export async function GET() {
-  try {
-    const response = await couch.get(
-      "/cimu-gaceta-actualidad/_all_docs?include_docs=true"
-    );
-
-    return new Response(JSON.stringify(response.data), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
-  } catch (error) {
-    // console.error("Error API:", error.message);
-    return new Response(JSON.stringify({ error: "Error al obtener datos" }), {
-      status: 500,
-    });
-  }
-}
+import { listNews } from '../../../../lib/security/newsStore.js';
+import { json, errorResponse } from '../../../../lib/security/http.js';
+export async function GET() { try { const docs = await listNews('actualidad'); return json({ rows: docs.map(doc => ({ doc })) }); } catch (error) { return errorResponse(error); } }

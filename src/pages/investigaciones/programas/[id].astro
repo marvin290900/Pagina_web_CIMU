@@ -95,6 +95,7 @@ const programas = [
 // Para generación estática
 
 
+import { listCatalog } from '../../../lib/security/catalog.js';
 const { id } = Astro.params;
 const programa  = programas.find(p => p.slug === id);
 
@@ -107,8 +108,7 @@ if (!programa) {
 let investigaciones = [];
 
 try {
-  const res = await fetch(`http://localhost:4321/api/investigaciones-programa/${id}`);
-  const data = await res.json();
+  const data = { ok:true,data:(await listCatalog('investigaciones')).filter(doc => doc.programa === id) };
   if (data.ok) {
     investigaciones = data.data.map((inv) => ({
       id: inv._id,

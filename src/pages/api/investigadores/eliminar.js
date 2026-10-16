@@ -1,3 +1,4 @@
+import { safePublicPath } from '../../../lib/security/files.js';
 import { getInvestigadorPorId, eliminarInvestigador } from '../../../lib/investigadores.js';
 import fs from 'fs/promises';
 import path from 'path';
@@ -12,7 +13,7 @@ async function eliminarArchivoImagen(fotoUrl) {
     }
 
     const urlSinQuery = fotoUrl.split('?')[0].replace(/^\/+/, '');
-    const imagePath = path.join(BASE_PATH, urlSinQuery);
+    const imagePath = safePublicPath("/" + urlSinQuery, ['investigadores_fotos', 'cv_pdfs']);
     //console.log('Intentando eliminar imagen en:', imagePath);
 
     try {
@@ -37,7 +38,7 @@ async function eliminarArchivoCV(cvUrl) {
     }
 
     const urlSinQuery = cvUrl.split('?')[0].replace(/^\/+/, '');
-    const cvPath = path.join(BASE_PATH, urlSinQuery);
+    const cvPath = safePublicPath("/" + urlSinQuery, ['investigadores_fotos', 'cv_pdfs']);
     console.log('Intentando eliminar CV en:', cvPath);
 
     try {

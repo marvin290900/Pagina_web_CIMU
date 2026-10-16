@@ -1,3 +1,4 @@
+import { safePublicPath } from '../../../lib/security/files.js';
 import { getImagenPorId, eliminarImagen } from '../../../lib/imagenesCarrusel.js';
 import fs from 'fs/promises';
 import path from 'path';
@@ -12,7 +13,7 @@ async function eliminarArchivoImagen(fotoUrl) {
     }
 
     const urlSinQuery = fotoUrl.split('?')[0].replace(/^\/+/, '');
-    const imagePath = path.join(BASE_PATH, urlSinQuery);
+    const imagePath = safePublicPath("/" + urlSinQuery, ['carrousel']);
     //console.log('Intentando eliminar imagen en:', imagePath);
 
     try {

@@ -7,7 +7,11 @@
         "build": "astro build",
         "preview": "astro preview",
         "astro": "astro",
-        "start": "node ./dist/server/entry.mjs"
+        "start": "node ./dist/server/entry.mjs",
+        "test": "node --test --test-isolation=none tests/*.test.js",
+        "access:migrate": "node scripts/migrate-access.js",
+        "auth:cleanup": "node scripts/cleanup-auth.js",
+        "test:integration": "npm run build && node --test --test-isolation=none tests/integration/*.test.js"
     },
     "dependencies": {
         "@astrojs/node": "^9.3.0",
@@ -18,6 +22,7 @@
         "axios": "^1.12.2",
         "bcrypt": "^6.0.0",
         "daisyui": "^5.0.43",
+        "dompurify": "^3.4.17",
         "dotenv": "^17.1.0",
         "formidable": "^3.5.4",
         "jsdom": "^26.1.0",

@@ -9,7 +9,7 @@
           ><button class="btn mr-3 btn-ghost">
             <span class="mdi mdi-arrow-left"></span>Regresar
           </button></a
-        >Gestion de usuarios
+        >Autores públicos
       </h2>
       <div>
         <label class="input">
@@ -115,7 +115,7 @@
               <div class="tooltip tooltip-bottom" data-tip="Eliminar">
                 <button
                   class="btn btn-soft btn-error btn-sm"
-                  @click="abrirModalEliminar(usuario)"
+                  disabled title="La eliminación está deshabilitada; usa desactivar"
                 >
                   <span class="mdi mdi-delete text-lg"></span>
                 </button>
@@ -339,7 +339,7 @@ const irAPagina = (pagina) => {
 
 const obtenerUsuarios = async () => {
   try {
-    const response = await fetch("/api/gaceta/obtener?categoria=autores");
+    const response = await fetch("/api/gaceta/obtener?categoria=autores&admin=1");
     if (!response.ok) {
       throw new Error("Error al obtener los usuarios");
     }
@@ -440,7 +440,7 @@ const guardarUsuario = async (usuarioData) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(usuarioData),
+          body: JSON.stringify({ ...usuarioData, _rev: usuarios.value.find(u => u._id === usuarioData._id)?._rev }),
         }
       );
     }
@@ -536,9 +536,10 @@ const desactivarUsuario = async (id, estado) => {
     abrirModalGuardando();
 
     const response = await fetch(
-      `/api/gaceta/desactivar_autor?id=${id}&estado=${estado}`,
+      '/api/gaceta/desactivar_autor',
       {
-        method: "GET",
+        method: "PATCH",
+        body: JSON.stringify({ id, rev: usuarios.value.find(u => u._id === id)?._rev, estado: estado === 'activo' ? 'inactivo' : 'activo' }),
         headers: {
           "Content-Type": "application/json",
         },

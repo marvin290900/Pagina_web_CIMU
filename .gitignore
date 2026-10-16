@@ -28,3 +28,6 @@ public/uploads
 
 # public pdf
 public/pdf
+
+# private editorial assets
+storage/

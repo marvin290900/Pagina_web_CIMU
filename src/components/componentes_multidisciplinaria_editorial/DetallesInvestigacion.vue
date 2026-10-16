@@ -175,7 +175,7 @@ const activarAlerta = (mensaje) => {
 
 const actualizarEstadistica = async (tipo) => {
   try {
-    await fetch(`/api/libros/actualizar-vistas?id=${props.id}&tipo=${tipo}`);
+    await fetch(`/api/libros/actualizar-vistas?id=${props.id}&tipo=${tipo}`, { method: 'POST' });
   } catch (error) {
     console.error("Error al actualizar", error);
   }

@@ -1,59 +1,49 @@
-// src/middleware.js
 import { defineMiddleware } from 'astro:middleware';
-import { validateSession } from './lib/session';
-
-const protectedRoutes = ['/dashboard', '/profile', '/admin', '/account'];
-
-// APIs que son explícitamente públicas (Lectura de datos)
-const publicAPIs = [
-  '/api/login',
-  '/api/logout',
-  '/api/investigadores/obtener',
-  '/api/gaceta/obtener',
-  '/api/gaceta/actualidad/obtener_todos',
-  '/api/gaceta/actualidad/buscar',
-  '/api/inicio/obtener',
-  '/api/libros/obtener',
-  '/api/libros/obtener-filtrados',
-  '/api/libros/buscar',
-  '/api/remi/obtener_revista',
-  '/api/investigaciones/investigaciones'
-];
-
+import { validateSession, createSessionCookie, createBlankSessionCookie } from './lib/session.js';
+import { can, ROLE_ACTIONS } from './lib/security/roles.js';
+import { audit } from './lib/security/audit.js';
+import { validateApiInput } from './lib/security/requestValidation.js';
+import { apiRule, ADMIN_PAGES } from './lib/security/routes.js';
+import { json, errorResponse, assertSameOrigin } from './lib/security/http.js';
+function allowed(user, rule) {
+  if (!user) return false;
+  if (rule === 'authenticated') return true;
+  if (['libros.access','investigaciones.access'].includes(rule)) return user.assignments.some(a => a.role !== 'administrador' && a.modules.includes(rule.split('.')[0]));
+  if (rule === 'gaceta.access') return (user.assignments || []).some(a => ROLE_ACTIONS[a.role] && a.role !== 'administrador' && a.modules.includes('gaceta') && a.sections.length);
+  return can(user, rule);
+}
 export const onRequest = defineMiddleware(async (context, next) => {
-  const { cookies, url, redirect, locals } = context;
-  const { pathname } = url;
-
-  // Obtener token de la cookie
-  const token = cookies.get('session')?.value ?? null;
-
-  // Validar sesión
-  const { session, user } = await validateSession(token);
-
-  // Guardar en locals para uso en componentes y rutas
-  locals.session = session;
-  locals.user = user;
-
-  // 1. Verificar protección de rutas de interfaz (Páginas)
-  const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
-  if (isProtectedRoute && !user) {
-    return redirect('/login?redirect=' + pathname);
-  }
-
-  // 2. Verificar protección de APIs (Estrategia: Protegido por defecto)
-  if (pathname.startsWith('/api/')) {
-    const isPublicAPI = publicAPIs.some(api => pathname.startsWith(api));
-
-    // Si no es pública y no hay usuario admin, denegar acceso
-    if (!isPublicAPI && (!user || !user.isAdmin)) {
-      return new Response(JSON.stringify({
-        error: 'Acceso denegado. Se requieren permisos de administrador.'
-      }), {
-        status: 403,
-        headers: { 'Content-Type': 'application/json' }
-      });
+  try {
+    const { request, url, cookies, locals } = context;
+    const decodedPath = decodeURIComponent(url.pathname);
+    if (decodedPath.includes('\\') || decodedPath.includes('\0')) return json({ error: 'Ruta inválida' }, 400);
+    const path = decodedPath.replace(/\/$/, '') || '/';
+    const token = cookies.get('session')?.value;
+    const identity = await validateSession(token);
+    Object.assign(locals, identity);
+    if (identity.session) {
+      const cookie = createSessionCookie(token, identity.session.expiresAt); cookies.set(cookie.name, cookie.value, cookie.attributes);
+    } else if (token) {
+      const cookie = createBlankSessionCookie(); cookies.set(cookie.name, cookie.value, cookie.attributes);
     }
-  }
-
-  return next();
+    if (path.startsWith('/api/')) {
+      const rule = apiRule(request.method, path);
+      if (!rule) return json({ error: 'Ruta o método no permitido' }, 403);
+      assertSameOrigin(request);
+      await validateApiInput(request);
+      if (rule !== 'public' && !allowed(identity.user, rule)) {
+        if (identity.user) await audit(identity.user.id,'access.denied',path,{ method:request.method }).catch(() => console.error('No se pudo registrar acceso denegado'));
+        return json({ error: identity.user ? 'No tienes permiso para esta acción' : 'Inicia sesión para continuar' }, identity.user ? 403 : 401);
+      }
+    }
+    if (path === '/admin' || path.startsWith('/admin/')) {
+      if (!identity.user) return context.redirect('/login?redirect=' + encodeURIComponent(path));
+      if (!ADMIN_PAGES[path] || !allowed(identity.user, ADMIN_PAGES[path])) return new Response('No tienes permiso para acceder a esta página.', { status: 403 });
+    }
+    const response = await next();
+    if (path.startsWith('/admin') || path.startsWith('/api/') || path === '/login' || path === '/activar-cuenta') response.headers.set('Cache-Control', 'no-store');
+    response.headers.set('X-Content-Type-Options', 'nosniff');
+    response.headers.set('Referrer-Policy', 'same-origin');
+    return response;
+  } catch (error) { return errorResponse(error); }
 });

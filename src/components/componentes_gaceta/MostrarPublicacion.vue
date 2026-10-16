@@ -77,7 +77,7 @@
 
       <!-- Contenido principal en texto -->
       <!-- <p class="whitespace-pre-line">{{ data.contenido }}</p> -->
-      <MdPreview editorId="preview-only" :modelValue="data.contenido" />
+      <MdPreview :sanitize="sanitizeHtml" editorId="preview-only" :modelValue="data.contenido" />
 
       <!-- Galería de imágenes -->
       <div
@@ -123,6 +123,7 @@
 </template>
 
 <script setup>
+import { sanitizeHtml } from "../../lib/security/sanitize.js";
 import { ref, onMounted } from "vue";
 import Galeria from "./components/Galeria.vue";
 import { MdPreview } from "md-editor-v3";

@@ -3,7 +3,7 @@
     <h1 class="text-2xl font-bold mb-6">Panel de Investigaciones</h1>
 
     <!-- Botón para nueva investigación -->
-    <button @click="abrirModalNueva" class="btn btn-success mb-4">+ Nueva Investigación</button>
+    <button v-if="can(currentUser, 'investigaciones.create')" @click="abrirModalNueva" class="btn btn-success mb-4">+ Nueva Investigación</button>
 
     <!-- Lista temporal de investigaciones -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -20,9 +20,10 @@
           <p><strong>Fecha:</strong> {{ formatDate(inv.doc.fecha_publicacion) }}</p>
           <p v-if="inv.doc.pdfURL" class="truncate">📄 <a :href="inv.doc.pdfURL" target="_blank"
               class="text-blue-500 underline">Ver PDF</a></p>
+          <EstadoEditorial :user="currentUser" :doc="inv.doc" module="investigaciones" @changed="getInvestigacion" />
           <div class="card-actions justify-end">
-            <button @click="editarInvestigacion(inv, index)" class="btn btn-sm btn-info">Editar</button>
-            <button @click="abrirConfirm(inv)" class="btn btn-sm btn-error">Eliminar</button>
+            <button v-if="inv.doc.editorialStatus === 'borrador' && canEditContent(currentUser, 'investigaciones', inv.doc)" @click="editarInvestigacion(inv, index)" class="btn btn-sm btn-info">Editar</button>
+            <button v-if="false" @click="abrirConfirm(inv)" class="btn btn-sm btn-error">Eliminar</button>
 
 
 
@@ -137,8 +138,12 @@
 </template>
 
 <script setup>
+import EstadoEditorial from './EstadoEditorial.vue';
+import { can,canEditContent } from '../../lib/security/roles.js';
+
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 
+const currentUser = ref(null)
 const investigaciones = ref([])
 const investigacionEditando = ref({ titulo: '', descripcion: '', resumen: '', investigadores: [], programa: '', fecha: '', pdfURL: '', imagenURL: '', index: null, URI: '', 'palabras clave': '' })
 const keywordsInput = ref('')
@@ -182,7 +187,7 @@ function cerrarModal() {
 }
 
 async function getInvestigacion() {
-  const listRes = await fetch('/api/investigaciones/investigaciones');
+  const listRes = await fetch('/api/investigaciones/investigaciones?admin=1');
   const listJson = await listRes.json();
   if (listRes.ok && listJson.ok) {
     investigaciones.value = listJson.data.rows; // conserva estructura esperada por el template
@@ -405,6 +410,7 @@ async function guardarInvestigacion() {
       body.oldSelected
       // Editando, obtener _id y _rev del doc actual
       body.id = investigacionEditando.value._id
+      body._rev = investigacionEditando.value._rev
       res = await fetch('/api/investigaciones/investigaciones', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -459,7 +465,8 @@ const handleClickOutside = (event) => {
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
+  try { currentUser.value = (await (await fetch('/api/cuenta/me')).json()).user; } catch { mostrarToast('No se pudo cargar la cuenta','error'); }
   document.addEventListener("click", handleClickOutside);
 
   getInvestigacion()

@@ -1,77 +1,11 @@
-// src/pages/api/libros/ordenados.js
-
-import { couch } from "../../../lib/couchDB"; // Asegúrate que esta ruta sea correcta
-
-/**
- * API para obtener libros ordenados por fecha de publicación descendente.
- * Acepta un parámetro opcional ?anio=YYYY para filtrar por año.
- */
-export async function GET({ request }) {
+import { listCatalog } from '../../../lib/security/catalog.js';
+import { json,errorResponse } from '../../../lib/security/http.js';
+export async function GET({ request,locals }) {
   try {
-    const url = new URL(request.url);
-    const anio = url.searchParams.get("anio");
-
-    // console.log("=== API LIBROS ORDENADOS ===");
-
-    // --- Selector Base ---
-    let selector = {};
-
-    if (anio) {
-      // console.log("Filtrando por año:", anio);
-      const fechaInicio = `${anio}-01-01T00:00:00Z`;
-      const fechaFin = `${anio}-12-31T23:59:59Z`;
-
-      // Filtro de fecha al selector
-      selector.fecha_publicacion = {
-        $gte: fechaInicio,
-        $lte: fechaFin,
-      };
-    } else {
-      // console.log("Obteniendo todos los libros ordenados");
-      // Si no hay año, nos aseguramos que el campo exista para poder ordenarlo
-      selector.fecha_publicacion = {
-        $gt: null,
-      };
-    }
-
-    // --- Query Final ---
-    const query = {
-      selector: selector,
-      sort: [{ fecha_publicacion: "desc" }],
-      limit: 1000,
-      use_index: "idx-fecha-publicacion-desc",
-    };
-
-    // console.log("Ejecutando query:", JSON.stringify(query));
-    const res = await couch.post("cimu-libros/_find", query);
-    const docs = res.docs || (res.data ? res.data.docs : []);
-
-    if (!docs) {
-      // console.error("Respuesta inesperada de CouchDB:", res);
-      throw new Error("El formato de respuesta de CouchDB no contiene 'docs'.");
-    }
-
-    // console.log("Libros obtenidos:", docs.length);
-
-    // Devuelve solo el array de documentos
-    return new Response(JSON.stringify(docs), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-    });
-  } catch (error) {
-    // console.error("Error en la API de libros ordenados:", error.message);
-    return new Response(
-      JSON.stringify({ error: "Error al consultar la base de datos" }),
-      {
-        status: 500,
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-      }
-    );
-  }
+    const url = new URL(request.url), year = url.searchParams.get('anio');
+    let docs = await listCatalog('libros',locals.user,url.searchParams.get('admin') === '1');
+    if (/^\d{4}$/.test(year || '')) docs = docs.filter(d => d.fecha_publicacion?.startsWith(year));
+    docs.sort((a,b) => (b.fecha_publicacion || '').localeCompare(a.fecha_publicacion || ''));
+    return json(docs);
+  } catch (error) { return errorResponse(error); }
 }

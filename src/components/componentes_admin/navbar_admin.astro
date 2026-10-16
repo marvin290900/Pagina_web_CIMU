@@ -1,3 +1,18 @@
+---
+import { can } from '../../lib/security/roles.js';
+const user = Astro.locals.user;
+const links = [
+  { href: '/admin', label: 'Panel', show: true },
+  { href: '/admin/usuarios', label: 'Cuentas y permisos', show: can(user, 'users.read') },
+  { href: '/admin/gaceta', label: 'Gaceta', show: user?.assignments.some(a => a.role !== 'administrador' && a.modules.includes('gaceta') && a.sections.length) },
+  { href: '/admin/libros', label: 'Libros', show: user?.assignments.some(a => a.role !== 'administrador' && a.modules.includes('libros')) },
+  { href: '/admin/investigacion', label: 'Investigaciones', show: user?.assignments.some(a => a.role !== 'administrador' && a.modules.includes('investigaciones')) },
+  { href: '/admin/investigadores', label: 'Investigadores', show: can(user, 'investigadores.manage') },
+  { href: '/admin/inicio', label: 'Inicio y carrusel', show: can(user, 'inicio.manage') },
+  { href: '/admin/auditoria', label: 'Actividad', show: can(user, 'audit.read') },
+  { href: '/admin/cuenta', label: 'Mi cuenta', show: true },
+];
+---
 <!-- Overlay oscuro -->
 <div
   id="sidebarOverlay"
@@ -20,42 +35,8 @@
 
   <!-- Menú de navegación -->
   <nav class="flex flex-col p-4 space-y-2 flex-1">
-    <a
-      href="/admin/inicio"
-      class="hover:bg-gray-700 rounded px-3 py-2 flex items-center gap-2"
-    >
-      <span class="mdi mdi-home"></span> Inicio
-    </a>
-    <a
-      href="/admin/investigadores"
-      class="hover:bg-gray-700 rounded px-3 py-2 flex items-center gap-2"
-    >
-      <span class="mdi mdi-account-group-outline"></span> Investigadores/as
-    </a>
-    <a
-      href="/admin/gaceta"
-      class="hover:bg-gray-700 rounded px-3 py-2 flex items-center gap-2"
-    >
-      <span class="mdi mdi-post-outline"></span> Gaceta Multidisciplinaria
-    </a>
-    <a
-      href="/admin/investigacion"
-      class="hover:bg-gray-700 rounded px-3 py-2 flex items-center gap-2"
-    >
-      <span class="mdi mdi-file-document-multiple-outline"></span> Investigaciones
-    </a>
-    <a
-      href="/admin/libros"
-      class="hover:bg-gray-700 rounded px-3 py-2 flex items-center gap-2"
-    >
-      <span class="mdi mdi-school-outline"></span> Multidisciplinaria Editorial
-    </a>
-    <a
-      href="/admin/carrousel_imagenes"
-      class="hover:bg-gray-700 rounded px-3 py-2 flex items-center gap-2"
-    >
-      <span class="mdi mdi-image-multiple"></span> Carrusel de Imágenes
-    </a>
+    {links.filter(link => link.show).map(link => <a class="hover:bg-gray-700 rounded px-3 py-2" href={link.href}>{link.label}</a>)}
+    <p class="text-xs text-gray-300 pt-4">{user?.name}<br />{user?.email}</p>
   </nav>
 
   <!-- Cerrar sesión -->

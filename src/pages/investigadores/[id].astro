@@ -356,7 +356,8 @@ console.log("Investigador obtenido:", investigador);
 
   </section>
 
-  <script type="module">
+  <script>
+    import { sanitizeHtml } from "../../lib/security/sanitize.js";
     const investigadorEl = document.getElementById("investigador-data");
     const investigador = JSON.parse(investigadorEl.dataset.investigador);
 
@@ -405,7 +406,7 @@ console.log("Investigador obtenido:", investigador);
       tabActivo = tab;
 
       const key = tab.dataset.tab;
-      content.innerHTML = datos[key];
+      content.innerHTML = sanitizeHtml(datos[key]);
     }
 
     // Asignamos click a cada tab
@@ -461,7 +462,7 @@ const publicaciones = {
     pubTabActivo = tab;
 
     const key = tab.dataset.tab;
-    publicacionesContent.innerHTML = publicaciones[key];
+    publicacionesContent.innerHTML = sanitizeHtml(publicaciones[key]);
   }
 
   pubTabs.forEach((tab) => {

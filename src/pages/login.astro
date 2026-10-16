@@ -1,12 +1,13 @@
 ---
 import Layout from "../layouts/Layout_login.astro";
+import { safeRedirect } from '../lib/security/http.js';
 const { redirect, url, locals } = Astro;
 
 if (locals.user) {
   return redirect('/admin', 302);
 }
 
-const redirectTo = url.searchParams.get('redirect') || '/admin';
+const redirectTo = safeRedirect(url.searchParams.get('redirect'));
 
 const currentYear = new Date().getFullYear();
 ---
@@ -78,39 +79,17 @@ const currentYear = new Date().getFullYear();
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const formData = new FormData(form);
-      const response = await fetch("/api/login", {
-        method: "POST",
-        body: JSON.stringify({
-          email: formData.get("email"),
-          password: formData.get("password"),
-        }),
-        headers: { "Content-Type": "application/json" },
-        credentials: 'include' 
-      });
-
-      console.log('2. Response status:', response.status);
-      console.log('3. Response headers:', [...response.headers.entries()]);
-
-      const data = await response.json();
-
-        console.log('4. Response data:', data);
-
-      if (response.ok) {
-        console.log('5. Login exitoso!');
-        console.log('6. Cookies actuales:', document.cookie);
-        console.log('7. Redirigiendo a:', redirectTo);
-        
-        // Pequeña espera para asegurar que la cookie se guarde
-        await new Promise(resolve => setTimeout(resolve, 200));
-        
-        window.location.href = redirectTo;
-      } else {
-        console.log('5. Login falló:', data.error);
-        document.getElementById("mensajeError").textContent = data.error;
-        document.getElementById("mensajeError").classList.remove("hidden");
-      }
-
+      const button = form.querySelector('button[type="submit"]');
+      const message = document.getElementById('mensajeError');
+      button.disabled = true; message.classList.add('hidden');
+      try {
+        const data = new FormData(form);
+        const response = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: data.get('email'), password: data.get('password') }) });
+        const result = await response.json();
+        if (!response.ok) throw new Error(typeof result.error === 'string' ? result.error : 'Revisa las credenciales');
+        location.href = redirectTo;
+      } catch (error) { message.textContent = error.message || 'No se pudo iniciar sesión'; message.classList.remove('hidden'); }
+      finally { button.disabled = false; }
     });
   </script>
 </Layout>

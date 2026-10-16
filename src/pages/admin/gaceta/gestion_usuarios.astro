@@ -1,8 +1,3 @@
 ---
-import LayoutAdmin from "../../../layouts/Layout_admin.astro";
-import GestionUsuarios from "../../../components/componentes_admin/gaceta/gestion_usuarios/gestionUsuarios.vue";
+return Astro.redirect('/admin/gaceta/gestion_autores', 302);
 ---
-
-<LayoutAdmin>
-  <GestionUsuarios client:load />
-</LayoutAdmin>

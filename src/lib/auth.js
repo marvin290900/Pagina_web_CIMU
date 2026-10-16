@@ -1,87 +1,23 @@
-// src/lib/auth.js
-// Funciones de autenticación
-import { couch } from './couchDB.js';
 import bcrypt from 'bcrypt';
-import { v4 as uuidv4 } from 'uuid';
-
-// Crear usuario
-export async function createUser(email, password, isAdmin = false) {
-  const existing = await findUserByEmail(email);
-  if (existing) {
-    throw new Error('El email ya está registrado');
-  }
-
-  const passwordHash = await bcrypt.hash(password, 10);
-  const userId = uuidv4();
-
-  const user = {
-    _id: userId,
-    email,
-    passwordHash,
-    isAdmin,
-    createdAt: new Date().toISOString()
-  };
-
-  await couch.put(`/users/${userId}`, user);
-  return user;
-}
-
-// Buscar usuario por email
-export async function findUserByEmail(email) {
-  try {
-    const response = await couch.post('/users/_find', {
-      selector: { email },
-      limit: 1
-    });
-
-    return response.data.docs[0] || null;
-  } catch (error) {
-    // console.error('Error buscando usuario:', error);
-    return null;
-  }
-}
-
-// Autenticar usuario
+import { couch } from './couchDB.js';
+import { readPolicy } from './security/store.js';
+import { publicUser } from './security/roles.js';
+const DUMMY_HASH = await bcrypt.hash('unused-constant-timing-password', 12);
 export async function authenticateUser(email, password) {
-
-  const user = await findUserByEmail(email);
-  if (!user) return null;
-
-  const isValid = await bcrypt.compare(password, user.passwordHash);
-  if (!isValid) return null;
-
-  return user;
+  const policy = await readPolicy();
+  const account = Object.values(policy.accounts).find(user => user.email === email);
+  let credential;
+  if (account) credential = (await couch.get(`/users/${encodeURIComponent(account.id)}`)).data;
+  const valid = await bcrypt.compare(password, credential?.passwordHash || DUMMY_HASH);
+  if (!valid || account?.status !== 'active') return null;
+  return { ...publicUser(account), credentialVersion: credential.credentialVersion };
 }
-
-// Inicializar bases de datos
 export async function initDatabases() {
-  try {
-    try {
-      await couch.put('/users');
-      // console.log('DB "users" creada');
-    } catch (e) {
-      if (e.response?.status !== 412) throw e;
-    }
-
-    try {
-      await couch.put('/sessions');
-      // console.log('DB "sessions" creada');
-    } catch (e) {
-      if (e.response?.status !== 412) throw e;
-    }
-
-    await couch.post('/users/_index', {
-      index: { fields: ['email'] },
-      name: 'email-index'
-    });
-
-    await couch.post('/sessions/_index', {
-      index: { fields: ['token'] },
-      name: 'token-index'
-    });
-
-    // console.log('Bases de datos inicializadas');
-  } catch (error) {
-    console.error('Error:', error);
+  for (const name of ['users', 'sessions', 'audit_events', 'auth_attempts', 'private_assets', 'cimu-libros', 'investigaciones', 'investigadores', 'cimu-gaceta-autores', 'cimu-gaceta', ...['actualidad','vida_universitaria','opinion','memoria','audiovisuales'].map(section => `cimu-gaceta-${section}`)]) {
+    try { await couch.put(`/${name}`); }
+    catch (error) { if (error.response?.status !== 412) throw error; }
+  }
+  for (const [db, fields] of [['sessions', ['userId']], ['audit_events', ['createdAt']], ['auth_attempts', ['expiresAt']]]) {
+    await couch.post(`/${db}/_index`, { index: { fields }, name: fields.join('-') + '-index' });
   }
 }
