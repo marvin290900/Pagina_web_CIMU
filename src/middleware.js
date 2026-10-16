@@ -3,7 +3,7 @@ import { validateSession, createSessionCookie, createBlankSessionCookie } from '
 import { can, ROLE_ACTIONS } from './lib/security/roles.js';
 import { audit } from './lib/security/audit.js';
 import { validateApiInput } from './lib/security/requestValidation.js';
-import { apiRule, ADMIN_PAGES } from './lib/security/routes.js';
+import { apiRule, adminRule } from './lib/security/routes.js';
 import { json, errorResponse, assertSameOrigin } from './lib/security/http.js';
 function allowed(user, rule) {
   if (!user) return false;
@@ -38,7 +38,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
     }
     if (path === '/admin' || path.startsWith('/admin/')) {
       if (!identity.user) return context.redirect('/login?redirect=' + encodeURIComponent(path));
-      if (!ADMIN_PAGES[path] || !allowed(identity.user, ADMIN_PAGES[path])) return new Response('No tienes permiso para acceder a esta página.', { status: 403 });
+      const pageRule = adminRule(path);
+      if (!pageRule || !allowed(identity.user, pageRule)) return new Response('No tienes permiso para acceder a esta página.', { status: 403 });
     }
     const response = await next();
     if (path.startsWith('/admin') || path.startsWith('/api/') || path === '/login' || path === '/activar-cuenta') response.headers.set('Cache-Control', 'no-store');

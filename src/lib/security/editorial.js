@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { SECTIONS, can, canReadContent, canEditContent } from './roles.js';
+import { SECTIONS, can, canReadContent, canEditContent, canEditNews } from './roles.js';
 import { HttpError } from './http.js';
 export const sectionSchema = z.enum(SECTIONS);
 export const collectionSchema = z.enum([...SECTIONS, 'autores']);
@@ -31,7 +31,7 @@ export function assertNewsRead(user, doc, section) {
 }
 export function assertNewsEdit(user, doc, section) {
   if (!canEditContent(user, 'gaceta', doc, section)) throw new HttpError(403, 'No puedes editar esta publicación');
-  if (!['borrador'].includes(doc.editorialStatus)) throw new HttpError(409, 'Devuelve la publicación a borrador antes de editarla');
+  if (!canEditNews(user, doc, section)) throw new HttpError(409, 'No puedes editar en este estado. Solicita correcciones o retira a borrador');
 }
 export function nextContentState(user, doc, module, section, target) {
   const scope = { section };

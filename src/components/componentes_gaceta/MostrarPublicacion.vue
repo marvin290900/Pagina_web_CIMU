@@ -2,6 +2,7 @@
   <div v-if="cargando" class="w-full mx-auto flex justify-center">
     <span class="loading loading-spinner text-primary"></span>
   </div>
+  <p v-else-if="error" role="alert" class="max-w-3xl mx-auto p-8">La publicación no está disponible.</p>
   <div
     v-else
     class="w-11/12 xl:w-3/5 mx-auto my-12 pb-4 bg-white rounded-lg shadow-lg overflow-hidden"
@@ -27,7 +28,7 @@
         <div v-else class="avatar avatar-placeholder w-full">
           <a :href="`/gaceta/perfil/${data.autor.id}`">
             <div class="bg-black/50 text-neutral-content w-24 rounded-full">
-              <span class="text-3xl">{{ autor.nombre[0] }}</span>
+              <span class="text-3xl">{{ autor.nombre?.[0] || 'A' }}</span>
             </div>
           </a>
         </div>
@@ -87,7 +88,7 @@
         <galeria :galeria="data.imagenes.galeria" />
       </div>
       <!-- Video -->
-      <div v-if="data.link_yt">
+      <div v-if="videoUrl">
         <h3 class="text-xl mb-4 flex items-center">
           <span class="mdi mdi-youtube text-red-500 pr-2"></span>
           Video Relacionado
@@ -95,7 +96,7 @@
         <div class="bg-white rounded-lg shadow-lg overflow-hidden">
           <div class="relative" style="padding-bottom: 56.25%">
             <iframe
-              :src="data.link_yt"
+              :src="videoUrl"
               class="absolute top-0 left-0 w-full h-full"
               frameborder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -124,22 +125,20 @@
 
 <script setup>
 import { sanitizeHtml } from "../../lib/security/sanitize.js";
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import Galeria from "./components/Galeria.vue";
 import { MdPreview } from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
 
 const data = ref({});
-const autor = ref(null);
+const autor = ref({ nombre: '', foto: '' });
+const error = ref(false);
 const cargando = ref(true);
-
-const url = new URL(window.location.href); // Convierte la URL en un objeto URL
-
-// Acceder a parámetros con URLSearchParams
-const params = new URLSearchParams(url.search);
 
 // Props
 const props = defineProps({
+  initialPublication: { type: Object, default: null },
+  initialAuthor: { type: Object, default: null },
   id: {
     type: String,
     required: true,
@@ -151,6 +150,7 @@ const obtener = async (id, coleccion) => {
     const response = await fetch(
       `/api/gaceta/actualidad/buscar?id=${id}&coleccion=${coleccion}`
     );
+    if (!response.ok) return null;
     const dataResponse = await response.json();
 
     return dataResponse;
@@ -160,20 +160,29 @@ const obtener = async (id, coleccion) => {
   }
 };
 
+const videoUrl = computed(() => {
+  if (!data.value.link_yt) return '';
+  try {
+    const url = new URL(data.value.link_yt);
+    if (!['https:', 'http:'].includes(url.protocol)) return '';
+    const host = url.hostname.toLowerCase();
+    if (!['youtube.com','www.youtube.com','m.youtube.com','youtube-nocookie.com','www.youtube-nocookie.com','youtu.be'].includes(host)) return '';
+    const id = host === 'youtu.be' ? url.pathname.slice(1) : url.searchParams.get('v') || url.pathname.match(/^\/(?:embed|shorts)\/([^/]+)/)?.[1];
+    return /^[A-Za-z0-9_-]{11}$/.test(id || '') ? `https://www.youtube-nocookie.com/embed/${id}` : '';
+  } catch { return ''; }
+});
 onMounted(async () => {
-  const coleccion = params.get("categoria"); //obtengo la categoria de la url
-  const id = params.get("id"); // obtengo el id de la url
-  if (id) {
-    autor.value = await obtener(id, "autores");
-    data.value = await obtener(id, coleccion);
-  } else {
-    data.value = await obtener(props.id, coleccion);
-    autor.value = await obtener(data.value.autor.id, "autores");
-  }
-
-  if (autor.value) {
-    cargando.value = false;
-  }
+  try {
+    const params = new URL(window.location.href).searchParams;
+    const publication = props.initialPublication || await obtener(props.id, params.get('categoria'));
+    if (!publication?._id) { error.value = true; return; }
+    data.value = {
+      ...publication,
+      imagenes: { portada: { url: '', descripcion: '', ...publication.imagenes?.portada }, galeria: publication.imagenes?.galeria || [] },
+    };
+    autor.value = props.initialAuthor || await obtener(publication.autor?.id, 'autores') || { nombre: publication.autor?.nombre || 'Autor', foto: '' };
+  } catch { error.value = true; }
+  finally { cargando.value = false; }
 });
 </script>
 

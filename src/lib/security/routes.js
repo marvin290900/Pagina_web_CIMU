@@ -34,3 +34,8 @@ export const ADMIN_PAGES = {
   '/admin/gaceta': 'gaceta.access', '/admin/gaceta/gestion_publicaciones': 'gaceta.access',
   '/admin/gaceta/gestion_usuarios': 'autores.manage', '/admin/gaceta/gestion_autores': 'autores.manage', '/admin/gaceta/gestion_destacados': 'gaceta.feature',
 };
+
+export function adminRule(path) {
+  if (/^\/admin\/gaceta\/publicacion\/[a-zA-Z0-9_-]+$/.test(path)) return 'gaceta.access';
+  return ADMIN_PAGES[path] || null;
+}

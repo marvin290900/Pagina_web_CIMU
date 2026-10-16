@@ -17,6 +17,7 @@ test('HTTP: login, account invitation, scoped draft, private file, review and pu
     'users/security-policy':{ _id:'security-policy',_rev:'1-test',accounts:{ admin } },
     'users/admin':{ _id:'admin',_rev:'1-test',credentialVersion:'v1',passwordHash:await bcrypt.hash('Private admin password',4) },
     'investigadores/r':{_id:'r',_rev:'1-test',nombre:'Investigadora'},
+    'cimu-gaceta-actualidad/private-news':{_id:'private-news',_rev:'1-test',titulo:'Contenido de otra sección',editorialStatus:'borrador',createdBy:'other'},
     'cimu-gaceta-autores/a':{ _id:'a',_rev:'1-test',nombre:'Autora',correo:'private@example.com',estado:'activo' },
   });
   const couchServer = http.createServer(async (req,res) => {
@@ -70,6 +71,15 @@ test('HTTP: login, account invitation, scoped draft, private file, review and pu
     assert.equal((await request('/api/gaceta/crear?coleccion=actualidad','POST',{...body,tipo:'actualidad'},writerCookie)).response.status,403);
     const draft = await request('/api/gaceta/crear?coleccion=opinion','POST',body,writerCookie); assert.equal(draft.response.status,201,JSON.stringify(draft.data));
     const newsId = draft.data.id;
+    const previewPath = `/admin/gaceta/publicacion/${newsId}?categoria=opinion`;
+    assert.equal((await request(previewPath)).response.status,302);
+    const preview = await request(previewPath,'GET',undefined,writerCookie);
+    assert.equal(preview.response.status,200,JSON.stringify(preview.data));
+    assert(preview.data.includes('Vista previa de la publicación'));
+    assert(!preview.data.includes('private@example.com'));
+    const deniedPreview = await request('/admin/gaceta/publicacion/private-news?categoria=actualidad','GET',undefined,writerCookie);
+    assert.equal(deniedPreview.response.status,403);
+    assert(!JSON.stringify(deniedPreview.data).includes('Contenido de otra sección'));
     assert.equal((await request(`/api/gaceta/obtener?categoria=opinion&id=${newsId}`)).response.status,404);
     assert.equal((await request(assetUrl,'GET',undefined,writerCookie)).response.status,200);
     const transition = (rev,target,cookie) => request('/api/gaceta/transicion','POST',{ section:'opinion',id:newsId,rev,target,note:'' },cookie);
@@ -80,8 +90,25 @@ test('HTTP: login, account invitation, scoped draft, private file, review and pu
     const publicDoc = await request(`/api/gaceta/obtener?categoria=opinion&id=${newsId}`); assert.equal(publicDoc.response.status,200); assert(!('createdBy' in publicDoc.data));
     assert.equal((await request(assetUrl)).response.status,200);
     const author = await request('/api/gaceta/obtener?categoria=autores&id=a'); assert(!('correo' in author.data)); assert.equal(author.data.publicaciones.length,1);
-    const archived = await transition(published.data.publication._rev,'archivado',adminCookie); assert.equal(archived.response.status,200);
+    assert.equal((await request(`/api/gaceta/actualizar?coleccion=opinion&id=${newsId}`,'PUT',{...body,_rev:published.data.publication._rev},writerCookie)).response.status,409);
+    const edited = await request(`/api/gaceta/actualizar?coleccion=opinion&id=${newsId}`,'PUT',{...body,titulo:'Título actualizado en vivo',_rev:published.data.publication._rev},adminCookie);
+    assert.equal(edited.response.status,200,JSON.stringify(edited.data));
+    assert.equal((await request(`/api/gaceta/obtener?categoria=opinion&id=${newsId}`)).data.titulo,'Título actualizado en vivo');
+    const archived = await transition(edited.data.rev,'archivado',adminCookie); assert.equal(archived.response.status,200);
     assert.equal((await request(assetUrl)).response.status,404);
+    assert.equal((await request(previewPath,'GET',undefined,adminCookie)).response.status,200);
+    const restored = await transition(archived.data.publication._rev,'publicado',adminCookie);
+    assert.equal(restored.response.status,200,JSON.stringify(restored.data));
+    assert.equal((await request(assetUrl)).response.status,200);
+    const deletePath = `/api/gaceta/eliminar?coleccion=opinion&id=${newsId}`;
+    const deleteBody = {rev:restored.data.publication._rev};
+    assert.equal((await request(deletePath,'DELETE',deleteBody,writerCookie)).response.status,403);
+    assert.equal((await request(deletePath,'DELETE',{rev:edited.data.rev},adminCookie)).response.status,409);
+    const deleted = await request(deletePath,'DELETE',deleteBody,adminCookie);
+    assert.equal(deleted.response.status,200,JSON.stringify(deleted.data));
+    assert.equal((await request(`/api/gaceta/obtener?categoria=opinion&id=${newsId}`)).response.status,404);
+    assert.equal((await request(assetUrl)).response.status,404);
+    assert.equal((await request(previewPath,'GET',undefined,adminCookie)).response.status,404);
 
     for (const module of ['libros','investigaciones']) {
       const input = module === 'libros' ? {titulo:'Libro de prueba',fecha_publicacion:'2026-10-15',autores:[{id:'r',nombre:'Investigadora'}]} : {titulo:'Investigación de prueba',resumen:'Resumen',descripcion:'Descripción',programa:'juridico',investigadores:[{id:'r',nombre:'Investigadora'}],'Fecha de publicacion':'2026-10-15'};

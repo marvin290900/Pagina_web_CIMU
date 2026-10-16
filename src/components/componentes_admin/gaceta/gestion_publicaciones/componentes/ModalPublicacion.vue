@@ -15,6 +15,7 @@
       }}
     </h3>
 
+    <p v-if="serverError" role="alert" class="alert alert-error">{{ serverError }}</p>
     <form @submit.prevent="guardar" class="py-4 flex flex-col gap-4">
       <!-- Título -->
       <div class="form-control">
@@ -251,7 +252,7 @@
           type="button"
           class="btn"
           @click="cerrar"
-          :disabled="guardando || subiendoPortada || subiendoGaleria"
+          :disabled="guardando || saving || subiendoPortada || subiendoGaleria"
         >
           Cancelar
         </button>
@@ -259,20 +260,20 @@
           type="submit"
           class="btn btn-primary"
           :disabled="
-            guardando ||
+            guardando || saving ||
             subiendoPortada ||
             subiendoGaleria ||
             !formData.imagenes.portada.url
           "
         >
           <span
-            v-if="guardando || subiendoPortada || subiendoGaleria"
+            v-if="guardando || saving || subiendoPortada || subiendoGaleria"
             class="loading loading-spinner loading-sm"
           ></span>
           {{
             subiendoPortada || subiendoGaleria
               ? "Subiendo imágenes..."
-              : guardando
+              : guardando || saving
               ? "Guardando..."
               : modo === "crear"
               ? "Crear publicación"
@@ -295,6 +296,8 @@ import ES_ES from "@vavt/cm-extension/dist/locale/es-ES";
 import { set } from "zod/v4";
 
 const props = defineProps({
+  serverError: { type: String, default: '' },
+  saving: { type: Boolean, default: false },
   section: { type: String, required: true },
   publicacion: {
     type: Object,
@@ -370,7 +373,10 @@ const cargarAutores = async () => {
     if (!response.ok) throw new Error("Error al cargar autores");
 
     const data = await response.json();
-    autores.value = data.rows.map((row) => row.doc);
+    const available = data.rows.map((row) => row.doc);
+    if (props.publicacion?.autor?.id && !available.some(a => a._id === props.publicacion.autor.id)) available.push({ _id: props.publicacion.autor.id, nombre: props.publicacion.autor.nombre });
+    autores.value = available;
+    if (props.publicacion?.autor?.id) autorSeleccionado.value = available.find(a => a._id === props.publicacion.autor.id);
     console.log("Autores cargados:", autores.value.length);
   } catch (error) {
     console.error("Error al cargar autores:", error);
@@ -479,11 +485,14 @@ watch(
       // Convertir fecha a formato local
       fechaLocal.value = isoToLocal(nuevaPublicacion.fecha_publicacion);
 
-      // Establecer autor seleccionado
+      // Keep the existing author selectable even if the public profile is inactive.
       if (nuevaPublicacion.autor?.id) {
-        autorSeleccionado.value = autores.value.find(
-          (a) => a._id === nuevaPublicacion.autor.id
-        );
+        let author = autores.value.find(a => a._id === nuevaPublicacion.autor.id);
+        if (!author) {
+          author = { _id: nuevaPublicacion.autor.id, nombre: nuevaPublicacion.autor.nombre };
+          autores.value.push(author);
+        }
+        autorSeleccionado.value = author;
       }
 
       // Establecer etiquetas como texto
@@ -678,6 +687,7 @@ const cerrar = () => {
 
 // Guardar publicación
 const guardar = async () => {
+  if (props.saving || guardando.value) return;
   try {
     guardando.value = true;
 

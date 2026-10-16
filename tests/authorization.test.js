@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { can, canReadContent, canEditContent, MODULES } from '../src/lib/security/roles.js';
+import { can, canReadContent, canEditContent, canEditNews, MODULES } from '../src/lib/security/roles.js';
 import { nextNewsState, publicNews, publicAuthor, isPublished } from '../src/lib/security/editorial.js';
-import { apiRule } from '../src/lib/security/routes.js';
+import { apiRule, adminRule } from '../src/lib/security/routes.js';
 import { assertSameOrigin, safeRedirect } from '../src/lib/security/http.js';
 import { accountSchema, passwordSchema } from '../src/lib/security/validation.js';
 const person = (role, modules = ['gaceta'], sections = ['opinion']) => ({ id: role, status: 'active', assignments: [{ role, modules, sections }] });
@@ -73,4 +73,18 @@ test('password length, email normalization and role assignment validation', () =
   const parsed = accountSchema.parse({ email:'  USER@EXAMPLE.COM ', name:'Persona', assignments:[{ role:'colaborador', modules:['gaceta'], sections:['opinion'] }] });
   assert.equal(parsed.email, 'user@example.com');
   assert(!accountSchema.safeParse({ ...parsed, assignments:[{ role:'colaborador', modules:['gaceta'], sections:[] }] }).success);
+});
+
+test('Gaceta direct management and preview routes are limited to the allowed scope', () => {
+  const director = person('director'), editor = person('editor'), administrator = person('administrador',[],[]);
+  const doc = { editorialStatus:'publicado',createdBy:'legacy',assignedTo:['editor'] };
+  assert(canEditNews(director,doc,'opinion'));
+  assert(!canEditNews(director,doc,'actualidad'));
+  assert(!canEditNews(editor,doc,'opinion'));
+  assert(!canEditNews(administrator,doc,'opinion'));
+  assert(can(director,'gaceta.delete',{section:'opinion'}));
+  assert(!can(editor,'gaceta.delete',{section:'opinion'}));
+  assert(!can(director,'libros.delete'));
+  assert.equal(adminRule('/admin/gaceta/publicacion/abc-123'),'gaceta.access');
+  assert.equal(adminRule('/admin/gaceta/publicacion/abc-123/unknown'),null);
 });

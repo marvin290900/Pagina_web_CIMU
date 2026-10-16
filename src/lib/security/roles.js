@@ -15,7 +15,7 @@ export function can(user, permission, scope = {}) {
   const [module, action, extra] = permission.split('.');
   if (extra || !action) return false;
   return (user.assignments || []).some(assignment => {
-    const actions = ROLE_ACTIONS[assignment.role] || [];
+    const actions = [...(ROLE_ACTIONS[assignment.role] || []), ...(assignment.role === 'director' && module === 'gaceta' ? ['edit_published', 'delete'] : [])];
     if (assignment.role === 'administrador') return actions.includes(permission);
     if (!MODULES.includes(module) || !actions.includes(action)) return false;
     if (!assignment.modules?.includes(module)) return false;
@@ -34,6 +34,13 @@ export function canReadContent(user, module, doc, section) {
 export function canEditContent(user, module, doc, section) {
   const scope = { section, createdBy: doc.createdBy, assignedTo: doc.assignedTo };
   return can(user, `${module}.edit_own`, scope) || can(user, `${module}.edit_assigned`, scope);
+}
+// Direction can update live news and archived news without changing their visibility.
+export function canEditNews(user, doc, section) {
+  if (!canEditContent(user, 'gaceta', doc, section)) return false;
+  return doc.editorialStatus === 'borrador'
+    || (doc.editorialStatus === 'publicado' && can(user, 'gaceta.edit_published', { section }))
+    || (doc.editorialStatus === 'archivado' && can(user, 'gaceta.manage', { section }));
 }
 export function publicUser(account) {
   const { id, email, name, status, assignments, authVersion, createdAt, updatedAt } = account;

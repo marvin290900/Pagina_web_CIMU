@@ -1,0 +1,29 @@
+---
+import LayoutAdmin from '../../../../layouts/Layout_admin.astro';
+import MostrarPublicacion from '../../../../components/componentes_gaceta/MostrarPublicacion.vue';
+import { getNews } from '../../../../lib/security/newsStore.js';
+import { sectionSchema, assertNewsRead, publicNews, publicAuthor } from '../../../../lib/security/editorial.js';
+import { idSchema } from '../../../../lib/security/validation.js';
+import { errorResponse } from '../../../../lib/security/http.js';
+
+let publication, author;
+try {
+  const section = sectionSchema.parse(Astro.url.searchParams.get('categoria'));
+  const doc = await getNews(section, idSchema.parse(Astro.params.id));
+  assertNewsRead(Astro.locals.user, doc, section);
+  publication = { ...publicNews(doc), editorialStatus: doc.editorialStatus };
+  author = { nombre: doc.autor?.nombre || 'Autor', foto: '' };
+  if (doc.autor?.id) {
+    try { author = publicAuthor(await getNews('autores', doc.autor.id)); }
+    catch (error) { if (error.response?.status !== 404) throw error; }
+  }
+} catch (error) { return errorResponse(error); }
+---
+<LayoutAdmin>
+  <section class="max-w-5xl mx-auto px-4 space-y-3">
+    <a class="link" href="/admin/gaceta/gestion_publicaciones">Volver a gestionar publicaciones</a>
+    <h1 class="text-2xl font-bold">Vista previa de la publicación</h1>
+    <p>Estado: {publication.editorialStatus}. Esta vista requiere acceso a la publicación; no cambia su visibilidad pública.</p>
+  </section>
+  <MostrarPublicacion id={publication._id} initialPublication={publication} initialAuthor={author} client:only="vue" />
+</LayoutAdmin>
