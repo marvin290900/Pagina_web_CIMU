@@ -12,7 +12,7 @@ import { memoryCouch } from '../helpers/memory-couch.js';
 const listen = server => new Promise(resolve => server.listen(0,'127.0.0.1',resolve));
 async function unusedPort() { const server = net.createServer(); await listen(server); const port = server.address().port; await new Promise(resolve => server.close(resolve)); return port; }
 test('HTTP: login, account invitation, scoped draft, private file, review and public publication', { timeout:30000 }, async () => {
-  const admin = { id:'admin', email:'admin@example.com', name:'Administradora', status:'active', authVersion:1, assignments:[{ role:'administrador', modules:[], sections:[] },{ role:'director', modules:['gaceta','autores','libros','investigaciones'], sections:['*'] }] };
+  const admin = { id:'admin', email:'admin@example.com', name:'Administradora', status:'active', authVersion:1, assignments:[{ role:'administrador', modules:[], sections:[] },{ role:'director', modules:['gaceta','autores','libros','investigaciones','inicio'], sections:['*'] }] };
   const memory = memoryCouch({
     'users/security-policy':{ _id:'security-policy',_rev:'1-test',accounts:{ admin } },
     'users/admin':{ _id:'admin',_rev:'1-test',credentialVersion:'v1',passwordHash:await bcrypt.hash('Private admin password',4) },
@@ -53,6 +53,16 @@ test('HTTP: login, account invitation, scoped draft, private file, review and pu
     assert.equal(logged.response.status,200,JSON.stringify(logged.data)); const adminCookie = logged.cookie;
     assert(adminCookie); assert(logged.response.headers.get('set-cookie').includes('HttpOnly'));
     const adminPage = await request('/admin/usuarios','GET',undefined,adminCookie); assert.equal(adminPage.response.status,200); assert(adminPage.data.includes('Cuentas y permisos'));
+    const dashboard = await request('/admin','GET',undefined,adminCookie);
+    assert.equal(dashboard.response.status,200);
+    assert(dashboard.data.includes('href="/admin/carrousel_imagenes"'));
+    assert(dashboard.data.includes('href="/admin/libros"'));
+    const oldHome = await request('/admin/inicio','GET',undefined,adminCookie);
+    assert.equal(oldHome.response.status,302);
+    assert.equal(oldHome.response.headers.get('location'),'/admin/carrousel_imagenes');
+    const carousel = await request('/admin/carrousel_imagenes','GET',undefined,adminCookie);
+    assert.equal(carousel.response.status,200);
+    assert(carousel.data.includes('Imágenes del Carrusel'));
     const created = await request('/api/usuarios','POST',{ email:'writer@example.com',name:'Colaboradora',assignments:[{role:'colaborador',modules:['gaceta','libros','investigaciones'],sections:['opinion']}] },adminCookie);
     assert.equal(created.response.status,201,JSON.stringify(created.data));
     // Creating another account must never replace the admin session.
@@ -62,6 +72,10 @@ test('HTTP: login, account invitation, scoped draft, private file, review and pu
     const writerLogin = await request('/api/login','POST',{email:'writer@example.com',password:'Private writer password'}); assert.equal(writerLogin.response.status,200); const writerCookie = writerLogin.cookie;
     assert.equal((await request('/api/usuarios','GET',undefined,writerCookie)).response.status,403);
     assert.equal((await request('/admin/usuarios','GET',undefined,writerCookie)).response.status,403);
+    assert.equal((await request('/admin/carrousel_imagenes','GET',undefined,writerCookie)).response.status,403);
+    const writerDashboard = await request('/admin','GET',undefined,writerCookie);
+    assert(writerDashboard.data.includes('href="/admin/libros"'));
+    assert(!writerDashboard.data.includes('href="/admin/carrousel_imagenes"'));
     assert.equal((await request('/admin/gaceta/gestion_publicaciones','GET',undefined,writerCookie)).response.status,200);
     const upload = new FormData();upload.set('module','gaceta');upload.set('section','opinion');upload.set('foto',new File([Buffer.from([255,216,255,0])],'cover.jpg',{type:'image/jpeg'}));
     const uploaded = await request('/api/subir_imagen','POST',upload,writerCookie); assert.equal(uploaded.response.status,200,JSON.stringify(uploaded.data));
@@ -75,7 +89,9 @@ test('HTTP: login, account invitation, scoped draft, private file, review and pu
     assert.equal((await request(previewPath)).response.status,302);
     const preview = await request(previewPath,'GET',undefined,writerCookie);
     assert.equal(preview.response.status,200,JSON.stringify(preview.data));
-    assert(preview.data.includes('Vista previa de la publicación'));
+    assert(preview.data.includes('aria-label="Proceso editorial"'));
+    assert(preview.data.includes('aria-current="step"'));
+    assert(preview.data.includes('Datos editoriales'));
     assert(!preview.data.includes('private@example.com'));
     const deniedPreview = await request('/admin/gaceta/publicacion/private-news?categoria=actualidad','GET',undefined,writerCookie);
     assert.equal(deniedPreview.response.status,403);

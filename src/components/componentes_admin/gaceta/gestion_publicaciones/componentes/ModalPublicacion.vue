@@ -4,6 +4,8 @@
       <button
         class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 z-10"
         @click="cerrar"
+        :disabled="guardando || saving"
+        aria-label="Cerrar formulario"
       >
         ✕
       </button>
@@ -27,6 +29,7 @@
           v-model="formData.titulo"
           class="input input-bordered w-full"
           placeholder="Título de la publicación"
+          aria-label="Título de la publicación"
           required
         />
       </div>
@@ -35,9 +38,9 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="form-control">
           <label class="label">
-            <span class="label-text font-semibold">Tipo *</span>
+            <span class="label-text font-semibold">Sección</span>
           </label>
-          <input class="input w-full" :value="props.section" readonly aria-label="Sección" />
+          <input class="input w-full" :value="NEWS_SECTIONS[props.section]" readonly aria-label="Sección" />
         </div>
 
         <div class="form-control">
@@ -46,6 +49,7 @@
           </label>
           <select
             v-model="formData.categoria"
+            aria-label="Categoría"
             class="select select-bordered w-full"
             required
           >
@@ -69,13 +73,14 @@
           </label>
           <input
             type="datetime-local"
+            aria-label="Fecha de publicación"
             v-model="fechaLocal"
             class="input input-bordered w-full"
             required
           />
         </div>
 
-        <p class="text-sm">Se guardará como borrador. La fecha pública se establece al publicar.</p>
+        <p class="form-state-hint">{{ modo === 'crear' ? 'La publicación comenzará como borrador.' : publicacion.editorialStatus === 'publicado' ? 'Los cambios se mostrarán en el sitio al guardar.' : 'Se conservará el estado actual de la publicación.' }}</p>
       </div>
 
       <!-- Autor -->
@@ -85,6 +90,7 @@
         </label>
         <select
           v-model="autorSeleccionado"
+          aria-label="Autor"
           class="select select-bordered w-full"
           required
         >
@@ -104,6 +110,7 @@
         <input
           type="text"
           v-model="etiquetasTexto"
+          aria-label="Etiquetas, separadas con comas"
           class="input input-bordered w-full"
           placeholder="tecnología, innovación, desarrollo"
         />
@@ -119,6 +126,7 @@
         <input
           type="url"
           v-model="formData.link_yt"
+          aria-label="Enlace de YouTube (opcional)"
           class="input input-bordered w-full"
           placeholder="https://www.youtube.com/watch?v=..."
         />
@@ -158,6 +166,7 @@
             <input
               type="text"
               v-model="formData.imagenes.portada.descripcion"
+              aria-label="Descripción de la portada"
               class="input input-bordered w-full mt-2"
               placeholder="Descripción de la imagen"
             />
@@ -165,6 +174,7 @@
 
           <input
             ref="portadaInput"
+            aria-label="Imagen de portada"
             type="file"
             @change="handlePortadaSelect"
             accept="image/*"
@@ -207,6 +217,7 @@
               <button
                 type="button"
                 @click="eliminarImagenGaleria(index)"
+                :aria-label="`Quitar imagen ${index + 1} de la galería`"
                 class="absolute top-2 right-2 btn btn-circle btn-sm btn-error opacity-0 group-hover:opacity-100 transition-opacity"
               >
                 <span class="mdi mdi-delete"></span>
@@ -214,6 +225,7 @@
               <input
                 type="text"
                 v-model="imagen.descripcion"
+                :aria-label="`Descripción de la imagen ${index + 1}`"
                 class="input input-bordered input-sm w-full mt-2"
                 placeholder="Descripción"
               />
@@ -222,8 +234,9 @@
 
           <!-- Input para agregar más imágenes -->
           <input
-            v-if="formData.imagenes.galeria.length < 11"
+            v-if="formData.imagenes.galeria.length < 10"
             ref="galeriaInput"
+            aria-label="Agregar imágenes a la galería"
             type="file"
             @change="handleGaleriaSelect"
             accept="image/*"
@@ -288,12 +301,12 @@
 
 <script setup>
 import { sanitizeHtml } from "../../../../../lib/security/sanitize.js";
+import { NEWS_SECTIONS } from "../../../../../lib/publicationUi.js";
 import { ref, watch, computed, onMounted } from "vue";
 import { MdEditor, config } from "md-editor-v3";
 import Alert from "../../../../alert/Alert.vue";
 import "md-editor-v3/lib/style.css";
 import ES_ES from "@vavt/cm-extension/dist/locale/es-ES";
-import { set } from "zod/v4";
 
 const props = defineProps({
   serverError: { type: String, default: '' },
@@ -478,6 +491,7 @@ watch(
           galeria: nuevaPublicacion.imagenes?.galeria || [],
           link_yt: nuevaPublicacion.imagenes?.link_yt || "",
         },
+        link_yt: nuevaPublicacion.link_yt || "",
         estado: nuevaPublicacion.estado || "",
         visitas: nuevaPublicacion.visitas || 0,
       };

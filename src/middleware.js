@@ -1,17 +1,10 @@
 import { defineMiddleware } from 'astro:middleware';
 import { validateSession, createSessionCookie, createBlankSessionCookie } from './lib/session.js';
-import { can, ROLE_ACTIONS } from './lib/security/roles.js';
+import { hasAccessRule } from './lib/security/navigation.js';
 import { audit } from './lib/security/audit.js';
 import { validateApiInput } from './lib/security/requestValidation.js';
 import { apiRule, adminRule } from './lib/security/routes.js';
 import { json, errorResponse, assertSameOrigin } from './lib/security/http.js';
-function allowed(user, rule) {
-  if (!user) return false;
-  if (rule === 'authenticated') return true;
-  if (['libros.access','investigaciones.access'].includes(rule)) return user.assignments.some(a => a.role !== 'administrador' && a.modules.includes(rule.split('.')[0]));
-  if (rule === 'gaceta.access') return (user.assignments || []).some(a => ROLE_ACTIONS[a.role] && a.role !== 'administrador' && a.modules.includes('gaceta') && a.sections.length);
-  return can(user, rule);
-}
 export const onRequest = defineMiddleware(async (context, next) => {
   try {
     const { request, url, cookies, locals } = context;
@@ -31,7 +24,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
       if (!rule) return json({ error: 'Ruta o método no permitido' }, 403);
       assertSameOrigin(request);
       await validateApiInput(request);
-      if (rule !== 'public' && !allowed(identity.user, rule)) {
+      if (rule !== 'public' && !hasAccessRule(identity.user, rule)) {
         if (identity.user) await audit(identity.user.id,'access.denied',path,{ method:request.method }).catch(() => console.error('No se pudo registrar acceso denegado'));
         return json({ error: identity.user ? 'No tienes permiso para esta acción' : 'Inicia sesión para continuar' }, identity.user ? 403 : 401);
       }
@@ -39,7 +32,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     if (path === '/admin' || path.startsWith('/admin/')) {
       if (!identity.user) return context.redirect('/login?redirect=' + encodeURIComponent(path));
       const pageRule = adminRule(path);
-      if (!pageRule || !allowed(identity.user, pageRule)) return new Response('No tienes permiso para acceder a esta página.', { status: 403 });
+      if (!pageRule || !hasAccessRule(identity.user, pageRule)) return new Response('No tienes permiso para acceder a esta página.', { status: 403 });
     }
     const response = await next();
     if (path.startsWith('/admin') || path.startsWith('/api/') || path === '/login' || path === '/activar-cuenta') response.headers.set('Cache-Control', 'no-store');

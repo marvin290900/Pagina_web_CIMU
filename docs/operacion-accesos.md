@@ -4,6 +4,7 @@ Implementado el 15 de octubre de 2026 en la rama `update`. Este documento descri
 
 ## Funciones disponibles
 
+- `/admin`: accesos directos a los módulos autorizados. El carrusel está en `/admin/carrousel_imagenes` y los libros en `/admin/libros`; la ruta anterior `/admin/inicio` redirige al carrusel.
 - `/admin/usuarios`: cuentas internas, múltiples asignaciones de rol y alcance, activaciones/desactivaciones, revocación de sesiones y restablecimiento de acceso.
 - `/activar-cuenta`: establecer contraseña mediante enlace privado de un solo uso. El token viaja en el fragmento de la URL, no en el query del servidor. Se elimina del historial al abrir la página.
 - `/admin/cuenta`: identidad y cambio de contraseña. Cambiarla cierra todas las sesiones.
@@ -73,6 +74,18 @@ Definir `PRIVATE_UPLOAD_DIR` como una ruta absoluta persistente, accesible solo 
 Los archivos publicados antes de este cambio conservan sus URLs anteriores en `public/uploads`. Su confidencialidad retroactiva requiere inventariar referencias, trasladarlos y retirar las copias públicas; esta tarea debe hacerse sobre la copia restaurada antes de afirmar que material histórico retirado ya no es descargable. La protección automática implementada cubre los archivos nuevos del flujo editorial.
 
 ## Mantenimiento y verificación
+
+### Interfaz de Gaceta
+
+La gestión de publicaciones abre un listado en tabla con título, sección, autor, estado, última actualización y visualizaciones. Incluye búsqueda, filtros por sección y estado, y paginación. Solo consulta las secciones que la cuenta puede leer; las restricciones por propietario y responsable siguen aplicándose en el servidor.
+
+Al seleccionar una publicación se abre su ficha interna. La barra superior muestra Borrador → Revisión → Aprobación → Publicación; las etapas habilitadas y las acciones dependen del rol, del alcance y del estado actual. Cada cambio requiere confirmación y permite añadir una observación. Las publicaciones archivadas se identifican aparte y conservan su historial.
+
+La ficha reúne contenido, datos editoriales, historial de estados y responsable de edición. Editar conserva el estado actual; guardar una publicación ya publicada actualiza su contenido visible. Archivar la retira de Gaceta sin eliminar el registro. Los archivos históricos conservan las limitaciones descritas en la sección de despliegue.
+
+El nuevo diseño no requiere una migración adicional de datos. Para verlo en Docker hay que reconstruir y recrear el servicio `frontend`; reiniciar un contenedor con una imagen anterior no incorpora los cambios de código.
+
+### Comandos de verificación
 
 - `npm test`: pruebas de permisos, propiedad, transiciones, sesiones, cuentas, concurrencia, migración, rutas y sanitización; usan CouchDB en memoria.
 - `npm run test:integration`: compila y ejecuta el flujo HTTP con una instancia temporal de la aplicación, archivos temporales y CouchDB simulado en localhost. No consulta `.env` para conectar con la base real; las variables se sustituyen para el proceso de prueba.

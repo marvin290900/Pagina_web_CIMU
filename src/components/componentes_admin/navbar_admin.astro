@@ -1,140 +1,49 @@
 ---
-import { can } from '../../lib/security/roles.js';
+import { getAdminLinks } from '../../lib/security/navigation.js';
 const user = Astro.locals.user;
-const links = [
-  { href: '/admin', label: 'Panel', show: true },
-  { href: '/admin/usuarios', label: 'Cuentas y permisos', show: can(user, 'users.read') },
-  { href: '/admin/gaceta', label: 'Gaceta', show: user?.assignments.some(a => a.role !== 'administrador' && a.modules.includes('gaceta') && a.sections.length) },
-  { href: '/admin/libros', label: 'Libros', show: user?.assignments.some(a => a.role !== 'administrador' && a.modules.includes('libros')) },
-  { href: '/admin/investigacion', label: 'Investigaciones', show: user?.assignments.some(a => a.role !== 'administrador' && a.modules.includes('investigaciones')) },
-  { href: '/admin/investigadores', label: 'Investigadores', show: can(user, 'investigadores.manage') },
-  { href: '/admin/inicio', label: 'Inicio y carrusel', show: can(user, 'inicio.manage') },
-  { href: '/admin/auditoria', label: 'Actividad', show: can(user, 'audit.read') },
-  { href: '/admin/cuenta', label: 'Mi cuenta', show: true },
-];
+const links = getAdminLinks(user);
+const path = Astro.url.pathname.replace(/\/$/, '');
+const current = links.find(link => link.href === '/admin' ? path === '/admin' || path === '/admin/informacion' : path === link.href || path.startsWith(link.href + '/'));
+const glyphs = { '/admin': '▦', '/admin/usuarios': '♙', '/admin/carrousel_imagenes': '▧', '/admin/libros': '▤', '/admin/gaceta': '≡', '/admin/investigacion': '⌕', '/admin/investigadores': '♧', '/admin/auditoria': '◷', '/admin/cuenta': '○' };
 ---
-<!-- Overlay oscuro -->
-<div
-  id="sidebarOverlay"
-  class="fixed inset-0 bg-[#6B72804D] z-40 hidden transition-opacity duration-300"
->
-</div>
-
-<!-- Sidebar (oculto por defecto) -->
-<aside
-  id="sidebar"
-  class="fixed top-0 left-0 w-64 h-full bg-gray-800 text-white transform -translate-x-full transition-transform duration-300 z-50"
->
-  <!-- Título + botón cerrar -->
-  <div class="flex items-center justify-between p-4 border-b border-gray-700">
-    <span class="font-bold text-lg">Navegación</span>
-    <button id="closeSidebar" class="text-white text-xl hover:text-red-400">
-      <span class="mdi mdi-close"></span>
-    </button>
-  </div>
-
-  <!-- Menú de navegación -->
-  <nav class="flex flex-col p-4 space-y-2 flex-1">
-    {links.filter(link => link.show).map(link => <a class="hover:bg-gray-700 rounded px-3 py-2" href={link.href}>{link.label}</a>)}
-    <p class="text-xs text-gray-300 pt-4">{user?.name}<br />{user?.email}</p>
-  </nav>
-
-  <!-- Cerrar sesión -->
-  <div class="p-4 border-t border-gray-700">
-    <button
-      class="hover:bg-red-600 hover:text-white rounded px-3 py-2 flex items-center gap-2 text-red-400"
-      id="logoutBtn"
-    >
-      <span class="mdi mdi-logout"></span> Cerrar Sesión</button
-    >
-  </div>
+<div id="sidebarOverlay" class="admin-overlay" hidden></div>
+<aside id="sidebar" class="admin-rail" aria-label="Menú principal" data-open="false">
+  <div class="rail-brand"><a href="/admin" class="admin-brand"><span class="brand-mark">C</span><span>CIMU<span class="brand-caption" style="display:block">EDITORIAL</span></span></a><button id="closeSidebar" class="icon-button mobile-only" aria-label="Cerrar menú">×</button></div>
+  <p class="rail-label">ESPACIO DE TRABAJO</p>
+  <nav class="rail-navigation">{links.map(link => <a href={link.href} class="rail-link" aria-current={current?.href === link.href ? 'page' : undefined}><span class="rail-glyph" aria-hidden="true">{glyphs[link.href] || '○'}</span>{link.label}</a>)}</nav>
+  <div class="rail-footer"><div class="rail-user"><span class="user-initial" aria-hidden="true">{user?.name?.slice(0,1).toUpperCase() || 'U'}</span><div style="min-width:0"><p class="user-name">{user?.name}</p><p class="user-email">{user?.email}</p></div></div><button id="logoutBtn" class="logout-control">Cerrar sesión →</button><p id="logoutError" role="alert" class="fine-print danger-text"></p></div>
 </aside>
-
-<!-- Encabezado principal -->
-<header
-  id="mainHeader"
-  class="navbar fixed top-0 left-0 w-full z-40 bg-gray-900 text-white shadow"
->
-  <div class="w-full flex items-center justify-between px-4 md:px-6 h-10">
-    <div class="flex items-center gap-3">
-      <!-- Botón para mostrar el sidebar -->
-      <button
-        id="toggleSidebar"
-        class="btn btn-sm btn-ghost text-white focus:outline-none mdi mdi-menu text-2xl hover:bg-blue-950"
-      ></button>
-
-      <!-- Título -->
-      <a
-        href="/admin/informacion"
-        class="text-xs sm:text-xs md:text-lg lg:text-lg font-bold uppercase"
-        >Panel de Administración</a
-      >
-    </div>
-
-    <!-- Avatar usuario -->
-    <!-- <div class="flex items-center">
-      <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white">
-        <img
-          src="https://i.pravatar.cc/150?img=3"
-          alt="Usuario logueado"
-          class="w-full h-full object-cover"
-        />
-      </div>
-    </div> -->
-  </div>
-</header>
-
-<!-- Scripts -->
+<header class="admin-topbar"><button id="toggleSidebar" class="icon-button mobile-only" aria-label="Abrir menú" aria-controls="sidebar" aria-expanded="false">☰</button><p class="topbar-title">Editorial <span style="padding:0 10px;color:#c2cbd1">/</span> {current?.label || 'Panel'}</p><span class="topbar-context">CIMU · Universidad de El Salvador</span></header>
 <script>
-  // Función para inicializar los eventos
-  const setupNavbar = () => {
-    const sidebar = document.getElementById("sidebar");
-    const toggleSidebar = document.getElementById("toggleSidebar");
-    const closeSidebar = document.getElementById("closeSidebar");
-    const overlay = document.getElementById("sidebarOverlay");
-    const logoutBtn = document.getElementById("logoutBtn");
-
-    const openSidebar = () => {
-      sidebar?.classList.remove("-translate-x-full");
-      sidebar?.classList.add("translate-x-0");
-      overlay?.classList.remove("hidden");
-    };
-
-    const hideSidebar = () => {
-      sidebar?.classList.add("-translate-x-full");
-      sidebar?.classList.remove("translate-x-0");
-      overlay?.classList.add("hidden");
-    };
-
-    // Evento Logout
-    if (logoutBtn) {
-      logoutBtn.onclick = async (e) => {
-        e.preventDefault();
-        console.log("Se clickeó cerrar sesión - Enviando petición...");
-
-        try {
-          const response = await fetch("/api/logout", { method: "POST" });
-          if (response.ok) {
-            console.log("Sesión cerrada en el servidor");
-            window.location.href = "/login";
-          } else {
-            console.error("Error al cerrar sesión:", response.statusText);
-          }
-        } catch (err) {
-          console.error("Error de red:", err);
-        }
-      };
+  const sidebar = document.getElementById('sidebar')!;
+  const overlay = document.getElementById('sidebarOverlay')!;
+  const toggle = document.getElementById('toggleSidebar')!;
+  const desktop = matchMedia('(min-width:1100px)');
+  function setOpen(open: boolean) {
+    sidebar.dataset.open = String(open); overlay.hidden = !open;
+    sidebar.inert = !desktop.matches && !open;
+    toggle.setAttribute('aria-expanded',String(open));
+    document.body.style.overflow = open && !desktop.matches ? 'hidden' : '';
+    if (open && !desktop.matches) document.getElementById('closeSidebar')!.focus();
+  }
+  toggle.addEventListener('click',()=>setOpen(true));
+  document.getElementById('closeSidebar')!.addEventListener('click',()=>{setOpen(false);toggle.focus();});
+  overlay.addEventListener('click',()=>setOpen(false));
+  document.addEventListener('keydown',event=>{
+    if (desktop.matches || sidebar.dataset.open !== 'true') return;
+    if (event.key === 'Escape') { setOpen(false); toggle.focus(); }
+    if (event.key === 'Tab') {
+      const controls = [...sidebar.querySelectorAll<HTMLElement>('a[href],button:not([disabled])')];
+      const first = controls[0], last = controls.at(-1);
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
     }
-
-    // Eventos de UI
-    toggleSidebar?.addEventListener("click", openSidebar);
-    closeSidebar?.addEventListener("click", hideSidebar);
-    overlay?.addEventListener("click", hideSidebar);
-  };
-
-  // Ejecutar al cargar la página
-  setupNavbar();
-
-  // Si usas ViewTransitions de Astro, descomenta la siguiente línea:
-  // document.addEventListener('astro:after-swap', setupNavbar);
+  });
+  desktop.addEventListener('change',()=>setOpen(false));
+  setOpen(false);
+  document.getElementById('logoutBtn')!.addEventListener('click',async event=>{
+    const button=event.currentTarget as HTMLButtonElement;button.disabled=true;
+    try {const response=await fetch('/api/logout',{method:'POST'});if(!response.ok)throw new Error();location.href='/login';}
+    catch {document.getElementById('logoutError')!.textContent='No se pudo cerrar la sesión. Intenta nuevamente.';button.disabled=false;}
+  });
 </script>

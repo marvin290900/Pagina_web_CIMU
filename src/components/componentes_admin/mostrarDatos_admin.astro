@@ -1,5 +1,24 @@
 ---
+import { ROLE_LABELS, can } from '../../lib/security/roles.js';
+import { getAdminLinks } from '../../lib/security/navigation.js';
 const user = Astro.locals.user;
-import { ROLE_LABELS } from '../../lib/security/roles.js';
+const links = getAdminLinks(user).filter(link => link.href !== '/admin');
+const canAssignRoles = can(user, 'users.assign_roles');
 ---
-<section class="max-w-4xl mx-auto p-6 space-y-5"><h1 class="text-3xl font-bold">Bienvenido, {user.name}</h1><p>Abre el menú para acceder a tus módulos.</p><h2 class="text-xl font-bold">Tus accesos</h2><ul>{user.assignments.map(a => <li class="border rounded p-4 mb-2"><strong>{ROLE_LABELS[a.role]}</strong><p>{a.modules.join(', ')}</p>{a.modules.includes('gaceta') && <p>Secciones: {a.sections.includes('*') ? 'Todas' : a.sections.join(', ')}</p>}</li>)}</ul></section>
+<section class="max-w-5xl mx-auto p-6 space-y-6">
+  <h1 class="text-3xl font-bold">Bienvenido, {user.name}</h1>
+  <p>Selecciona el módulo que deseas gestionar.</p>
+  <nav aria-label="Gestión del sitio" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {links.map(link => <a href={link.href} class="block border rounded-lg p-5 hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-blue-700">
+      <h2 class="text-xl font-semibold">{link.label}</h2><p class="text-gray-600 mt-2">{link.description}</p>
+    </a>)}
+  </nav>
+  {canAssignRoles && <aside class="border rounded-lg p-4 bg-blue-50">
+    <h2 class="font-semibold">Acceso a libros y carrusel</h2>
+    <p>Para publicar libros o gestionar el carrusel, asigna el rol Director editorial con los módulos Libros e Inicio en <a class="link" href="/admin/usuarios">Cuentas y permisos</a>. Puedes conservar también el rol Administrador.</p>
+    <p>Después de cambiar tus propios permisos, vuelve a iniciar sesión.</p>
+  </aside>}
+  <details><summary class="text-xl font-bold cursor-pointer">Tus accesos</summary>
+    <ul class="mt-4">{user.assignments.map(a => <li class="border rounded p-4 mb-2"><strong>{ROLE_LABELS[a.role]}</strong><p>{a.modules.join(', ')}</p>{a.modules.includes('gaceta') && <p>Secciones: {a.sections.includes('*') ? 'Todas' : a.sections.join(', ')}</p>}</li>)}</ul>
+  </details>
+</section>
