@@ -1,24 +1,26 @@
 ---
-import { ROLE_LABELS, can } from '../../lib/security/roles.js';
 import { getAdminLinks } from '../../lib/security/navigation.js';
+import { ROLE_LABELS } from '../../lib/security/roles.js';
+import IconoApp from './IconoApp.astro';
 const user = Astro.locals.user;
 const links = getAdminLinks(user).filter(link => link.href !== '/admin');
-const canAssignRoles = can(user, 'users.assign_roles');
+const colors = ['violet','amber','teal','blue','rose','cyan','slate','green'];
 ---
-<section class="max-w-5xl mx-auto p-6 space-y-6">
-  <h1 class="text-3xl font-bold">Bienvenido, {user.name}</h1>
-  <p>Selecciona el módulo que deseas gestionar.</p>
-  <nav aria-label="Gestión del sitio" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    {links.map(link => <a href={link.href} class="block border rounded-lg p-5 hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-blue-700">
-      <h2 class="text-xl font-semibold">{link.label}</h2><p class="text-gray-600 mt-2">{link.description}</p>
+<section class="editorial-workspace app-home">
+  <div class="workspace-heading"><div><p class="eyebrow">TU ESPACIO EDITORIAL</p><h1>Hola, {user.name.split(' ')[0]}</h1><p class="subtle">Todo lo que necesitas para crear, organizar y compartir conocimiento.</p></div><a href="/" class="ui-button quiet" target="_blank" rel="noopener">Visitar el sitio ↗</a></div>
+  <div class="app-launcher-header"><h2>Aplicaciones</h2><label class="app-search search-field"><span aria-hidden="true">⌕</span><input id="app-search" type="search" placeholder="Buscar una aplicación…" aria-label="Buscar aplicaciones" /></label></div>
+  <nav class="app-grid" aria-label="Gestión del sitio">
+    {links.map((link,index) => <a href={link.href} class="app-tile" data-app-name={`${link.label} ${link.description}`.toLocaleLowerCase('es')}>
+      <span class={`app-icon ${colors[index % colors.length]}`}><IconoApp name={link.href} /></span><span class="app-name">{link.label}</span><span class="app-description">{link.description}</span><span class="app-open" aria-hidden="true">↗</span>
     </a>)}
   </nav>
-  {canAssignRoles && <aside class="border rounded-lg p-4 bg-blue-50">
-    <h2 class="font-semibold">Acceso a libros y carrusel</h2>
-    <p>Para publicar libros o gestionar el carrusel, asigna el rol Director editorial con los módulos Libros e Inicio en <a class="link" href="/admin/usuarios">Cuentas y permisos</a>. Puedes conservar también el rol Administrador.</p>
-    <p>Después de cambiar tus propios permisos, vuelve a iniciar sesión.</p>
-  </aside>}
-  <details><summary class="text-xl font-bold cursor-pointer">Tus accesos</summary>
-    <ul class="mt-4">{user.assignments.map(a => <li class="border rounded p-4 mb-2"><strong>{ROLE_LABELS[a.role]}</strong><p>{a.modules.join(', ')}</p>{a.modules.includes('gaceta') && <p>Secciones: {a.sections.includes('*') ? 'Todas' : a.sections.join(', ')}</p>}</li>)}</ul>
-  </details>
+  <p id="apps-empty" class="empty-state subtle" hidden>No encontramos esa aplicación. Prueba con otro nombre.</p>
+  <footer class="home-footer"><div><span class="status-dot"></span><span>Sesión de {user.name}</span></div><div class="tag-list compact">{[...new Set(user.assignments.map(a => ROLE_LABELS[a.role]))].map(role => <span>{role}</span>)}</div><a href="/admin/cuenta">Consultar mis accesos →</a></footer>
 </section>
+<script>
+  document.getElementById('app-search')?.addEventListener('input',event=>{
+    const query=(event.target as HTMLInputElement).value.trim().toLocaleLowerCase('es'); let visible=0;
+    document.querySelectorAll<HTMLElement>('[data-app-name]').forEach(tile=>{tile.hidden=!tile.dataset.appName!.includes(query);if(!tile.hidden)visible++;});
+    document.getElementById('apps-empty')!.hidden=visible>0;
+  });
+</script>

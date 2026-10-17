@@ -6,7 +6,7 @@ import CargandoEditor from '../../editorial/CargandoEditor.vue';
 const ModalPublicacion = defineAsyncComponent({ loader: () => import('./componentes/ModalPublicacion.vue'), loadingComponent: CargandoEditor, delay: 100 });
 const user = ref(null), rows = ref([]), loading = ref(true), saving = ref(false), error = ref('');
 const section = ref(''), status = ref(''), search = ref(''), page = ref(1), pageSize = 15;
-const picker = ref(null), formDialog = ref(null), createSection = ref(''), formMounted = ref(false);
+const picker = ref(null), formDialog = ref(null), createSection = ref(''), formMounted = ref(false), formBusy = ref(false);
 const sections = computed(() => newsSectionsFor(user.value));
 const createSections = computed(() => sections.value.filter(s => can(user.value, 'gaceta.create', { section: s })));
 const totals = computed(() => ({ all: rows.value.length, preparation: rows.value.filter(d => ['borrador','en_revision','aprobado'].includes(d.editorialStatus)).length, published: rows.value.filter(d => d.editorialStatus === 'publicado').length, archived: rows.value.filter(d => d.editorialStatus === 'archivado').length }));
@@ -86,6 +86,6 @@ onMounted(load);
       <footer class="table-footer"><span>{{ first }}–{{ Math.min(currentPage * pageSize, filtered.length) }} de {{ filtered.length }} publicaciones</span><div class="pagination"><button class="ui-button quiet" aria-label="Página anterior" :disabled="currentPage <= 1 || loading" @click="page=currentPage-1">←</button><span>{{ currentPage }} / {{ pages }}</span><button class="ui-button quiet" aria-label="Página siguiente" :disabled="currentPage >= pages || loading" @click="page=currentPage+1">→</button></div></footer>
     </div>
     <dialog ref="picker" class="modal editorial-modal" aria-labelledby="choose-section-title"><div class="modal-box ui-dialog"><p class="eyebrow">NUEVA PUBLICACIÓN</p><h2 id="choose-section-title">¿En qué sección quieres escribir?</h2><label class="field-label">Sección<select v-model="createSection" class="ui-control"><option v-for="s in createSections" :key="s" :value="s">{{ NEWS_SECTIONS[s] }}</option></select></label><div class="dialog-actions"><button class="ui-button" @click="picker.close()">Cancelar</button><button class="ui-button primary" @click="startForm">Continuar →</button></div></div></dialog>
-    <dialog ref="formDialog" class="modal editorial-modal" aria-label="Nueva publicación" @cancel="saving && $event.preventDefault()"><ModalPublicacion v-if="formMounted" :key="createSection" :publicacion="{}" modo="crear" :section="createSection" :server-error="error" :saving="saving" @cerrar="formDialog.close();formMounted=false" @guardar="save" /></dialog>
+    <dialog ref="formDialog" class="modal editorial-modal" aria-label="Nueva publicación" @cancel="(saving || formBusy) && $event.preventDefault()" @close="formMounted=false"><ModalPublicacion v-if="formMounted" :key="createSection" :publicacion="{}" modo="crear" :section="createSection" :server-error="error" :saving="saving" @cerrar="formDialog.close();formMounted=false" @guardar="save" @busy="formBusy=$event" /></dialog>
   </section>
 </template>

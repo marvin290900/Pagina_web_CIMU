@@ -3,6 +3,7 @@
     <form method="dialog">
       <button
         class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 z-10"
+        type="button" aria-label="Cerrar formulario" :disabled="saving || guardando || subiendoPortada || subiendoPDF"
         @click="cerrar"
       >
         ✕
@@ -13,6 +14,7 @@
       {{ modo === "crear" ? "Agregar nuevo libro" : "Editar libro" }}
     </h3>
 
+    <p v-if="serverError" role="alert" class="ui-alert error">{{ serverError }}</p>
     <form @submit.prevent="guardar" class="py-4 flex flex-col gap-4">
       <!-- Título -->
       <div class="form-control">
@@ -21,7 +23,7 @@
         </label>
         <input
           type="text"
-          v-model="formData.titulo"
+          v-model="formData.titulo" aria-label="Título del libro"
           class="input input-bordered w-full"
           placeholder="Título del libro"
           required
@@ -36,7 +38,7 @@
           </label>
           <input
             type="text"
-            v-model="formData.tipo"
+            v-model="formData.tipo" aria-label="Tipo de libro"
             class="input input-bordered w-full"
             placeholder="Ej: Investigación, Ensayo..."
             required
@@ -49,7 +51,7 @@
           </label>
           <input
             type="date"
-            v-model="formData.fecha_publicacion"
+            v-model="formData.fecha_publicacion" aria-label="Fecha de publicación"
             class="input input-bordered w-full"
             required
           />
@@ -63,7 +65,7 @@
             <span class="label-text font-semibold">Editorial *</span>
           </label>
           <select
-            v-model="formData.editorial"
+            v-model="formData.editorial" aria-label="Editorial"
             class="select select-bordered w-full"
             required
           >
@@ -80,7 +82,7 @@
             <span class="label-text font-semibold">Colección *</span>
           </label>
           <select
-            v-model="formData.coleccion"
+            v-model="formData.coleccion" aria-label="Colección"
             class="select select-bordered w-full"
             required
           >
@@ -104,7 +106,7 @@
           </label>
           <input
             type="number"
-            v-model="formData.paginas"
+            v-model="formData.paginas" aria-label="Número de páginas"
             class="input input-bordered w-full"
             placeholder="Cantidad"
             min="1"
@@ -119,7 +121,7 @@
           </label>
           <input
             type="text"
-            v-model="formData.isbn"
+            v-model="formData.isbn" aria-label="ISBN"
             class="input input-bordered w-full"
             placeholder="ISBN"
           />
@@ -131,7 +133,7 @@
           </label>
           <input
             type="url"
-            v-model="formData.uri"
+            v-model="formData.uri" aria-label="Enlace de referencia"
             class="input input-bordered w-full"
             placeholder="https://..."
           />
@@ -144,7 +146,7 @@
           <span class="label-text font-semibold">Resumen</span>
         </label>
         <textarea
-          v-model="formData.resumen"
+          v-model="formData.resumen" aria-label="Resumen"
           class="textarea textarea-bordered w-full"
           placeholder="Resumen del libro"
           rows="4"
@@ -177,7 +179,7 @@
           </div>
 
           <input
-            ref="portadaInput"
+            ref="portadaInput" aria-label="Portada del libro"
             type="file"
             @change="handlePortadaSelect"
             accept="image/*"
@@ -226,7 +228,7 @@
           </div>
 
           <input
-            ref="pdfInput"
+            ref="pdfInput" aria-label="Documento PDF"
             type="file"
             @change="handlePDFSelect"
             accept="application/pdf"
@@ -252,7 +254,7 @@
           <div class="flex gap-3 mb-3">
             <input
               type="text"
-              v-model="palabraClave"
+              v-model="palabraClave" aria-label="Palabra clave"
               @keyup.enter="agregarPalabraClave"
               class="input input-bordered flex-1"
               placeholder="Agregar palabra clave"
@@ -292,7 +294,7 @@
           <span class="label-text font-semibold">Autores *</span>
         </label>
         <select
-          v-model="autorSeleccionado"
+          v-model="autorSeleccionado" aria-label="Seleccionar autor"
           @change="agregarAutor"
           class="select select-bordered w-full"
         >
@@ -343,7 +345,7 @@
           type="button"
           class="btn"
           @click="cerrar"
-          :disabled="guardando || subiendoPortada || subiendoPDF"
+          :disabled="saving || guardando || subiendoPortada || subiendoPDF"
         >
           Cancelar
         </button>
@@ -351,7 +353,7 @@
           type="submit"
           class="btn btn-primary"
           :disabled="
-            guardando ||
+            saving || guardando ||
             subiendoPortada ||
             subiendoPDF ||
             !formData.portada ||
@@ -359,13 +361,13 @@
           "
         >
           <span
-            v-if="guardando || subiendoPortada || subiendoPDF"
+            v-if="saving || guardando || subiendoPortada || subiendoPDF"
             class="loading loading-spinner loading-sm"
           ></span>
           {{
             subiendoPortada || subiendoPDF
               ? "Subiendo archivos..."
-              : guardando
+              : saving || guardando
                 ? "Guardando..."
                 : modo === "crear"
                   ? "Crear libro"
@@ -380,11 +382,12 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, onBeforeUnmount } from "vue";
 import Alert from "../../../alert/Alert.vue";
-import { email } from "zod/v4";
 
 const props = defineProps({
+  saving: { type: Boolean, default: false },
+  serverError: { type: String, default: "" },
   libro: {
     type: Object,
     default: () => ({}),
@@ -395,7 +398,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["cerrar", "guardar"]);
+const emit = defineEmits(["cerrar", "guardar", "busy"]);
 
 // Referencias
 const portadaInput = ref(null);
@@ -405,6 +408,8 @@ const pdfInput = ref(null);
 const guardando = ref(false);
 const subiendoPortada = ref(false);
 const subiendoPDF = ref(false);
+watch([subiendoPortada, subiendoPDF], ([cover, pdf]) => emit("busy", cover || pdf), {flush: "sync"});
+onBeforeUnmount(() => emit("busy", false));
 
 // Datos
 const investigadores = ref([]);
@@ -516,7 +521,7 @@ watch(
         _id: nuevoLibro._id || "",
         titulo: nuevoLibro.titulo || "",
         tipo: nuevoLibro.tipo || "",
-        fecha_publicacion: nuevoLibro.fecha_publicacion || "",
+        fecha_publicacion: (nuevoLibro.fecha_publicacion || "").slice(0,10),
         editorial: nuevoLibro.editorial || "",
         coleccion: nuevoLibro.coleccion || "",
         paginas: nuevoLibro.paginas || null,
@@ -526,8 +531,8 @@ watch(
         portada: nuevoLibro.portada || "",
         pdf_url: nuevoLibro.pdf_url || "",
         pdf_thumbnail: nuevoLibro.pdf_thumbnail || "",
-        palabras_clave: nuevoLibro.palabras_clave || [],
-        autores: nuevoLibro.autores || [],
+        palabras_clave: [...(nuevoLibro.palabras_clave || [])],
+        autores: JSON.parse(JSON.stringify(nuevoLibro.autores || [])),
       };
       console.log("Datos cargados para editar:", formData.value);
     } else {
@@ -719,6 +724,7 @@ const eliminarAutor = (index) => {
 
 // Cerrar modal
 const cerrar = () => {
+  if (props.saving || guardando.value || subiendoPortada.value || subiendoPDF.value) return;
   resetearFormulario();
   emit("cerrar");
 };

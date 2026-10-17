@@ -3,17 +3,16 @@ import { ref, computed, onMounted, defineAsyncComponent } from 'vue';
 import { can, canEditNews } from '../../../../lib/security/roles.js';
 import { NEWS_SECTIONS, stateLabel, dateLabel, newsActions, adminRequest, videoEmbedUrl } from '../../../../lib/publicationUi.js';
 import BarraEstados from '../../editorial/BarraEstados.vue';
+import AccionesPublicacion from '../../editorial/AccionesPublicacion.vue';
 import CargandoEditor from '../../editorial/CargandoEditor.vue';
 import { sanitizeHtml } from '../../../../lib/security/sanitize.js';
 const ModalPublicacion = defineAsyncComponent({ loader: () => import('./componentes/ModalPublicacion.vue'), loadingComponent: CargandoEditor, delay: 100 });
 const MarkdownPreview = defineAsyncComponent(async () => { const { MdPreview } = await import('md-editor-v3'); await import('md-editor-v3/lib/style.css'); return MdPreview; });
 const props = defineProps({ initialPublication: { type: Object, required: true }, user: { type: Object, required: true }, section: { type: String, required: true }, author: { type: Object, default: () => ({}) } });
 const doc = ref(JSON.parse(JSON.stringify(props.initialPublication))), busy = ref(false), error = ref(''), notice = ref(''), tab = ref('content'), mounted = ref(false);
-const editDialog = ref(null), editMounted = ref(false), actionDialog = ref(null), pending = ref(null), note = ref(''), assignees = ref([]);
+const editDialog = ref(null), editMounted = ref(false), formBusy = ref(false), actionDialog = ref(null), pending = ref(null), note = ref(''), assignees = ref([]);
 const scope = computed(() => ({ section: props.section }));
 const actions = computed(() => newsActions(props.user, doc.value, props.section));
-const primaryActions = computed(() => actions.value.filter(a => !a.secondary));
-const secondaryActions = computed(() => actions.value.filter(a => a.secondary));
 const canEdit = computed(() => canEditNews(props.user, doc.value, props.section));
 const canAssign = computed(() => can(props.user, 'gaceta.assign', scope.value));
 const publicUrl = computed(() => `/gaceta/${encodeURIComponent(doc.value._id)}?categoria=${props.section}`);
@@ -89,11 +88,11 @@ onMounted(async () => {
     <div class="record-toolbar">
       <div class="record-actions">
         <button v-if="canEdit" class="ui-button primary" :disabled="busy" @click="edit">Editar publicación</button>
-        <button v-for="action in primaryActions" :key="action.target" class="ui-button" :disabled="busy" @click="openAction(action)">{{ action.label }} <span aria-hidden="true">→</span></button>
-        <details v-if="secondaryActions.length || can(user,'gaceta.delete',scope)" class="action-menu"><summary class="ui-button quiet" aria-label="Más acciones">Más acciones <span aria-hidden="true">⌄</span></summary><div class="action-menu-panel"><button v-for="action in secondaryActions" :key="action.target" :disabled="busy" @click="openAction(action);$event.target.closest('details').removeAttribute('open')">{{ action.label }}</button><button v-if="can(user,'gaceta.delete',scope)" class="danger-text" :disabled="busy" @click="openAction({delete:true,label:'Eliminar publicación'});$event.target.closest('details').removeAttribute('open')">Eliminar publicación</button></div></details>
+        <details v-if="can(user,'gaceta.delete',scope)" class="action-menu"><summary class="ui-button quiet" aria-label="Más acciones">Más acciones ⌄</summary><div class="action-menu-panel"><button class="danger-text" :disabled="busy" @click="openAction({delete:true,label:'Eliminar publicación'});$event.target.closest('details').removeAttribute('open')">Eliminar publicación</button></div></details>
       </div>
       <a v-if="doc.editorialStatus === 'publicado'" class="ui-button quiet" :href="publicUrl" target="_blank" rel="noopener">Ver en el sitio ↗</a>
     </div>
+    <AccionesPublicacion :user="user" :doc="doc" :section="section" :busy="busy" @select="openAction" />
     <div class="record-state-row"><span class="eyebrow">PROCESO EDITORIAL</span><BarraEstados :state="doc.editorialStatus" :actions="actions" :busy="busy" @select="openAction" /></div>
     <p v-if="error && !editDialog?.open && !actionDialog?.open" role="alert" class="ui-alert error">{{ error }}</p><p v-if="notice" role="status" class="ui-alert success">{{ notice }}</p>
     <div class="record-layout">
@@ -117,7 +116,7 @@ onMounted(async () => {
         <p class="record-help">Los cambios de estado quedan registrados en la actividad de esta publicación.</p>
       </aside>
     </div>
-    <dialog ref="editDialog" class="modal editorial-modal" aria-label="Editar publicación" @cancel="busy && $event.preventDefault()"><ModalPublicacion v-if="editMounted" :publicacion="doc" modo="editar" :section="section" :server-error="error" :saving="busy" @cerrar="editDialog.close();editMounted=false" @guardar="save" /></dialog>
+    <dialog ref="editDialog" class="modal editorial-modal" aria-label="Editar publicación" @cancel="(busy || formBusy) && $event.preventDefault()" @close="editMounted=false"><ModalPublicacion v-if="editMounted" :publicacion="doc" modo="editar" :section="section" :server-error="error" :saving="busy" @cerrar="editDialog.close();editMounted=false" @guardar="save" @busy="formBusy=$event" /></dialog>
     <dialog ref="actionDialog" class="modal editorial-modal" aria-labelledby="action-title" @cancel="busy && $event.preventDefault()"><form class="modal-box ui-dialog" @submit.prevent="confirmAction"><p class="eyebrow">{{ pending?.delete ? 'ELIMINAR REGISTRO' : 'PROCESO EDITORIAL' }}</p><h2 id="action-title">{{ pending?.label }}</h2><p class="subtle">{{ confirmation }}</p><p class="dialog-record-title">{{ doc.titulo }}</p><label v-if="!pending?.delete" class="field-label">Observaciones <span class="subtle">(opcional)</span><textarea v-model="note" class="ui-control" maxlength="2000" rows="3" placeholder="Añade contexto para el equipo…"></textarea></label><p v-if="error" class="ui-alert error" role="alert">{{ error }}</p><div class="dialog-actions"><button type="button" class="ui-button" :disabled="busy" @click="actionDialog.close()">Cancelar</button><button class="ui-button" :class="pending?.delete ? 'danger' : 'primary'" :disabled="busy">{{ busy ? 'Procesando…' : pending?.delete ? 'Eliminar definitivamente' : 'Confirmar cambio' }}</button></div></form></dialog>
   </section>
 </template>

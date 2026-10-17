@@ -1,11 +1,15 @@
 ---
 import Layout from '../../../layouts/Layout_admin.astro';
+import IconoApp from '../../../components/componentes_admin/IconoApp.astro';
 import { can } from '../../../lib/security/roles.js';
 const user = Astro.locals.user;
+const apps = [
+  { href:'/admin/gaceta/gestion_publicaciones',icon:'/admin/gaceta',color:'teal',label:'Publicaciones',description:'Prepara noticias, revisa el contenido y acompaña cada etapa hasta su publicación.',caption:'CREAR · REVISAR · PUBLICAR',show:true },
+  { href:'/admin/gaceta/gestion_autores',icon:'autores',color:'violet',label:'Autores públicos',description:'Organiza las firmas, biografías y perfiles que acompañan las publicaciones.',caption:'PERFILES Y FIRMAS',show:can(user,'autores.manage') },
+  { href:'/admin/gaceta/gestion_destacados',icon:'destacados',color:'amber',label:'Destacados',description:'Elige las publicaciones que tendrán mayor presencia en la portada de Gaceta.',caption:'SELECCIÓN EDITORIAL',show:can(user,'gaceta.feature') },
+];
 ---
-<Layout><section class="max-w-4xl mx-auto px-4 space-y-6"><h1 class="text-3xl font-bold">Gaceta Multidisciplinaria</h1>
-<div class="flex flex-wrap gap-4">
-<a class="btn btn-primary" href="/admin/gaceta/gestion_publicaciones">Publicaciones y revisión</a>
-{can(user, 'autores.manage') && <a class="btn" href="/admin/gaceta/gestion_autores">Autores públicos</a>}
-{can(user, 'gaceta.feature') && <a class="btn" href="/admin/gaceta/gestion_destacados">Destacados</a>}
-</div></section></Layout>
+<Layout title="Gaceta · CIMU"><section class="editorial-workspace app-home"><div class="workspace-heading"><div><p class="eyebrow">COMUNIDAD UNIVERSITARIA</p><h1>Gaceta Multidisciplinaria</h1><p class="subtle">Un espacio para las historias, ideas y voces de nuestra comunidad.</p></div><a href="/gaceta" target="_blank" rel="noopener" class="ui-button quiet">Ver Gaceta ↗</a></div>
+<nav class="gaceta-app-grid" aria-label="Aplicaciones de Gaceta">{apps.filter(app=>app.show).map(app=><a href={app.href} class="gaceta-app workspace-sheet"><span class={`app-icon ${app.color}`}><IconoApp name={app.icon}/></span><p class="eyebrow">{app.caption}</p><h2>{app.label}</h2><p class="subtle">{app.description}</p><span class="app-card-link">Abrir {app.label.toLowerCase()} <span aria-hidden="true">→</span></span></a>)}</nav>
+<div class="workflow-guide workspace-sheet"><div><p class="eyebrow">DE LA IDEA A LA COMUNIDAD</p><h2>Un proceso editorial claro</h2><p class="subtle">Abre una publicación para ver su estado y realizar las acciones disponibles para tu rol.</p></div><ol><li>Borrador</li><li>Revisión</li><li>Aprobación</li><li>Publicación</li></ol></div>
+</section></Layout>

@@ -1,0 +1,5 @@
+---
+import Layout from '../../../layouts/Layout_admin.astro';
+import DetalleCuenta from '../../../components/componentes_admin/usuarios/DetalleCuenta.vue';
+---
+<Layout title="Invitar persona · CIMU"><DetalleCuenta viewer={Astro.locals.user} client:load /></Layout>

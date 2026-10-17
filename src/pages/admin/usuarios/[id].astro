@@ -1,0 +1,11 @@
+---
+import Layout from '../../../layouts/Layout_admin.astro';
+import DetalleCuenta from '../../../components/componentes_admin/usuarios/DetalleCuenta.vue';
+import { readPolicy } from '../../../lib/security/store.js';
+import { publicUser } from '../../../lib/security/roles.js';
+import { idSchema } from '../../../lib/security/validation.js';
+import { errorResponse, HttpError } from '../../../lib/security/http.js';
+let account;
+try { const policy=await readPolicy(); const stored=policy.accounts[idSchema.parse(Astro.params.id)]; if(!stored)throw new HttpError(404,'Cuenta no encontrada');account=publicUser(stored); } catch(error){return errorResponse(error);}
+---
+<Layout title={`${account.name} · Cuentas · CIMU`}><DetalleCuenta initialAccount={account} viewer={Astro.locals.user} client:load /></Layout>

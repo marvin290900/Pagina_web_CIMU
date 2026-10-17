@@ -53,10 +53,16 @@ test('HTTP: login, account invitation, scoped draft, private file, review and pu
     assert.equal(logged.response.status,200,JSON.stringify(logged.data)); const adminCookie = logged.cookie;
     assert(adminCookie); assert(logged.response.headers.get('set-cookie').includes('HttpOnly'));
     const adminPage = await request('/admin/usuarios','GET',undefined,adminCookie); assert.equal(adminPage.response.status,200); assert(adminPage.data.includes('Cuentas y permisos'));
+    assert.equal((await request('/admin/usuarios/nueva','GET',undefined,adminCookie)).response.status,200);
+    const ownProfile=await request('/admin/cuenta','GET',undefined,adminCookie);
+    assert.equal(ownProfile.response.status,200);assert(ownProfile.data.includes('Mis roles y accesos'));
     const dashboard = await request('/admin','GET',undefined,adminCookie);
     assert.equal(dashboard.response.status,200);
     assert(dashboard.data.includes('href="/admin/carrousel_imagenes"'));
     assert(dashboard.data.includes('href="/admin/libros"'));
+    assert(dashboard.data.includes('Buscar aplicaciones'));
+    const gacetaMenu=await request('/admin/gaceta','GET',undefined,adminCookie);
+    assert(gacetaMenu.data.includes('Aplicaciones de Gaceta'));
     const oldHome = await request('/admin/inicio','GET',undefined,adminCookie);
     assert.equal(oldHome.response.status,302);
     assert.equal(oldHome.response.headers.get('location'),'/admin/carrousel_imagenes');
@@ -68,10 +74,18 @@ test('HTTP: login, account invitation, scoped draft, private file, review and pu
     // Creating another account must never replace the admin session.
     const stillAdmin = await request('/api/cuenta/me','GET',undefined,adminCookie); assert.equal(stillAdmin.data.user.id,'admin');
     const writerId = created.data.user.id;
+    const accountRecord=await request(`/admin/usuarios/${writerId}`,'GET',undefined,adminCookie);
+    assert.equal(accountRecord.response.status,200);
+    assert(accountRecord.data.includes('Roles y permisos'));
+    assert(!accountRecord.data.includes('passwordHash'));
+    assert(!accountRecord.data.includes('setupTokenHash'));
+    assert.equal((await request('/admin/usuarios/missing','GET',undefined,adminCookie)).response.status,404);
     assert.equal((await request('/api/cuenta/activar','POST',{id:writerId,token:created.data.setupToken,password:'Private writer password'})).response.status,200);
     const writerLogin = await request('/api/login','POST',{email:'writer@example.com',password:'Private writer password'}); assert.equal(writerLogin.response.status,200); const writerCookie = writerLogin.cookie;
     assert.equal((await request('/api/usuarios','GET',undefined,writerCookie)).response.status,403);
     assert.equal((await request('/admin/usuarios','GET',undefined,writerCookie)).response.status,403);
+    assert.equal((await request(`/admin/usuarios/${writerId}`,'GET',undefined,writerCookie)).response.status,403);
+    assert.equal((await request('/admin/usuarios/nueva','GET',undefined,writerCookie)).response.status,403);
     assert.equal((await request('/admin/carrousel_imagenes','GET',undefined,writerCookie)).response.status,403);
     const writerDashboard = await request('/admin','GET',undefined,writerCookie);
     assert(writerDashboard.data.includes('href="/admin/libros"'));
@@ -103,6 +117,10 @@ test('HTTP: login, account invitation, scoped draft, private file, review and pu
     const review = await transition(draft.data.rev,'en_revision',writerCookie); assert.equal(review.response.status,200);
     const approved = await transition(review.data.publication._rev,'aprobado',adminCookie); assert.equal(approved.response.status,200);
     const published = await transition(approved.data.publication._rev,'publicado',adminCookie); assert.equal(published.response.status,200);
+    const directorView=await request(previewPath,'GET',undefined,adminCookie);
+    assert(directorView.data.includes('aria-label="Acciones editoriales"'));
+    assert(directorView.data.includes('Archivar publicación'));
+    assert(directorView.data.includes('Retirar a borrador'));
     const publicDoc = await request(`/api/gaceta/obtener?categoria=opinion&id=${newsId}`); assert.equal(publicDoc.response.status,200); assert(!('createdBy' in publicDoc.data));
     assert.equal((await request(assetUrl)).response.status,200);
     const author = await request('/api/gaceta/obtener?categoria=autores&id=a'); assert(!('correo' in author.data)); assert.equal(author.data.publicaciones.length,1);

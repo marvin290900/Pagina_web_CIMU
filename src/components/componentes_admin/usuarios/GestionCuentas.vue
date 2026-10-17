@@ -1,85 +1,26 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { ROLE_LABELS, MODULES, SECTIONS } from '../../../lib/security/roles.js';
-const users = ref([]), busy = ref(false), error = ref(''), notice = ref(''), setupLink = ref('');
-const editing = ref(null), form = ref(empty());
-function empty() { return { name: '', email: '', status: 'invited', assignments: [{ role: 'colaborador', modules: ['gaceta'], sections: ['actualidad'] }] }; }
-async function api(url, options = {}) {
-  const response = await fetch(url, { ...options, headers: { 'Content-Type': 'application/json' } });
-  const data = await response.json();
-  if (!response.ok) throw new Error(typeof data.error === 'string' ? data.error : 'Revisa los datos del formulario');
-  return data;
-}
-async function load() { users.value = (await api('/api/usuarios')).users; }
-function select(user) {
-  editing.value = user?.id || null; form.value = user ? JSON.parse(JSON.stringify({ name: user.name, email: user.email, status: user.status, assignments: user.assignments, version: user.authVersion })) : empty();
-  setupLink.value = ''; notice.value = ''; error.value = '';
-}
-function showLink(id, token) { setupLink.value = `${location.origin}/activar-cuenta#id=${encodeURIComponent(id)}&token=${encodeURIComponent(token)}`; }
-async function run(action) { busy.value = true; error.value = ''; notice.value = ''; try { await action(); } catch (e) { error.value = e.message; } finally { busy.value = false; } }
-async function save() {
-  await run(async () => {
-    if (editing.value) {
-      const { email, ...body } = form.value;
-      await api(`/api/usuarios/${editing.value}`, { method: 'PATCH', body: JSON.stringify(body) });
-      notice.value = 'Cuenta actualizada. Sus sesiones anteriores quedaron revocadas.';
-    } else {
-      const { status, ...body } = form.value;
-      const result = await api('/api/usuarios', { method: 'POST', body: JSON.stringify(body) });
-      showLink(result.user.id, result.setupToken);
-      notice.value = 'Cuenta creada. Entrega el enlace de forma privada; se muestra solo en esta pantalla.';
-    }
-    editing.value = null; form.value = empty(); await load();
-  });
-}
-async function access(user, action) {
-  if (!window.confirm(action === 'reset' ? 'Se invalidará la contraseña actual y todas las sesiones. ¿Restablecer acceso?' : '¿Cerrar todas las sesiones de esta cuenta?')) return;
-  await run(async () => {
-    const data = await api(`/api/usuarios/${user.id}/acceso`, { method: 'POST', body: JSON.stringify({ action }) });
-    if (data.setupToken) showLink(user.id, data.setupToken);
-    notice.value = action === 'reset' ? 'Entrega el nuevo enlace de forma privada. Vence en una hora.' : 'Sesiones revocadas.';
-    await load();
-  });
-}
-onMounted(() => run(load));
+import { ref, computed, onMounted } from 'vue';
+import { ROLE_LABELS } from '../../../lib/security/roles.js';
+import { ACCOUNT_STATES, MODULE_LABELS, accountRoles, accountModules, initials } from '../../../lib/adminUi.js';
+import { adminRequest, dateLabel } from '../../../lib/publicationUi.js';
+const users=ref([]), loading=ref(true), error=ref(''), search=ref(''), status=ref(''), role=ref(''), page=ref(1);
+const filtered=computed(()=>users.value.filter(u=>(!status.value||u.status===status.value)&&(!role.value||u.assignments.some(a=>a.role===role.value))&&`${u.name} ${u.email} ${accountRoles(u)}`.toLocaleLowerCase('es').includes(search.value.trim().toLocaleLowerCase('es'))));
+const pages=computed(()=>Math.max(1,Math.ceil(filtered.value.length/15)));
+const current=computed(()=>Math.min(page.value,pages.value));
+const visible=computed(()=>filtered.value.slice((current.value-1)*15,current.value*15));
+async function load(){loading.value=true;error.value='';try{users.value=(await adminRequest('/api/usuarios')).users;}catch(e){error.value=e.message;}finally{loading.value=false;}}
+function open(event,id){if(!event.target.closest('a,button'))location.href=`/admin/usuarios/${encodeURIComponent(id)}`;}
+onMounted(load);
 </script>
 <template>
-  <section class="max-w-6xl mx-auto px-4 space-y-6">
-    <h1 class="text-3xl font-bold">Cuentas y permisos</h1>
-    <p>Cada cuenta pertenece a una persona. Los autores públicos se administran por separado en Gaceta.</p>
-    <p v-if="error" role="alert" class="alert alert-error">{{ error }}</p>
-    <p v-if="notice" role="status" class="alert alert-success">{{ notice }}</p>
-    <div v-if="setupLink" class="p-4 border rounded space-y-2">
-      <label class="block font-bold" for="setup-link">Enlace privado para establecer contraseña</label>
-      <input id="setup-link" class="input w-full" readonly :value="setupLink" @focus="$event.target.select()" />
-      <button class="btn btn-sm" @click="setupLink = ''">Ocultar enlace</button>
-    </div>
-    <div class="overflow-x-auto"><table class="table">
-      <thead><tr><th>Persona</th><th>Correo</th><th>Estado</th><th>Roles</th><th>Acciones</th></tr></thead>
-      <tbody><tr v-for="user in users" :key="user.id">
-        <td>{{ user.name }}</td><td>{{ user.email }}</td><td>{{ user.status }}</td>
-        <td><div v-for="(a, index) in user.assignments" :key="index">{{ ROLE_LABELS[a.role] }} · {{ a.modules.join(', ') }}<span v-if="a.sections.length"> · {{ a.sections.join(', ') }}</span></div></td>
-        <td><div class="flex flex-wrap gap-2"><button class="btn btn-sm" :disabled="busy" @click="select(user)">Editar</button><button class="btn btn-sm" :disabled="busy" @click="access(user, 'revoke')">Cerrar sesiones</button><button class="btn btn-sm" :disabled="busy" @click="access(user, 'reset')">Restablecer acceso</button></div></td>
-      </tr></tbody>
-    </table></div>
-    <form class="border rounded p-6 space-y-4" @submit.prevent="save">
-      <div class="flex justify-between"><h2 class="text-xl font-bold">{{ editing ? 'Editar cuenta' : 'Crear cuenta' }}</h2><button type="button" class="btn btn-sm" :disabled="busy" @click="select(null)">Nueva cuenta</button></div>
-      <label class="block">Nombre<input v-model="form.name" class="input block w-full" required minlength="2" maxlength="120" :disabled="busy" /></label>
-      <label class="block">Correo<input v-model="form.email" class="input block w-full" type="email" required :disabled="busy || !!editing" /></label>
-      <label v-if="editing" class="block">Estado<select v-model="form.status" class="select block" :disabled="busy"><option value="active">Activa</option><option value="disabled">Desactivada</option><option v-if="form.status === 'invited'" value="invited">Invitación pendiente</option></select></label>
-      <fieldset v-for="(assignment, index) in form.assignments" :key="index" class="border rounded p-4 space-y-3" :disabled="busy">
-        <legend>Asignación {{ index + 1 }}</legend>
-        <label>Rol <select v-model="assignment.role" class="select"><option v-for="(label, role) in ROLE_LABELS" :key="role" :value="role">{{ label }}</option></select></label>
-        <template v-if="assignment.role !== 'administrador'">
-          <p>Módulos</p><div class="flex flex-wrap gap-4"><label v-for="module in MODULES" :key="module"><input v-model="assignment.modules" type="checkbox" :value="module" class="checkbox checkbox-sm" /> {{ module }}</label></div>
-          <template v-if="assignment.modules.includes('gaceta')"><p>Secciones de Gaceta</p><div class="flex flex-wrap gap-4"><label v-for="section in ['*', ...SECTIONS]" :key="section"><input v-model="assignment.sections" type="checkbox" :value="section" class="checkbox checkbox-sm" /> {{ section === '*' ? 'Todas' : section }}</label></div></template>
-        </template>
-        <p v-else>Administra cuentas y sesiones. Para publicar, agrega también el rol de dirección editorial.</p>
-        <button type="button" class="btn btn-sm" :disabled="form.assignments.length === 1" @click="form.assignments.splice(index, 1)">Quitar asignación</button>
-      </fieldset>
-      <button type="button" class="btn" :disabled="busy || form.assignments.length >= 12" @click="form.assignments.push({ role: 'consulta', modules: [], sections: [] })">Agregar rol y alcance</button>
-      <p class="text-sm">Los colaboradores trabajan en borradores propios; los editores revisan y editan contenidos asignados; dirección editorial publica.</p>
-      <div><button class="btn btn-primary" :disabled="busy">{{ busy ? 'Guardando…' : editing ? 'Guardar cambios' : 'Crear y generar enlace' }}</button></div>
-    </form>
-  </section>
+<section class="editorial-workspace">
+  <div class="workspace-heading"><div><p class="eyebrow">EQUIPO EDITORIAL</p><h1>Cuentas y permisos</h1><p class="subtle">Personas, responsabilidades y accesos en un solo lugar.</p></div><a href="/admin/usuarios/nueva" class="ui-button primary">＋ Invitar persona</a></div>
+  <div class="metric-grid" aria-label="Resumen del equipo"><div><span>Total de personas</span><strong>{{loading?'—':users.length}}</strong></div><div><span><i class="metric-dot green"></i> Cuentas activas</span><strong>{{loading?'—':users.filter(u=>u.status==='active').length}}</strong></div><div><span><i class="metric-dot amber"></i> Invitaciones pendientes</span><strong>{{loading?'—':users.filter(u=>u.status==='invited').length}}</strong></div><div><span><i class="metric-dot gray"></i> Desactivadas</span><strong>{{loading?'—':users.filter(u=>u.status==='disabled').length}}</strong></div></div>
+  <p v-if="error" class="ui-alert error" role="alert">{{error}}</p>
+  <div class="workspace-sheet"><div class="list-toolbar"><label class="search-field"><span aria-hidden="true">⌕</span><input v-model="search" type="search" aria-label="Buscar personas" placeholder="Buscar por nombre, correo o rol…" @input="page=1" /></label><div class="list-filters"><label><span class="sr-only">Estado de la cuenta</span><select v-model="status" class="ui-control" @change="page=1"><option value="">Todos los estados</option><option v-for="(label,key) in ACCOUNT_STATES" :value="key" :key="key">{{label}}</option></select></label><label><span class="sr-only">Rol de la cuenta</span><select v-model="role" class="ui-control" @change="page=1"><option value="">Todos los roles</option><option v-for="(label,key) in ROLE_LABELS" :value="key" :key="key">{{label}}</option></select></label><button class="ui-button quiet" :disabled="loading" @click="load" aria-label="Actualizar cuentas">↻ <span>Actualizar</span></button></div></div>
+  <div class="table-scroll" :aria-busy="loading"><table class="record-table accounts-table"><thead><tr><th>Persona</th><th>Estado</th><th>Roles</th><th>Módulos editoriales</th><th>Actualización</th><th><span class="sr-only">Abrir cuenta</span></th></tr></thead><tbody v-if="loading"><tr v-for="n in 4" :key="n"><td colspan="6"><div class="loading-line"></div></td></tr></tbody><tbody v-else><tr v-for="user in visible" :key="user.id" class="clickable-row" @click="open($event,user.id)"><td><div class="person-cell"><span class="person-avatar" aria-hidden="true">{{initials(user.name)}}</span><div><a :href="`/admin/usuarios/${encodeURIComponent(user.id)}`" class="record-title">{{user.name}}</a><p class="cell-secondary">{{user.email}}</p></div></div></td><td><span class="state-badge" :data-state="user.status">{{ACCOUNT_STATES[user.status]}}</span></td><td><span class="roles-text">{{accountRoles(user)}}</span></td><td><div class="inline-tags"><span v-for="m in accountModules(user)" :key="m" class="section-label">{{MODULE_LABELS[m]}}</span><span v-if="!accountModules(user).length" class="subtle">Sin módulos editoriales</span></div></td><td class="nowrap">{{dateLabel(user.updatedAt||user.createdAt)}}</td><td class="row-arrow" aria-hidden="true">→</td></tr></tbody></table></div>
+  <div v-if="!loading&&!filtered.length" class="empty-state"><h2>No encontramos personas</h2><p>{{users.length?'Prueba otro nombre o cambia los filtros.':'Invita a la primera persona de tu equipo.'}}</p><button v-if="users.length" class="ui-button" @click="search='';role='';status=''">Limpiar filtros</button></div>
+  <footer class="table-footer"><span>{{filtered.length?((current-1)*15+1):0}}–{{Math.min(current*15,filtered.length)}} de {{filtered.length}} personas</span><div class="pagination"><button class="ui-button quiet" aria-label="Página anterior" :disabled="current<=1" @click="page=current-1">←</button><span>{{current}} / {{pages}}</span><button class="ui-button quiet" aria-label="Página siguiente" :disabled="current>=pages" @click="page=current+1">→</button></div></footer></div>
+  <p class="workspace-footnote">Abre una cuenta para editar sus roles y alcances. Los perfiles de autores públicos se administran por separado en Gaceta.</p>
+</section>
 </template>

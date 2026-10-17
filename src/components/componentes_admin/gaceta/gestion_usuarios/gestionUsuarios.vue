@@ -1,37 +1,13 @@
 <template>
-  <section class="w-4/5 mx-auto">
-    <div v-if="cargandoUsuarios" class="w-full flex justify-center h-[100vh]">
-      <span class="loading loading-spinner text-primary"></span>
-    </div>
-    <div v-else class="flex justify-between py-4">
-      <h2 class="text-3xl font-bold">
-        <a href="/admin/gaceta"
-          ><button class="btn mr-3 btn-ghost">
-            <span class="mdi mdi-arrow-left"></span>Regresar
-          </button></a
-        >Autores públicos
-      </h2>
-      <div>
-        <label class="input">
-          <span class="mdi mdi-magnify text-2xl text-gray-500"></span>
-          <input
-            v-model="busquedaUsuario"
-            type="search"
-            class="grow"
-            placeholder="Buscar"
-          />
-        </label>
-      </div>
-      <button class="btn btn-primary" @click="abrirModalNuevo">
-        <span class="mdi mdi-plus text-xl"></span>
-        Agregar
-      </button>
-    </div>
-
+  <section class="editorial-workspace management-workspace">
+    <nav class="record-breadcrumb" aria-label="Ruta de navegación"><a href="/admin/gaceta">← Gaceta</a><span aria-hidden="true">/</span><span>Autores públicos</span></nav>
+    <div class="workspace-heading"><div><p class="eyebrow">PERFILES Y FIRMAS</p><h1>Autores públicos</h1><p class="subtle">Las personas que dan voz a las publicaciones de Gaceta.</p></div><button class="ui-button primary" :disabled="cargandoUsuarios" @click="abrirModalNuevo">＋ Agregar autor</button></div>
+    <div class="list-toolbar workspace-sheet"><label class="search-field"><span aria-hidden="true">⌕</span><input v-model="busquedaUsuario" type="search" aria-label="Buscar autores públicos" placeholder="Buscar autores…" /></label></div>
+    <div v-if="cargandoUsuarios" class="empty-state" role="status"><span class="loading loading-spinner loading-sm" aria-hidden="true"></span> Cargando autores…</div>
     <div
-      class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100"
+      class="table-scroll workspace-sheet"
     >
-      <table class="table">
+      <table class="record-table">
         <!-- head -->
         <thead>
           <tr>
@@ -194,7 +170,7 @@
     </div>
 
     <!-- Modal agregar usuario -->
-    <dialog ref="modalRef" id="modal_libros" class="modal">
+    <dialog ref="modalRef" id="modal_libros" class="modal editorial-modal">
       <modal-usuarios
         :usuario="dataUsuario"
         :modo="modoModal"
@@ -204,7 +180,7 @@
     </dialog>
 
     <!-- Modal eliminar usuario -->
-    <dialog ref="modalEliminarRef" id="modal_eliminar" class="modal">
+    <dialog ref="modalEliminarRef" id="modal_eliminar" class="modal editorial-modal">
       <div class="modal-box w-11/12 max-w-3xl">
         <div class="flex justify-between items-center">
           <h3 class="text-lg font-bold">Confirmar eliminación</h3>
@@ -239,7 +215,7 @@
     </dialog>
 
     <!-- Modal eliminar usuario -->
-    <dialog ref="modalGuardandoRef" id="modal_guardando" class="modal">
+    <dialog ref="modalGuardandoRef" id="modal_guardando" class="modal editorial-modal">
       <div class="modal-box w-2/3">
         <span class="loading loading-spinner text-primary"></span> Guardando...
       </div>

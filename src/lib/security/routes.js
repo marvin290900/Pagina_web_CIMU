@@ -36,6 +36,8 @@ export const ADMIN_PAGES = {
 };
 
 export function adminRule(path) {
+  if (path === '/admin/usuarios/nueva') return 'users.create';
+  if (/^\/admin\/usuarios\/[a-zA-Z0-9_-]+$/.test(path)) return 'users.read';
   if (/^\/admin\/gaceta\/publicacion\/[a-zA-Z0-9_-]+$/.test(path)) return 'gaceta.access';
   return ADMIN_PAGES[path] || null;
 }

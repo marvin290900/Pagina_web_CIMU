@@ -14,9 +14,10 @@ export function stateLabel(state) {
   return state === 'archivado' ? 'Archivada' : PUBLICATION_STATES.find(s => s.value === state)?.label || 'Sin clasificar';
 }
 export function dateLabel(value, withTime = false) {
-  const date = new Date(value || '');
+  const dateOnly = typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value);
+  const date = new Date(dateOnly ? `${value}T12:00:00Z` : value || '');
   if (!Number.isFinite(date.getTime())) return '—';
-  return new Intl.DateTimeFormat('es-SV', { dateStyle: 'medium', ...(withTime ? { timeStyle: 'short' } : {}), timeZone: 'America/El_Salvador' }).format(date);
+  return new Intl.DateTimeFormat('es-SV', { dateStyle: 'medium', ...(withTime && !dateOnly ? { timeStyle: 'short' } : {}), timeZone: 'America/El_Salvador' }).format(date);
 }
 export function newsSectionsFor(user) {
   return SECTIONS.filter(section => can(user, 'gaceta.read_internal', { section }) || can(user, 'gaceta.create', { section }));
@@ -35,6 +36,20 @@ export function newsActions(user, doc, section) {
 }
 export function newsRecordUrl(doc, section = doc.sectionKey || doc.tipo) {
   return `/admin/gaceta/publicacion/${encodeURIComponent(doc._id)}?categoria=${encodeURIComponent(section)}`;
+}
+export function catalogActions(user, doc, module) {
+  if (!['libros', 'investigaciones'].includes(module)) return [];
+  const actions = [];
+  const state = doc.editorialStatus;
+  if (state === 'borrador' && canEditContent(user, module, doc)) actions.push({ target: 'en_revision', label: 'Enviar a revisión' });
+  if (state === 'en_revision' && can(user, `${module}.review`)) actions.push({ target: 'aprobado', label: 'Aprobar publicación' }, { target: 'borrador', label: 'Solicitar correcciones', secondary: true });
+  if (state === 'aprobado' && can(user, `${module}.publish`)) actions.push({ target: 'publicado', label: 'Publicar' });
+  if (['publicado', 'aprobado', 'archivado'].includes(state) && can(user, `${module}.unpublish`)) actions.push({ target: 'borrador', label: 'Volver a borrador', secondary: true });
+  if (state && state !== 'archivado' && can(user, `${module}.archive`)) actions.push({ target: 'archivado', label: 'Archivar', secondary: true });
+  return actions;
+}
+export function catalogRecordUrl(module, id) {
+  return `${module === 'libros' ? '/admin/libros' : '/admin/investigacion'}?registro=${encodeURIComponent(id)}`;
 }
 export async function adminRequest(url, options = {}) {
   const response = await fetch(url, { ...options, headers: { 'Content-Type': 'application/json', ...options.headers } });

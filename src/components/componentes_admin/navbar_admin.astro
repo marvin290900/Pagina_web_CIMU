@@ -1,16 +1,16 @@
 ---
 import { getAdminLinks } from '../../lib/security/navigation.js';
+import IconoApp from './IconoApp.astro';
 const user = Astro.locals.user;
 const links = getAdminLinks(user);
 const path = Astro.url.pathname.replace(/\/$/, '');
 const current = links.find(link => link.href === '/admin' ? path === '/admin' || path === '/admin/informacion' : path === link.href || path.startsWith(link.href + '/'));
-const glyphs = { '/admin': '▦', '/admin/usuarios': '♙', '/admin/carrousel_imagenes': '▧', '/admin/libros': '▤', '/admin/gaceta': '≡', '/admin/investigacion': '⌕', '/admin/investigadores': '♧', '/admin/auditoria': '◷', '/admin/cuenta': '○' };
 ---
 <div id="sidebarOverlay" class="admin-overlay" hidden></div>
 <aside id="sidebar" class="admin-rail" aria-label="Menú principal" data-open="false">
   <div class="rail-brand"><a href="/admin" class="admin-brand"><span class="brand-mark">C</span><span>CIMU<span class="brand-caption" style="display:block">EDITORIAL</span></span></a><button id="closeSidebar" class="icon-button mobile-only" aria-label="Cerrar menú">×</button></div>
   <p class="rail-label">ESPACIO DE TRABAJO</p>
-  <nav class="rail-navigation">{links.map(link => <a href={link.href} class="rail-link" aria-current={current?.href === link.href ? 'page' : undefined}><span class="rail-glyph" aria-hidden="true">{glyphs[link.href] || '○'}</span>{link.label}</a>)}</nav>
+  <nav class="rail-navigation">{links.map(link => <a href={link.href} class="rail-link" aria-current={current?.href === link.href ? 'page' : undefined}><span class="rail-glyph" aria-hidden="true"><IconoApp name={link.href} /></span>{link.label}</a>)}</nav>
   <div class="rail-footer"><div class="rail-user"><span class="user-initial" aria-hidden="true">{user?.name?.slice(0,1).toUpperCase() || 'U'}</span><div style="min-width:0"><p class="user-name">{user?.name}</p><p class="user-email">{user?.email}</p></div></div><button id="logoutBtn" class="logout-control">Cerrar sesión →</button><p id="logoutError" role="alert" class="fine-print danger-text"></p></div>
 </aside>
 <header class="admin-topbar"><button id="toggleSidebar" class="icon-button mobile-only" aria-label="Abrir menú" aria-controls="sidebar" aria-expanded="false">☰</button><p class="topbar-title">Editorial <span style="padding:0 10px;color:#c2cbd1">/</span> {current?.label || 'Panel'}</p><span class="topbar-context">CIMU · Universidad de El Salvador</span></header>

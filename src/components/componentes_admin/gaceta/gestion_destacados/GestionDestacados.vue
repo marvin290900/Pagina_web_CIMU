@@ -1,6 +1,8 @@
 <template>
-  <section class="w-4/5 mx-auto">
-    <div v-if="cargando" class="w-full flex justify-center h-[100vh]">
+  <section class="editorial-workspace management-workspace">
+    <nav class="record-breadcrumb" aria-label="Ruta de navegación"><a href="/admin/gaceta">← Gaceta</a><span aria-hidden="true">/</span><span>Destacados</span></nav>
+    <div class="workspace-heading"><div><p class="eyebrow">SELECCIÓN EDITORIAL</p><h1>Destacados</h1><p class="subtle">Elige las historias que acompañan la portada de Gaceta.</p></div></div>
+    <div v-if="cargando" class="empty-state" role="status">
       <span class="loading loading-spinner text-primary"></span>
     </div>
     <!-- Publicación destacada -->
@@ -28,10 +30,10 @@
       </div>
       <div
         v-if="publicacionDestacada.length > 0"
-        class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 my-8"
+        class="table-scroll workspace-sheet my-8"
       >
         <div class="flex w-full p-6 text-2xl justify-center"></div>
-        <table class="table h-full">
+        <table class="record-table">
           <thead>
             <tr>
               <th>Estado</th>
@@ -121,10 +123,10 @@
       <!-- Tabla de publicaciones destacadas -->
       <div
         v-if="publicacionesPaginadas.length > 0"
-        class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 my-8"
+        class="table-scroll workspace-sheet my-8"
       >
         <div class="flex w-full p-6 text-2xl justify-center"></div>
-        <table class="table">
+        <table class="record-table">
           <thead>
             <tr>
               <th>Estado</th>

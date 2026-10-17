@@ -4,7 +4,7 @@
       <button
         class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 z-10"
         @click="cerrar"
-        :disabled="guardando || saving"
+        :disabled="guardando || saving || subiendoPortada || subiendoGaleria" type="button"
         aria-label="Cerrar formulario"
       >
         ✕
@@ -302,7 +302,7 @@
 <script setup>
 import { sanitizeHtml } from "../../../../../lib/security/sanitize.js";
 import { NEWS_SECTIONS } from "../../../../../lib/publicationUi.js";
-import { ref, watch, computed, onMounted } from "vue";
+import { ref, watch, computed, onMounted, onBeforeUnmount } from "vue";
 import { MdEditor, config } from "md-editor-v3";
 import Alert from "../../../../alert/Alert.vue";
 import "md-editor-v3/lib/style.css";
@@ -331,7 +331,7 @@ config({
   },
 });
 
-const emit = defineEmits(["cerrar", "guardar"]);
+const emit = defineEmits(["cerrar", "guardar", "busy"]);
 
 // Referencias
 const portadaInput = ref(null);
@@ -341,6 +341,8 @@ const galeriaInput = ref(null);
 const guardando = ref(false);
 const subiendoPortada = ref(false);
 const subiendoGaleria = ref(false);
+watch([guardando, subiendoPortada, subiendoGaleria], values => emit("busy", values.some(Boolean)), {flush: "sync"});
+onBeforeUnmount(() => emit("busy", false));
 const imagenesCargadas = ref(0);
 const totalImagenesSubir = ref(0);
 const alert = ref(false);
@@ -695,6 +697,7 @@ const handleUploadMarkdown = async (file) => {
 
 // Cerrar modal
 const cerrar = () => {
+  if (props.saving || guardando.value || subiendoPortada.value || subiendoGaleria.value) return;
   resetearFormulario();
   emit("cerrar");
 };

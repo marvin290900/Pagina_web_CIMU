@@ -2,22 +2,20 @@
 
 ---
 
-<section id="apartadoCarrouselAdmin" class="py-1 bg-white text-black">
+<section id="apartadoCarrouselAdmin" class="editorial-workspace management-workspace">
   <div class="container mx-auto px-4">
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="text-sm sm:text-lg md:text-lg lg:text-2xl font-semibold">
-        Imágenes del Carrusel
-      </h2>
+    <div class="workspace-heading">
+      <div><p class="eyebrow">PORTADA DEL SITIO</p><h1>Imágenes del Carrusel</h1><p class="subtle">Organiza las imágenes que reciben a nuestra comunidad.</p></div>
       <button
         id="btnMostrarModalAgregar"
-        class="bg-blue-950 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+        class="ui-button primary"
       >
         + Agregar Imagen
       </button>
     </div>
 
     <!-- Modal para agregar imagen -->
-    <dialog id="modalAgregarImagen" class="modal">
+    <dialog id="modalAgregarImagen" class="modal editorial-modal">
       <div class="modal-box max-w-lg">
         <form
           id="formAgregarImagen"
@@ -74,7 +72,7 @@
     </dialog>
 
     <!-- Modal para confirmar agregar imagen -->
-    <dialog id="modalConfirmarAgregar" class="modal">
+    <dialog id="modalConfirmarAgregar" class="modal editorial-modal">
       <div class="modal-box">
         <h3 class="font-bold text-lg mb-4">¿Guardar nueva imagen?</h3>
         <p class="text-sm text-gray-600 mb-4">
@@ -98,7 +96,7 @@
     </dialog>
 
     <!-- Modal para editar imagen -->
-    <dialog id="modalEditarImagen" class="modal">
+    <dialog id="modalEditarImagen" class="modal editorial-modal">
       <div class="modal-box max-w-lg">
         <form
           id="formEditarImagen"
@@ -171,7 +169,7 @@
     </dialog>
 
     <!-- Modal confirmar edición -->
-    <dialog id="modalConfirmarEditar" class="modal">
+    <dialog id="modalConfirmarEditar" class="modal editorial-modal">
       <div class="modal-box">
         <h3 class="font-bold text-lg mb-4">¿Guardar cambios?</h3>
         <p class="text-sm text-gray-600 mb-4">
@@ -195,7 +193,7 @@
     </dialog>
 
     <!-- Modal para confirmar eliminar imagen -->
-    <dialog id="modalConfirmarEliminar" class="modal">
+    <dialog id="modalConfirmarEliminar" class="modal editorial-modal">
       <div class="modal-box">
         <h3 class="font-bold text-lg mb-4">¿Eliminar imagen?</h3>
         <p class="text-sm text-gray-600 mb-4">

@@ -1,19 +1,17 @@
-<section id="apartadoInvestigadoresAdmin" class="py-1 bg-white text-black">
+<section id="apartadoInvestigadoresAdmin" class="editorial-workspace management-workspace">
   <div class="container mx-auto px-4">
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="text-sm sm:text-lg md:text-lg lg:text-2xl font-semibold">
-        Investigadores Registrados
-      </h2>
+    <div class="workspace-heading">
+      <div><p class="eyebrow">COMUNIDAD ACADÉMICA</p><h1>Investigadores Registrados</h1><p class="subtle">Gestiona los perfiles que acompañan libros e investigaciones.</p></div>
       <button
         id="btnMostrarModalAgregar"
-        class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+        class="ui-button primary"
       >
         + Agregar Investigador
       </button>
     </div>
 
     <!-- Modal para agregar investigador -->
-    <dialog id="modalAgregarInvestigador" class="modal">
+    <dialog id="modalAgregarInvestigador" class="modal editorial-modal">
       <div class="modal-box max-w-3xl">
         <form
           id="formAgregarInvestigador"
@@ -329,7 +327,7 @@
     </dialog>
 
     <!-- Modal para editar investigador -->
-    <dialog id="modalEditarInvestigador" class="modal">
+    <dialog id="modalEditarInvestigador" class="modal editorial-modal">
       <div class="modal-box max-w-3xl">
         <form
           id="formEditarInvestigador"
@@ -665,7 +663,7 @@
     </p>
 
     <!-- Modal para mostrar investigador -->
-    <dialog id="modalInvestigador" class="modal">
+    <dialog id="modalInvestigador" class="modal editorial-modal">
       <div class="modal-box">
         <form method="dialog">
           <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
@@ -721,7 +719,7 @@
     </dialog>
 
     <!-- Modal para confirmar agregar investigador -->
-    <dialog id="modalConfirmarAgregar" class="modal">
+    <dialog id="modalConfirmarAgregar" class="modal editorial-modal">
       <div class="modal-box">
         <h3 class="font-bold text-lg mb-4">¿Guardar nuevo investigador?</h3>
         <p class="text-sm text-gray-600 mb-4">
@@ -743,7 +741,7 @@
     </dialog>
 
     <!-- Modal para confirmar eliminacion -->
-    <dialog id="modalConfirmarEliminar" class="modal">
+    <dialog id="modalConfirmarEliminar" class="modal editorial-modal">
       <div class="modal-box">
         <h3 class="font-bold text-lg mb-4">
           ¿Estás seguro de eliminar este investigador?
@@ -760,7 +758,7 @@
     </dialog>
 
     <!-- Modal para confirmar guardar lo editado -->
-    <dialog id="modalConfirmarGuardar" class="modal">
+    <dialog id="modalConfirmarGuardar" class="modal editorial-modal">
       <div class="modal-box">
         <h3 class="font-bold text-lg mb-4">¿Deseas guardar los cambios?</h3>
         <div class="flex justify-end gap-2">

@@ -21,6 +21,13 @@ test('links and pages respect assignment and active state without granting admin
   assert(getAdminLinks(writer).some(link => link.href === '/admin/libros'));
   assert(!canAccessAdminPage(writer, '/admin/carrousel_imagenes'));
   assert(!canAccessAdminPage(writer, '/admin/usuarios'));
+  for (const path of ['/admin/usuarios/nueva','/admin/usuarios/person']) {
+    assert(canAccessAdminPage(admin,path));
+    assert(!canAccessAdminPage(writer,path));
+    assert(!canAccessAdminPage(account('director',['libros']),path));
+    assert(!canAccessAdminPage({...admin,status:'disabled'},path));
+  }
+  assert(!canAccessAdminPage(admin,'/admin/usuarios/person/otro'));
   assert.deepEqual(getAdminLinks({ ...writer, status: 'disabled' }), []);
   assert.deepEqual(getAdminLinks(null), []);
   assert(!hasAccessRule(account('unknown', ['libros']), 'libros.access'));
