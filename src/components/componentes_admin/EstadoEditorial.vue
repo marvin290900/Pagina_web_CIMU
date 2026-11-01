@@ -1,4 +1,5 @@
 <script setup>
+import { useFormNotifications } from '../../lib/notifications.js';
 import { ref, computed } from 'vue';
 import { can,canEditContent } from '../../lib/security/roles.js';
 const props = defineProps({ user:Object, doc:Object, module:String });
@@ -31,6 +32,8 @@ async function assign(id) {
   try { await api('/api/editorial/asignar',{method:'PATCH',body:JSON.stringify({module:props.module,id:props.doc._id,rev:props.doc._rev,assignedTo:id ? [id] : []})});emit('changed'); }
   catch(e) {error.value=e.message;} finally {busy.value=false;}
 }
+
+useFormNotifications({ error: error });
 </script>
 <template><div class="space-y-2 min-w-48"><p class="font-semibold">{{ doc.editorialStatus }}</p>
   <p v-if="error" role="alert" class="text-red-700">{{ error }}</p>

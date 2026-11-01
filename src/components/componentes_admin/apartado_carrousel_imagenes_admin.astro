@@ -232,6 +232,8 @@
 </section>
 
 <script>
+  import { notify } from '../../lib/notifications.js';
+  function showValidationMessage(message) { notify(message, 'warning'); }
   const btnMostrarModal = document.getElementById("btnMostrarModalAgregar");
   const modalAgregar = document.getElementById("modalAgregarImagen");
   const modalConfirmarAgregar = document.getElementById(
@@ -279,7 +281,7 @@
     // Validar tamaño
     const sizeMB = file.size / (1024 * 1024);
     if (sizeMB > MAX_IMAGEN_MB) {
-      alert(`La imagen no puede superar los ${MAX_IMAGEN_MB} MB.`);
+      showValidationMessage(`La imagen no puede superar los ${MAX_IMAGEN_MB} MB.`);
       e.target.value = "";
       previewImagen.src = "";
       previewImagen.classList.add("hidden");
@@ -288,7 +290,7 @@
 
     // Validar tipo MIME
     if (!validImageTypes.includes(file.type)) {
-      alert("Solo se permiten imágenes PNG o JPG.");
+      showValidationMessage("Solo se permiten imágenes PNG o JPG.");
       e.target.value = "";
       previewImagen.src = "";
       previewImagen.classList.add("hidden");
@@ -301,7 +303,7 @@
       fileName.endsWith(ext),
     );
     if (!hasValidExtension) {
-      alert("La imagen debe tener extensión .png o .jpg");
+      showValidationMessage("La imagen debe tener extensión .png o .jpg");
       e.target.value = "";
       previewImagen.src = "";
       previewImagen.classList.add("hidden");
@@ -529,7 +531,7 @@
     // Validar tamaño
     const sizeMB = file.size / (1024 * 1024);
     if (sizeMB > MAX_IMAGEN_MB) {
-      alert(`La imagen no puede superar los ${MAX_IMAGEN_MB} MB.`);
+      showValidationMessage(`La imagen no puede superar los ${MAX_IMAGEN_MB} MB.`);
       e.target.value = "";
       previewNuevaEditar.src = "";
       previewNuevaEditar.classList.add("hidden");
@@ -538,7 +540,7 @@
 
     // Validar tipo MIME
     if (!validImageTypes.includes(file.type)) {
-      alert("Solo se permiten imágenes PNG o JPG.");
+      showValidationMessage("Solo se permiten imágenes PNG o JPG.");
       e.target.value = "";
       previewNuevaEditar.src = "";
       previewNuevaEditar.classList.add("hidden");
@@ -551,7 +553,7 @@
       fileName.endsWith(ext),
     );
     if (!hasValidExtension) {
-      alert("La imagen debe tener extensión .png o .jpg");
+      showValidationMessage("La imagen debe tener extensión .png o .jpg");
       e.target.value = "";
       previewNuevaEditar.src = "";
       previewNuevaEditar.classList.add("hidden");
@@ -783,49 +785,8 @@
 
   // Función para mostrar mensajes flotantes
   function showMessage(mensaje, tipo = "info") {
-    let contenedor = document.getElementById("message-container");
-    if (!contenedor) {
-      contenedor = document.createElement("div");
-      contenedor.id = "message-container";
-      contenedor.style.position = "fixed";
-      contenedor.style.top = "80px";
-      contenedor.style.left = "50%";
-      contenedor.style.transform = "translateX(-50%)";
-      contenedor.style.zIndex = "999999999";
-      document.body.appendChild(contenedor);
+      notify(mensaje, tipo);
     }
-
-    const mensajeElem = document.createElement("div");
-    mensajeElem.textContent = mensaje;
-    mensajeElem.style.marginBottom = "10px";
-    mensajeElem.style.padding = "12px 20px";
-    mensajeElem.style.borderRadius = "5px";
-    mensajeElem.style.color = "white";
-    mensajeElem.style.minWidth = "200px";
-    mensajeElem.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
-    mensajeElem.style.fontWeight = "600";
-    mensajeElem.style.fontFamily = "sans-serif";
-    mensajeElem.style.opacity = "1";
-    mensajeElem.style.transition = "opacity 0.5s ease";
-
-    switch (tipo) {
-      case "success":
-        mensajeElem.style.backgroundColor = "#28a745";
-        break;
-      case "error":
-        mensajeElem.style.backgroundColor = "#dc3545";
-        break;
-      default:
-        mensajeElem.style.backgroundColor = "#007bff";
-    }
-
-    contenedor.appendChild(mensajeElem);
-
-    setTimeout(() => {
-      mensajeElem.style.opacity = "0";
-      setTimeout(() => mensajeElem.remove(), 500);
-    }, 3000);
-  }
 
   //datalles par evitar que se envien muchas peticiones al servidor
   function mostrarSpinnerEnBoton(boton) {

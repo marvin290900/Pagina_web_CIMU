@@ -1,0 +1,14 @@
+.git
+node_modules
+dist
+.astro
+.env
+.env.*
+!.env.example
+output
+docs
+tests
+storage
+public/uploads
+public/pdf
+*.log

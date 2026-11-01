@@ -12,11 +12,13 @@ import { memoryCouch } from '../helpers/memory-couch.js';
 const listen = server => new Promise(resolve => server.listen(0,'127.0.0.1',resolve));
 async function unusedPort() { const server = net.createServer(); await listen(server); const port = server.address().port; await new Promise(resolve => server.close(resolve)); return port; }
 test('HTTP: login, account invitation, scoped draft, private file, review and public publication', { timeout:30000 }, async () => {
+  const legacyResearcherId='author.legacy+books@example.test';
   const admin = { id:'admin', email:'admin@example.com', name:'Administradora', status:'active', authVersion:1, assignments:[{ role:'administrador', modules:[], sections:[] },{ role:'director', modules:['gaceta','autores','libros','investigaciones','inicio'], sections:['*'] }] };
   const memory = memoryCouch({
     'users/security-policy':{ _id:'security-policy',_rev:'1-test',accounts:{ admin } },
     'users/admin':{ _id:'admin',_rev:'1-test',credentialVersion:'v1',passwordHash:await bcrypt.hash('Private admin password',4) },
     'investigadores/r':{_id:'r',_rev:'1-test',nombre:'Investigadora'},
+    [`investigadores/${legacyResearcherId}`]:{_id:legacyResearcherId,_rev:'1-test',nombre:'Autora histórica',type:'investigador'},
     'cimu-gaceta-actualidad/private-news':{_id:'private-news',_rev:'1-test',titulo:'Contenido de otra sección',editorialStatus:'borrador',createdBy:'other'},
     'cimu-gaceta-autores/a':{ _id:'a',_rev:'1-test',nombre:'Autora',correo:'private@example.com',estado:'activo' },
   });
@@ -145,7 +147,7 @@ test('HTTP: login, account invitation, scoped draft, private file, review and pu
     assert.equal((await request(previewPath,'GET',undefined,adminCookie)).response.status,404);
 
     for (const module of ['libros','investigaciones']) {
-      const input = module === 'libros' ? {titulo:'Libro de prueba',fecha_publicacion:'2026-10-15',autores:[{id:'r',nombre:'Investigadora'}]} : {titulo:'Investigación de prueba',resumen:'Resumen',descripcion:'Descripción',programa:'juridico',investigadores:[{id:'r',nombre:'Investigadora'}],'Fecha de publicacion':'2026-10-15'};
+      const input = module === 'libros' ? {_id:'',titulo:'Libro de prueba',fecha_publicacion:'2026-10-15',autores:[{id:legacyResearcherId,nombre:'Autora histórica'}]} : {titulo:'Investigación de prueba',resumen:'Resumen',descripcion:'Descripción',programa:'juridico',investigadores:[{id:legacyResearcherId,nombre:'Autora histórica'}],'Fecha de publicacion':'2026-10-15'};
       const catalogUpload = new FormData();catalogUpload.set('module',module);
       catalogUpload.set('foto',new File([Buffer.from([255,216,255,0])],'cover.jpg',{type:'image/jpeg'}));
       const catalogAsset = await request('/api/subir_imagen','POST',catalogUpload,writerCookie);assert.equal(catalogAsset.response.status,200,JSON.stringify(catalogAsset.data));
@@ -154,6 +156,9 @@ test('HTTP: login, account invitation, scoped draft, private file, review and pu
       const route = module === 'libros' ? '/api/libros/crear' : '/api/investigaciones/investigaciones';
       const saved = await request(route,'POST',input,writerCookie);
       assert.equal(saved.response.status,201,JSON.stringify(saved.data));
+      const internal=await request(module==='libros'?'/api/libros/obtener-filtrados?admin=1':'/api/investigaciones/investigaciones?admin=1','GET',undefined,writerCookie);
+      const internalDocs=module==='libros'?internal.data:internal.data.data.rows.map(row=>row.doc);
+      assert.equal(internalDocs[0][module==='libros'?'autores':'investigadores'][0].id,legacyResearcherId);
       const savedId = module === 'libros' ? saved.data.id : saved.data.data.id;
       let rev = module === 'libros' ? saved.data.rev : saved.data.data.rev;
       const publicPath = module === 'libros' ? `/api/libros/buscar?id=${savedId}` : `/api/investigaciones/${savedId}`;

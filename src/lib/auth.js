@@ -12,12 +12,4 @@ export async function authenticateUser(email, password) {
   if (!valid || account?.status !== 'active') return null;
   return { ...publicUser(account), credentialVersion: credential.credentialVersion };
 }
-export async function initDatabases() {
-  for (const name of ['users', 'sessions', 'audit_events', 'auth_attempts', 'private_assets', 'cimu-libros', 'investigaciones', 'investigadores', 'cimu-gaceta-autores', 'cimu-gaceta', ...['actualidad','vida_universitaria','opinion','memoria','audiovisuales'].map(section => `cimu-gaceta-${section}`)]) {
-    try { await couch.put(`/${name}`); }
-    catch (error) { if (error.response?.status !== 412) throw error; }
-  }
-  for (const [db, fields] of [['sessions', ['userId']], ['audit_events', ['createdAt']], ['auth_attempts', ['expiresAt']]]) {
-    await couch.post(`/${db}/_index`, { index: { fields }, name: fields.join('-') + '-index' });
-  }
-}
+export { initDatabases } from './security/databases.js';

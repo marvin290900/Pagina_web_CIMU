@@ -1,4 +1,5 @@
 <script setup>
+import { useFormNotifications, notifyAfterNavigation } from '../../../../lib/notifications.js';
 import { ref, computed, onMounted, defineAsyncComponent } from 'vue';
 import { can } from '../../../../lib/security/roles.js';
 import { NEWS_SECTIONS, PUBLICATION_STATES, stateLabel, dateLabel, newsSectionsFor, newsRecordUrl, adminRequest } from '../../../../lib/publicationUi.js';
@@ -45,10 +46,13 @@ async function save(input) {
   saving.value = true; error.value = '';
   try {
     const data = await adminRequest(`/api/gaceta/crear?coleccion=${createSection.value}`, { method: 'POST', body: JSON.stringify({ ...input, tipo: createSection.value }) });
+    notifyAfterNavigation('Publicación creada correctamente.');
     location.href = newsRecordUrl({ _id: data.id }, createSection.value);
   } catch(e) { error.value = e.message; saving.value = false; }
 }
 onMounted(load);
+
+useFormNotifications({ error: error });
 </script>
 <template>
   <section class="editorial-workspace">

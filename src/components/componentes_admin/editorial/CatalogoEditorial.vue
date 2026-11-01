@@ -1,4 +1,5 @@
 <script setup>
+import { useFormNotifications } from '../../../lib/notifications.js';
 import { ref, computed, onMounted, watch } from 'vue';
 import { can, canEditContent } from '../../../lib/security/roles.js';
 import { PUBLICATION_STATES, stateLabel, dateLabel, adminRequest, catalogActions, catalogRecordUrl } from '../../../lib/publicationUi.js';
@@ -36,6 +37,9 @@ async function assign(id){await run(async()=>{await adminRequest('/api/editorial
 watch(()=>props.documents,()=>{override.value=null;});
 onMounted(async()=>{selectedId.value=new URL(location.href).searchParams.get('registro')||'';if(selectedId.value&&can(props.user,`${props.module}.assign`)){try{users.value=(await adminRequest(`/api/editorial/responsables?module=${props.module}`)).users;}catch(e){localError.value=e.message;}}});
 watch(()=>props.user,async user=>{if(selectedId.value&&can(user,`${props.module}.assign`)&&!users.value.length){try{users.value=(await adminRequest(`/api/editorial/responsables?module=${props.module}`)).users;}catch(e){localError.value=e.message;}}});
+
+useFormNotifications({ error: localError });
+useFormNotifications({ notice: notice });
 </script>
 <template><section class="editorial-workspace">
 <template v-if="!selectedId"><div class="workspace-heading"><div><p class="eyebrow">CATÁLOGO EDITORIAL</p><h1>{{title}}</h1><p class="subtle">{{books?'Organiza tus libros y acompaña su proceso editorial.':'Del trabajo académico a la publicación: gestiona cada investigación.'}}</p></div><div class="record-actions"><button v-if="books&&can(user,'libros.manage')" class="ui-button" @click="$emit('collections')">Colecciones</button><button v-if="can(user,`${module}.create`)" class="ui-button primary" :disabled="loading" @click="$emit('create')">＋ {{books?'Nuevo libro':'Nueva investigación'}}</button></div></div>

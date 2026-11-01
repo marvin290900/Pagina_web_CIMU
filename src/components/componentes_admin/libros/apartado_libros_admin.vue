@@ -1,4 +1,5 @@
 <script setup>
+import { useFormNotifications, notifyAfterNavigation } from '../../../lib/notifications.js';
 import { ref, onMounted, defineAsyncComponent } from 'vue';
 import { adminRequest } from '../../../lib/publicationUi.js';
 import CatalogoEditorial from '../editorial/CatalogoEditorial.vue';
@@ -10,11 +11,16 @@ const collections=ref([]), newCollection=ref(''), collectionsError=ref('');
 async function load(){loading.value=true;error.value='';try{if(!user.value)user.value=(await adminRequest('/api/cuenta/me')).user;books.value=await adminRequest('/api/libros/obtener-filtrados?admin=1');}catch(e){error.value=e.message;}finally{loading.value=false;}}
 function edit(doc=null){editing.value=doc?JSON.parse(JSON.stringify(doc)):null;formError.value='';editorMounted.value=true;editDialog.value.showModal();}
 function close(){if(saving.value||formBusy.value)return;editDialog.value.close();editorMounted.value=false;}
-async function save(input){if(saving.value)return;saving.value=true;formError.value='';try{const result=await adminRequest(editing.value?`/api/libros/actualizar?id=${encodeURIComponent(editing.value._id)}`:'/api/libros/crear',{method:editing.value?'PUT':'POST',body:JSON.stringify({...input,_rev:editing.value?._rev})});editDialog.value.close();editorMounted.value=false;if(!editing.value){location.href=`/admin/libros?registro=${encodeURIComponent(result.id)}`;return;}await load();notice.value='Cambios guardados.';}catch(e){formError.value=e.message;}finally{saving.value=false;}}
+async function save(input){if(saving.value)return;saving.value=true;notice.value='';formError.value='';try{const result=await adminRequest(editing.value?`/api/libros/actualizar?id=${encodeURIComponent(editing.value._id)}`:'/api/libros/crear',{method:editing.value?'PUT':'POST',body:JSON.stringify({...input,_rev:editing.value?._rev})});editDialog.value.close();editorMounted.value=false;if(!editing.value){notifyAfterNavigation('Libro creado correctamente.');location.href=`/admin/libros?registro=${encodeURIComponent(result.id)}`;return;}await load();notice.value='Cambios guardados.';}catch(e){formError.value=e.message;}finally{saving.value=false;}}
 async function openCollections(){collectionsError.value='';collectionsDialog.value.showModal();saving.value=true;try{collections.value=(await adminRequest('/api/libros/obtener?id=colecciones')).colecciones;}catch(e){collectionsError.value=e.message;}finally{saving.value=false;}}
 function addCollection(){const name=newCollection.value.trim();if(!name)return;if(collections.value.includes(name)){collectionsError.value='La colección ya está en la lista.';return;}collections.value.push(name);newCollection.value='';collectionsError.value='';}
-async function saveCollections(){saving.value=true;collectionsError.value='';try{await adminRequest('/api/libros/actualizar?id=colecciones',{method:'PUT',body:JSON.stringify({colecciones:collections.value})});collectionsDialog.value.close();notice.value='Colecciones actualizadas.';}catch(e){collectionsError.value=e.message;}finally{saving.value=false;}}
+async function saveCollections(){notice.value='';saving.value=true;collectionsError.value='';try{await adminRequest('/api/libros/actualizar?id=colecciones',{method:'PUT',body:JSON.stringify({colecciones:collections.value})});collectionsDialog.value.close();notice.value='Colecciones actualizadas.';}catch(e){collectionsError.value=e.message;}finally{saving.value=false;}}
 onMounted(load);
+
+useFormNotifications({ error: error });
+useFormNotifications({ notice: notice });
+useFormNotifications({ error: formError });
+useFormNotifications({ error: collectionsError });
 </script>
 <template><div><p v-if="notice" class="ui-alert" role="status">{{notice}}</p><CatalogoEditorial module="libros" :user="user" :documents="books" :loading="loading" :error="error" @create="edit()" @edit="edit" @refresh="load" @collections="openCollections" />
 <dialog ref="editDialog" class="modal editorial-modal" :aria-label="editing?'Editar libro':'Nuevo libro'" @cancel="(saving||formBusy)&&$event.preventDefault()" @close="editorMounted=false"><ModalLibros v-if="editorMounted" :libro="editing||{}" :modo="editing?'editar':'crear'" :saving="saving" :server-error="formError" @cerrar="close" @guardar="save" @busy="formBusy=$event"/></dialog>

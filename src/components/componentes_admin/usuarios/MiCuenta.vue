@@ -1,4 +1,5 @@
 <script setup>
+import { useFormNotifications, notifyAfterNavigation } from '../../../lib/notifications.js';
 import { ref } from 'vue';
 import { initials, ACCOUNT_STATES } from '../../../lib/adminUi.js';
 import { dateLabel, adminRequest } from '../../../lib/publicationUi.js';
@@ -10,9 +11,11 @@ async function save(){
   if(password.value!==confirmation.value){error.value='Las contraseñas nuevas no coinciden.';return;}
   if(password.value.length<12||new TextEncoder().encode(password.value).length>72){error.value='Usa al menos 12 caracteres y como máximo 72 bytes para la nueva contraseña.';return;}
   busy.value=true;
-  try{await adminRequest('/api/cuenta/password',{method:'POST',body:JSON.stringify({currentPassword:currentPassword.value,password:password.value})});location.href='/login';}
+  try{await adminRequest('/api/cuenta/password',{method:'POST',body:JSON.stringify({currentPassword:currentPassword.value,password:password.value})});notifyAfterNavigation('Contraseña actualizada. Inicia sesión con tu nueva contraseña.');location.href='/login';}
   catch(e){error.value=e.message;}finally{busy.value=false;}
 }
+
+useFormNotifications({ error: error });
 </script>
 <template><section class="editorial-workspace profile-workspace">
 <div class="workspace-heading"><div><p class="eyebrow">ESPACIO PERSONAL</p><h1>Mi cuenta</h1><p class="subtle">Consulta tus accesos y mantén segura tu cuenta.</p></div></div>

@@ -1,6 +1,10 @@
 # Operación de cuentas y permisos
 
+Para usuarios y administración, consulta el [manual de roles, permisos y flujo editorial](manual-roles-permisos.md), con matrices de permisos, procedimientos y ejemplos.
+
 Implementado el 15 de octubre de 2026 en la rama `update`. Este documento describe el código preparado; no implica despliegue ni migración de datos reales.
+
+Para el diccionario de bases, documentos y eventos, consulta [Base de datos, autenticación y auditoría](estructura-base-datos.md).
 
 ## Funciones disponibles
 
@@ -29,6 +33,10 @@ Implementado el 15 de octubre de 2026 en la rama `update`. Este documento descri
 Los módulos auxiliares son autores, investigadores e inicio/carrusel: su administración requiere dirección editorial con ese módulo. Consulta, edición y colaboración se aplican al contenido de Gaceta, libros e investigaciones. Las secciones solo limitan Gaceta.
 
 Asignar administración y dirección a la misma persona es válido. Los permisos de una asignación no se combinan con el alcance de otra para conceder más acceso.
+
+## Instalación nueva
+
+Una base vacía puede prepararse con el Compose de este repositorio o con `npm run db:setup`. Se crea una cuenta administradora/directora con las variables `CIMU_ADMIN_*`, configuración inicial y datos de prueba opcionales. El inicializador conserva una política existente y no sustituye la migración de datos anteriores. Sigue la [guía de instalación inicial](instalacion-inicial.md).
 
 ## Preparación y migración
 

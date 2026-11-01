@@ -1,0 +1,68 @@
+name: cimu
+services:
+  couchdb:
+    image: couchdb:3
+    user: "5984:5984"
+    environment:
+      COUCHDB_USER: ${COUCHDB_USER:-cimu_service}
+      COUCHDB_PASSWORD: ${COUCHDB_PASSWORD:?Define COUCHDB_PASSWORD en .env}
+      NODENAME: 127.0.0.1
+    volumes:
+      - couchdb_data:/opt/couchdb/data
+      - ./docker/couchdb.ini:/opt/couchdb/etc/local.d/10-single-node.ini:ro
+    ports:
+      - "127.0.0.1:${COUCHDB_PORT:-5985}:5984"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:5984/_up"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    logging: &logging
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    environment:
+      HOST: 0.0.0.0
+      PORT: 4321
+      COUCHDB_URL: http://couchdb:5984
+      COUCHDB_USER: ${COUCHDB_USER:-cimu_service}
+      COUCHDB_PASSWORD: ${COUCHDB_PASSWORD:?Define COUCHDB_PASSWORD en .env}
+      CIMU_BOOTSTRAP: ${CIMU_BOOTSTRAP:-true}
+      CIMU_ADMIN_EMAIL: ${CIMU_ADMIN_EMAIL:-}
+      CIMU_ADMIN_NAME: ${CIMU_ADMIN_NAME:-Administración CIMU}
+      CIMU_ADMIN_PASSWORD: ${CIMU_ADMIN_PASSWORD:-}
+      CIMU_SEED_DEMO: ${CIMU_SEED_DEMO:-false}
+      PRIVATE_UPLOAD_DIR: /app/storage/private
+    volumes:
+      - public_uploads:/app/public/uploads
+      - private_uploads:/app/storage/private
+    depends_on:
+      couchdb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:4321/login').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+    logging: *logging
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "127.0.0.1:${CIMU_HTTP_PORT:-8081}:80"
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - public_uploads:/usr/share/nginx/html/uploads:ro
+    depends_on:
+      frontend:
+        condition: service_healthy
+    logging: *logging
+volumes:
+  couchdb_data:
+  public_uploads:
+  private_uploads:

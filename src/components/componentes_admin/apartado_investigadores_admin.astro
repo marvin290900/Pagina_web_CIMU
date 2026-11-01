@@ -784,6 +784,8 @@
   </div>
 
   <script>
+  import { notify } from '../../lib/notifications.js';
+  function showValidationMessage(message) { notify(message, 'warning'); }
     const modalConfirmarAgregar = document.getElementById(
       "modalConfirmarAgregar"
     ) as HTMLDialogElement;
@@ -1033,7 +1035,7 @@
       // Validar tamaño
       const sizeMB = file.size / (1024 * 1024);
       if (sizeMB > MAX_FOTO_MB) {
-        alert(`La foto no puede superar los ${MAX_FOTO_MB} MB.`);
+        showValidationMessage(`La foto no puede superar los ${MAX_FOTO_MB} MB.`);
         inputFoto.value = "";
         previewFoto.src = "";
         previewFoto.classList.add("hidden");
@@ -1043,7 +1045,7 @@
       // Validar tipo MIME
       const validImageTypes = ["image/png", "image/jpeg"];
       if (!validImageTypes.includes(file.type)) {
-        alert("Solo se permiten imágenes PNG o JPG.");
+        showValidationMessage("Solo se permiten imágenes PNG o JPG.");
         inputFoto.value = "";
         previewFoto.src = "";
         previewFoto.classList.add("hidden");
@@ -1058,7 +1060,7 @@
       );
 
       if (!hasValidExtension) {
-        alert("La foto debe tener extensión .png o .jpg");
+        showValidationMessage("La foto debe tener extensión .png o .jpg");
         inputFoto.value = "";
         previewFoto.src = "";
         previewFoto.classList.add("hidden");
@@ -1081,7 +1083,7 @@
       // Validar tamaño
       const sizeMB = file.size / (1024 * 1024);
       if (sizeMB > MAX_CV_MB) {
-        alert(`El CV no puede superar los ${MAX_CV_MB} MB.`);
+        showValidationMessage(`El CV no puede superar los ${MAX_CV_MB} MB.`);
         inputCV.value = "";
         previewCV.src = "";
         previewCV.classList.add("hidden");
@@ -1090,7 +1092,7 @@
 
       // Validar tipo MIME
       if (file.type !== "application/pdf") {
-        alert("Solo se permiten archivos PDF.");
+        showValidationMessage("Solo se permiten archivos PDF.");
         inputCV.value = "";
         previewCV.src = "";
         previewCV.classList.add("hidden");
@@ -1100,7 +1102,7 @@
       // Validar extensión
       const fileName = file.name.toLowerCase();
       if (!fileName.endsWith(".pdf")) {
-        alert("El CV debe ser un archivo PDF");
+        showValidationMessage("El CV debe ser un archivo PDF");
         inputCV.value = "";
         previewCV.src = "";
         previewCV.classList.add("hidden");
@@ -1506,7 +1508,7 @@
       // Validar tamaño
       const sizeMB = file.size / (1024 * 1024);
       if (sizeMB > MAX_FOTO_MB) {
-        alert(`La foto no puede superar los ${MAX_FOTO_MB} MB.`);
+        showValidationMessage(`La foto no puede superar los ${MAX_FOTO_MB} MB.`);
         (e.target as HTMLInputElement).value = "";
         preview.src = "";
         preview.classList.add("hidden");
@@ -1516,7 +1518,7 @@
       // Validar tipo MIME
       const validImageTypes = ["image/png", "image/jpeg"];
       if (!validImageTypes.includes(file.type)) {
-        alert("Solo se permiten imágenes PNG o JPG.");
+        showValidationMessage("Solo se permiten imágenes PNG o JPG.");
         (e.target as HTMLInputElement).value = "";
         preview.src = "";
         preview.classList.add("hidden");
@@ -1531,7 +1533,7 @@
       );
 
       if (!hasValidExtension) {
-        alert("La foto debe tener extensión .png o .jpg");
+        showValidationMessage("La foto debe tener extensión .png o .jpg");
         (e.target as HTMLInputElement).value = "";
         preview.src = "";
         preview.classList.add("hidden");
@@ -1559,7 +1561,7 @@
       // Validar tamaño
       const sizeMB = file.size / (1024 * 1024);
       if (sizeMB > MAX_CV_MB) {
-        alert(`El CV no puede superar los ${MAX_CV_MB} MB.`);
+        showValidationMessage(`El CV no puede superar los ${MAX_CV_MB} MB.`);
         (e.target as HTMLInputElement).value = "";
         preview.src = "";
         preview.classList.add("hidden");
@@ -1568,7 +1570,7 @@
 
       // Validar tipo MIME
       if (file.type !== "application/pdf") {
-        alert("Solo se permiten archivos PDF.");
+        showValidationMessage("Solo se permiten archivos PDF.");
         (e.target as HTMLInputElement).value = "";
         preview.src = "";
         preview.classList.add("hidden");
@@ -1578,7 +1580,7 @@
       // Validar extensión
       const fileName = file.name.toLowerCase();
       if (!fileName.endsWith(".pdf")) {
-        alert("El CV debe ser un archivo PDF");
+        showValidationMessage("El CV debe ser un archivo PDF");
         (e.target as HTMLInputElement).value = "";
         preview.src = "";
         preview.classList.add("hidden");
@@ -1592,7 +1594,7 @@
 
     function editarInvestigador(id) {
       const inv = investigadores.find((i) => i._id === id);
-      if (!inv) return alert("Investigador no encontrado");
+      if (!inv) return showValidationMessage("Investigador no encontrado");
 
       eliminarFoto = false;
       eliminarCV = false;
@@ -2220,59 +2222,7 @@
 
     //FUncion para mostrar mesanje personalizado
     function showMessage(mensaje, tipo = "info") {
-      // Crear contenedor si no existe
-      let contenedor = document.getElementById("message-container");
-      if (!contenedor) {
-        contenedor = document.createElement("div");
-        contenedor.id = "message-container";
-        contenedor.style.position = "fixed";
-        contenedor.style.top = "80px";
-        contenedor.style.left = "50%";
-        contenedor.style.transform = "translateX(-50%)";
-        contenedor.style.zIndex = "999999999";
-        document.body.appendChild(contenedor);
-      }
-
-      // Crear el mensaje
-      const mensajeElem = document.createElement("div");
-      mensajeElem.textContent = mensaje;
-      mensajeElem.style.marginBottom = "10px";
-      mensajeElem.style.padding = "12px 20px";
-      mensajeElem.style.borderRadius = "5px";
-      mensajeElem.style.color = "white";
-      mensajeElem.style.minWidth = "200px";
-      mensajeElem.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
-      mensajeElem.style.fontWeight = "600";
-      mensajeElem.style.fontFamily = "sans-serif";
-      mensajeElem.style.cursor = "default";
-      mensajeElem.style.opacity = "1";
-      mensajeElem.style.transition = "opacity 0.5s ease";
-      mensajeElem.style.position = "relative";
-      mensajeElem.style.zIndex = "999999999";
-
-      // Colores según tipo
-      switch (tipo) {
-        case "success":
-          mensajeElem.style.backgroundColor = "#28a745";
-          break;
-        case "error":
-          mensajeElem.style.backgroundColor = "#dc3545";
-          break;
-        case "info":
-        default:
-          mensajeElem.style.backgroundColor = "#007bff";
-          break;
-      }
-
-      contenedor.appendChild(mensajeElem);
-
-      // Desaparece después de 3 segundos
-      setTimeout(() => {
-        mensajeElem.style.opacity = "0";
-        setTimeout(() => {
-          mensajeElem.remove();
-        }, 500);
-      }, 3000);
+      notify(mensaje, tipo);
     }
 
     // Funcion para filtrar por categoria

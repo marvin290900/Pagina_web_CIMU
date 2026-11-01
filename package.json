@@ -7,11 +7,12 @@
         "build": "astro build",
         "preview": "astro preview",
         "astro": "astro",
-        "start": "node ./dist/server/entry.mjs",
+        "start": "node scripts/start.mjs",
         "test": "node --test --test-isolation=none tests/*.test.js",
         "access:migrate": "node scripts/migrate-access.js",
         "auth:cleanup": "node scripts/cleanup-auth.js",
-        "test:integration": "npm run build && node --test --test-isolation=none tests/integration/*.test.js"
+        "test:integration": "npm run build && node --test --test-isolation=none tests/integration/*.test.js",
+        "db:setup": "node scripts/bootstrap.js"
     },
     "dependencies": {
         "@astrojs/node": "^9.3.0",

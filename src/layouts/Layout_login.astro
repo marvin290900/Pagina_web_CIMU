@@ -1,58 +1,27 @@
 ---
-import "../styles/global.css";
+import '../styles/global.css';
+import '../styles/admin.css';
+import '../styles/auth.css';
+import NotificationCenter from '../components/alert/NotificationCenter.vue';
+import uesLogo from '../assets/logos/uesLogoRojo.svg';
+const { title = 'Iniciar sesión', activation = false } = Astro.props;
 ---
-
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Login - CIMU</title>
-    <link
-      href="https://cdn.materialdesignicons.com/7.2.96/css/materialdesignicons.min.css"
-      rel="stylesheet"
-    />
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
-
-  </head>
-  <body>
-    <main class="bounce-in-up">
+  <head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width" /><link rel="icon" type="image/png" href="/favicon.png" /><title>{title} · CIMU</title></head>
+  <body class="admin-shell auth-shell">
+    <header class="auth-topbar"><a class="admin-brand" href="/"><span class="brand-mark" aria-hidden="true">C</span><span>CIMU <span class="brand-caption">EDITORIAL</span></span></a><a href="/" class="auth-back-site">Volver al sitio <span aria-hidden="true">↗</span></a></header>
+    <main class="auth-layout">
+      <section class="auth-intro" aria-label="Espacio editorial de CIMU">
+        <div class="auth-institution"><img src={uesLogo.src} alt="Universidad de El Salvador" /><p>UNIVERSIDAD DE EL SALVADOR<br /><span>Facultad Multidisciplinaria de Occidente</span></p></div>
+        <p class="eyebrow">UN ESPACIO PARA CREAR Y COMPARTIR</p>
+        <h2>El conocimiento<br />se construye<br /><span>en equipo.</span></h2>
+        <p class="auth-intro-copy">Gestiona las publicaciones de la editorial y acompaña cada historia desde su primera idea hasta su publicación.</p>
+        <div class="auth-intro-footer"><span class="auth-intro-line"></span><p>{activation ? 'Tu cuenta es personal. Sus roles y permisos definen las aplicaciones en las que podrás trabajar.' : 'Libros, investigaciones y Gaceta. Un mismo espacio para tu equipo editorial.'}</p></div>
+      </section>
       <slot />
     </main>
+    <footer class="auth-footer">© {new Date().getFullYear()} CIMU · Universidad de El Salvador</footer>
+    <div id="notification-root"></div><NotificationCenter client:only="vue" />
   </body>
 </html>
-
-<style>
-  html,
-  body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    font-family: 'Spectral', serif;
-    background-color: white;
-  }
-
- @keyframes bounceInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(100%) scale(0.9);
-  }
-  60% {
-    opacity: 1;
-    transform: translateY(-20px) scale(1.05);
-  }
-  80% {
-    transform: translateY(10px) scale(0.98);
-  }
-  100% {
-    transform: translateY(0) scale(1);
-  }
-}
-
-.bounce-in-up {
-  animation: bounceInUp 0.9s cubic-bezier(0.215, 0.610, 0.355, 1.000);
-}
-
-</style>

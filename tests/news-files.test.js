@@ -51,11 +51,25 @@ test('file paths cannot escape their authorized module', () => {
   for (const value of ['/uploads/libros/../../.env', '/uploads/libros/%2e%2e/%2e%2e/.env','/uploads/carrousel/picture.jpg','https://evil.test/uploads/libros/a.pdf']) assert.throws(() => safePublicPath(value,['libros']));
 });
 test('legacy endpoint identifiers cannot traverse CouchDB databases', async () => {
-  for (const id of ['../users/security-policy','%2e%2e%2fusers','_design/security','a?x=y','a/b']) {
+  for (const id of ['../users/security-policy','%2e%2e%2fusers','_design/security','a?x=y','a/b',
+    'author@example.test/../users','author%2fusers@example.test','author@example.test?admin=1',
+    'author@example.test#x','author@example.test&x=y','author..name@example.test','author\\name@example.test',
+    'author@example.test\n','valid-id\n']) {
     assert.throws(() => validateDocumentIds({ nested:{ _id:id } }));
     await assert.rejects(validateApiInput(new Request('http://localhost/api/libros/buscar?id=' + encodeURIComponent(id))));
   }
   assert.doesNotThrow(() => validateDocumentIds({ id:'colecciones', investigadores:[{ id:randomUUID() }] }));
+});
+
+test('legacy researcher email IDs pass transport validation without normalization', async () => {
+  const id = 'Author.Legacy+books@example.test';
+  const payload = { _id:'', autores:[{id,nombre:'Autora'}] };
+  assert.doesNotThrow(() => validateDocumentIds(payload));
+  await assert.doesNotReject(validateApiInput(new Request('http://localhost/api/libros/crear', {
+    method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),
+  })));
+  await assert.doesNotReject(validateApiInput(new Request('http://localhost/api/libros/obtener?id='+encodeURIComponent(id))));
+  assert.equal(payload.autores[0].id,id);
 });
 
 test('Gaceta archive, direct update, restore and delete enforce scope and revisions', async () => {

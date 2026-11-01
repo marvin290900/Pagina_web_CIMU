@@ -1,4 +1,5 @@
 <script setup>
+import { useFormNotifications, notifyAfterNavigation } from '../../../../lib/notifications.js';
 import { ref, computed, onMounted, defineAsyncComponent } from 'vue';
 import { can, canEditNews } from '../../../../lib/security/roles.js';
 import { NEWS_SECTIONS, stateLabel, dateLabel, newsActions, adminRequest, videoEmbedUrl } from '../../../../lib/publicationUi.js';
@@ -52,6 +53,7 @@ async function confirmAction() {
   await perform(async () => {
     if (pending.value.delete) {
       await adminRequest(`/api/gaceta/eliminar?coleccion=${props.section}&id=${encodeURIComponent(doc.value._id)}`, { method: 'DELETE', body: JSON.stringify({ rev: doc.value._rev }) });
+      notifyAfterNavigation('Publicación eliminada.');
       location.href = '/admin/gaceta/gestion_publicaciones'; return;
     }
     const data = await adminRequest('/api/gaceta/transicion', { method: 'POST', body: JSON.stringify({ section: props.section, id: doc.value._id, rev: doc.value._rev, target: pending.value.target, note: note.value }) });
@@ -81,6 +83,9 @@ onMounted(async () => {
     catch(e) { error.value = `No se pudieron cargar los responsables. ${e.message}`; }
   }
 });
+
+useFormNotifications({ error: error });
+useFormNotifications({ notice: notice });
 </script>
 <template>
   <section class="editorial-workspace record-workspace">

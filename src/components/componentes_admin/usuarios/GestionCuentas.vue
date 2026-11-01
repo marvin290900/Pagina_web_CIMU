@@ -1,4 +1,5 @@
 <script setup>
+import { useFormNotifications } from '../../../lib/notifications.js';
 import { ref, computed, onMounted } from 'vue';
 import { ROLE_LABELS } from '../../../lib/security/roles.js';
 import { ACCOUNT_STATES, MODULE_LABELS, accountRoles, accountModules, initials } from '../../../lib/adminUi.js';
@@ -11,6 +12,8 @@ const visible=computed(()=>filtered.value.slice((current.value-1)*15,current.val
 async function load(){loading.value=true;error.value='';try{users.value=(await adminRequest('/api/usuarios')).users;}catch(e){error.value=e.message;}finally{loading.value=false;}}
 function open(event,id){if(!event.target.closest('a,button'))location.href=`/admin/usuarios/${encodeURIComponent(id)}`;}
 onMounted(load);
+
+useFormNotifications({ error: error });
 </script>
 <template>
 <section class="editorial-workspace">

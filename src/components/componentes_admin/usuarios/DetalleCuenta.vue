@@ -1,4 +1,5 @@
 <script setup>
+import { useFormNotifications } from '../../../lib/notifications.js';
 import { ref, computed } from 'vue';
 import { ROLE_LABELS, MODULES, SECTIONS } from '../../../lib/security/roles.js';
 import { ACCOUNT_STATES, MODULE_LABELS, ROLE_DESCRIPTIONS, initials } from '../../../lib/adminUi.js';
@@ -22,7 +23,10 @@ async function save(){await run(async()=>{
 });}
 function ask(action){pending.value=action;error.value='';confirmDialog.value.showModal();}
 async function access(){await run(async()=>{const data=await adminRequest(`/api/usuarios/${account.value.id}/acceso`,{method:'POST',body:JSON.stringify({action:pending.value})});confirmDialog.value.close();if(data.setupToken)showLink(account.value.id,data.setupToken);notice.value=pending.value==='reset'?'Acceso restablecido. El nuevo enlace vence en una hora.':'Todas las sesiones de esta cuenta se cerraron.';if(account.value.id===props.viewer.id){sessionEnded.value=true;}else{const updated=(await adminRequest('/api/usuarios')).users.find(u=>u.id===account.value.id);if(updated){account.value=updated;form.value.version=updated.authVersion;}}});}
-async function copy(){try{await navigator.clipboard.writeText(setupLink.value);notice.value='Enlace copiado.';}catch{notice.value='Selecciona el enlace para copiarlo manualmente.';}}
+async function copy(){notice.value='';try{await navigator.clipboard.writeText(setupLink.value);notice.value='Enlace copiado.';}catch{notice.value='Selecciona el enlace para copiarlo manualmente.';}}
+
+useFormNotifications({ error: error });
+useFormNotifications({ notice: notice });
 </script>
 <template><section class="editorial-workspace account-workspace">
 <nav class="record-breadcrumb" aria-label="Ruta de navegación"><a href="/admin/usuarios">← Cuentas y permisos</a><span aria-hidden="true">/</span><span>{{isNew?'Nueva cuenta':account.name}}</span></nav>

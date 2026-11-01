@@ -1,5 +1,7 @@
 # Interfaz del espacio editorial
 
+La explicación completa de las responsabilidades y autorizaciones está en el [manual de roles y permisos](manual-roles-permisos.md).
+
 El panel principal es un menú de aplicaciones con búsqueda. Muestra únicamente los módulos que la cuenta puede abrir. Los colores e iconos ayudan a reconocer cada aplicación, y el menú lateral sigue disponible durante el trabajo.
 
 ## Cuentas y permisos

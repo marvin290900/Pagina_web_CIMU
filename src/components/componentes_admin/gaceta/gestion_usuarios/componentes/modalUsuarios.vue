@@ -1,4 +1,5 @@
 <script setup>
+import { notify } from '../../../../../lib/notifications.js';
 import { ref, watch } from "vue";
 
 const props = defineProps({
@@ -172,7 +173,7 @@ const guardar = async () => {
       !formData.value.correo ||
       !formData.value.estado
     ) {
-      alert("Por favor completa los campos obligatorios");
+      notify("Por favor completa los campos obligatorios", "warning");
       guardando.value = false;
       return;
     }
@@ -194,7 +195,7 @@ const guardar = async () => {
     emit("guardar", { ...formData.value });
   } catch (error) {
     console.error("Error al guardar:", error);
-    alert(`Error al guardar el usuario: ${error.message}`);
+    notify(`Error al guardar el usuario: ${error.message}`, "error");
   } finally {
     guardando.value = false;
   }

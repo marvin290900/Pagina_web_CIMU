@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { MODULES, SECTIONS, ROLE_LABELS } from './roles.js';
+import { isSafeDocumentId } from './documentIds.js';
 export const emailSchema = z.string().trim().toLowerCase().email().max(254);
 export const passwordSchema = z.string().min(12, 'Usa al menos 12 caracteres').refine(value => Buffer.byteLength(value, 'utf8') <= 72, 'La contraseña supera los 72 bytes admitidos por bcrypt');
 export const assignmentSchema = z.object({
@@ -13,3 +14,4 @@ export const assignmentSchema = z.object({
 export const accountSchema = z.object({ email: emailSchema, name: z.string().trim().min(2).max(120), assignments: z.array(assignmentSchema).min(1).max(12) }).strict();
 export const updateAccountSchema = z.object({ name: z.string().trim().min(2).max(120), status: z.enum(['active', 'disabled', 'invited']), assignments: z.array(assignmentSchema).min(1).max(12), version: z.number().int().nonnegative() }).strict();
 export const idSchema = z.string().regex(/^[a-zA-Z0-9_-]{1,128}$/);
+export const researcherIdSchema = z.string().refine(isSafeDocumentId, 'Identificador de investigador inválido');

@@ -1,8 +1,9 @@
 ---
 import '../styles/global.css';
 import '../styles/admin.css';
+import NotificationCenter from '../components/alert/NotificationCenter.vue';
 import NavbarAdmin from '../components/componentes_admin/navbar_admin.astro';
 const { title = 'Panel editorial · CIMU' } = Astro.props;
 ---
 <!doctype html>
-<html lang="es"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width" /><link rel="icon" type="image/png" href="/favicon.png" /><meta name="generator" content={Astro.generator} /><title>{title}</title><link href="https://cdn.materialdesignicons.com/7.2.96/css/materialdesignicons.min.css" rel="stylesheet" /></head><body class="admin-shell"><a href="#admin-content" class="sr-only focus:not-sr-only">Ir al contenido</a><NavbarAdmin /><main id="admin-content" class="admin-main"><slot /></main></body></html>
+<html lang="es"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width" /><link rel="icon" type="image/png" href="/favicon.png" /><meta name="generator" content={Astro.generator} /><title>{title}</title><link href="https://cdn.materialdesignicons.com/7.2.96/css/materialdesignicons.min.css" rel="stylesheet" /></head><body class="admin-shell"><a href="#admin-content" class="sr-only focus:not-sr-only">Ir al contenido</a><NavbarAdmin /><main id="admin-content" class="admin-main"><slot /></main><div id="notification-root"></div><NotificationCenter client:only="vue" /></body></html>
